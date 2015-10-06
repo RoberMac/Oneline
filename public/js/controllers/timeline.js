@@ -114,7 +114,7 @@ angular.module('Oneline.timelineControllers', [])
             )
         {
 
-            $scope.setControlCenter('write-'+ action + ':' + id + ':' + item.user.screen_name)
+            $scope.setControlCenter('write_twitter-'+ action + ':' + id + ':' + item.user.screen_name)
             return;
         }
         // 更改樣式

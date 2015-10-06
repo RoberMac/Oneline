@@ -658,7 +658,7 @@ ng\:form {
   margin-bottom: 17px;
   font-weight: 600;
 }
-.timeline__time {
+.timeline__time, .read__time {
   position: absolute;
   bottom: 3px;
   right: 3px;
@@ -831,7 +831,7 @@ ng\:form {
 .timeline--quote .timeline__text {
   margin-top: 0;
 }
-.timeline--quote .timeline__time {
+.timeline--quote .timeline__time, .timeline--quote .read__time {
   font-size: 10px;
 }
 .timeline--retweet__profile__avatar {
@@ -1529,4 +1529,65 @@ ng\:form {
   -ms-transform: translateY(-7px);
   -webkit-transform: translateY(-7px);
   transform: translateY(-7px);
+}
+
+.read {
+  margin: 0 auto;
+  width: 100%;
+  height: 33.3vh;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.read__item {
+  position: relative;
+  border-bottom: 1px solid #CECECF;
+}
+.read__avatar {
+  position: relative;
+  display: inline-block;
+  margin: 7px;
+  width: calc(100% / 10 - 14px);
+  vertical-align: middle;
+  overflow: hidden;
+}
+.read__avatar::before {
+  content: '';
+  padding-top: 100%;
+  float: left;
+}
+.read__avatar img {
+  float: left;
+  width: 100%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+.read__profile {
+  position: relative;
+  display: inline-block;
+  margin: 7px;
+  width: 30px;
+  height: 30px;
+  float: left;
+}
+.read__profile img {
+  float: left;
+  width: 100%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+.read__time {
+  right: 1px;
+  bottom: 1px;
+  font-size: 9px;
+}
+.read__text {
+  display: table;
+  padding: 7px;
+  width: calc(100% - 44px);
+  height: 44px;
+}
+.read__text a, .read__text a:visited {
+  color: #3F5D87;
 }

@@ -1,11 +1,11 @@
 <span class="cursor--pointer">
-    <button class="actions tips--deep tips--frozen" ng-if="::item.favorite_count > 0" type="button">
+    <button ng-click="setControlCenter('write_instagram-like' + ':' + item.id_str)"  class="actions tips--deep" type="button">
         <svg class="actions__button" viewBox="0 0 26 26" ng-class="::{'actions__button--like--active': item.favorited}">
             <use xlink:href="/public/img/icon-sprites.svg#favorite"></use>
         </svg>
         <span class="actions__count" ng-attr-data-count="{{::item.favorite_count > 0 ? item.favorite_count : ''}}"></span>
     </button>
-    <button class="actions tips--deep tips--frozen" ng-if="::item.reply_count > 0"  type="button">
+    <button ng-click="setControlCenter('write_instagram-reply' + ':' + item.id_str)" class="actions tips--deep" type="button">
         <svg class="actions__button" viewBox="0 0 26 26">
             <use xlink:href="/public/img/icon-sprites.svg#reply">
         </svg>

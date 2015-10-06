@@ -81,6 +81,27 @@ angular.module('Oneline.olControlCenterDirectives', [])
         }
     }
 }])
+.directive('read', ['Action', function(Action){
+    return {
+        restrict: 'A',
+        controller: ['$scope', 'Action', function ($scope, Action){
+            var _info       = $scope.controlCenter.split(':'),
+                _id         = _info[1],
+                _type       = _info[0].split('-')[1];
+
+            Action.get({
+                action: _type,
+                provider: 'instagram',
+                id: _id
+            })
+            .$promise
+            .then(function (res){
+                $scope.readType  = _type 
+                $scope.readItems = res.data
+            })
+        }]
+    }
+}])
 .directive('write', ['$window', 'Action', 'olUI',
     function ($window, Action, olUI){
 
@@ -231,7 +252,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
 .directive('geoPicker', ['$window', function ($window){
     return {
         restrict: 'E',
-        templateUrl: 'controlCenter/write/geoPicker.html',
+        templateUrl: 'controlCenter/write/component/geoPicker.html',
         link: function (scope, elem, attrs){
             var geoPickerBtn = elem.find('button');
 
@@ -268,7 +289,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
 .directive('mediaUpload', ['Media', function (Media){
     return {
         restrict: 'E',
-        templateUrl: 'controlCenter/write/mediaUpload.html',
+        templateUrl: 'controlCenter/write/component/mediaUpload.html',
         link: function (scope, elem, attrs){
             var uploadBtn = elem.find('input');
 

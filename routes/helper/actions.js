@@ -49,12 +49,15 @@ module.exports = {
 
         return q_twit(action_str, tOpts)
         .then(function (data){
-            if (action === 'like'){
-                return { statusCode: 200 }
-            } else if (action === 'retweet' || action === 'quote'){
-                return { statusCode: 200, id_str: data[0].id_str }
-            } else if (action === 'tweet'){
-                return { statusCode: 200 }
+            switch (action){
+                case 'retweet':
+                case 'quote':
+                    return { statusCode: 200, id_str: data[0].id_str }
+                    break;
+                case 'like':
+                case 'tweet':
+                    return { statusCode: 200 }
+                    break;
             }
         })
     },
@@ -62,12 +65,16 @@ module.exports = {
 
         var wOpts = { access_token: opts.token, id: opts.id }, action_str;
 
-        if (action === 'like'){
-            action_str = 'attitudes/' + (opts.method === 'put' ? 'create' : 'destroy')
-        } else if (action === 'retweet'){
-            action_str = 'statuses/' + (opts.method === 'put' ? 'repost' : 'destroy')
-        } else if (action === 'star'){
-            action_str = 'favorites/' + (opts.method === 'put' ? 'create' : 'destroy')
+        switch (action){
+            case 'like':
+                action_str = 'attitudes/' + (opts.method === 'put' ? 'create' : 'destroy')
+                break;
+            case 'retweet':
+                action_str = 'statuses/' + (opts.method === 'put' ? 'repost' : 'destroy')
+                break;
+            case 'star':
+                action_str = 'favorites/' + (opts.method === 'put' ? 'create' : 'destroy')
+                break;
         }
 
         var deferred = Q.defer();
@@ -86,12 +93,30 @@ module.exports = {
                 } catch (e) {
                     data = body
                 } finally {
-                    deferred.resolve({ statusCode: 200 })
+                    deferred.resolve({ statusCode: 200, id_str: data.idstr })
                 }
             }
         })
 
         return deferred.promise;
+    },
+    instagram: function (action, opts){
+        Ig.use({ access_token : opts.token })
+        var q_ig;
+
+        switch (action){
+            case 'like':
+                q_ig = Q.nbind(Ig.likes, Ig);
+                break;
+            case 'reply':
+                q_ig = Q.nbind(Ig.comments, Ig);
+                break;
+        }
+
+        return q_ig(opts.id)
+        .then(function (data){
+            return { statusCode: 200, data: data[0].slice(0, 100) }
+        })
     }
 }
 

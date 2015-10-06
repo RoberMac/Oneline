@@ -27,6 +27,9 @@ angular.module('Oneline.RESTfulServices', [])
         },
         update: {
             method: 'POST'
+        },
+        get: {
+            method: 'GET'
         }
     })
 

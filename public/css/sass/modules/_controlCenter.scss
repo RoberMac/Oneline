@@ -236,3 +236,70 @@
         }
     }
 }
+
+.read {
+    margin: 0 auto;
+    width: 100%;
+    height: 33.3vh;
+    font-size: $font-size-base;
+    line-height: 1.4;
+
+    &__item {
+        position: relative;
+        border-bottom: 1px solid $color-gray-drak;
+    }
+    &__avatar {
+        position: relative;
+        display: inline-block;
+        margin: 7px;
+        width: calc(100% / 10 - 14px);
+        vertical-align: middle;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            padding-top: 100%;
+            float: left;
+        }
+
+        img {
+            float: left;
+            width: 100%;
+            @include border-radius(50%);
+        }
+    }
+    &__profile {
+        position: relative;
+        display: inline-block;
+        margin: 7px;
+        width: 30px;
+        height: 30px;
+        float: left;
+
+        img {
+            float: left;
+            width: 100%;
+            @include border-radius(50%);
+        }
+    }
+    &__time {
+        @extend .timeline__time;
+        right: 1px;
+        bottom: 1px;
+        font-size: 9px;
+    }
+    &__text {
+        display: table;
+        padding: 7px;
+        width: calc(100% - 44px);
+        height: 44px;
+
+        a, a:visited {
+            color: $color-instagram;
+        }
+    }
+    &__time {
+        @extend .timeline__time;
+    }
+}
+

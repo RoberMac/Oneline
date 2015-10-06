@@ -35,7 +35,7 @@ angular.module('Oneline.rootControllers', [])
 
             currentState === 'settings'
                 ? $state.go('timeline')
-                : $scope.setControlCenter('write-tweet')
+                : $scope.setControlCenter('write_twitter-tweet')
         }
         // L -> R
         else {
