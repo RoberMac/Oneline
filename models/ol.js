@@ -22,6 +22,10 @@ var userSchema = new Schema({
         lowercase: true,
         require  : true
     },
+    avatar       : {
+        type     : String,
+        require  : true
+    },
     token        : {
         type     : String,
         require  : true

@@ -8,6 +8,7 @@
 @mixin font-smoothing {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 @mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white,  50%)) {
     ::-webkit-scrollbar {

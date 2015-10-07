@@ -27,13 +27,15 @@ angular.module('Oneline', [
     'Oneline.olTextDirectives',
     'Oneline.olControlCenterDirectives'
 ])
-.config(['$locationProvider', '$stateProvider', 
+.config(['$locationProvider', '$stateProvider', '$compileProvider',
     '$urlRouterProvider', '$httpProvider', 'jwtInterceptorProvider', 'weiboEmotifyProvider',
-    function($locationProvider, $stateProvider, 
+    function($locationProvider, $stateProvider, $compileProvider,
         $urlRouterProvider, $httpProvider, jwtInterceptorProvider, weiboEmotifyProvider) {
 
 
     $locationProvider.html5Mode(true)
+
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|blob|data|mailto):/)
 
     // 配置每次請求攜帶 JWT
     jwtInterceptorProvider.tokenGetter = function() {

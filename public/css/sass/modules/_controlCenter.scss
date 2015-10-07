@@ -35,6 +35,15 @@
         position: absolute;
         width: 100%;
         height: 66.7%;
+        
+        &--verticallyCenter {
+            @include align-items(center);
+            @include display-flex;
+
+            > div {
+                width: 100%;
+            }
+        }
     }
 }
 

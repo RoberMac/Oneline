@@ -87,11 +87,12 @@ angular.module('Oneline.olControlCenterDirectives', [])
         controller: ['$scope', 'Action', function ($scope, Action){
             var _info       = $scope.controlCenter.split(':'),
                 _id         = _info[1],
+                _provider   = _info[0].split('-')[0].split('_')[1],
                 _type       = _info[0].split('-')[1];
 
             Action.get({
                 action: _type,
-                provider: 'instagram',
+                provider: _provider,
                 id: _id
             })
             .$promise
@@ -102,8 +103,8 @@ angular.module('Oneline.olControlCenterDirectives', [])
         }]
     }
 }])
-.directive('write', ['$window', 'Action', 'olUI',
-    function ($window, Action, olUI){
+.directive('write', ['$compile', '$window', '$templateRequest', '$filter', 'Action', 'olUI',
+    function ($compile, $window, $templateRequest, $filter, Action, olUI){
 
     return {
         restrict: 'A',
@@ -111,6 +112,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
         link: function (scope, elem, attrs){
             var _info       = scope.controlCenter.split(':'),
                 _id         = _info[1],
+                _provider   = _info[0].split('-')[0].split('_')[1],
                 _type       = _info[0].split('-')[1],
                 __type      = '',
                 _limitCount = _type === 'tweet' || _type === 'reply'
@@ -129,18 +131,20 @@ angular.module('Oneline.olControlCenterDirectives', [])
              * 初始化
              *
              */
-            // 添加 `@username` 前綴
+            var _cancelMask = document.querySelector('.cancelMask__wrapper'),
+                cancelMask  = angular.element(_cancelMask);
             if (_type === 'reply' || _type === 'retweet'){
-
+                // 添加 `@username` 前綴
                 if (_type === 'reply'){
                     statusElem.val('@' + _info[2] + ' ')
-                } else if (_type === 'retweet'){
-                    // 允許直接提交 -> 「轉推」
+                } 
+                // 允許直接提交 -> 「轉推」
+                else if (_type === 'retweet'){
                     statusElem.prop('required', false)
                     submitButton.prop('disabled', false)
                 }
                 // 預覽「源推」
-                angular.element(document.querySelector('.cancelMask__wrapper'))
+                cancelMask
                 .children()
                 .append(
                     angular.element(document.querySelector('[data-id="' + _id + '"]'))
@@ -149,16 +153,36 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 );
                 // 取消（除「來源」外）「其他操作」按鈕 hover 態提醒
                 angular.element(
-                    document.querySelector('.cancelMask__wrapper').querySelectorAll('button.tips--deep')
+                    _cancelMask.querySelectorAll('button.tips--deep')
                 ).addClass('tips--frozen');
 
-                angular.element(document.querySelector('.cancelMask__wrapper [data-source]'))
+                angular.element(_cancelMask.querySelector('[data-source]'))
                 .parent()
                 .removeClass('tips--frozen');
-
+                // 判斷是否需要垂直居中
+                _cancelMask.offsetHeight - _cancelMask.children[0].scrollHeight > 72
+                    ? cancelMask.addClass('cancelMask__wrapper--verticallyCenter')
+                    : cancelMask.removeClass('cancelMask__wrapper--verticallyCenter')               
                 // 「回覆」／「轉推」提醒
-                typeButton = angular.element(document.querySelector('.cancelMask__wrapper [data-' + _type + ']'));
+                typeButton = angular.element(_cancelMask.querySelector('[data-' + _type + ']'));
                 typeButton.parent().removeClass('tips--deep tips--frozen')
+            } else if (_type === 'tweet'){
+                var _profile = JSON.parse(localStorage.getItem('profile_twitter')) || {};
+                scope.tweetPreview = {
+                    user: {
+                        name: _profile.displayName,
+                        profile_image_url_https: _profile.avatar,
+                        screen_name: "EW"
+                    },
+                    media: [],
+                    text: ''
+                }
+                $templateRequest('controlCenter/write/component/livePreview--twitter.html')
+                .then(function (html){
+                    cancelMask
+                    .children()
+                    .append($compile(html)(scope))
+                })
             }
 
             /**
@@ -189,7 +213,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
 
                 Action.update({
                     action: __type || _type,
-                    provider: 'twitter',
+                    provider: _provider,
                     id: _id || 0
                 }, { params: params })
                 .$promise
@@ -220,6 +244,11 @@ angular.module('Oneline.olControlCenterDirectives', [])
             .on('input', function (){
                 // 更新推文內容
                 status = statusElem.val().trim()
+                // Twitter Preview
+                if (scope.tweetPreview){
+                    scope.tweetPreview.text = $filter('linkify')(status, 'twitter')
+                    scope.$apply()
+                }
                 // 超字提醒
                 var statusLength = status.length
                 if (statusLength > _limitCount || statusLength === 0){
@@ -291,7 +320,8 @@ angular.module('Oneline.olControlCenterDirectives', [])
         restrict: 'E',
         templateUrl: 'controlCenter/write/component/mediaUpload.html',
         link: function (scope, elem, attrs){
-            var uploadBtn = elem.find('input');
+            var _provider = attrs.provider,
+                uploadBtn = elem.find('input');
 
             uploadBtn.on('change', function (){
                 var fd   = new FormData(),
@@ -302,7 +332,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 addImagePreview(file, fakeId)
                 // Upload
                 fd.append('twitterMedia', file)
-                Media.upload({ provider: 'twitter' }, fd)
+                Media.upload({ provider: _provider }, fd)
                 .$promise
                 .then(function (data){
                     var media_ids = elem.data('media_ids') || [],
@@ -329,8 +359,9 @@ angular.module('Oneline.olControlCenterDirectives', [])
 
                 reader.onload = function (e) {
                     var previews = angular.element(document.querySelectorAll('.write__previews')),
+                        previewURL = URL.createObjectURL(dataURLtoBlob(e.target.result)),
                         previewHTML = '<span class="write__previews__item tips--active tips--inprocess animate--faster" data-mediaId><img src="'
-                                        + e.target.result
+                                        + previewURL
                                         + '"></span>'
 
                     previews.append(previewHTML)
@@ -339,6 +370,16 @@ angular.module('Oneline.olControlCenterDirectives', [])
                         previewItem  = angular.element(previewItems[previewItems.length - 1]);
 
                     previewItem.attr('data-mediaId', fakeId)
+
+                    // Twitter Preview
+                    if (scope.tweetPreview){
+                        scope.tweetPreview.media.push({
+                            type: "photo",
+                            image_url: previewURL,
+                            fakeId: fakeId
+                        })
+                        scope.$apply()
+                    }
                 }
 
                 reader.readAsDataURL(file)
@@ -351,6 +392,14 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 var previewItem = document.querySelector('[data-mediaId="' + fakeId + '"]');
 
                 angular.element(previewItem).remove()
+
+                // Twitter Preview
+                if (scope.tweetPreview){
+                    scope.tweetPreview.media = scope.tweetPreview.media.filter(function (item){
+                        return item.fakeId !== fakeId
+                    })
+                    scope.$apply()
+                }
             }
             function attachMediaId (fakeId, media_id){
                 var previewItem = angular.element(
@@ -372,6 +421,12 @@ angular.module('Oneline.olControlCenterDirectives', [])
 
                     previewItem.remove()
 
+                    // Twitter Preview
+                    if (scope.tweetPreview){
+                        scope.tweetPreview.media.splice(index, 1)
+                        scope.$apply()
+                    }
+
                     if (document.querySelectorAll('.write__previews__item').length < 4){
                         elem.attr('style', '')
                     }
@@ -379,6 +434,30 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 .on('$destroy', function (){
                     previewItem.off('click')
                 })
+            }
+            // via https://github.com/ebidel/filer.js/blob/master/src/filer.js#L137
+            function dataURLtoBlob(dataURL) {
+                var BASE64_MARKER = ';base64,';
+                if (dataURL.indexOf(BASE64_MARKER) == -1) {
+                    var parts = dataURL.split(',');
+                    var contentType = parts[0].split(':')[1];
+                    var raw = decodeURIComponent(parts[1]);
+
+                    return new Blob([raw], {type: contentType});
+                }
+
+                var parts = dataURL.split(BASE64_MARKER);
+                var contentType = parts[0].split(':')[1];
+                var raw = window.atob(parts[1]);
+                var rawLength = raw.length;
+
+                var uInt8Array = new Uint8Array(rawLength);
+
+                for (var i = 0; i < rawLength; ++i) {
+                    uInt8Array[i] = raw.charCodeAt(i);
+                }
+
+                return new Blob([uInt8Array], {type: contentType});
             }
         }
     }

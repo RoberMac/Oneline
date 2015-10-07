@@ -33,26 +33,28 @@ html
         title ｜ #{provider.substr(0, 1).toUpperCase() + provider.substr(1)}
         link(rel='stylesheet', href='/public/dist/oneline.min.css')
     body
-        div(class='oneline overflow--y')
+        div(
+            class='oneline overflow--y'
+            data-profile=profile
+            data-provider=provider
+            data-token=token
+        )
             div.social-list.social-list--one
                 div.vertically_center
                     if provider === 'twitter'
                         svg(
-                            data-token=token
                             class='social-icon animate--general'
                             viewBox='0 0 300 300'
                         )
                             use(xlink:href="/public/img/icon-sprites.svg#twitter")
                     else if provider === 'instagram'
                         svg(
-                            data-token=token
                             class='social-icon animate--general'
                             viewBox='0 0 775 300'
                         )
                             use(xlink:href="/public/img/icon-sprites.svg#instagram")
                     else if provider === 'weibo'
                         svg(
-                            data-token=token
                             class='social-icon animate--general'
                             viewBox='0 0 300 300'
                         )
@@ -60,11 +62,15 @@ html
         script(type='text/javascript').
             (function (){
 
-                var socialIcon = document.getElementsByClassName('social-icon')[0]
-                    token = socialIcon.getAttribute('data-token');
+                var socialIcon = document.getElementsByClassName('social-icon')[0],
+                    dataELem = document.getElementsByClassName('oneline')[0],
+                    token = dataELem.getAttribute('data-token'),
+                    provider = dataELem.getAttribute('data-provider'),
+                    profile = dataELem.getAttribute('data-profile');
 
                 // Cross-tab Communication
                 localStorage.setItem('addToken', token)
+                localStorage.setItem('profile_' + provider, profile)
 
                 setTimeout(function (){
                     socialIcon.setAttribute('class', socialIcon.getAttribute('class') + ' social-icon--active')
