@@ -8,29 +8,21 @@
         height: 17px;
         margin: 0 auto;
         vertical-align: middle;
-        fill: $color-steel;
+        fill: var(--color-steel);
 
         &--wait {
             cursor: default;
 
-            @include animation(waitAnimate 1s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55));
-            @include keyframes(waitAnimate) {
-                0% {
-                    @include transform(rotate(0deg));
-                }
-                100% {
-                    @include transform(rotate(360deg));
-                }
-            }
+            animation: waitAnimate 1s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
         &--like {
             &--active {
-                fill: $color-weibo;
+                fill: var(--color-weibo);
             }
         }
         &--retweet {
             &--active {
-                fill: $color-twitter;
+                fill: var(--color-twitter);
             }
         }
         &--reply {
@@ -51,8 +43,7 @@
 
         &::after {
             content: attr(data-count);
-            line-height: 28px;
-            font-size: 10px;
+            font-size: 10px 28px;
             color: #89A;
         }
     }
@@ -61,8 +52,7 @@
 .timeline--quote {
     .actions {
         &__button {
-            width: 15px;
-            height: 24px;
+            size: 15px 24px;
 
             &--retweet {
                 width: 18px;

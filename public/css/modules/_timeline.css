@@ -1,52 +1,41 @@
-.timeline {
+:--timelineStyle {
     position: relative;
     margin: 36px 7px;
     padding: 0 10px;
-    background-color: $color-white;
+    background-color: var(--color-white);
     cursor: default;
-
-    @include border-radius(3px);
-
-    
-    // 用戶信息
+    border-radius: 3px;
+}
+.timeline {    
     &__profile {
-        position: relative;
-        top: -24px; // 48px/2 (avatar)
+        position: relative -24px * *;
         text-align: center;
 
-        // 頭銜
         &__avatar {
-            width: 48px;
-            height: 48px;
+            size: 48px;
             border-width: 1px;
             border-style: solid;
-            @include border-radius(50%);
+            border-radius: 50%;
         }
-        // 用戶名
         &__fullname {
             margin-bottom: 17px;
-            font-weight: $font-weight-bold;
+            font-weight: var(--font-weight-bold);
         }
     }
-    // 發文時間
     &__time {
-        position: absolute;
-        bottom: 3px;
-        right: 3px;
+        position: absolute * 3px 3px *;
         color: #89A;
         font-size: 11px;
         cursor: pointer;
     }
-    // 文章外盒
     &__content {
-        position: relative;
-        top: -24px;
+        position: relative -24px * *;
     }
-    // 文章內容
     &__text {
         margin-top: 17px;
         word-wrap: break-word;
         white-space: pre-wrap;
+        line-height: 1.4;
         cursor: text;
 
         img {
@@ -54,7 +43,6 @@
             vertical-align: text-bottom;
         }
     }
-    // 圖片／視頻
     &__media {
         display: block;
         position: relative;
@@ -67,14 +55,9 @@
             display: none; 
         }
 
-        /**
-         * 圖片（視頻）尺寸／樣式
-         *
-         */
-        // 大圖
         img, video {
             width: 100%;
-            @include border-radius(3px);
+            border-radius: 3px;
         }
         video {
             cursor: pointer;
@@ -82,28 +65,26 @@
         &--large {
             position: relative;
         }
-        // 縮略圖
         &--thumb {
             img {
                 width: 80px;
                 margin-right: 7px;
                 cursor: zoom-in;
-                @include border-radius(1px);
+                border-radius: 1px;
 
-                @media #{$all-mobile-devices}{
+                @media (--all-mobile-devices){
                     width: calc(100% / 9 - 3px);
                     margin-right: 3px;
                 }
             }
         }
-        // 小圖（小於縮略圖）
         &--small {
             img {
                 width: calc(100% / 9 - 7px);
                 margin-right: 7px;
                 border: 0px solid;
                 cursor: pointer;
-                @include border-radius(50%);
+                border-radius: 50%;
             }
         }
         &--gif {
@@ -112,79 +93,55 @@
                 url(data:image/gif;base64,R0lGODlhMAAxAPU+AAEBAQUFBQsLCw4ODhERERYWFhoaGh4eHiIiIiQkJCwsLC0tLTMzMzU1NTg4OD4+PkBAQEREREpKSk9PT1FRUVRUVFhYWF1dXWFhYWRkZG5ubnFxcXd3d3p6en19fYCAgIeHh4uLi4+Pj5KSkpaWlpmZmZ+fn6CgoKioqKmpqa+vr7Kysra2trq6ur+/v8LCwsTExMjIyM7OztHR0dfX19nZ2d3d3eHh4ebm5urq6uzs7PHx8fb29vn5+f///wAAACH5BAEAAD8AIf8LSW1hZ2VNYWdpY2sHZ2FtbWE9MQAsAAAAADAAMQAABv7An3BILBqFvKNyyWz+ciKXz0mtEncfQCZn7TpVCwDg4y0rVxBxyMwmrh7qtvwdl7PpgLXdjNfvvX1/ZYGCXYSFVYeITmh1i4xweY9Uhzw3k0hcQoQ8Kho0kzkqIT2baQAgPz4sYh6XqjOacjslrZcqpyA+NRtiDzCqNQ5SdjceAAMILj8qEWIfPjbHABIxPzJhENZyN1kAEC8/Kc6oPzcgYhHWJ5F+bOe+4SsSzz46vdTWLOQkxegCAGT4WJHAF4oSCMQAqDHwgJgRxbIA1HDiAoAAABUGEMPhhAWF/arwqGFjBxF4GBVqJCAg40aVACBSqQFCQQMTSYSgRDYgo/6YlwoJsHwZskkOEipbmDSX5SVQmFBfymwyw2IBA2JaTNkJtatGMUWZ6DABoGABAAisGbvotS3RKjd6YcXagAaPpm29Sq3iI4YYgFgxyAjBNm9UsFZy1MIKAKADCn8HSH7ZUzJAAZIHENgY1gmOYw4bKxxguO1UuBkAMB4QgHRpr52pwGAAgMBPMSt03BAFYMMNHLtXZIgFPAcNAqer7DghhjTWFDxWaOjwEUIHGTtIVPDQw8WFDuBjmslBWEDCEgMB2EQmJsUNMR10qAAwIVLsKjk0qAewwoeIgD60oIAYLOAAmQc68ICDDjjQc18VM0Qygg8uiIGDDIy5B58OKZcAEIEDiLERHQAOlcDDCyHwIIMAEZRgVwoacIeCSgOYIMdYZQFwwg021MCcBjXUQAMOKVwQw38IYCXBMjceU9Br7DnEgQ575ODkRgIA1dJoG7lmQil2+OCDfgdM9hdGWTbW0lkZ2CCIDzhAqdAniOwQg36vneDmIzfIkIIHG3AQ6AaEcgACDDVQiYkQOQCHw6OQyrIoIkEAADs=) 2x
             ), zoom-in !important;
 
-            @media #{all-mobile-devices}{
+            @media (--all-mobile-devices){
                 border: 1px solid #D0104C;
             }
         }
         &--inactive {
-            @include filter(grayscale(100%));
-            @include opacity(.7);
+            filter: grayscale(100%);
+            opacity: .7);
         }
         &--active {
-            @include filter(grayscale(0%));
-            @include opacity(1);
+            filter: grayscale(0%);
+            opacity: 1;
         }
-        // 大圖（未打開）
         &--hide {
             display: none;
         }
-        // 縮略圖（正在加載）
         &--loading {
             border: 7px solid!important;
-            @include animation(imgLoadAnimate 1.7s infinite linear);
-            @include keyframes(imgLoadAnimate) {
-                0%, 100% {
-                    border-color: $color-gray;
-                }
-                50% {
-                    border-color: $color-gray-drak;
-                }
-            }
+            animation: imgLoadAnimate 1.7s infinite linear;
         }
         &__jumpButton {
-            position: absolute;
-            top: 3px;
-            right: 3px;
-            width: 17px;
-            height: 17px;
+            position: absolute 3px 3px * *;
+            size: 17px;
             cursor: pointer;
         }
-        /**
-         * 播放按鈕
-         *
-         */
         &__playButton {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            width: 50px;
-            height: 50px;
+            position: absolute 0 * * 0;
+            size: 50px;
             cursor: pointer;
             
-            // 正在播放
             &--playing {
-                @include opacity(0);
+                opacity: 0;
             }
         }
     }
 
-
-    // 引用推文
     &--quote {
         top: -12px;
         margin: 27px 7px 7px 7px;
-        border: 1px solid $color-gray;
-        background-color: $color-gray;
-        font-size: $font-size-small;
+        border: 1px solid var(--color-gray);
+        background-color: var(--color-gray);
+        font-size: var(--font-size-small);
 
         strong, p {
-            color: $color-black;
+            color: var(--color-black);
         }
         .timeline {
             &__profile {
                 &__avatar {
-                    width: 40px;
-                    height: 40px;
+                    size: 40px;
                 }
                 &__fullname {
                     margin-bottom: 7px;
@@ -202,63 +159,53 @@
         }
 
     }
-    // 轉推用戶頭像
     &--retweet__profile__avatar {
-        position: absolute;
-        top: -12px;
-        left: calc(50% - 72px);
+        position: absolute -12px * * calc(50% - 72px);
 
         img {
-            width: 24px;
-            height: 24px;
+            size: 24px;
         }
         &::after {
             content: '';
-            position: absolute;
-            top: 4px;
-            right: -21px;
-            width: 19px;
-            height: 16px;
+            position: absolute 4px -21px * *;
+            size: 19px 16px;
             background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 19 16" xmlns="http://www.w3.org/2000/svg"><g fill="black"><path d="M10.84 10.653c-.053-.07-.127-.105-.221-.105h-5.092v-3.655h1.697c.153 0 .286-.06.398-.181.112-.121.168-.263.168-.428 0-.152-.044-.282-.133-.39l-2.829-3.655c-.112-.139-.256-.209-.433-.209s-.321.07-.433.209l-2.829 3.655c-.089.108-.133.238-.133.39 0 .165.056.308.168.428.112.121.245.181.398.181h1.697v5.711l.009.11.027.109.049.076.079.067.119.019h8.487c.077 0 .143-.03.199-.09.056-.06.084-.132.084-.214 0-.064-.021-.13-.062-.2l-1.415-1.827zM17.409 8.112h-1.697v-5.711l-.009-.11-.026-.109-.049-.076-.08-.067-.119-.019h-8.487c-.077 0-.143.03-.199.09-.056.06-.084.132-.084.214 0 .07.02.133.062.19l1.414 1.827c.053.076.127.114.221.114h5.092v3.654h-1.697c-.153 0-.286.06-.398.181-.112.121-.168.264-.168.428 0 .152.044.282.133.39l2.829 3.654c.118.146.262.219.433.219.171 0 .315-.073.433-.219l2.829-3.654c.088-.108.133-.238.133-.39 0-.165-.056-.308-.168-.428-.112-.12-.245-.181-.398-.181z"/></g></svg>');
             background-repeat: no-repeat;
-            @include opacity(.3);
-            @include transform(scale(.7));
+            opacity: .3;
+            transform: scale(.7);
         }
     }
     
-    // Twitter 樣式
     &--twitter {
         .timeline__profile__avatar {
-            border-color: $color-twitter;
-            background-color: $color-twitter;
+            border-color: var(--color-twitter);
+            background-color: var(--color-twitter);
         }
         .timeline__content {
             a, a:visited {
-                color: $color-twitter;
+                color: var(--color-twitter);
             }
         }
     }
-    // Instagram 樣式
     &--instagram {
         .timeline__profile__avatar {
-            border-color: $color-instagram;
-            background-color: $color-instagram;
+            border-color: var(--color-instagram);
+            background-color: var(--color-instagram);
         }
         .timeline__content {
             a, a:visited {
-                color: $color-instagram;
+                color: var(--color-instagram);
             }
         }
     }
-    // Weibo 樣式
     &--weibo {
         .timeline__profile__avatar {
-            border-color: $color-weibo;
-            background-color: $color-weibo;
+            border-color: var(--color-weibo);
+            background-color: var(--color-weibo);
         }
         .timeline__content {
             a, a:visited {
-                color: $color-weibo;
+                color: var(--color-weibo);
             }
         }
     }
@@ -266,15 +213,12 @@
 
     &__action {
         display: none;
-        position: absolute;
-        top: 7px;
-        right: 5px;
-        width: 20px;
-        height: 6px;
+        position: absolute 7px 5px * *;
+        size: 20px 6px;
         cursor: pointer;
         z-index: 3;
 
-        @media #{$all-mobile-devices}{
+        @media (--all-mobile-devices){
             display: block;
         }
     }
@@ -286,19 +230,32 @@
     }
 }
 
-/* Load more button */
-.loadMore {
-    @extend .timeline;
-    display: block;
-    width: calc(100% - 14px);
+
+:--dividerLine {
+    content: '';
+    position: absolute * * * calc(50% - 1px);
     height: 40px;
+    border-right: 1px dashed var(--color-black);
+}
+:--dividerText {
+    content: attr(data-date);
+    position: absolute * * * 0;
+    width: 100%;
+    font-size: 10px 20px;
+    font-weight: var(--font-weight-light);
+    text-align: center;
+    background-color: var(--color-gray);
+}
+.loadMore {
+    display: block;
+    size: calc(100% - 14px) 40px;
     margin: 10px 7px;
-    border: 1px solid $color-gray;
-    font-size: $font-size-base;
+    border: 1px solid var(--color-gray);
+    font-size: var(--font-size-base);
     cursor: pointer;
 
     &:hover {
-        border: 1px solid $color-gray-drak;
+        background-color: var(--color-gray);
     }
     &:first-child {
         z-index: 3;
@@ -308,108 +265,55 @@
     }
     &__count::before {
         content: attr(data-count);
-        position: absolute;
-        top: 0;
-        left: 0;
+        position: absolute 0 * * 0;
         width: 100%;
-        color: $color-gray-drak;
+        color: var(--color-gray-drak);
         text-align: center;
         line-height: 40px;
     }
     &--initLoad {
-        position: absolute;
-        top: calc(50% - 20px);
+        position: absolute calc(50% - 20px) * *;
         cursor: default;
     }
     &--loading {
+        background-color: var(--color-gray);
+
         &::before {
             content: '';
-            position: absolute;
-            top: 19px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: $color-black;
-            @include transform-origin(left);
-            @include border-radius(1px);
-            @include animation(loadAnimate 2.7s infinite linear);
-            @include keyframes(loadAnimate) {
-                0% {
-                    @include transform(translateX(0) scaleX(.07));
-                }
-                90% {
-                    @include transform(translateX(90%) scaleX(.07));
-                }
-                100% {
-                    @include transform(translateX(100%) scaleX(0));
-                }
-            }
+            position: absolute 19px * * 0;
+            size: 100% 2px;
+            background-color: var(--color-black);
+            transform-origin: left;
+            border-radius: 1px;
+            animation: loadAnimate 2.7s infinite linear;
         }
         &--fail {
             cursor: pointer;
 
             &::before {
-                @include animation(loadAnimate--fail 7.7s infinite linear);
-                @include keyframes(loadAnimate--fail) {
-                    0% {
-                        @include transform(translateX(0) scaleX(.07));
-                    }
-                    90% {
-                        @include transform(translateX(64%) scaleX(.07));
-                    }
-                    100% {
-                        @include transform(translateX(75%) scaleX(.0));
-                    }
-                }
+                animation: loadAnimate--fail 7.7s infinite linear;
             }
             &::after {
                 content: attr(data-count);
-                position: absolute;
-                top: 0;
-                right: 0%;
-                width: 25%;
-                height: 100%;
-                color: $color-gray-drak;
+                position: absolute 0 0 * *;
+                size: 25px 100%;
+                color: var(--color-gray-drak);
                 text-align: center;
                 line-height: 40px;
-                border-left: 7px solid $color-black;
+                border-left: 7px solid var(--color-black);
             }
         }
     }
 }
 
-.divider_line {
-    content: '';
-    position: absolute;
-    left: 50%;
-    left: calc(50% - 1px);
-    height: 40px;
-    border-right: 1px dashed $color-black;
-}
-.divider_text {
-    content: attr(data-date);
-    position: absolute;
-    left: 0%;
-    width: 100%;
-    font-size: 10px;
-    font-weight: $font-weight-light;
-    line-height: 20px;
-    text-align: center;
-    background-color: $color-gray;
-}
-/* Divider */
 .divider {
     &--top {
         margin-top: 100px;
 
         &::before {
-            @extend .divider_line;
-
             top: -82px;
         }
         &::after {
-            @extend .divider_text;
-
             top: -72px;
         }
     }
@@ -418,13 +322,9 @@
         margin-bottom: 100px;
 
         &::before {
-            @extend .divider_line;
-
             bottom: -58px;
         }
         &::after {
-            @extend .divider_text;
-
             bottom: -48px;
         }
     }

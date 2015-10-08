@@ -1,0 +1,114 @@
+:--onelineSize {
+    left: 40%;
+    width: 20%;
+    @media (--phone-portrait){
+        left: 15%;
+        width: 70%;
+    }
+    @media (--tablet){
+        left: 25%;
+        width: 50%;
+    }
+    @media (--tablet-landscape){
+        left: 33.3%;
+        width: 33.3%;
+    }
+}
+
+.oneline {
+    position: absolute 0 * *;
+    height: 100%;
+    background-color: var(--color-black);
+    filter: brightness(1);
+    transform: translate3d(0, 0, 0);
+    z-index: 1;
+}
+
+.menu {
+    display: table;
+    position: absolute * *;
+    size: 40% 100%;
+    text-align: center;
+
+    &--left {
+        left: 0%;
+
+        @media (--phone-portrait){
+            width: 25%;
+        }
+    }
+    &--right {
+        left: 60%;
+    }
+    &:hover &__button {
+        opacity: 1;
+    }
+
+    &__button {
+        cursor: pointer;
+        opacity: 0;
+        filter: grayscale(100%);
+
+        svg {
+            size: 70px;
+        }
+
+        @media (--all-mobile-devices){
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        &:hover, &--active {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+        &--inactive {
+            display: none;
+        }
+    }
+
+    @media (--all-mobile-devices){
+        display: none;
+    }
+}
+
+
+.status {
+    &--timeline {
+        :--onelineSize {
+            left: 33.3%;
+            width: 33.3%;
+            @media (--phone-portrait){
+                left: 0%;
+                width: 100%;
+            }
+            @media (--tablet){
+                left: 15%;
+                width: 70%;
+            }
+            @media (--tablet-landscape){
+                left: 25%;
+                width: 50%;
+            }
+        }
+
+        .oneline, .controlCenter {
+            background-color: var(--color-gray);
+        }
+
+        .menu {
+            width: 33.3%;
+
+            &--left {
+                left: 0%;
+            }
+            &--right {
+                left: 66.7%;
+            }
+
+            @media (--all-mobile-devices){
+                display: none;
+            }
+        }
+    }
+}

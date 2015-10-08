@@ -1,10 +1,7 @@
-/* 底部控制中心 */
 .controlCenter {
-    @extend .settingsWidth;
-    position: absolute;
-    bottom: 0;
+    position: absolute * * 0;
     height: 0%;
-    background-color: $color-gray;
+    background-color: var(--color-gray);
     z-index: 5;
 
     &--active {
@@ -18,27 +15,23 @@
     &__wrapper {
         display: table;
         position: absolute;
-        width: 100%;
-        height: 100%;
+        size: 100%;
     }
 }
 .cancelMask {
-    @extend .settingsWidth;
-    position: absolute;
-    top: 0;
+    position: absolute 0 * *;
     height: 100%;
     z-index: 4;
     cursor: pointer;
-    background-color: $color-black-alpha;
+    background-color: var(--color-black-alpha);
 
     &__wrapper {
         position: absolute;
-        width: 100%;
-        height: 66.7%;
-        
+        size: 100% 66.7%;
+
         &--verticallyCenter {
-            @include align-items(center);
-            @include display-flex;
+            align-items: center;
+            display: flex;
 
             > div {
                 width: 100%;
@@ -49,60 +42,31 @@
 
 .replicant {
     font-size: 27px;
-    font-weight: $font-weight-bold;
+    font-weight: var(--font-weight-bold);
     text-align: center;
 
     &--deckard {
         &::before {
             content: attr(data-countdown);
-            position: absolute;
-            bottom: 3px;
-            right: 7px;
-            font-size: $font-size-small;
+            position: absolute * 7px 3px *;
+            font-size: var(--font-size-small);
             font-weight: 100;
         }
         &::after {
             content: '';
-            position: absolute;
-            top: 3px;
-            right: 7px;
-            width: 16px;
-            height: 20px;
+            position: absolute 3px 7px * *;
+            size: 16px 20px;
             background-repeat: no-repeat;
             background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 81 100" xmlns="http://www.w3.org/2000/svg"><path d="M71.683 0h-29.365c-5.082 0-9.318 4.167-9.318 9.167v81.667c0 5 4.235 9.167 9.318 9.167h29.365c5.082 0 9.318-4.167 9.318-9.167v-81.667c0-5-4.235-9.167-9.318-9.167zm-14.682 2.778c.847 0 1.412.556 1.412 1.389s-.565 1.389-1.412 1.389-1.412-.556-1.412-1.389.565-1.389 1.412-1.389zm-4.235 5.556h8.471c.847 0 1.412.556 1.412 1.389s-.565 1.389-1.412 1.389h-8.471c-.847 0-1.412-.556-1.412-1.389s.565-1.389 1.412-1.389zm4.235 88.889c-2.259 0-4.235-1.944-4.235-4.167 0-2.222 1.976-4.167 4.235-4.167 2.259 0 4.235 1.944 4.235 4.167 0 2.222-1.976 4.167-4.235 4.167zm21.176-11.111h-42.353v-72.222h42.353v72.222zM23.399 48.499c1.436.829 1.432 2.175 0 3.002l-20.8 12.009c-1.436.829-2.6.153-2.6-1.501v-24.018c0-1.658 1.168-2.328 2.6-1.501l20.8 12.009z"/></svg>');
         }
     }
     &--rachael {
-        width: 80%;
-        height: 50px;
-        font-size: 27px;
-        line-height: 50px;
+        size: 80% 50px;
+        font-size: 27px 50px;
         text-align: center;
 
         &--errCode {
-            @include animation(errFormAnimate .5s ease-in-out);
-
-            @include keyframes(errFormAnimate) {
-                0%, 100% {
-                    background-color: $color-white;
-                    @include transform(translateX(0));
-                }
-                12.5% {
-                    @include transform(translateX(-6px));
-                }
-                37.5% {
-                    @include transform(translateX(5px));
-                }
-                50% {
-                    background-color: $color-weibo;
-                }
-                62.5% {
-                    @include transform(translateX(-3px));
-                }
-                87.5% {
-                    @include transform(translateX(2px));
-                }
-            }
+            animation: errFormAnimate .5s ease-in-out;
         }
     }
 }
@@ -110,20 +74,18 @@
 .write {
     &__textarea {
         margin: 0 auto;
-        width: 90%;
-        height: 20vh;
+        size: 90% 20vh;
         max-height: 20vh;
-        font-size: $font-size-base;
-        line-height: 1.4;
-        background-color: $color-white;
+        font-size: var(--font-size-base) var(--line-height-base);
+        background-color: var(--color-white);
 
         &:disabled {
-            background-color: $color-gray;
+            background-color: var(--color-gray);
             cursor: not-allowed;
-            @include user-select(none);
+            user-select: none;
         }
         &--err {
-            @include animation(errFormAnimate .5s ease-in-out);
+            animation: errFormAnimate .5s ease-in-out;
         }
     }
     &__toolBar {
@@ -133,15 +95,13 @@
     }
     &__btn {
         position: relative;
-        width: 27px;
-        height: 27px;
+        size: 27px;
 
         &--geo {
             float: left;
 
             svg {
-                width: 12px;
-                height: 17px;
+                size: 12px 17px;
             }
         }
         &--media {
@@ -152,8 +112,7 @@
             cursor: pointer;
 
             svg {
-                width: 17px;
-                height: 14px;
+                size: 17px 14px;
                 vertical-align: middle;
             }
         }
@@ -162,56 +121,38 @@
 
             svg {
                 width: 27px;
-                @include animation(writingAnimate .3s infinite linear);
-                @include animation-play-state(paused);
-                @include keyframes(writingAnimate) {
-                    from {
-                        @include transform(rotate(0deg) translateX(1px) rotate(0deg));
-                    }
-                    to {
-                        @include transform(rotate(360deg) translateX(1px) rotate(-360deg));
-                    }
-                }
+                animation: writingAnimate .3s infinite linear;
+                animation-play-state: paused;
             }
 
             &::before {
                 content: attr(data-count);
-                position: absolute;
-                color: $color-steel;
-                right: 28px;
-                bottom: 0;
+                position: absolute * 28px 0 *;
+                color: var(--color-steel);
                 font-size: 7px;
             }
 
             &--typing {
                 svg {
-                    @include animation-play-state(running);
+                    animation-play-state: running;
                 }
             }
             &:disabled {
                 cursor: not-allowed;
 
                 svg {
-                    @include filter(grayscale(100%));
-                    @include animation-play-state(paused);
+                    filter: grayscale(100%);
+                    animation-play-state: paused;
                 }
                 &::before {
-                    color: $color-weibo;
+                    color: var(--color-weibo);
                 }
             }
             &--sending {
-                @include animation(sendingAnimate 1.7s infinite cubic-bezier(0.4, 0, 1, 1));
-                @include keyframes(sendingAnimate) {
-                    0%, 100% {
-                        @include transform(translateX(0));
-                    }
-                    50% {
-                        @include transform(translateX(-27px));
-                    }
-                }
+                animation: sendingAnimate 1.7s infinite cubic-bezier(0.4, 0, 1, 1);
 
                 svg {
-                    @include animation-play-state(running);
+                    animation-play-state: running;
                 }
                 &::before {
                     content: '';
@@ -220,27 +161,24 @@
         }
     }
     &__previews {
-        position: absolute;
-        bottom: 0px;
-        left: calc(50% - 54px - 9px);
-        @include transform(translateY(7px));
+        position: absolute * * 0 calc(50% - 54px - 9px);
+        transform: translateY(7px);
 
         &__item {
             float: left;
             display: inline-block;
             margin-right: 3px;
-            width: 27px;
-            height: 27px;
+            size: 27px;
             overflow: hidden;
             cursor: pointer;
-            @include border-radius(3px 3px 0 0);
+            border-radius: 3px 3px 0 0;
 
             img {
                 width: 27px;
             }
 
             &:hover {
-                @include transform(translateY(-7px));
+                transform: translateY(-7px);
             }
         }
     }
@@ -248,14 +186,12 @@
 
 .read {
     margin: 0 auto;
-    width: 100%;
-    height: 33.3vh;
-    font-size: $font-size-base;
-    line-height: 1.4;
+    size: 100% 33.3vh;
+    font-size: var(--font-size-base) var(--line-height-base);
 
     &__item {
         position: relative;
-        border-bottom: 1px solid $color-gray-drak;
+        border-bottom: 1px solid var(--color-gray-drak);
     }
     &__avatar {
         position: relative;
@@ -274,41 +210,37 @@
         img {
             float: left;
             width: 100%;
-            @include border-radius(50%);
+            border-radius: 50%;
         }
     }
     &__profile {
         position: relative;
         display: inline-block;
         margin: 7px;
-        width: 30px;
-        height: 30px;
+        size: 30px;
         float: left;
 
         img {
             float: left;
             width: 100%;
-            @include border-radius(50%);
+            border-radius: 50%;
         }
     }
     &__time {
-        @extend .timeline__time;
         right: 1px;
         bottom: 1px;
         font-size: 9px;
+        color: #89A;
+        cursor: pointer;
     }
     &__text {
         display: table;
         padding: 7px;
-        width: calc(100% - 44px);
-        height: 44px;
+        size: calc(100% - 44px) 44px;
 
         a, a:visited {
-            color: $color-instagram;
+            color: var(--color-instagram);
         }
-    }
-    &__time {
-        @extend .timeline__time;
     }
 }
 

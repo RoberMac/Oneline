@@ -1,0 +1,100 @@
+@keyframes loadAnimate {
+    0% {
+        transform: translateX(0) scaleX(.07);
+    }
+    90% {
+        transform: translateX(90%) scaleX(.07);
+    }
+    100% {
+        transform: translateX(100%) scaleX(0);
+    }
+}
+@keyframes loadAnimate--fail {
+    0% {
+        transform: translateX(0) scaleX(.07);
+    }
+    90% {
+        transform: translateX(64%) scaleX(.07);
+    }
+    100% {
+        transform: translateX(75%) scaleX(.0);
+    }
+}
+@keyframes imgLoadAnimate {
+    0%, 100% {
+        border-color: var(--color-gray);
+    }
+    50% {
+        border-color: var(--color-gray-drak);
+    }
+}
+@keyframes errFormAnimate {
+    0%, 100% {
+        background-color: var(--color-white);
+        transform: translateX(0);
+    }
+    12.5% {
+        transform: translateX(-6px);
+    }
+    37.5% {
+        transform: translateX(5px);
+    }
+    50% {
+        background-color: var(--color-weibo);
+    }
+    62.5% {
+        transform: translateX(-3px);
+    }
+    87.5% {
+        transform: translateX(2px);
+    }
+}
+@keyframes writingAnimate {
+    from {
+        transform: rotate(0deg) translateX(1px) rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg) translateX(1px) rotate(-360deg);
+    }
+}
+@keyframes sendingAnimate {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(-27px);
+    }
+}
+@keyframes waitAnimate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@keyframes inprocessAnimate {
+    0%, 100% {
+        opacity: .3;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+@keyframes tipsErrAnimate {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    12.5% {
+        transform: translateX(-4px);
+    }
+    37.5% {
+        transform: translateX(4px);
+    }
+    62.5% {
+        transform: translateX(-2px);
+    }
+    87.5% {
+        transform: translateX(2px);
+    }
+}
