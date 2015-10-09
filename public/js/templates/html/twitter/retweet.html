@@ -3,7 +3,7 @@
 <div ng-include=" 'twitter/component/content.html' "></div>
 
 <a class="timeline--retweet__profile__avatar" ng-href="//twitter.com/{{::item.user.screen_name}}" target="_blank">
-    <img class="timeline__profile__avatar" ng-src="{{::item.user.profile_image_url_https}}" alt="avatar">
+    <img class="timeline__profile__avatar" ng-src="{{::item.user.avatar}}" alt="avatar">
 </a>
 
 <div ng-include=" 'actions/twitter.html' "></div>

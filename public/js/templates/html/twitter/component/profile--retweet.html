@@ -1,6 +1,8 @@
 <div class="timeline__profile">
     <a ng-href="//twitter.com/{{::item.retweet.user.screen_name}}" target="_blank">
-        <img class="timeline__profile__avatar" ng-src="{{::item.retweet.user.profile_image_url_https.replace('normal', 'bigger')}}">
+
+        <img class="timeline__profile__avatar" ng-srcset="{{::item.retweet.user.avatar}} 900w, {{::item.retweet.user.avatar.replace('normal', 'bigger')}} 1280w" sizes="100vw" ng-src="{{::item.retweet.user.avatar}}">
+
     </a>
     <div class="timeline__profile__fullname">
         <a ng-href="//twitter.com/{{::item.retweet.user.screen_name}}" target="_blank">

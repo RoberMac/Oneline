@@ -61,10 +61,11 @@ gulp.task('css_ol', function () {
         require('postcss-partial-import'),
         require('postcss-nested'),
         require('postcss-short'),
-        require('postcss-apply'),
+        require('postcss-assets')({ loadPaths: ['public/img/assets'] }),
         require('postcss-cssnext')({
             autoprefixer: true
         }),
+        require("css-mqpacker"),
         require('cssnano')
     ];
 

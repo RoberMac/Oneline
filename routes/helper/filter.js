@@ -225,7 +225,7 @@ function trimTweetUser (user){
     return {
         name: user.name,
         screen_name: user.screen_name,
-        profile_image_url_https: user.profile_image_url_https
+        avatar: user.profile_image_url_https
     }
 }
 function trimWeiboUser (user){
@@ -242,7 +242,7 @@ function trimWeiboUser (user){
         name: user.name,
         idstr: user.idstr,
         screen_name: user.screen_name,
-        profile_image_url_https: user.avatar_large
+        avatar: user.profile_image_url
     }        
 }
 /**

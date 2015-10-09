@@ -5,8 +5,9 @@
                 <use xlink:href="/public/img/icon-sprites.svg#eyeball-twitter"></use>
             </svg>
         </a>
-        <img ng-if="::media.type === 'photo'" ng-src="{{::media.image_url}}" handle-image-error>
 
-        <ol-video ng-if="::media.type !== 'photo'" ol-src="::media.video_url" ol-poster="::media.image_url"></ol-video>
+        <img ng-if="::media.type === 'photo'" ng-srcset="{{::media.image_url}}:small 900w, {{::media.image_url}} 1280w" ng-src="{{::media.image_url}}:small" sizes="100vw" handle-image-error>
+
+        <ol-video ng-if="::media.type !== 'photo'" ol-src="::media.video_url" ol-poster="::media.image_url + ':small'"></ol-video>
     </div>
 </div>

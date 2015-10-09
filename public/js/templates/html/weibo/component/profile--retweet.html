@@ -1,6 +1,8 @@
 <div class="timeline__profile">
     <a ng-href="//weibo.com/n/{{::item.retweet.user.screen_name}}" target="_blank">
-        <img class="timeline__profile__avatar" ng-src="{{::item.retweet.user.profile_image_url_https}}">
+
+        <img class="timeline__profile__avatar" ng-srcset="{{::item.retweet.user.avatar}} 900w, {{::item.retweet.user.avatar.replace('/50/', '/180/')}} 1280w" sizes="100vw" ng-src="{{::item.retweet.user.avatar}}">
+
     </a>
     <div class="timeline__profile__fullname">
         <a ng-href="//weibo.com/n/{{::item.retweet.user.screen_name}}" target="_blank">
