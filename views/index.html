@@ -31,7 +31,7 @@
             <div ng-click="$event.stopPropagation()"></div>
         </div>
     </div>
-    <div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter animate--general" ng-class="{ 'controlCenter--active': controlCenter.indexOf('replicant') >= 0, 'controlCenter--active--deep': controlCenter.indexOf('write') >= 0 }"></div>
+    <div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter animate--general" ng-class="{ 'controlCenter--active': controlCenter.indexOf('replicant') >= 0, 'controlCenter--active--deep': controlCenter.indexOf('read') >= 0 || controlCenter.indexOf('write') >= 0}"></div>
 
     <div ng-include=" 'menu/right.html' "></div>
 

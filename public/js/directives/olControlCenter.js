@@ -81,7 +81,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
         }
     }
 }])
-.directive('read', ['Action', function(Action){
+.directive('read', ['$window', function($window){
     return {
         restrict: 'A',
         controller: ['$scope', 'Action', function ($scope, Action){
@@ -100,7 +100,72 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 $scope.readType  = _type 
                 $scope.readItems = res.data
             })
-        }]
+        }],
+        link: function (scope, elem, attrs){
+            var _window      = angular.element($window);
+            // 按 Esc 鍵取消操作
+            _window.on('keydown', function (e){
+                if (e.keyCode === 27){
+                    scope.$apply(function (){
+                        scope.setControlCenter('')
+                    })
+                }
+            })
+            elem.on('$destroy', function (){
+                _window.off()
+            })
+        }
+    }
+}])
+.directive('userProfile', ['$compile', '$templateRequest', 'Action', 
+    function($compile, $templateRequest, Action){
+
+    return {
+        restrict: 'A',
+        scope: false,
+        link: function (scope, elem, attrs){
+            elem.on('click', function (){
+                if (elem.hasClass('tips--frozen')) return;
+
+                var _info       = scope.controlCenter.split(':'),
+                    _provider   = _info[0].split('-')[0].split('_')[1];
+
+                elem.addClass('timeline__media--loading')
+                Action.get({
+                    action: 'user',
+                    provider: _provider,
+                    id: elem.attr('user-profile')
+                })
+                .$promise
+                .then(function (res){
+                    scope.user = res.data;
+
+                    var maskContainer = angular.element(
+                                            document.querySelector('.cancelMask__wrapper')
+                                        ).children();
+
+                    maskContainer.empty()
+
+                    $templateRequest('controlCenter/read/component/profile--instagram.html')
+                    .then(function (html){
+                        maskContainer
+                        .append($compile(html)(scope))
+                    })
+                })
+                .then(function (){
+                    elem.addClass('timeline__media--active')
+                })
+                .catch(function (){
+                    elem.addClass('tips--frozen')
+                })
+                .finally(function (){
+                    elem.removeClass('timeline__media--loading')
+                })
+            })
+            elem.on('$destroy', function (){
+                elem.off('click')
+            })
+        }
     }
 }])
 .directive('write', ['$compile', '$window', '$templateRequest', '$filter', 'Action', 'olUI',

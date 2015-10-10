@@ -29,9 +29,19 @@ angular.module('Oneline.tokenHelperServices', [])
 
         store.set('tokenList', tokenList)
     },
-    /* 清空 token */
-    this.clearToken = function (){
-        store.remove('tokenList')
+    /* 清空無效 token */
+    this.clearInvalidToken = function (){
+        var tokenList = store.get('tokenList') || [],
+            _this = this;
+
+        tokenList.forEach(function (token){
+            var isTokenExpired = jwtHelper.isTokenExpired(token),
+                provider = jwtHelper.decodeToken(token).provider;
+
+            if (isTokenExpired){
+                _this.removeToken(provider)
+            }
+        })
     },
     /* 獲取 provider 列表 */
     this.getProviderList = function (){
@@ -43,7 +53,7 @@ angular.module('Oneline.tokenHelperServices', [])
     /* 驗證 token 是否有效 */
     this.isValidToken = function (){
         var tokenList = store.get('tokenList') || [];
-        
+
         return (tokenList.length > 0) && tokenList.every(function (token){
             return !jwtHelper.isTokenExpired(token)
         })

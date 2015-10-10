@@ -1,0 +1,53 @@
+<div class="timeline profile__wrapper">
+    <div class="timeline--instagram profile--instagram">
+        <!-- Profile -->
+        <div class="timeline__profile">
+            <a ng-href="//instagram.com/{{::user.profile.username}}" target="_blank">
+                <img class="timeline__profile__avatar" ng-src="{{::user.profile.profile_picture}}" alt="avatar">
+            </a>
+            <div class="timeline__profile__fullname">
+                <a ng-href="//instagram.com/{{::user.profile.username}}" target="_blank">
+                    <strong ng-bind="::user.profile.full_name ? user.profile.full_name : user.profile.username"></strong>
+                </a>
+            </div>
+        </div>
+
+        <div ng-if="::user.profile.bio" class="timeline__content">
+            <p class="timeline__text profile__biography" linkify="instagram">{{::user.profile.bio | html}}</p>
+        </div>
+
+        <!-- Timeline -->
+        <div ng-if="user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline profile__timeline">
+
+            <div class="timeline__content">
+                <div ng-include=" 'media/instagram.html' "></div>
+                <p class="timeline__text" linkify="instagram">{{::item.text | html}}</p>
+            </div>
+
+            <span class="cursor--pointer">
+                <button class="actions tips--frozen" type="button">
+                    <svg class="actions__button" viewBox="0 0 26 26">
+                        <use xlink:href="/public/img/icon-sprites.svg#favorite"></use>
+                    </svg>
+                    <span class="actions__count" ng-attr-data-count="{{::item.favorite_count > 0 ? item.favorite_count : ''}}"></span>
+                </button>
+                <button class="actions tips--frozen" type="button">
+                    <svg class="actions__button" viewBox="0 0 26 26">
+                        <use xlink:href="/public/img/icon-sprites.svg#reply">
+                    </svg>
+                    <span class="actions__count" ng-attr-data-count="{{::item.reply_count > 0 ? item.reply_count : ''}}"></span>
+                </button>
+                <a ng-href="{{::item.link}}" target="_blank">
+                    <button class="actions tips--deep" type="button">
+                        <svg class="actions__button" viewBox="0 0 26 26" data-source>
+                            <use xlink:href="/public/img/icon-sprites.svg#source"></use>
+                        </svg>
+                        <span class="actions__count"></span>
+                    </button>
+                </a>
+            </span>
+
+            <span class="timeline__time tips" relative-date="{{::item.created_at}}"></span>
+
+        </div>
+</div>

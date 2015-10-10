@@ -22,10 +22,12 @@
 }
 @keyframes imgLoadAnimate {
     0%, 100% {
-        border-color: var(--color-gray);
+        filter: grayscale(0%);
+        opacity: 1;
     }
     50% {
-        border-color: var(--color-gray-drak);
+        filter: grayscale(100%);
+        opacity: .3;
     }
 }
 @keyframes errFormAnimate {

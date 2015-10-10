@@ -89,18 +89,25 @@ app.set('view engine', 'jade')
 var jwt = require('jsonwebtoken');
 app.use(['/timeline', '/actions', '/auth/revoke', '/auth/replicant', '/upload'], function (req, res, next){
     var tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [],
-        validPassports = {};
+        validPassports = {},
+        invalidToken = [];
 
     // 提取有效 token 的 payload 到 req.olPassports
     tokenList.forEach(function (token, index){
         try {
             var decoded = jwt.verify(token, process.env.KEY)
             validPassports[decoded.provider] = decoded.userId
-        } catch (e){}
+        } catch (e){
+            try {
+                invalidToken.push(jwt.decode(token).provider)
+            } catch (e){
+                invalidToken = ['twitter', 'instagram', 'weibo']
+            }
+        }
     })
 
-    if (Object.keys(validPassports).length !== tokenList.length){
-        next({ statusCode: 401, message: 'No authorization token was found' })
+    if (invalidToken.length > 0 || Object.keys(validPassports).length <= 0){
+        next({ statusCode: 401, invalidToken: invalidToken})
     } else {
         req.olPassports = validPassports
         req.olId = {}

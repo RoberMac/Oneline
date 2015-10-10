@@ -43,7 +43,7 @@ router.get('/', function (req, res, next){
             })
 
         if (_providerList.length < Object.keys(req.olPassports).length){
-            throw { statusCode: 401 }
+            throw { statusCode: 401, invalidToken: ['twitter', 'instagram', 'weibo']}
         }
 
         providerList.forEach(function (userInfo, index){

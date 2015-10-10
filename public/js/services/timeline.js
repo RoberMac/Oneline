@@ -298,7 +298,9 @@ angular.module('Oneline.timelineServices', [])
         step = _step ? _step : 1
 
         if (err.status === 401){
-            olTokenHelper.clearToken()
+            err.data.invalidToken.forEach(function (provider){
+                olTokenHelper.removeToken(provider)
+            })
             $state.go('settings')
         } else if (err.status === 429){
             olUI.setLoading('fail', step)

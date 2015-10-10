@@ -6,7 +6,7 @@
             </svg>
         </a>
 
-        <img ng-if="::media.type === 'photo'" ng-srcset="{{::media.image_url}}:small 900w, {{::media.image_url}} 1280w" ng-src="{{::media.image_url}}:small" sizes="100vw" handle-image-error>
+        <img ng-if="::media.type === 'photo'" ng-srcset="{{::media.image_url}}:small 960w, {{::media.image_url}} 1280w" sizes="100vw" ng-src="{{::media.image_url}}:small" handle-image-error>
 
         <ol-video ng-if="::media.type !== 'photo'" ol-src="::media.video_url" ol-poster="::media.image_url + ':small'"></ol-video>
     </div>

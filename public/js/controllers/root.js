@@ -47,19 +47,23 @@ angular.module('Oneline.rootControllers', [])
         }
     }
 
-    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams){
+
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams){
         // * -> /
         if (toState.name === 'timeline'){
             if (!olTokenHelper.isValidToken()){
+                event.preventDefault()
                 $state.go('settings')
             } else {
                 $scope.isTimeline = true
             }
         }
+    })
+    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams){
         // * -> /settings
-        else if (toState.name === 'settings'){
+        if (toState.name === 'settings'){
             if (!olTokenHelper.isValidToken()){
-                olTokenHelper.clearToken()
+                olTokenHelper.clearInvalidToken()
             }
             $scope.isTimeline = false
         }

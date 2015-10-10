@@ -1,7 +1,8 @@
 var extend  = require('extend'),
     Twit    = require('twit'),
     Ig      = require('instagram-node').instagram(),
-    request = require('request');
+    request = require('request'),
+    filter  = require('./filter');
 
 module.exports = {
     twitter: function (action, opts){
@@ -113,10 +114,27 @@ module.exports = {
                 break;
         }
 
-        return q_ig(opts.id)
-        .then(function (data){
-            return { statusCode: 200, data: data[0].slice(0, 100) }
-        })
+        if (action === 'user'){
+            return Q.all([
+                Q.nbind(Ig.user, Ig)(opts.id),
+                Q.nbind(Ig.user_media_recent, Ig)(opts.id)
+            ])
+            .spread(function (userData, timelineData){
+                var data = {
+                    profile : userData[0],
+                    timeline: filter.instagram(timelineData[0]).data
+                };
+                return {
+                    statusCode: 200,
+                    data: data
+                }
+            })
+        } else {
+            return q_ig(opts.id)
+            .then(function (data){
+                return { statusCode: 200, data: data[0].slice(0, 100) }
+            })
+        }
     }
 }
 

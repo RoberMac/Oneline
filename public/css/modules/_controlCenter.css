@@ -56,7 +56,7 @@
             content: '';
             position: absolute 3px 7px * *;
             size: 16px 20px;
-            background: inline('2Phone.svg') no-repeat;
+            background: inline('2Phone.png') no-repeat;
             background-size: 16px 20px;
         }
     }
@@ -189,56 +189,67 @@
     size: 100% 33.3vh;
     font-size: var(--font-size-base) var(--line-height-base);
 
-    &__item {
-        position: relative;
-        border-bottom: 1px solid var(--color-gray-drak);
-    }
-    &__avatar {
-        position: relative;
-        display: inline-block;
-        margin: 7px;
-        width: calc(100% / 10 - 14px);
-        vertical-align: middle;
-        overflow: hidden;
+    &__like {
+        &__avatar {
+            position: relative;
+            display: inline-block;
+            margin: 3px;
+            width: calc(100% / 10 - 6px);
+            vertical-align: middle;
+            overflow: hidden;
 
-        &::before {
-            content: '';
-            padding-top: 100%;
-            float: left;
-        }
+            @media (--phone){
+                width: calc(100% / 5 - 6px);
+            }
+            @media (--tablet){
+                width: calc(100% / 7 - 6px);
+            }
 
-        img {
-            float: left;
-            width: 100%;
-            border-radius: 50%;
-        }
-    }
-    &__profile {
-        position: relative;
-        display: inline-block;
-        margin: 7px;
-        size: 30px;
-        float: left;
+            &::before {
+                content: '';
+                padding-top: 100%;
+                float: left;
+            }
 
-        img {
-            float: left;
-            width: 100%;
-            border-radius: 50%;
+            img {
+                float: left;
+                width: 100%;
+                border-radius: 50%;
+            }
         }
     }
-    &__time {
-        position: absolute * 1px 1px *;
-        font-size: 9px;
-        color: #89A;
-        cursor: pointer;
-    }
-    &__text {
-        display: table;
-        padding: 7px;
-        size: calc(100% - 44px) 44px;
+    &__reply {
+        > li {
+            position: relative;
+            border-bottom: 1px solid var(--color-gray-drak);
+        }
+        &__avatar {
+            position: relative;
+            display: inline-block;
+            margin: 7px;
+            size: 30px;
+            float: left;
 
-        a, a:visited {
-            color: var(--color-instagram);
+            img {
+                float: left;
+                width: 100%;
+                border-radius: 50%;
+            }
+        }
+        &__time {
+            position: absolute * 1px 1px *;
+            font-size: 9px;
+            color: #89A;
+            cursor: pointer;
+        }
+        &__text {
+            display: table;
+            padding: 7px;
+            size: calc(100% - 44px) 44px;
+
+            a, a:visited {
+                color: var(--color-instagram);
+            }
         }
     }
 }

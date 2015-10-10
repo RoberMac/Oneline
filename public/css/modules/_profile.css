@@ -1,0 +1,36 @@
+.profile {
+    &__wrapper {
+        padding: 0 0 7px 0;
+    }
+    &__biography {
+        padding: 3px 7px;
+        white-space: pre-line;
+        font-size: 13px;
+        color: var(--color-gray);
+    }
+    &__timeline {
+        padding: 10px 10px 0px 10px;
+        margin: 17px;
+        background-color: var(--color-gray);
+
+        .timeline__content {
+            top: 0;
+        }
+        .timeline__text {
+            margin: 17px 0;
+        }
+        .actions__count::after {
+            color: var(--color-steel);
+        }
+    }
+
+    &--instagram {
+        .profile__biography {
+            background-color: var(--color-instagram);
+
+            a, a:visited {
+                color: #82B6FF;
+            }
+        }
+    }
+}

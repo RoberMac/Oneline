@@ -148,11 +148,11 @@ img, video {
         }
     }
     &--frozen {
-        opacity: .3;
+        opacity: .3!important;
         cursor: default;
 
         &:hover {
-            opacity: .3;
+            opacity: .3!important;
         }
     }
     &--inprocess {
