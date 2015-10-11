@@ -103,21 +103,11 @@ module.exports = {
     },
     instagram: function (action, opts){
         Ig.use({ access_token : opts.token })
-        var q_ig;
-
-        switch (action){
-            case 'like':
-                q_ig = Q.nbind(Ig.likes, Ig);
-                break;
-            case 'reply':
-                q_ig = Q.nbind(Ig.comments, Ig);
-                break;
-        }
 
         if (action === 'user'){
             return Q.all([
                 Q.nbind(Ig.user, Ig)(opts.id),
-                Q.nbind(Ig.user_media_recent, Ig)(opts.id)
+                Q.nbind(Ig.user_media_recent, Ig)(opts.id, { count: 7 })
             ])
             .spread(function (userData, timelineData){
                 var data = {
@@ -130,6 +120,17 @@ module.exports = {
                 }
             })
         } else {
+            var q_ig;
+
+            switch (action){
+                case 'like':
+                    q_ig = Q.nbind(Ig.likes, Ig);
+                    break;
+                case 'reply':
+                    q_ig = Q.nbind(Ig.comments, Ig);
+                    break;
+            }
+
             return q_ig(opts.id)
             .then(function (data){
                 return { statusCode: 200, data: data[0].slice(0, 100) }

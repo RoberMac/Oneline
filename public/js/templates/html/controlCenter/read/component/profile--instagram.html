@@ -1,4 +1,5 @@
-<div class="timeline profile__wrapper">
+<div class="timeline profile">
+
     <div class="timeline--instagram profile--instagram">
         <!-- Profile -->
         <div class="timeline__profile">
@@ -11,11 +12,36 @@
                 </a>
             </div>
         </div>
-
-        <div ng-if="::user.profile.bio" class="timeline__content">
-            <p class="timeline__text profile__biography" linkify="instagram">{{::user.profile.bio | html}}</p>
+        <!-- 粉絲數、正在關注數 -->
+        <div ng-if="::user.profile.counts" class="profile__count">
+            <div class="profile__count__column" ng-attr-data-count="{{::user.profile.counts.media}}">
+                <svg viewBox="0 0 60 60">
+                    <use xlink:href="/public/img/icon-sprites.svg#post"></use>
+                </svg>
+            </div>
+            <div class="profile__count__column" ng-attr-data-count="{{::user.profile.counts.followed_by}}">
+                <svg viewBox="0 0 60 60">
+                    <use xlink:href="/public/img/icon-sprites.svg#followed_by"></use>
+                </svg>
+            </div>
+            <div class="profile__count__column" ng-attr-data-count="{{::user.profile.counts.follows}}">
+                <svg viewBox="0 0 60 60">
+                    <use xlink:href="/public/img/icon-sprites.svg#follows"></use>
+                </svg>
+            </div>
         </div>
-
+        <!-- 簡介 -->
+        <div ng-if="::user.profile.bio">
+            <p class="timeline__text profile__biography" linkify="instagram">{{::user.profile.bio + ' ' + user.profile.website | html}}</p>
+        </div>
+        <!-- 加載動畫 -->
+       <div ng-if="!user.timeline && !user.profile.isLocked" class="loadMore loadMore--loading"></div>
+        <!-- 是否為私人帳號 -->
+        <div ng-if="user.profile.isLocked" class="profile__locked">
+            <svg viewBox="0 0 40 40">
+                <use xlink:href="/public/img/icon-sprites.svg#locked"></use>
+            </svg>
+        </div>
         <!-- Timeline -->
         <div ng-if="user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline profile__timeline">
 
@@ -39,15 +65,13 @@
                 </button>
                 <a ng-href="{{::item.link}}" target="_blank">
                     <button class="actions tips--deep" type="button">
-                        <svg class="actions__button" viewBox="0 0 26 26" data-source>
+                        <svg class="actions__button" viewBox="0 0 26 26">
                             <use xlink:href="/public/img/icon-sprites.svg#source"></use>
                         </svg>
                         <span class="actions__count"></span>
                     </button>
                 </a>
             </span>
-
             <span class="timeline__time tips" relative-date="{{::item.created_at}}"></span>
-
         </div>
 </div>

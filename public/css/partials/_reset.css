@@ -91,8 +91,12 @@ img, video {
 }
 
 .vertically_center {
-    display: table-cell;
-    vertical-align: middle;
+    align-items: center;
+    display: flex;
+
+    > * {
+        width: 100%;
+    }
 }
 .animate {
     &--slower {

@@ -1,6 +1,6 @@
-<div class="menu menu--right animate--faster">
+<div class="menu menu--right vertically_center animate--faster">
 
-    <div ng-if="!isTimeline && providerList.length > 0" class="vertically_center">
+    <div ng-if="!isTimeline && providerList.length > 0">
         <a href="/">
             <button class="menu__button animate--faster" type="button">
                 <svg viewBox="0 0 200 200">
@@ -10,7 +10,7 @@
         </a>
     </div>
 
-    <div ng-if="isTimeline && providerList.indexOf('twitter') >= 0 && !controlCenter" class="animate--general vertically_center">
+    <div ng-if="isTimeline && providerList.indexOf('twitter') >= 0 && !controlCenter" class="animate--general">
         <button class="menu__button animate--faster" ng-click="setControlCenter('write_twitter-tweet')" type="button">
             <svg viewBox="0 0 200 200">
                <use xlink:href="/public/img/icon-sprites.svg#newTweet"></use>

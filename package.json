@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A Social Network Aggregator",
   "main": "app.js",
   "repository": {
@@ -57,6 +57,7 @@
     "gulp-svgmin": "^1.2.0",
     "gulp-svgstore": "^5.0.5",
     "gulp-uglify": "^1.4.0",
+    "lost": "^6.6.2",
     "path": "^0.12.7",
     "postcss-assets": "^3.0.2",
     "postcss-cssnext": "^2.1.0",

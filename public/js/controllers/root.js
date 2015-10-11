@@ -35,12 +35,14 @@ angular.module('Oneline.rootControllers', [])
 
             currentState === 'settings'
                 ? $state.go('timeline')
-                : $scope.setControlCenter('write_twitter-tweet')
+                : $scope.providerList.indexOf('twitter') >= 0
+                    ? $scope.setControlCenter('write_twitter-tweet')
+                    : null
         }
         // L -> R
         else {
             currentState === 'timeline'
-                ? $scope.controlCenter.indexOf('write') >= 0
+                ? /read|write/.test($scope.controlCenter)
                     ? $scope.setControlCenter('')
                     : $state.go('settings')
                 : null

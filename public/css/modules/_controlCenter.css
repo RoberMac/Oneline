@@ -4,18 +4,14 @@
     background-color: var(--color-gray);
     z-index: 5;
 
-    &--active {
+    &--replicant {
         height: 20%;
-
-        &--deep {
-            height: 33.3%;
-        }
     }
-
-    &__wrapper {
-        display: table;
-        position: absolute;
-        size: 100%;
+    &--write {
+        height: 33.3%;
+    }
+    &--read {
+        height: 17%;
     }
 }
 .cancelMask {
@@ -24,18 +20,19 @@
     z-index: 4;
     cursor: pointer;
     background-color: var(--color-black-alpha);
+    ::-webkit-scrollbar {
+        display: none; 
+    }
 
     &__wrapper {
         position: absolute;
-        size: 100% 66.7%;
+        size: 100% 80%;
 
-        &--verticallyCenter {
-            align-items: center;
-            display: flex;
-
-            > div {
-                width: 100%;
-            }
+        &--write {
+            height: 66.7%
+        }
+        &--read {
+            height: 83%
         }
     }
 }
@@ -186,23 +183,27 @@
 
 .read {
     margin: 0 auto;
-    size: 100% 33.3vh;
+    padding: 10px;
+    size: 100% 17vh;
     font-size: var(--font-size-base) var(--line-height-base);
+
+    .loadMore {
+        width: calc(100% - 34px);
+    }
+    &--reply {
+        padding: 0;
+    }
 
     &__like {
         &__avatar {
             position: relative;
-            display: inline-block;
-            margin: 3px;
-            width: calc(100% / 10 - 6px);
-            vertical-align: middle;
-            overflow: hidden;
+            lost-waffle: 1/10;
 
             @media (--phone){
-                width: calc(100% / 5 - 6px);
+                lost-waffle: 1/5;
             }
             @media (--tablet){
-                width: calc(100% / 7 - 6px);
+                lost-waffle: 1/7;
             }
 
             &::before {
@@ -222,13 +223,11 @@
         > li {
             position: relative;
             border-bottom: 1px solid var(--color-gray-drak);
+            lost-utility: clearfix;
         }
         &__avatar {
-            position: relative;
-            display: inline-block;
-            margin: 7px;
-            size: 30px;
-            float: left;
+            padding: 7px;
+            lost-column: 1/7 0;
 
             img {
                 float: left;
@@ -236,20 +235,18 @@
                 border-radius: 50%;
             }
         }
+        &__text {
+            lost-column: 6/7 0;
+
+            a, a:visited {
+                color: var(--color-instagram);
+            }
+        }
         &__time {
             position: absolute * 1px 1px *;
             font-size: 9px;
             color: #89A;
             cursor: pointer;
-        }
-        &__text {
-            display: table;
-            padding: 7px;
-            size: calc(100% - 44px) 44px;
-
-            a, a:visited {
-                color: var(--color-instagram);
-            }
         }
     }
 }

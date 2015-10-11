@@ -87,7 +87,7 @@ app.set('view engine', 'jade')
 
 // 保護 endpoints
 var jwt = require('jsonwebtoken');
-app.use(['/timeline', '/actions', '/auth/revoke', '/auth/replicant', '/upload'], function (req, res, next){
+app.use(['/timeline', '/actions', '/auth/revoke', '/auth/replicant/deckard', '/upload'], function (req, res, next){
     var tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [],
         validPassports = {},
         invalidToken = [];

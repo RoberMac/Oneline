@@ -3,7 +3,6 @@
     size: 100% 70%;
 }
 .social-list {
-    display: table;
     position: absolute;
     size: 100% 33.3%;
 
@@ -26,6 +25,9 @@
     width: 33.3%;
     filter: grayscale(100%);
 
+    > svg {
+        width: 100%;
+    }
     &--active {
         filter: grayscale(0%);
     }

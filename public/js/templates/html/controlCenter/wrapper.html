@@ -1,10 +1,6 @@
-<div class="controlCenter__wrapper">
-    <div class="vertically_center">
-        <div ng-if="controlCenter === 'replicant--deckard'" ng-include=" 'controlCenter/replicant/deckard.html' " class="replicant animate--general">
-        </div>
-        <div ng-if="controlCenter === 'replicant--rachael'" ng-include=" 'controlCenter/replicant/rachael.html' " class="replicant animate--general">
-        </div>
-        <div ng-if="controlCenter.indexOf('write_twitter') >= 0" ng-include=" 'controlCenter/write/twitter.html' " class="animate--general"></div>
-        <div ng-if="controlCenter.indexOf('read_instagram') >= 0" ng-include=" 'controlCenter/read/instagram.html' " class="animate--general"></div>
-    </div>
+<div ng-if="controlCenter === 'replicant--deckard'" ng-include=" 'controlCenter/replicant/deckard.html' " class="replicant animate--general">
 </div>
+<div ng-if="controlCenter === 'replicant--rachael'" ng-include=" 'controlCenter/replicant/rachael.html' " class="replicant animate--general">
+</div>
+<div ng-if="controlCenter.indexOf('write_twitter') >= 0" ng-include=" 'controlCenter/write/twitter.html' " class="animate--general"></div>
+<div ng-if="controlCenter.indexOf('read_instagram') >= 0" ng-include=" 'controlCenter/read/instagram.html' " class="animate--general"></div>

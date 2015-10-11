@@ -251,7 +251,7 @@
     cursor: pointer;
 
     &:hover {
-        background-color: var(--color-gray);
+        background-color: transparent;
     }
     &:first-child {
         z-index: 3;
@@ -269,10 +269,11 @@
     }
     &--initLoad {
         position: absolute calc(50% - 20px) * *;
+        background-color: transparent;
         cursor: default;
     }
     &--loading {
-        background-color: var(--color-gray);
+        background-color: transparent;
 
         &::before {
             content: '';

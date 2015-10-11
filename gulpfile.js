@@ -65,7 +65,8 @@ gulp.task('css_ol', function () {
         require('postcss-cssnext')({
             autoprefixer: true
         }),
-        require("css-mqpacker"),
+        require('css-mqpacker'),
+        require('lost'),
         require('cssnano')
     ];
 

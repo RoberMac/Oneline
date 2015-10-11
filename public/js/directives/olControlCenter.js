@@ -122,40 +122,53 @@ angular.module('Oneline.olControlCenterDirectives', [])
 
     return {
         restrict: 'A',
-        scope: false,
+        scope: {
+            profile: '=userProfile'
+        },
         link: function (scope, elem, attrs){
             elem.on('click', function (){
                 if (elem.hasClass('tips--frozen')) return;
 
-                var _info       = scope.controlCenter.split(':'),
-                    _provider   = _info[0].split('-')[0].split('_')[1];
+                var _profile  = scope.profile,
+                    _provider = 'instagram';
 
+                scope.user = {
+                    profile: {
+                        full_name: _profile.full_name,
+                        profile_picture: _profile.profile_picture,
+                        username: _profile.username,
+                        isLocked: false
+                    }
+                };
+
+                var maskContainer = angular.element(
+                                        document.querySelector('.cancelMask__wrapper')
+                                    ).children();
+
+                maskContainer.empty()
+
+                $templateRequest('controlCenter/read/component/profile--instagram.html')
+                .then(function (html){
+                    maskContainer
+                    .append($compile(html)(scope))
+                })
                 elem.addClass('timeline__media--loading')
+
+
                 Action.get({
                     action: 'user',
                     provider: _provider,
-                    id: elem.attr('user-profile')
+                    id: _profile.id
                 })
                 .$promise
                 .then(function (res){
                     scope.user = res.data;
-
-                    var maskContainer = angular.element(
-                                            document.querySelector('.cancelMask__wrapper')
-                                        ).children();
-
-                    maskContainer.empty()
-
-                    $templateRequest('controlCenter/read/component/profile--instagram.html')
-                    .then(function (html){
-                        maskContainer
-                        .append($compile(html)(scope))
-                    })
                 })
                 .then(function (){
                     elem.addClass('timeline__media--active')
                 })
                 .catch(function (){
+                    scope.user.profile.isLocked = true
                     elem.addClass('tips--frozen')
                 })
                 .finally(function (){
@@ -226,8 +239,8 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 .removeClass('tips--frozen');
                 // 判斷是否需要垂直居中
                 _cancelMask.offsetHeight - _cancelMask.children[0].scrollHeight > 72
-                    ? cancelMask.addClass('cancelMask__wrapper--verticallyCenter')
-                    : cancelMask.removeClass('cancelMask__wrapper--verticallyCenter')               
+                    ? cancelMask.addClass('vertically_center')
+                    : cancelMask.removeClass('vertically_center')               
                 // 「回覆」／「轉推」提醒
                 typeButton = angular.element(_cancelMask.querySelector('[data-' + _type + ']'));
                 typeButton.parent().removeClass('tips--deep tips--frozen')
