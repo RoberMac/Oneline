@@ -1,11 +1,4 @@
 <span class="cursor--pointer">
-    <!-- Favorite -->
-    <button class="actions tips--deep tips--frozen" ng-if="::item.favorite_count > 0" type="button">
-        <svg class="actions__button" viewBox="0 0 26 26" data-like>
-            <use xlink:href="/public/img/icon-sprites.svg#favorite"></use>
-        </svg>
-        <span class="actions__count" ng-attr-data-count="{{::item.favorite_count}}"></span>
-    </button>
     <!-- Retweet -->
     <button ng-click="toggleAction('retweet', item)" class="actions tips--deep" type="button">
         <svg class="actions__button" viewBox="0 0 34 26" data-retweet>
@@ -14,11 +7,11 @@
         <span class="actions__count" ng-attr-data-count="{{::item.retweet_count > 0 ? item.retweet_count : ''}}"></span>
     </button>
     <!-- Reply -->
-    <button class="actions tips--deep tips--frozen" ng-if="::item.comments_count > 0" type="button">
-        <svg class="actions__button" viewBox="0 0 26 26">
+    <button ng-click="toggleAction('reply', item)" class="actions tips--deep" type="button">
+        <svg class="actions__button" viewBox="0 0 26 26" data-reply>
            <use xlink:href="/public/img/icon-sprites.svg#reply"></use>
         </svg>
-        <span class="actions__count" ng-attr-data-count="{{::item.comments_count}}"></span>
+        <span class="actions__count" ng-attr-data-count="{{::item.comments_count > 0 ? item.comments_count : ''}}"></span>
     </button>
     <!-- Source -->
     <a ng-href="//weibo.com/{{::item.user.idstr}}/{{::item.mid}}" target="_blank">

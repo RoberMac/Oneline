@@ -3,7 +3,12 @@
     height: 0%;
     background-color: var(--color-gray);
     z-index: 5;
+    transform-origin: bottom;
+    transform: scaleY(0);
 
+    &--replicant, &--write, &--read {
+        transform: scaleY(1);
+    }
     &--replicant {
         height: 20%;
     }
@@ -72,7 +77,6 @@
     &__textarea {
         margin: 0 auto;
         size: 90% 20vh;
-        max-height: 20vh;
         font-size: var(--font-size-base) var(--line-height-base);
         background-color: var(--color-white);
 
@@ -138,7 +142,7 @@
                 cursor: not-allowed;
 
                 svg {
-                    filter: grayscale(100%);
+                    fill: var(--color-steel);
                     animation-play-state: paused;
                 }
                 &::before {
@@ -154,6 +158,16 @@
                 &::before {
                     content: '';
                 }
+            }
+        }
+        &--twitter {
+            svg {
+                fill: var(--color-twitter);
+            }
+        }
+        &--weibo {
+            svg {
+                fill: var(--color-weibo);
             }
         }
     }
@@ -250,4 +264,7 @@
         }
     }
 }
-
+.switch-icon {
+    position: absolute * 0 0 *;
+    size: 40px;
+}

@@ -78,7 +78,7 @@ angular.module('Oneline.timelineControllers', [])
             if (data[1] === 'newPosts'){
                 var allPosts = $scope.timelineData.concat(data[0]);
 
-                $scope.timelineData = olTimelineHelper.removeOldPosts(allPosts, $scope.providerList)
+                $scope.timelineData = olTimelineHelper.removeOldPosts(allPosts, data[0], $scope.providerList)
                 timelineCache.put('newPosts', [])
             } else {
                 $scope.timelineData = data[0]
@@ -108,15 +108,15 @@ angular.module('Oneline.timelineControllers', [])
         var isActive = olUI.isActionActive(action, id);
 
         // 處理「轉推」與「回覆」
-        if (provider === 'twitter' 
-            && (
-                (action === 'retweet' && !isActive) || action === 'reply')
+        if (
+                (provider === 'twitter' || provider === 'weibo')
+                && ((action === 'retweet' && !isActive) || action === 'reply')
             )
         {
-
-            $scope.setControlCenter('write_twitter-'+ action + ':' + id + ':' + item.user.screen_name)
+            $scope.setControlCenter('write_' + provider + '-'+ action + ':' + id + ':' + item.user.screen_name)
             return;
         }
+
         // 更改樣式
         olUI.setActionState(action, id, 'wait')
         olUI.setActionState(action, id, isActive ? 'inactive' : 'active')

@@ -23,8 +23,14 @@ angular.module('Oneline.rootControllers', [])
         })
     }
     // 設置是否顯示「控制中心」
-    $scope.setControlCenter = function (value){
-        $scope.controlCenter = value
+    $scope.setControlCenter = function (state, thenSwitchTo){
+        $scope.controlCenter = state
+
+        if (thenSwitchTo){
+            setTimeout(function (){
+                $scope.controlCenter = thenSwitchTo
+            }, 700)
+        }
     }
     // Router
     $scope.goto = function (direction, e){
@@ -35,9 +41,11 @@ angular.module('Oneline.rootControllers', [])
 
             currentState === 'settings'
                 ? $state.go('timeline')
-                : $scope.providerList.indexOf('twitter') >= 0
-                    ? $scope.setControlCenter('write_twitter-tweet')
-                    : null
+            : $scope.providerList.indexOf('twitter') >= 0
+                ? $scope.setControlCenter('write_twitter-tweet')
+            : $scope.providerList.indexOf('weibo') >= 0
+                ? $scope.setControlCenter('write_weibo-tweet')
+            : null
         }
         // L -> R
         else {

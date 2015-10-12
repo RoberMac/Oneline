@@ -31,8 +31,6 @@ angular.module('Oneline.actionsServices', [])
                     olUI.actionData(action, _id, count > 0 ? count : '', 'count')
                 }
             }
-
         })
     }
-
 }])

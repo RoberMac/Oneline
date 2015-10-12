@@ -70,11 +70,34 @@ module.exports = {
             case 'like':
                 action_str = 'attitudes/' + (opts.method === 'put' ? 'create' : 'destroy')
                 break;
-            case 'retweet':
-                action_str = 'statuses/' + (opts.method === 'put' ? 'repost' : 'destroy')
-                break;
             case 'star':
                 action_str = 'favorites/' + (opts.method === 'put' ? 'create' : 'destroy')
+                break;
+            case 'retweet':
+                action_str = 'statuses/' + ((opts.method === 'put' || opts.method === 'post')
+                                                ? 'repost'
+                                                : 'destroy')
+                extend(wOpts, {
+                    status: opts.params && opts.params.status // `destroy` 時無 `opts.params` 
+                })
+                break;
+            case 'reply':
+                action_str = 'comments/create'
+                extend(wOpts, {
+                    comment: opts.params.status
+                })
+                break;
+            case 'tweet':
+                action_str = 'statuses/update'
+                extend(wOpts, {
+                    status: opts.params.status
+                })
+                if (opts.params.geo){
+                    extend(wOpts, {
+                        lat: opts.params.geo.lat,
+                        long: opts.params.geo.long
+                    })
+                }
                 break;
         }
 
@@ -85,6 +108,7 @@ module.exports = {
             form: wOpts
         }, function (err, res, body){
             if (err || res.statusCode !== 200){
+                console.log(err, res)
                 deferred.reject(err || { statusCode: res.statusCode })
             } else {
 

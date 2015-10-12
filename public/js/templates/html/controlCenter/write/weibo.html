@@ -1,0 +1,17 @@
+<form name="newTweetForm" write>
+
+    <textarea class="write__textarea animate--general" type="text" name="tweet" autocomplete="off" spellcheck="false" required></textarea>
+
+    <div class="write__toolBar">
+        <!-- left -->
+        <geo-picker ng-if="controlCenter.indexOf('write_weibo-tweet') >= 0"></geo-picker>
+        <!-- right -->
+        <button class="write__btn write__btn--send write__btn--weibo tips" type="submit" data-count disabled>
+            <svg viewBox="0 0 113 72">
+                <use xlink:href="/public/img/icon-sprites.svg#writing"></use>
+            </svg>
+        </button>
+    </div>
+
+    <div class="write__previews"></div>
+</form>

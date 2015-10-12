@@ -193,7 +193,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 _provider   = _info[0].split('-')[0].split('_')[1],
                 _type       = _info[0].split('-')[1],
                 __type      = '',
-                _limitCount = _type === 'tweet' || _type === 'reply'
+                _limitCount = _type === 'tweet' || _type === 'reply' || _provider === 'weibo'
                                     ? 140
                                     : _type === 'retweet'
                                         ? 116
@@ -213,7 +213,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 cancelMask  = angular.element(_cancelMask);
             if (_type === 'reply' || _type === 'retweet'){
                 // 添加 `@username` 前綴
-                if (_type === 'reply'){
+                if (_provider === 'twitter' && _type === 'reply'){
                     statusElem.val('@' + _info[2] + ' ')
                 } 
                 // 允許直接提交 -> 「轉推」
@@ -221,7 +221,10 @@ angular.module('Oneline.olControlCenterDirectives', [])
                     statusElem.prop('required', false)
                     submitButton.prop('disabled', false)
                 }
-                // 預覽「源推」
+                /**
+                 * 預覽「源推」
+                 *
+                 */
                 cancelMask
                 .children()
                 .append(
@@ -245,17 +248,18 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 typeButton = angular.element(_cancelMask.querySelector('[data-' + _type + ']'));
                 typeButton.parent().removeClass('tips--deep tips--frozen')
             } else if (_type === 'tweet'){
-                var _profile = JSON.parse(localStorage.getItem('profile_twitter')) || {};
+                var _profile = JSON.parse(localStorage.getItem('profile_' + _provider)) || {};
                 scope.tweetPreview = {
                     user: {
                         name: _profile.displayName,
-                        profile_image_url_https: _profile.avatar,
-                        screen_name: "EW"
+                        avatar: _profile.avatar,
+                        screen_name: _profile.screen_name
                     },
                     media: [],
-                    text: ''
+                    text: '',
+                    created_at: Date.now()
                 }
-                $templateRequest('controlCenter/write/component/livePreview--twitter.html')
+                $templateRequest('controlCenter/write/component/livePreview--' + _provider + '.html')
                 .then(function (html){
                     cancelMask
                     .children()
@@ -273,22 +277,31 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 e.preventDefault()
 
                 var params = {
-                    status: status,
-                    geo   : elem.find('geo-picker').data('geo'),
-                    media_ids: elem.find('media-upload').data('media_ids')
+                    status: status
                 }
-
-                if (_type === 'retweet' && status.length > 0){
-                    __type = 'quote'
-
+                // Init
+                if (_provider === 'twitter'){
                     angular.extend(params, {
-                        status: status + ' https://twitter.com/' + _info[2] + '/status/' + _id
+                        geo: elem.find('geo-picker').data('geo'),
+                        media_ids: elem.find('media-upload').data('media_ids')
                     })
-                }
 
+                    if (_type === 'retweet' && status.length > 0){
+                        __type = 'quote'
+
+                        params.status = status + ' https://twitter.com/' + _info[2] + '/status/' + _id
+                    }
+                } else if (_provider === 'weibo'){
+                    if (_type === 'tweet'){
+                        angular.extend(params, {
+                            geo: elem.find('geo-picker').data('geo')
+                        })
+                    }
+                }
+                // UI
                 statusElem.prop('disabled', true)
                 submitButton.addClass('write__btn--send--sending')
-
+                // Fire
                 Action.update({
                     action: __type || _type,
                     provider: _provider,
@@ -322,9 +335,9 @@ angular.module('Oneline.olControlCenterDirectives', [])
             .on('input', function (){
                 // 更新推文內容
                 status = statusElem.val().trim()
-                // Twitter Preview
+                // Live Preview: linkify
                 if (scope.tweetPreview){
-                    scope.tweetPreview.text = $filter('linkify')(status, 'twitter')
+                    scope.tweetPreview.text = $filter('linkify')(status, _provider)
                     scope.$apply()
                 }
                 // 超字提醒

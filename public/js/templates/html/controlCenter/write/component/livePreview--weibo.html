@@ -1,12 +1,12 @@
 <div class="timeline">
-    <div class="timeline--twitter">
-        
+    <div class="timeline--weibo">
+
         <div class="timeline__profile">
-            <a ng-href="//twitter.com/{{tweetPreview.user.screen_name}}" target="_blank">
-                <img class="timeline__profile__avatar" ng-src="{{tweetPreview.user.avatar.replace('normal', 'bigger')}}" alt="avatar">
+            <a ng-href="//weibo.com/n/{{tweetPreview.user.screen_name}}" target="_blank">
+                <img class="timeline__profile__avatar" ng-src="{{tweetPreview.user.avatar.replace('/50/', '/180/')}}">
             </a>
             <div class="timeline__profile__fullname">
-                <a ng-href="//twitter.com/{{tweetPreview.user.screen_name}}" target="_blank">
+                <a ng-href="//weibo.com/n/{{tweetPreview.user.screen_name}}" target="_blank">
                     <strong ng-bind="tweetPreview.user.name"></strong>
                 </a>
             </div>
@@ -14,18 +14,6 @@
 
         <div class="timeline__content">
             <p class="timeline__text" ng-bind-html="tweetPreview.text"></p>
-
-            <div ng-if="tweetPreview.media.length > 0" class="timeline__media">
-                <div ng-repeat="media in tweetPreview.media" class="timeline__media--large">
-                    <a ng-if="media.type === 'photo'" ng-href="{{media.image_url}}" target="_blank">
-                        <svg class="timeline__media__jumpButton tips--deep animate--faster" viewBox="0 0 130 130">
-                            <use xlink:href="/public/img/icon-sprites.svg#eyeball-twitter"></use>
-                        </svg>
-                    </a>
-                    <img ng-if="media.type === 'photo'" ng-src="{{media.image_url}}" handle-image-error>
-                </div>
-            </div>
-
         </div>
 
         <div>
@@ -62,8 +50,8 @@
     </div>
 </div>
 
-<button ng-if="::providerList.indexOf('weibo') >= 0" ng-click="setControlCenter('', 'write_weibo-tweet')" class="switch-icon animate--faster tips" type="button">
+<button ng-if="::providerList.indexOf('twitter') >= 0" ng-click="setControlCenter('', 'write_twitter-tweet')" class="switch-icon animate--faster tips" type="button">
     <svg viewBox="0 0 300 300">
-        <use xlink:href="/public/img/icon-sprites.svg#twitter"></use>
+        <use xlink:href="/public/img/icon-sprites.svg#weibo"></use>
     </svg>
 </button>

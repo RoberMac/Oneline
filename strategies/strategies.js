@@ -46,11 +46,18 @@ function oauth1 (token, tokenSecret, profile, done){
                 done(null, found)
             })
         } else {
-            var avatar = profile.provider === 'twitter' ? profile._json.profile_image_url_https : '';
+            var avatar, screen_name;
+
+            if (profile.provider === 'twitter'){
+                avatar = profile._json.profile_image_url_https
+                screen_name = profile.username
+            }
+
             var user = new User({
                 'id'         : id,
                 'userId'     : profile.id + '',
                 'displayName': profile.displayName,
+                'screen_name': screen_name,
                 'provider'   : profile.provider,
                 'avatar'     : avatar,
                 'token'      : token,
@@ -80,15 +87,21 @@ function oauth2 (accessToken, refreshToken, profile, done){
                 done(null, found)
             })
         } else {
-            var avatar = profile.provider === 'instagram' 
-                            ? profile._json.data.profile_picture 
-                            : profile.provider === 'weibo'
-                                ? profile._json.profile_image_url
-                                : null;
+            var avatar, screen_name;
+
+            if (profile.provider === 'instagram'){
+                avatar = profile._json.data.profile_picture
+                screen_name = profile._json.data.username
+            } else if (profile.provider === 'weibo'){
+                avatar = profile._json.profile_image_url
+                screen_name = profile._json.screen_name
+            }
+
             var user = new User({
                 'id'         : id,
                 'userId'     : profile.id + '',
                 'displayName': profile.displayName,
+                'screen_name': screen_name,
                 'provider'   : profile.provider,
                 'avatar'     : avatar,
                 'token'      : accessToken,

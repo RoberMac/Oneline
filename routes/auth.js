@@ -40,7 +40,8 @@ router.get('/:provider/callback', function (req, res, next){
         token: token,
         profile: {
             displayName: req.user.displayName,
-            avatar     : req.user.avatar
+            avatar     : req.user.avatar,
+            screen_name: req.user.screen_name
         }
     })
 })

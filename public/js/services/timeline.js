@@ -254,16 +254,22 @@ angular.module('Oneline.timelineServices', [])
         return defer.promise;
     }
     // 折疊「舊貼文」（大於 TIME_RANGE * 1）
-    this.removeOldPosts = function (timelineData, providerList){
+    this.removeOldPosts = function (timelineData, newPosts, providerList){
         var now = Date.now(),
-            cache = timelineData.filter(function (item){
-                return now - item.created_at < TIME_RANGE
-            });
+            oldPostsCache = timelineCache.get('oldPosts') || [];
 
+        // 保存「舊貼文」
+        oldPostsCache = oldPostsCache.concat(newPosts)
+        timelineCache.put('oldPosts', oldPostsCache)
+
+        // 重置「時間指針」
         time_pointer = now - TIME_RANGE
+
         this.updateOldPostsCount(providerList)
 
-        return cache;
+        return timelineData.filter(function (item){
+            return now - item.created_at < TIME_RANGE
+        })
     }
     // 更新（本地）「舊帖文」數目提示
     this.updateOldPostsCount = function (providerList){
