@@ -31,13 +31,16 @@
 
     &__wrapper {
         position: absolute;
-        size: 100% 80%;
+        size: 100% 100%;
 
+        &--replicant {
+            height: 100%;
+        }
         &--write {
-            height: 66.7%
+            height: 66.7%;
         }
         &--read {
-            height: 83%
+            height: 83%;
         }
     }
 }
@@ -265,6 +268,6 @@
     }
 }
 .switch-icon {
-    position: absolute * 0 0 *;
+    position: absolute * 0 100% *;
     size: 40px;
 }

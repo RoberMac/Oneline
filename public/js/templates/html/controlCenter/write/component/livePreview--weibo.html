@@ -2,12 +2,12 @@
     <div class="timeline--weibo">
 
         <div class="timeline__profile">
-            <a ng-href="//weibo.com/n/{{tweetPreview.user.screen_name}}" target="_blank">
-                <img class="timeline__profile__avatar" ng-src="{{tweetPreview.user.avatar.replace('/50/', '/180/')}}">
+            <a ng-href="//weibo.com/n/{{::tweetPreview.user.screen_name}}" target="_blank">
+                <img class="timeline__profile__avatar" ng-src="{{::tweetPreview.user.avatar.replace('/50/', '/180/')}}">
             </a>
             <div class="timeline__profile__fullname">
-                <a ng-href="//weibo.com/n/{{tweetPreview.user.screen_name}}" target="_blank">
-                    <strong ng-bind="tweetPreview.user.name"></strong>
+                <a ng-href="//weibo.com/n/{{::tweetPreview.user.screen_name}}" target="_blank">
+                    <strong ng-bind="::tweetPreview.user.name"></strong>
                 </a>
             </div>
         </div>
@@ -16,42 +16,9 @@
             <p class="timeline__text" ng-bind-html="tweetPreview.text"></p>
         </div>
 
-        <div>
-            <span class="cursor--pointer">
-                <!-- Favorite -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 26 26">
-                        <use xlink:href="/public/img/icon-sprites.svg#favorite"></use>
-                    </svg>
-                </button>
-                <!-- Retweet -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 34 26">
-                        <use xlink:href="/public/img/icon-sprites.svg#retweet"></use>
-                    </svg>
-                </button>
-                <!-- Reply -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 26 26">
-                        <use xlink:href="/public/img/icon-sprites.svg#reply"></use>
-                    </svg>
-                </button>
-                <!-- Source -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 26 26">
-                        <use xlink:href="/public/img/icon-sprites.svg#source"></use>
-                    </svg>
-                </button>
-            </span>
-        </div>
+        <div ng-include=" 'controlCenter/write/component/fakeActions.html' "></div>
 
         <span class="timeline__time" relative-date="{{::tweetPreview.created_at}}"></span>
 
     </div>
 </div>
-
-<button ng-if="::providerList.indexOf('twitter') >= 0" ng-click="setControlCenter('', 'write_twitter-tweet')" class="switch-icon animate--faster tips" type="button">
-    <svg viewBox="0 0 300 300">
-        <use xlink:href="/public/img/icon-sprites.svg#weibo"></use>
-    </svg>
-</button>

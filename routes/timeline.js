@@ -1,6 +1,6 @@
 /* /timeline */
 var router = require('express').Router(),
-    filter = require('./helper/filter'),
+    filter = require('./helper/filter--timeline'),
     feed   = require('./helper/timeline');
 
 

@@ -17,6 +17,10 @@ var userSchema = new Schema({
         type     : String,
         require  : true,
     },
+    screen_name  : {
+        type     : String,
+        require  : true,
+    },
     provider     : {
         type     : String,
         lowercase: true,
@@ -42,6 +46,10 @@ var replicantSchema = new Schema({
         index    : true
     },
     token        : {
+        type     : String,
+        require  : true
+    },
+    profile      : {
         type     : String,
         require  : true
     },

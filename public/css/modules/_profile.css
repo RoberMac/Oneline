@@ -46,15 +46,20 @@
         .timeline__content {
             top: 0;
         }
-        .timeline__media {
-            margin: 0;
+        .timeline__media, .timeline__text {
+            margin: 0 0 17px 0;
         }
-        .timeline__text {
-            margin: 17px 0;
+        .timeline--quote {
+            top: 0;
+            background-color: var(--color-gray-drak);
         }
         .actions__count::after {
             color: var(--color-steel);
         }
+    }
+    &__timeline--retweet {
+        margin: 36px 17px 17px;
+        background-color: var(--color-gray);
     }
     &--instagram {
         .profile__biography {
@@ -62,6 +67,15 @@
 
             a, a:visited {
                 color: #82B6FF;
+            }
+        }
+    }
+    &--twitter {
+        .profile__biography {
+            background-color: var(--color-twitter);
+
+            a, a:visited {
+                color: #78D6FF;
             }
         }
     }

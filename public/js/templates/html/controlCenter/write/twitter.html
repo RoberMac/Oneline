@@ -1,6 +1,6 @@
 <form name="newTweetForm" write>
 
-    <textarea class="write__textarea animate--faster" type="text" name="tweet" autocomplete="off" spellcheck="false" required></textarea>
+    <textarea class="write__textarea animate--general" type="text" name="tweet" autocomplete="off" spellcheck="false" required></textarea>
 
     <div class="write__toolBar">
         <!-- left -->
@@ -16,3 +16,8 @@
 
     <div class="write__previews"></div>
 </form>
+<button ng-if="::providerList.indexOf('weibo') >= 0" ng-click="setControlCenter('', 'write_weibo-tweet')" class="switch-icon animate--faster tips" type="button">
+    <svg viewBox="0 0 300 300">
+        <use xlink:href="/public/img/icon-sprites.svg#twitter"></use>
+    </svg>
+</button>

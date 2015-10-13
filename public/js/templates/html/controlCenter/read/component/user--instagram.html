@@ -3,41 +3,41 @@
     <div class="timeline--instagram profile--instagram">
         <!-- Profile -->
         <div class="timeline__profile">
-            <a ng-href="//instagram.com/{{::user.profile.username}}" target="_blank">
-                <img class="timeline__profile__avatar" ng-src="{{::user.profile.profile_picture}}" alt="avatar">
+            <a ng-href="//instagram.com/{{::user.name}}" target="_blank">
+                <img class="timeline__profile__avatar" ng-src="{{::user.avatar}}" alt="avatar">
             </a>
             <div class="timeline__profile__fullname">
-                <a ng-href="//instagram.com/{{::user.profile.username}}" target="_blank">
-                    <strong ng-bind="::user.profile.full_name ? user.profile.full_name : user.profile.username"></strong>
+                <a ng-href="//instagram.com/{{::user.name}}" target="_blank">
+                    <strong ng-bind="::user.screen_name ? user.screen_name : user.name"></strong>
                 </a>
             </div>
         </div>
         <!-- 粉絲數、正在關注數 -->
-        <div ng-if="::user.profile.counts" class="profile__count">
-            <div class="profile__count__column" ng-attr-data-count="{{::user.profile.counts.media}}">
+        <div ng-if="user.counts" class="profile__count">
+            <div class="profile__count__column" ng-attr-data-count="{{::user.counts.statuses}}">
                 <svg viewBox="0 0 60 60">
                     <use xlink:href="/public/img/icon-sprites.svg#post"></use>
                 </svg>
             </div>
-            <div class="profile__count__column" ng-attr-data-count="{{::user.profile.counts.followed_by}}">
+            <div class="profile__count__column" ng-attr-data-count="{{::user.counts.followed_by}}">
                 <svg viewBox="0 0 60 60">
                     <use xlink:href="/public/img/icon-sprites.svg#followed_by"></use>
                 </svg>
             </div>
-            <div class="profile__count__column" ng-attr-data-count="{{::user.profile.counts.follows}}">
+            <div class="profile__count__column" ng-attr-data-count="{{::user.counts.follows}}">
                 <svg viewBox="0 0 60 60">
                     <use xlink:href="/public/img/icon-sprites.svg#follows"></use>
                 </svg>
             </div>
         </div>
         <!-- 簡介 -->
-        <div ng-if="::user.profile.bio">
-            <p class="timeline__text profile__biography" linkify="instagram">{{::user.profile.bio + ' ' + user.profile.website | html}}</p>
+        <div ng-if="user.bio">
+            <p class="timeline__text profile__biography" linkify="instagram">{{::user.bio + ' ' + user.website | html}}</p>
         </div>
         <!-- 加載動畫 -->
-       <div ng-if="!user.timeline && !user.profile.isLocked" class="loadMore loadMore--loading"></div>
+       <div ng-if="!user.timeline && !user.isLocked" class="loadMore loadMore--loading"></div>
         <!-- 是否為私人帳號 -->
-        <div ng-if="user.profile.isLocked" class="profile__locked">
+        <div ng-if="user.isLocked" class="profile__locked">
             <svg viewBox="0 0 40 40">
                 <use xlink:href="/public/img/icon-sprites.svg#locked"></use>
             </svg>
@@ -51,18 +51,21 @@
             </div>
 
             <span class="cursor--pointer">
+                <!-- Favorite -->
                 <button class="actions tips--frozen" type="button">
                     <svg class="actions__button" viewBox="0 0 26 26">
                         <use xlink:href="/public/img/icon-sprites.svg#favorite"></use>
                     </svg>
                     <span class="actions__count" ng-attr-data-count="{{::item.favorite_count > 0 ? item.favorite_count : ''}}"></span>
                 </button>
+                <!-- Reply -->
                 <button class="actions tips--frozen" type="button">
                     <svg class="actions__button" viewBox="0 0 26 26">
                         <use xlink:href="/public/img/icon-sprites.svg#reply">
                     </svg>
                     <span class="actions__count" ng-attr-data-count="{{::item.reply_count > 0 ? item.reply_count : ''}}"></span>
                 </button>
+                <!-- Source -->
                 <a ng-href="{{::item.link}}" target="_blank">
                     <button class="actions tips--deep" type="button">
                         <svg class="actions__button" viewBox="0 0 26 26">

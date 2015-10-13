@@ -2,7 +2,8 @@ var extend  = require('extend'),
     Twit    = require('twit'),
     Ig      = require('instagram-node').instagram(),
     request = require('request'),
-    filter  = require('./filter');
+    timelineFilter = require('./filter--timeline'),
+    profileFilter = require('./filter--profile');
 
 module.exports = {
     twitter: function (action, opts){
@@ -13,54 +14,83 @@ module.exports = {
             access_token       : opts.token,
             access_token_secret: opts.tokenSecret
         });
-        var q_twit = Q.nbind(T.post, T);
 
         // Init
-        var tOpts = {}, action_str;
+        var tOpts = {}, action_str, q_twit;
 
-        switch (action){
-            case 'like':
-                action_str = 'favorites/' + (opts.method === 'put' ? 'create' : 'destroy')
-                extend(tOpts, { id: opts.id, include_entities: false })
-                break;
-            case 'retweet':
-                action_str = 'statuses/' + ((opts.method === 'put' || opts.method === 'post')
-                                                ? 'retweet'
-                                                : 'destroy')
-                extend(tOpts, { id: opts.id, trim_user: true })
-                break;
-            case 'reply':
-                extend(tOpts, { in_reply_to_status_id: opts.id })
-            case 'quote':
-            case 'tweet':
-                action_str = 'statuses/update'
-                extend(tOpts, {
-                    status: opts.params.status,
-                    media_ids: opts.params.media_ids,
-                    trim_user: true
+        if (action === 'user'){
+            q_twit = Q.nbind(T.get, T)
+
+            return Q.all([
+                q_twit('users/show', { user_id: opts.id, include_entities: false }),
+                q_twit('statuses/user_timeline', {
+                    user_id: opts.id,
+                    count: 7,
+                    trim_user: false,
+                    exclude_replies: true,
+                    contributor_details: false,
+                    include_rts: true
                 })
-                if (opts.params.geo){
-                    extend(tOpts, {
-                        lat: opts.params.geo.lat,
-                        long: opts.params.geo.long
-                    })
-                }
-                break;
-        }
+            ])
+            .spread(function (userData, timelineData){
+                var data = profileFilter.twitter(userData[0]);
 
-        return q_twit(action_str, tOpts)
-        .then(function (data){
+                extend(data, { timeline: timelineFilter.twitter(timelineData[0]).data })
+
+                return {
+                    statusCode: 200,
+                    data: data
+                }
+            })
+        } else {
+            q_twit = Q.nbind(T.post, T);
+
             switch (action){
-                case 'retweet':
-                case 'quote':
-                    return { statusCode: 200, id_str: data[0].id_str }
-                    break;
                 case 'like':
+                    action_str = 'favorites/' + (opts.method === 'put' ? 'create' : 'destroy')
+                    extend(tOpts, { id: opts.id, include_entities: false })
+                    break;
+                case 'retweet':
+                    action_str = 'statuses/' + ((opts.method === 'put' || opts.method === 'post')
+                                                    ? 'retweet'
+                                                    : 'destroy')
+                    extend(tOpts, { id: opts.id, trim_user: true })
+                    break;
+                case 'reply':
+                    extend(tOpts, { in_reply_to_status_id: opts.id })
+                case 'quote':
                 case 'tweet':
-                    return { statusCode: 200 }
+                    action_str = 'statuses/update'
+                    extend(tOpts, {
+                        status: opts.params.status,
+                        media_ids: opts.params.media_ids,
+                        trim_user: true
+                    })
+                    if (opts.params.geo){
+                        extend(tOpts, {
+                            lat: opts.params.geo.lat,
+                            long: opts.params.geo.long
+                        })
+                    }
                     break;
             }
-        })
+
+            return q_twit(action_str, tOpts)
+            .then(function (data){
+                switch (action){
+                    case 'retweet':
+                    case 'quote':
+                        return { statusCode: 200, id_str: data[0].id_str }
+                        break;
+                    case 'like':
+                    case 'tweet':
+                        return { statusCode: 200 }
+                        break;
+                    case 'user':
+                        return { statusCode: 200, data: profileFilter.twitter(data[0]) }
+                }
+            })
+        }
     },
     weibo: function (action, opts){
 
@@ -134,10 +164,10 @@ module.exports = {
                 Q.nbind(Ig.user_media_recent, Ig)(opts.id, { count: 7 })
             ])
             .spread(function (userData, timelineData){
-                var data = {
-                    profile : userData[0],
-                    timeline: filter.instagram(timelineData[0]).data
-                };
+                var data = profileFilter.instagram(userData[0]);
+
+                extend(data, { timeline: timelineFilter.instagram(timelineData[0]).data })
+
                 return {
                     statusCode: 200,
                     data: data

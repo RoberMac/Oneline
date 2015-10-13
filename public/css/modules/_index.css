@@ -64,6 +64,12 @@
         &--inactive {
             display: none;
         }
+        &--twitter {
+            fill: var(--color-twitter);
+        }
+        &--weibo {
+            fill: var(--color-weibo);
+        }
     }
 
     @media (--all-mobile-devices){

@@ -1,9 +1,7 @@
 <div class="timeline__profile">
-    <a ng-href="//twitter.com/{{::item.user.screen_name}}" target="_blank">
-
+    <button ng-click="setControlCenter('userProfile')" user-profile="::item.user" provider="twitter" from="timeline" type="button">
         <img class="timeline__profile__avatar" ng-src="{{::item.user.avatar.replace('normal', 'bigger')}}">
-
-    </a>
+    </button>
     <div class="timeline__profile__fullname">
         <a ng-href="//twitter.com/{{::item.user.screen_name}}" target="_blank">
             <strong ng-bind="::item.user.name"></strong>

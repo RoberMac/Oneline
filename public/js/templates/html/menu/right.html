@@ -12,7 +12,7 @@
 
     <div ng-if="isTimeline && !controlCenter && (providerList.indexOf('twitter') >= 0 || providerList.indexOf('weibo') >= 0)" class="animate--general">
         <button class="menu__button animate--faster" ng-click="setControlCenter(providerList.indexOf('twitter') >= 0 ? 'write_twitter-tweet' : 'write_weibo-tweet')" type="button">
-            <svg viewBox="0 0 200 200">
+            <svg viewBox="0 0 200 200" ng-class=":: providerList.indexOf('twitter') >= 0 ? 'menu__button--twitter' : 'menu__button--weibo' ">
                <use xlink:href="/public/img/icon-sprites.svg#newTweet"></use>
             </svg>
         </button>

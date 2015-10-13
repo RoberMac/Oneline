@@ -1,4 +1,25 @@
 angular.module('Oneline.olControlCenterDirectives', [])
+.directive('controlCenter', ['$window', function ($window){
+    return {
+        restrict: 'A',
+        link: function (scope, elem, attrs){
+            var _window = angular.element($window);
+
+            // 按 Esc 鍵取消操作
+            _window.on('keydown', function (e){
+                if (e.keyCode === 27){
+                    scope.$apply(function (){
+                        scope.setControlCenter('')
+                    })
+                }
+            })
+
+            elem.on('$destroy', function (){
+                _window.off()
+            });
+        }
+    }
+}])
 .directive('replicantDeckard', ['Replicant', function (Replicant){
     return {
         restrict: 'A',
@@ -18,7 +39,16 @@ angular.module('Oneline.olControlCenterDirectives', [])
                     elem.html(rdmString.substr(0, 7))
                 }, 100)
 
-                Replicant.deckard()
+                var profileList = [];
+                scope.providerList.forEach(function (provider){
+                    var profile = JSON.parse(localStorage.getItem('profile_' + provider));
+
+                    if (profile){
+                        profileList.push(profile)
+                    }
+                })
+
+                Replicant.deckard({ profileList: JSON.stringify(profileList) })
                 .$promise
                 .then(function (data){
                     var deadline = 60;
@@ -66,14 +96,16 @@ angular.module('Oneline.olControlCenterDirectives', [])
                             alert(msg)
                         })
                     } else {
+                        // 處理 Token
                         olTokenHelper.replaceTokenList(data.tokenList)
                         scope.updateProviderList()
+                        // 處理 Profile
+                        data.profileList.forEach(function (profile){
+                            localStorage.setItem('profile_' + profile._provider, JSON.stringify(profile))
+                        })
                     }
 
                     scope.setControlCenter('')
-                    scope.toggleActive({
-                        currentTarget: document.querySelector('.replicant-icon--rachael')
-                    })
                 }, function (err){
                     inputElem.addClassTemporarily('replicant--rachael--errCode', 500)
                 })
@@ -81,7 +113,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
         }
     }
 }])
-.directive('read', ['$window', function($window){
+.directive('read', [function(){
     return {
         restrict: 'A',
         controller: ['$scope', 'Action', function ($scope, Action){
@@ -100,25 +132,11 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 $scope.readType  = _type 
                 $scope.readItems = res.data
             })
-        }],
-        link: function (scope, elem, attrs){
-            var _window      = angular.element($window);
-            // 按 Esc 鍵取消操作
-            _window.on('keydown', function (e){
-                if (e.keyCode === 27){
-                    scope.$apply(function (){
-                        scope.setControlCenter('')
-                    })
-                }
-            })
-            elem.on('$destroy', function (){
-                _window.off()
-            })
-        }
+        }]
     }
 }])
-.directive('userProfile', ['$compile', '$templateRequest', 'Action', 
-    function($compile, $templateRequest, Action){
+.directive('userProfile', ['$timeout', '$compile', '$templateRequest', 'Action', 
+    function($timeout, $compile, $templateRequest, Action){
 
     return {
         restrict: 'A',
@@ -127,62 +145,78 @@ angular.module('Oneline.olControlCenterDirectives', [])
         },
         link: function (scope, elem, attrs){
             elem.on('click', function (){
-                if (elem.hasClass('tips--frozen')) return;
-
                 var _profile  = scope.profile,
-                    _provider = 'instagram';
+                    _from     = attrs.from,
+                    _provider = attrs.provider,
+                    _uid      = _provider === 'twitter'
+                                    ? _profile.id_str
+                                : _provider === 'instagram'
+                                    ? _profile.id
+                                : _provider === 'weibo'
+                                    ? _profile.idstr
+                                : null
 
-                scope.user = {
-                    profile: {
-                        full_name: _profile.full_name,
-                        profile_picture: _profile.profile_picture,
-                        username: _profile.username,
+                // Init
+                if (_provider === 'instagram'){
+                    if (_from === 'controlCenter' && elem.hasClass('tips--frozen')) return;
+
+                    scope.user = {
+                        screen_name: _profile.full_name,
+                        avatar: _profile.profile_picture,
+                        name: _profile.username,
                         isLocked: false
+                    };
+                } else {
+                    scope.user = {
+                        screen_name: _profile.screen_name,
+                        avatar: _profile.avatar,
+                        name: _profile.name
                     }
-                };
+                }
+                // Show Profile
+                $timeout(function (){
+                    var maskContainer = angular.element(
+                                            document.querySelector('.cancelMask__wrapper')
+                                        ).children();
 
-                var maskContainer = angular.element(
-                                        document.querySelector('.cancelMask__wrapper')
-                                    ).children();
+                    maskContainer.empty()
 
-                maskContainer.empty()
-
-                $templateRequest('controlCenter/read/component/profile--instagram.html')
-                .then(function (html){
-                    maskContainer
-                    .append($compile(html)(scope))
+                    $templateRequest('controlCenter/read/component/user--' + _provider + '.html')
+                    .then(function (html){
+                        maskContainer
+                        .append($compile(html)(scope))
+                    })
                 })
-                elem.addClass('timeline__media--loading')
-
+                // Fire
+                _from === 'controlCenter' ? elem.addClass('timeline__media--loading') : null
 
                 Action.get({
                     action: 'user',
                     provider: _provider,
-                    id: _profile.id
+                    id: _uid
                 })
                 .$promise
                 .then(function (res){
-                    scope.user = res.data;
-                })
-                .then(function (){
-                    elem.addClass('timeline__media--active')
+                    angular.extend(scope.user, res.data)
+                    _from === 'controlCenter' ? elem.addClass('timeline__media--active') : null
                 })
                 .catch(function (){
-                    scope.user.profile.isLocked = true
-                    elem.addClass('tips--frozen')
+                    scope.user.isLocked = true
+                     _from === 'controlCenter' ? elem.addClass('tips--frozen') : null
                 })
                 .finally(function (){
-                    elem.removeClass('timeline__media--loading')
+                     _from === 'controlCenter' ? elem.removeClass('timeline__media--loading') : null
                 })
             })
+
             elem.on('$destroy', function (){
                 elem.off('click')
             })
         }
     }
 }])
-.directive('write', ['$compile', '$window', '$templateRequest', '$filter', 'Action', 'olUI',
-    function ($compile, $window, $templateRequest, $filter, Action, olUI){
+.directive('write', ['$compile', '$templateRequest', '$filter', 'Action', 'olUI',
+    function ($compile, $templateRequest, $filter, Action, olUI){
 
     return {
         restrict: 'A',
@@ -199,8 +233,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                                         ? 116
                                         : null
 
-            var _window      = angular.element($window),
-                _button      = elem.find('button'),
+            var _button      = elem.find('button'),
                 submitButton = _button.eq(_button.length - 1),
                 statusElem   = elem.find('textarea'),
                 typeButton;
@@ -243,7 +276,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 // 判斷是否需要垂直居中
                 _cancelMask.offsetHeight - _cancelMask.children[0].scrollHeight > 72
                     ? cancelMask.addClass('vertically_center')
-                    : cancelMask.removeClass('vertically_center')               
+                    : cancelMask.removeClass('vertically_center')
                 // 「回覆」／「轉推」提醒
                 typeButton = angular.element(_cancelMask.querySelector('[data-' + _type + ']'));
                 typeButton.parent().removeClass('tips--deep tips--frozen')
@@ -314,7 +347,6 @@ angular.module('Oneline.olControlCenterDirectives', [])
                         olUI.setActionState('retweet', _id, 'active')
                         olUI.actionData('retweet', _id, data.id_str)
 
-                        // TODO
                         if (__type === 'quote'){
                             // 凍結
                             olUI.setActionState('retweet', _id, 'frozen')
@@ -356,16 +388,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
             })
             .on('$destroy', function (){
                 elem.off()
-                _window.off()
             });
-            // 按 Esc 鍵取消操作
-            _window.on('keydown', function (e){
-                if (e.keyCode === 27){
-                    scope.$apply(function (){
-                        scope.setControlCenter('')
-                    })
-                }
-            })
         }
     }
 }])

@@ -41,7 +41,8 @@ router.get('/:provider/callback', function (req, res, next){
         profile: {
             displayName: req.user.displayName,
             avatar     : req.user.avatar,
-            screen_name: req.user.screen_name
+            screen_name: req.user.screen_name,
+            _provider  : req.olProvider
         }
     })
 })
@@ -95,6 +96,7 @@ router.get('/replicant/deckard', function (req, res, next){
         if (found){
             found.id = code
             found.token = JSON.stringify(tokenList)
+            found.token = req.query.profileList
             found.createdAt = new Date()
             found.save(function (err){
                 if (err) return next({ statusCode: 500 })
@@ -104,6 +106,7 @@ router.get('/replicant/deckard', function (req, res, next){
             var replicant = new Replicant({
                 id       : code,
                 token    : JSON.stringify(tokenList),
+                profile  : req.query.profileList,
                 createdAt: new Date()
             })
             replicant.save(function (err){
@@ -124,6 +127,7 @@ router.post('/replicant/rachael', function (req, res, next){
             res.json({
                 statusCode: 200,
                 tokenList: JSON.parse(found.token || '[]'),
+                profileList: JSON.parse(found.profile),
                 msg: JSON.parse(found.msg || '[]')
             })
         } else {
