@@ -35,7 +35,7 @@
             <p class="timeline__text profile__biography" linkify="twitter">{{::user.bio + ' ' + user.website | html}}</p>
         </div>
         <!-- 加載動畫 -->
-       <div ng-if="!user.bio" class="loadMore loadMore--loading"></div>
+       <div ng-if="!user.timeline" class="loadMore loadMore--loading"></div>
         <!-- Timeline -->
         <div ng-if="user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline" ng-class=" item.type === 'retweet' ? 'profile__timeline--retweet' : 'profile__timeline' ">
 

@@ -15,7 +15,7 @@
 
     <div class="write__previews"></div>
 </form>
-<button ng-if="::providerList.indexOf('twitter') >= 0" ng-click="setControlCenter('', 'write_twitter-tweet')" class="switch-icon animate--faster tips" type="button">
+<button ng-if="::providerList.indexOf('twitter') >= 0 && controlCenter.indexOf('write_weibo-tweet') >= 0" ng-click="setControlCenter('', 'write_twitter-tweet')" class="switch-icon animate--faster tips" type="button">
     <svg viewBox="0 0 300 300">
         <use xlink:href="/public/img/icon-sprites.svg#weibo"></use>
     </svg>
