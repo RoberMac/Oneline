@@ -9,7 +9,9 @@ var filter = {
                 follows: data.friends_count,
                 followed_by: data.followers_count,
                 statuses: data.statuses_count
-            }
+            },
+            following: data.following,
+            protected: data.protected
         }
     },
     instagram: function (data){

@@ -1,6 +1,9 @@
 .profile {
     padding: 0 0 7px 0;
 
+    &__avatar {
+        left: calc(50% - 24px);
+    }
     &__locked {
         text-align: center;
 
@@ -30,6 +33,17 @@
             }
         }
     }
+    &__createdAt {
+        position: absolute 3px 0 0 3px;
+    }
+    &__following {
+        position: absolute 3px 3px * *;
+        size: 17px;
+
+        svg {
+            fill: #000;
+        }
+    }
     &__biography {
         position: relative -17px * *;
         padding: 3px 7px;
@@ -37,7 +51,14 @@
         font-size: 13px;
         color: var(--color-gray);
     }
+    &__website {
+        text-align: center;
 
+        svg {
+            size: 17px;
+            stroke-width: 7px;
+        }
+    }
     &__timeline {
         padding: 10px 10px 0px 10px;
         margin: 17px;
@@ -69,6 +90,21 @@
                 color: #82B6FF;
             }
         }
+        .profile__website {
+            svg {
+                stroke: var(--color-instagram);
+            }
+        }
+        .profile__count__column {
+            svg {
+                fill: var(--color-instagram);
+            }
+        }
+        .profile__following--active {
+            svg {
+                fill: var(--color-instagram);
+            }
+        }
     }
     &--twitter {
         .profile__biography {
@@ -76,6 +112,21 @@
 
             a, a:visited {
                 color: #78D6FF;
+            }
+        }
+        .profile__website {
+            svg {
+                stroke: var(--color-twitter);
+            }
+        }
+        .profile__count__column {
+            svg {
+                fill: var(--color-twitter);
+            }
+        }
+        .profile__following--active {
+            svg {
+                fill: var(--color-twitter);
             }
         }
     }

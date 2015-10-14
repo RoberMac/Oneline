@@ -1,0 +1,37 @@
+<!-- 貼文數、粉絲數、追隨數 -->
+<div ng-if="::user.counts" class="profile__count">
+    <div class="profile__count__column" ng-attr-data-count="{{::user.counts.statuses}}">
+        <svg viewBox="0 0 60 60">
+            <use xlink:href ng-attr-xlink:href="{{::'/public/img/icon-sprites.svg#' + _p_type}}"></use>
+        </svg>
+    </div>
+    <div class="profile__count__column" ng-attr-data-count="{{::user.counts.followed_by}}">
+        <svg viewBox="0 0 60 60">
+            <use xlink:href="/public/img/icon-sprites.svg#followed_by"></use>
+        </svg>
+    </div>
+    <div class="profile__count__column" ng-attr-data-count="{{::user.counts.follows}}">
+        <svg viewBox="0 0 60 60">
+            <use xlink:href="/public/img/icon-sprites.svg#follows"></use>
+        </svg>
+    </div>
+</div>
+<!-- 簡介 -->
+<div ng-if="::user.bio">
+    <p class="timeline__text profile__biography" linkify="{{::_p_provider}}">{{::user.bio | html}}</p>
+</div>
+<div ng-if="::user.website" class="profile__website">
+    <a ng-href="{{::user.website}}" target="_blank">
+        <svg viewBox="0 0 100 100" class="tips animate--faster">
+            <use xlink:href="/public/img/icon-sprites.svg#link"></use>
+        </svg>
+    </a>
+</div>
+<!-- 加載動畫 -->
+<div ng-if="!user.timeline && !user.protected" class="loadMore loadMore--loading"></div>
+<!-- 是否為私人帳號 -->
+<div ng-if="user.protected" class="profile__locked">
+    <svg viewBox="0 0 40 40">
+        <use xlink:href="/public/img/icon-sprites.svg#locked"></use>
+    </svg>
+</div>

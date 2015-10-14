@@ -292,7 +292,7 @@
             &::after {
                 content: attr(data-count);
                 position: absolute 0 0 * *;
-                size: 25px 100%;
+                size: 20% 100%;
                 color: var(--color-gray-drak);
                 text-align: center;
                 line-height: 40px;

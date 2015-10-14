@@ -2,48 +2,19 @@
 
     <div class="timeline--instagram profile--instagram">
         <!-- Profile -->
-        <div class="timeline__profile">
-            <a ng-href="//instagram.com/{{::user.name}}" target="_blank">
-                <img class="timeline__profile__avatar" ng-src="{{::user.avatar}}" alt="avatar">
+        <a class="timeline__profile profile__avatar" ng-href="//instagram.com/{{::user.screen_name}}" target="_blank">
+            <img class="timeline__profile__avatar" ng-src="{{::user.avatar}}" alt="avatar">
+        </a>
+        <div class="timeline__profile timeline__profile__fullname">
+            <a ng-href="//instagram.com/{{::user.screen_name}}" target="_blank">
+                <strong ng-bind="::user.name ? user.name : user.screen_name"></strong>
             </a>
-            <div class="timeline__profile__fullname">
-                <a ng-href="//instagram.com/{{::user.name}}" target="_blank">
-                    <strong ng-bind="::user.screen_name ? user.screen_name : user.name"></strong>
-                </a>
-            </div>
         </div>
-        <!-- 粉絲數、正在關注數 -->
-        <div ng-if="user.counts" class="profile__count">
-            <div class="profile__count__column" ng-attr-data-count="{{::user.counts.statuses}}">
-                <svg viewBox="0 0 60 60">
-                    <use xlink:href="/public/img/icon-sprites.svg#post"></use>
-                </svg>
-            </div>
-            <div class="profile__count__column" ng-attr-data-count="{{::user.counts.followed_by}}">
-                <svg viewBox="0 0 60 60">
-                    <use xlink:href="/public/img/icon-sprites.svg#followed_by"></use>
-                </svg>
-            </div>
-            <div class="profile__count__column" ng-attr-data-count="{{::user.counts.follows}}">
-                <svg viewBox="0 0 60 60">
-                    <use xlink:href="/public/img/icon-sprites.svg#follows"></use>
-                </svg>
-            </div>
-        </div>
-        <!-- 簡介 -->
-        <div ng-if="user.bio">
-            <p class="timeline__text profile__biography" linkify="instagram">{{::user.bio + ' ' + user.website | html}}</p>
-        </div>
-        <!-- 加載動畫 -->
-       <div ng-if="!user.timeline && !user.isLocked" class="loadMore loadMore--loading"></div>
-        <!-- 是否為私人帳號 -->
-        <div ng-if="user.isLocked" class="profile__locked">
-            <svg viewBox="0 0 40 40">
-                <use xlink:href="/public/img/icon-sprites.svg#locked"></use>
-            </svg>
-        </div>
+
+        <div ng-if="true" ng-include=" 'controlCenter/read/component/profile.html' " onload="_p_type = 'post'; _p_provider = 'instagram' "></div>
+
         <!-- Timeline -->
-        <div ng-if="user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline profile__timeline">
+        <div ng-if="::user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline profile__timeline">
 
             <div class="timeline__content">
                 <div ng-include=" 'media/instagram.html' "></div>

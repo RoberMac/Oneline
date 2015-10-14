@@ -27,7 +27,7 @@ module.exports = {
                     user_id: opts.id,
                     count: 7,
                     trim_user: false,
-                    exclude_replies: true,
+                    exclude_replies: false,
                     contributor_details: false,
                     include_rts: true
                 })
@@ -73,6 +73,10 @@ module.exports = {
                         })
                     }
                     break;
+                case 'follow':
+                    action_str = 'friendships/' + (opts.method === 'put' ? 'create' : 'destroy')
+                    extend(tOpts, { id: opts.id })
+                    break;
             }
 
             return q_twit(action_str, tOpts)
@@ -84,6 +88,7 @@ module.exports = {
                         break;
                     case 'like':
                     case 'tweet':
+                    case 'follow':
                         return { statusCode: 200 }
                         break;
                     case 'user':

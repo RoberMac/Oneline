@@ -50,7 +50,7 @@ angular.module('Oneline.rootControllers', [])
         // L -> R
         else {
             currentState === 'timeline'
-                ? /read|write/.test($scope.controlCenter)
+                ? !!$scope.controlCenter
                     ? $scope.setControlCenter('')
                     : $state.go('settings')
                 : null
