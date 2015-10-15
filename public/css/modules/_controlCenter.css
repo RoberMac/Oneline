@@ -33,7 +33,7 @@
         position: absolute;
         size: 100% 100%;
 
-        &--replicant {
+        &--userProfile, &--replicant {
             height: 100%;
         }
         &--write {
@@ -163,16 +163,6 @@
                 }
             }
         }
-        &--twitter {
-            svg {
-                fill: var(--color-twitter);
-            }
-        }
-        &--weibo {
-            svg {
-                fill: var(--color-weibo);
-            }
-        }
     }
     &__previews {
         position: absolute * * 0 calc(50% - 54px - 9px);
@@ -222,18 +212,6 @@
             @media (--tablet){
                 lost-waffle: 1/7;
             }
-
-            &::before {
-                content: '';
-                padding-top: 100%;
-                float: left;
-            }
-
-            img {
-                float: left;
-                width: 100%;
-                border-radius: 50%;
-            }
         }
     }
     &__reply {
@@ -245,12 +223,6 @@
         &__avatar {
             padding: 7px;
             lost-column: 1/7 0;
-
-            img {
-                float: left;
-                width: 100%;
-                border-radius: 50%;
-            }
         }
         &__text {
             lost-column: 6/7 0;
@@ -266,8 +238,26 @@
             cursor: pointer;
         }
     }
+    &__like, &__reply {
+        &__avatar {
+            &::before {
+                content: '';
+                padding-top: 100%;
+                float: left;
+            }
+
+            img {
+                float: left;
+                width: 100%;
+                border-radius: 50%;
+            }
+        }
+    }
 }
 .switch-icon {
-    position: absolute * 0 100% *;
-    size: 40px;
+    position: absolute * 3px calc(100% + 3px) *;
+
+    button {
+        width: 27px;
+    }
 }

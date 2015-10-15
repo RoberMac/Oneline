@@ -21,22 +21,13 @@ angular.module('Oneline.olUserProfileDirectives', [])
                                 : null
 
                 // Init
-                if (_provider === 'instagram'){
-                    if (_from === 'controlCenter' && elem.hasClass('tips--frozen')) return;
+                if (_from === 'controlCenter' && elem.hasClass('tips--frozen')) return;
 
-                    scope.user = {
-                        name: _profile.full_name,
-                        avatar: _profile.profile_picture,
-                        screen_name: _profile.username,
-                        uid: _uid
-                    };
-                } else {
-                    scope.user = {
-                        screen_name: _profile.screen_name,
-                        avatar: _profile.avatar,
-                        name: _profile.name,
-                        uid: _uid
-                    }
+                scope.user = {
+                    screen_name: _profile.screen_name,
+                    avatar: _profile.avatar,
+                    name: _profile.name,
+                    uid: _uid
                 }
                 // Show Profile
                 $timeout(function (){

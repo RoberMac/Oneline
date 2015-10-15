@@ -83,9 +83,11 @@ angular.module('Oneline', [
         return this;
     }
     angular.element.prototype.delay = function (time){
+        var _this = this;
+
         return $q(function (resolve, reject){
             setTimeout(function (){
-                resolve()
+                resolve(_this)
             }, time)
         })
     }

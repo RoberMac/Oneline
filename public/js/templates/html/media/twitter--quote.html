@@ -1,8 +1,8 @@
 <div class="timeline__media">
     <div ng-repeat="media in ::item.quote.media" class="timeline__media--large">
-        <a ng-if="::media.type === 'photo'" ng-href="{{::media.image_url}}:large" target="_blank">
-            <svg class="timeline__media__jumpButton tips--deep animate--faster" viewBox="0 0 130 130">
-                <use xlink:href="/public/img/icon-sprites.svg#eyeball-twitter"></use>
+        <a ng-if="::media.type === 'photo'" ng-href="{{::media.image_url}}:large" class="icon--twitter" target="_blank">
+            <svg class="timeline__media__jumpButton tips--deep animate--faster" viewBox="0 0 100 100">
+                <use xlink:href="/public/img/icon-sprites.svg#eyeball"></use>
             </svg>
         </a>
 

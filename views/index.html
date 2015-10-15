@@ -27,11 +27,11 @@
     </div>
 
     <div ng-if="controlCenter" class="cancelMask animate--general" ng-click="setControlCenter('')">
-        <div class="cancelMask__wrapper overflow--y" ng-class="{'cancelMask__wrapper--replicant': controlCenter.indexOf('replicant') >= 0, 'cancelMask__wrapper--write': controlCenter.indexOf('write') >= 0,'cancelMask__wrapper--read': controlCenter.indexOf('read') >= 0}">
-            <div ng-click="$event.stopPropagation()" control-center></div>
+        <div class="cancelMask__wrapper overflow--y">
+            <div ng-click="$event.stopPropagation()"></div>
         </div>
     </div>
-    <div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter vertically_center animate--general" ng-class="{'controlCenter--replicant': controlCenter.indexOf('replicant') >= 0,'controlCenter--write': controlCenter.indexOf('write') >= 0,'controlCenter--read': controlCenter.indexOf('read') >= 0}"></div>
+    <div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter vertically_center animate--general"></div>
 
     <div ng-include=" 'menu/right.html' "></div>
 

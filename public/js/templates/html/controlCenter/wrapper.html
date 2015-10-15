@@ -1,12 +1,11 @@
-<div ng-if="controlCenter === 'replicant--deckard'" ng-include=" 'controlCenter/replicant/deckard.html' " class="replicant animate--general">
-</div>
-<div ng-if="controlCenter === 'replicant--rachael'" ng-include=" 'controlCenter/replicant/rachael.html' " class="replicant animate--general">
-</div>
-<!-- Write -->
-<div ng-if="controlCenter.indexOf('write_twitter') >= 0" ng-include=" 'controlCenter/write/twitter.html' " class="animate--general">
-</div>
-<div ng-if="controlCenter.indexOf('write_weibo') >= 0" ng-include=" 'controlCenter/write/weibo.html' " class="animate--general">
-</div>
-<!-- Read -->
-<div ng-if="controlCenter.indexOf('read_instagram') >= 0" ng-include=" 'controlCenter/read/instagram.html' " class="animate--general">
+<div ng-if="controlCenter" class="animate--general"> 
+    <!-- Replicant -->
+    <div ng-if="::controlCenter.indexOf('replicant') >= 0" ng-include=" 'controlCenter/replicant/' + controlCenter.replace('replicant--', '') + '.html' " class="replicant animate--general">
+    </div>
+    <!-- Write -->
+    <div ng-if="::controlCenter.indexOf('write') >= 0" ng-include=" 'controlCenter/write/' + controlCenter.replace('write_', '').split('-')[0] + '.html' " class="animate--general">
+    </div>
+    <!-- Read -->
+    <div ng-if="::controlCenter.indexOf('read_') >= 0" ng-include=" 'controlCenter/read/' + controlCenter.replace('read_', '').split('-')[0] + '.html' " class="animate--general">
+    </div>
 </div>

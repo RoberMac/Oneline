@@ -1,8 +1,8 @@
 angular.module('Oneline.rootControllers', [])
 .controller('rootController', [
-        '$rootScope', '$scope', '$timeout', '$state',
+        '$rootScope', '$window', '$scope', '$timeout', '$state',
         'olTokenHelper', 'olUI', 'timelineCache',
-    function ($rootScope, $scope, $timeout, $state,
+    function ($rootScope, $window, $scope, $timeout, $state,
         olTokenHelper, olUI, timelineCache){
 
 
@@ -27,9 +27,29 @@ angular.module('Oneline.rootControllers', [])
         $scope.controlCenter = state
 
         if (thenSwitchTo){
-            setTimeout(function (){
-                $scope.controlCenter = thenSwitchTo
+            $timeout(function (){
+                $scope.setControlCenter(thenSwitchTo)
             }, 700)
+        }
+
+        $timeout(function (){
+            var cancelMask = angular.element(document.querySelector('.cancelMask__wrapper')),
+                controlCenter = angular.element(document.querySelector('.controlCenter')),
+                type = state.match(/replicant|read|write|userProfile/);
+
+            if (type){
+                cancelMask.addClass('cancelMask__wrapper--' + type[0])
+                controlCenter.addClass('controlCenter--' + type[0])
+            } else {
+                cancelMask.removeClass(typeStr('cancelMask__wrapper--'))
+                controlCenter.removeClass(typeStr('controlCenter--'))
+            }
+        })
+
+        function typeStr(prefix){
+            var typeList = ['replicant', 'read', 'write', 'userProfile'];
+
+            return typeList.map(function (i){return prefix + i }).join(' ')
         }
     }
     // Router
@@ -56,6 +76,14 @@ angular.module('Oneline.rootControllers', [])
                 : null
         }
     }
+    // 按 Esc 鍵取消操作
+    angular.element($window).on('keydown', function (e){
+        if (e.keyCode === 27){
+            $scope.$apply(function (){
+                $scope.setControlCenter('')
+            })
+        }
+    })
 
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams){
@@ -81,6 +109,6 @@ angular.module('Oneline.rootControllers', [])
         document.title = '｜'
         timelineCache.removeAll()
         $scope.updateProviderList()
-        $scope.controlCenter = ''
+        $scope.setControlCenter('')
     })
 }])

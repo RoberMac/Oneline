@@ -6,7 +6,7 @@
         <!-- left -->
         <geo-picker ng-if="controlCenter.indexOf('write_weibo-tweet') >= 0"></geo-picker>
         <!-- right -->
-        <button class="write__btn write__btn--send write__btn--weibo tips" type="submit" data-count disabled>
+        <button class="write__btn write__btn--send icon--weibo tips" type="submit" data-count disabled>
             <svg viewBox="0 0 113 72">
                 <use xlink:href="/public/img/icon-sprites.svg#writing"></use>
             </svg>
@@ -15,8 +15,10 @@
 
     <div class="write__previews"></div>
 </form>
-<button ng-if="::providerList.indexOf('twitter') >= 0 && controlCenter.indexOf('write_weibo-tweet') >= 0" ng-click="setControlCenter('', 'write_twitter-tweet')" class="switch-icon animate--faster tips" type="button">
-    <svg viewBox="0 0 300 300">
-        <use xlink:href="/public/img/icon-sprites.svg#weibo"></use>
-    </svg>
-</button>
+<div class="switch-icon">
+    <button ng-if="::providerList.indexOf('twitter') >= 0 && controlCenter.indexOf('write_weibo-tweet') >= 0" ng-click="setControlCenter('', 'write_twitter-tweet')" class="animate--faster tips--deep" type="button">
+        <svg viewBox="0 0 283 150">
+            <use xlink:href="/public/img/icon-sprites.svg#2Twitter"></use>
+        </svg>
+    </button>    
+</div>

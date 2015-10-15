@@ -183,3 +183,20 @@ img, video {
         ), e-resize;
     }
 }
+.icon {
+    &--twitter {
+        svg {
+            fill: var(--color-twitter);
+        }
+    }
+    &--instagram {
+        svg {
+            fill: var(--color-instagram);
+        }
+    }
+    &--weibo {
+        svg {
+            fill: var(--color-weibo);
+        }
+    }
+}

@@ -27,6 +27,7 @@ var filter = {
             if (item.retweeted_status){
                 extend(tweetObj, {
                     type: 'retweet',
+                    id_str: item.retweeted_status.id_str,
                     text: item.retweeted_status.text,
                     retweet: {
                         created_at: Date.parse(item.retweeted_status.created_at),

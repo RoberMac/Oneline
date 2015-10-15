@@ -1,6 +1,6 @@
 angular.module('Oneline.UIServices', [])
 .service('olAnimate', ['$q', function($q){
-    this.enter = function (element, parent, after, options){
+    this.enter = function (element){
         return $q(function (resolve, reject){
 
             angular.forEach(element, function (elem){
@@ -8,9 +8,9 @@ angular.module('Oneline.UIServices', [])
 
                 var delay = elem.hasClass('animate--general')
                                 ? 700
-                                : elem.hasClass('animate--faster')
-                                    ? 300
-                                    : 0
+                            : elem.hasClass('animate--faster')
+                                ? 300
+                            : 0;
 
                 elem
                 .addClassTemporarily('ol-enter', delay)
@@ -23,7 +23,7 @@ angular.module('Oneline.UIServices', [])
             resolve()
         })
     },
-    this.leave = function (element, options){
+    this.leave = function (element){
 
         return $q(function (resolve, reject){
             var noAnimate = 0;
@@ -34,9 +34,9 @@ angular.module('Oneline.UIServices', [])
                 if (elem.hasClass('animate--general') || elem.hasClass('animate--faster')){
                     var delay = elem.hasClass('animate--general')
                                     ? 700
-                                    : elem.hasClass('animate--faster')
-                                        ? 300
-                                        : 0
+                                : elem.hasClass('animate--faster')
+                                    ? 300
+                                : 0;
 
                     elem
                     .addClass('ol-leave')

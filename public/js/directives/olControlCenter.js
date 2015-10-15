@@ -1,25 +1,4 @@
 angular.module('Oneline.olControlCenterDirectives', [])
-.directive('controlCenter', ['$window', function ($window){
-    return {
-        restrict: 'A',
-        link: function (scope, elem, attrs){
-            var _window = angular.element($window);
-
-            // 按 Esc 鍵取消操作
-            _window.on('keydown', function (e){
-                if (e.keyCode === 27){
-                    scope.$apply(function (){
-                        scope.setControlCenter('')
-                    })
-                }
-            })
-
-            elem.on('$destroy', function (){
-                _window.off()
-            });
-        }
-    }
-}])
 .directive('replicantDeckard', ['Replicant', function (Replicant){
     return {
         restrict: 'A',
@@ -193,10 +172,6 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 angular.element(_cancelMask.querySelector('[data-source]'))
                 .parent()
                 .removeClass('tips--frozen');
-                // 判斷是否需要垂直居中
-                _cancelMask.offsetHeight - _cancelMask.children[0].scrollHeight > 72
-                    ? cancelMask.addClass('vertically_center')
-                    : cancelMask.removeClass('vertically_center')
                 // 「回覆」／「轉推」提醒
                 typeButton = angular.element(_cancelMask.querySelector('[data-' + _type + ']'));
                 typeButton.parent().removeClass('tips--deep tips--frozen')
@@ -270,6 +245,9 @@ angular.module('Oneline.olControlCenterDirectives', [])
                         if (__type === 'quote'){
                             // 凍結
                             olUI.setActionState('retweet', _id, 'frozen')
+                        } else {
+                            var count = ~~olUI.actionData('retweet', _id, null, 'count') + 1;
+                            olUI.actionData('retweet', _id, count, 'count')
                         }
                     }
 

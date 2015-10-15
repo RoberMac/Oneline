@@ -44,13 +44,10 @@
     }
 
     &__button {
+        size: 70px;
         cursor: pointer;
         opacity: 0;
         filter: grayscale(100%);
-
-        svg {
-            size: 70px;
-        }
 
         @media (--all-mobile-devices){
             opacity: 1;
