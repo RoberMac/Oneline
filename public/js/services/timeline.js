@@ -304,16 +304,24 @@ angular.module('Oneline.timelineServices', [])
         step = _step ? _step : 1
 
         if (err.status === 401){
-            err.data.invalidToken.forEach(function (provider){
+            var invalidToken = err.data.invalidToken || ['twitter', 'instagram', 'weibo'];
+
+            invalidToken.forEach(function (provider){
                 olTokenHelper.removeToken(provider)
             })
             $state.go('settings')
         } else if (err.status === 429){
+            var _safeTime = err.data.reset * 1000,
+                safeTime  = new Date(_safeTime).toLocaleTimeString('en-GB').substring(0, 5);
+
             olUI.setLoading('fail', step)
-            var safeTime = new Date(err.data.reset * 1000).toLocaleTimeString('en-GB').substring(0, 5)
             olUI.setPostsCount('newPosts', safeTime)
+            console.log(_safeTime, _safeTime - Date.now())
+            setTimeout(function (){
+                olUI.setPostsCount('newPosts', '⟳')
+            }, _safeTime - Date.now())
         } else {
-            _step ? olUI.setLoading('done', step) : null
+            olUI.setLoading('fail', step)
         }
     }
 }])

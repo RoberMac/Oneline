@@ -16,6 +16,11 @@
     <div class="write__previews"></div>
 </form>
 <div class="switch-icon">
+    <button ng-if="::controlCenter.indexOf('write_weibo-reply') >= 0" ng-click="setControlCenter('', 'read_weibo-reply:' + controlCenter.split(':')[1])" class="icon--weibo animate--faster tips" type="button">
+        <svg viewBox="0 0 283 150">
+            <use xlink:href="/public/img/icon-sprites.svg#2Reply"></use>
+        </svg>
+    </button>
     <button ng-if="::providerList.indexOf('twitter') >= 0 && controlCenter.indexOf('write_weibo-tweet') >= 0" ng-click="setControlCenter('', 'write_twitter-tweet')" class="animate--faster tips--deep" type="button">
         <svg viewBox="0 0 283 150">
             <use xlink:href="/public/img/icon-sprites.svg#2Twitter"></use>

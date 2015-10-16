@@ -109,10 +109,10 @@ img, video {
         transition: all .3s ease-in-out;
     }
     &--general, &--faster {
-        &.ol-enter, &.ol-leave.ol-leave--active {
+        &.ng-enter, &.ng-leave.ng-leave-active {
             opacity: 0;
         }
-        &.ol-leave, &.ol-enter.ol-enter--active {
+        &.ng-leave, &.ng-enter.ng-enter-active {
             opacity: 1;
         }
     }
@@ -184,7 +184,7 @@ img, video {
     }
 }
 .icon {
-    &--twitter {
+    &--twitter, &--retweet {
         svg {
             fill: var(--color-twitter);
         }
@@ -194,9 +194,24 @@ img, video {
             fill: var(--color-instagram);
         }
     }
-    &--weibo {
+    &--weibo, &--like {
         svg {
             fill: var(--color-weibo);
+        }
+    }
+    &--reply {
+        svg {
+            fill: #3caf36;
+        }
+    }
+    &--star {
+        svg {
+            fill: #FFE33B;
+        }
+    }
+    &--inactive {
+        svg {
+            fill: var(--color-gray-drak);
         }
     }
 }

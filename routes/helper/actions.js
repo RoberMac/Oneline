@@ -83,6 +83,9 @@ module.exports = {
                     action_str = 'friendships/' + (opts.method === 'put' ? 'create' : 'destroy')
                     extend(tOpts, { id: opts.id })
                     break;
+                default:
+                    throw { statusCode: 404 };
+                    break;
             }
 
             return q_twit(action_str, tOpts)
@@ -113,7 +116,10 @@ module.exports = {
     },
     weibo: function (action, opts){
 
-        var wOpts = { access_token: opts.token, id: opts.id }, action_str;
+        // Init
+        var wOpts  = { access_token: opts.token, id: opts.id },
+            _GET   = opts.method === 'get',
+            action_str;
 
         switch (action){
             case 'like':
@@ -123,24 +129,20 @@ module.exports = {
                 action_str = 'favorites/' + (opts.method === 'put' ? 'create' : 'destroy')
                 break;
             case 'retweet':
-                action_str = 'statuses/' + ((opts.method === 'put' || opts.method === 'post')
+                action_str = 'statuses/' + (/put|post|get/.test(opts.method)
                                                 ? 'repost'
-                                                : 'destroy')
+                                            : 'destroy')
                 extend(wOpts, {
                     status: opts.params && opts.params.status // `destroy` 時無 `opts.params` 
                 })
                 break;
             case 'reply':
-                action_str = 'comments/create'
-                extend(wOpts, {
-                    comment: opts.params.status
-                })
+                action_str = _GET ? 'comments/show' : 'comments/create'
+                _GET ? null : extend(wOpts, { comment: opts.params.status })
                 break;
             case 'tweet':
                 action_str = 'statuses/update'
-                extend(wOpts, {
-                    status: opts.params.status
-                })
+                extend(wOpts, { status: opts.params.status })
                 if (opts.params.geo){
                     extend(wOpts, {
                         lat: opts.params.geo.lat,
@@ -148,14 +150,17 @@ module.exports = {
                     })
                 }
                 break;
+            default:
+                throw { statusCode: 404 };
+                break;
         }
 
+        // Fire
         var deferred = Q.defer();
+        var rOpts = { url: 'https://api.weibo.com/2/' + action_str + '.json' }
+        extend(rOpts, _GET ? { qs: wOpts } : { form: wOpts })
 
-        request.post({
-            url: 'https://api.weibo.com/2/' + action_str + '.json', 
-            form: wOpts
-        }, function (err, res, body){
+        request[_GET ? 'get' : 'post'](rOpts, function (err, res, body){
             if (err || res.statusCode !== 200){
                 console.log(err, res)
                 deferred.reject(err || { statusCode: res.statusCode })
@@ -167,7 +172,24 @@ module.exports = {
                 } catch (e) {
                     data = body
                 } finally {
-                    deferred.resolve({ statusCode: 200, id_str: data.idstr })
+                    var returnObj = { statusCode: 200 }
+
+                    switch (action){
+                        case 'reply':
+                            switch (_GET){
+                                case true:
+                                    extend(returnObj, { data: profileFilter.weibo.reply(data.comments) })
+                                    break;
+                                case false:
+                            }
+                        case 'like':
+                        case 'star':
+                        case 'retweet':
+                            extend(returnObj, { id_str: data.idstr })
+                            break;
+                    }
+
+                    deferred.resolve(returnObj)
                 }
             }
         })
@@ -201,6 +223,9 @@ module.exports = {
                     break;
                 case 'reply':
                     q_ig = Q.nbind(Ig.comments, Ig);
+                    break;
+                default:
+                    throw { statusCode: 404 };
                     break;
             }
 

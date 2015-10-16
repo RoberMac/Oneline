@@ -15,26 +15,6 @@
 
             animation: waitAnimate 1s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
-        &--like {
-            &--active {
-                fill: var(--color-weibo);
-            }
-        }
-        &--retweet {
-            &--active {
-                fill: var(--color-twitter);
-            }
-        }
-        &--reply {
-            &--active {
-                fill: #3caf36;
-            }
-        }
-        &--star {
-            &--active {
-                fill: #FFE33B;
-            }
-        }
     }
     &__count {
         display: inline-block;

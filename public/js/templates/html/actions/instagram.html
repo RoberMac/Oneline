@@ -1,6 +1,6 @@
 <span class="cursor--pointer">
-    <button ng-click="setControlCenter('read_instagram-like' + ':' + item.id_str)"  class="actions tips--deep" type="button">
-        <svg class="actions__button" viewBox="0 0 26 26" ng-class="::{'actions__button--like--active': item.favorited}">
+    <button ng-click="setControlCenter('read_instagram-like' + ':' + item.id_str)" class="actions tips--deep" ng-class="::{'icon--like': item.favorited}" type="button">
+        <svg class="actions__button" viewBox="0 0 26 26">
             <use xlink:href="/public/img/icon-sprites.svg#favorite"></use>
         </svg>
         <span class="actions__count" ng-attr-data-count="{{::item.favorite_count > 0 ? item.favorite_count : ''}}"></span>

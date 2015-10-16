@@ -1,14 +1,14 @@
 <span class="cursor--pointer">
     <!-- Favorite -->
-    <button ng-click="toggleAction('like', item)" class="actions tips--deep" ng-class="::{'tips--active': item.favorited}" type="button">
-        <svg class="actions__button" viewBox="0 0 26 26" ng-class="::{'action__button--like--active': item.favorited}" data-like>
+    <button ng-click="toggleAction('like', item)" class="actions tips--deep" ng-class="::{'icon--like tips--active': item.favorited}" type="button">
+        <svg class="actions__button" viewBox="0 0 26 26" data-like>
             <use xlink:href="/public/img/icon-sprites.svg#favorite"></use>
         </svg>
         <span class="actions__count" ng-attr-data-count="{{::item.favorite_count > 0 ? item.favorite_count : ''}}"></span>
     </button>
     <!-- Retweet -->
-    <button ng-click="toggleAction('retweet', item)" class="actions tips--deep" ng-class="::{'tips--frozen': item.retweeted}" type="button">
-        <svg class="actions__button" viewBox="0 0 34 26" ng-class="::{'action__button--retweet--active': item.retweeted}" data-retweet>
+    <button ng-click="toggleAction('retweet', item)" class="actions tips--deep" ng-class="::{'icon--retweet tips--frozen': item.retweeted}" type="button">
+        <svg class="actions__button" viewBox="0 0 34 26" data-retweet>
             <use xlink:href="/public/img/icon-sprites.svg#retweet"></use>
         </svg>
         <span class="actions__count" ng-attr-data-count="{{::item.retweet_count > 0 ? item.retweet_count : ''}}"></span>

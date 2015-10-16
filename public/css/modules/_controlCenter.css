@@ -200,6 +200,16 @@
     &--reply {
         padding: 0;
     }
+    &--empty {
+        position: absolute 0 * * 0;
+        size: 100%;
+        text-align: center;
+
+        svg {
+            size: 100px 16vh;
+            margin: 0 auto;
+        }
+    }
 
     &__like {
         &__avatar {
@@ -225,7 +235,13 @@
             lost-column: 1/7 0;
         }
         &__text {
+            padding: 7px 0;
+            font-size: var(--font-size-small);
             lost-column: 6/7 0;
+
+            img {
+                width: 1em;
+            }
 
             a, a:visited {
                 color: var(--color-instagram);

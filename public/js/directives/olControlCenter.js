@@ -111,6 +111,11 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 $scope.readType  = _type 
                 $scope.readItems = res.data
             })
+            .catch(function (){
+                angular
+                .element(document.querySelector('.read .loadMore'))
+                .addClass('loadMore--loading--fail')
+            })
         }]
     }
 }])

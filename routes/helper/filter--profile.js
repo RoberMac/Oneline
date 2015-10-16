@@ -52,7 +52,8 @@ var filter = {
                     avatar: item.from.profile_picture,
                     screen_name: item.from.username,
                     id: item.from.id,
-                    text: item.text
+                    text: item.text,
+                    created_at: item.created_time * 1000
                 })
             })
 
@@ -70,7 +71,23 @@ var filter = {
             }
         }
     },
-    weibo: function (data){
+    weibo: {
+        reply: function (data){
+            var cache = [];
+
+            data.forEach(function (item){
+                cache.push({
+                    name: item.user.name,
+                    avatar: item.user.profile_image_url,
+                    screen_name: item.user.screen_name,
+                    id: item.user.idstr,
+                    text: item.text,
+                    created_at: Date.parse(item.created_at)
+                })
+            })
+
+            return cache;
+        }
     }
 }
 
