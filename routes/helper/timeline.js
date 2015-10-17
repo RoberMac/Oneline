@@ -1,6 +1,6 @@
 var Twit    = require('twit'),
     Ig      = require('instagram-node').instagram(),
-    request = require('request');
+    Weibo   = require('./weibo');
 
 module.exports = {
     twitter: function (opts){
@@ -69,27 +69,11 @@ module.exports = {
             wOpts.max_id = opts.max_id
         }
 
-        var deferred = Q.defer();
-
-        request({ 
-            url: 'https://api.weibo.com/2/statuses/home_timeline.json',
-            qs : wOpts
-        }, function (err, res, body){
-            if (err || res.statusCode !== 200){
-                deferred.reject(err || { statusCode: res.statusCode })
-            } else {
-                var data;
-                try {
-                    data = JSON.parse(body)
-                } catch (e) {
-                    data = body
-                } finally {
-                    deferred.resolve(data)
-                }
-            }
+        return Weibo({
+            method: 'get',
+            endpoint: 'statuses/home_timeline',
+            opts: wOpts
         })
-
-        return deferred.promise;
     }
 }
 

@@ -1,7 +1,7 @@
 var extend  = require('extend'),
     Twit    = require('twit'),
     Ig      = require('instagram-node').instagram(),
-    request = require('request'),
+    Weibo   = require('./weibo'),
     timelineFilter = require('./filter--timeline'),
     profileFilter = require('./filter--profile');
 
@@ -38,10 +38,7 @@ module.exports = {
 
                 extend(data, { timeline: timelineFilter.twitter(timelineData[0]).data })
 
-                return {
-                    statusCode: 200,
-                    data: data
-                }
+                return { data: data }
             })
         } else {
 
@@ -94,14 +91,14 @@ module.exports = {
                     switch (action){
                         case 'retweet':
                         case 'reply':
-                            return { statusCode: 200, data: profileFilter.twitter[action](data[0]) }
+                            return { data: profileFilter.twitter[action](data[0]) }
                             break;
                     }
                 } else {
                     switch (action){
                         case 'retweet':
                         case 'quote':
-                            return { statusCode: 200, id_str: data[0].id_str }
+                            return { id_str: data[0].id_str }
                             break;
                         case 'like':
                         case 'tweet':
@@ -155,46 +152,28 @@ module.exports = {
                 break;
         }
 
-        // Fire
-        var deferred = Q.defer();
-        var rOpts = { url: 'https://api.weibo.com/2/' + action_str + '.json' }
-        extend(rOpts, _GET ? { qs: wOpts } : { form: wOpts })
+        return Weibo({
+            method: _GET ? 'get' : 'post',
+            endpoint: action_str,
+            opts: wOpts
+        })
+        .then(function (data){
 
-        request[_GET ? 'get' : 'post'](rOpts, function (err, res, body){
-            if (err || res.statusCode !== 200){
-                console.log(err, res)
-                deferred.reject(err || { statusCode: res.statusCode })
-            } else {
-
-                var data;
-                try {
-                    data = JSON.parse(body)
-                } catch (e) {
-                    data = body
-                } finally {
-                    var returnObj = { statusCode: 200 }
-
-                    switch (action){
-                        case 'reply':
-                            switch (_GET){
-                                case true:
-                                    extend(returnObj, { data: profileFilter.weibo.reply(data.comments) })
-                                    break;
-                                case false:
-                            }
-                        case 'like':
-                        case 'star':
-                        case 'retweet':
-                            extend(returnObj, { id_str: data.idstr })
+            switch (action){
+                case 'reply':
+                    switch (_GET){
+                        case true:
+                            return { data: profileFilter.weibo.reply(data.comments) }
                             break;
+                        case false:
                     }
-
-                    deferred.resolve(returnObj)
-                }
+                case 'like':
+                case 'star':
+                case 'retweet':
+                    return { id_str: data.idstr }
+                    break;
             }
         })
-
-        return deferred.promise;
     },
     instagram: function (action, opts){
         Ig.use({ access_token : opts.token })
@@ -209,10 +188,7 @@ module.exports = {
 
                 extend(data, { timeline: timelineFilter.instagram(timelineData[0]).data })
 
-                return {
-                    statusCode: 200,
-                    data: data
-                }
+                return { data: data }
             })
         } else {
             var q_ig;
@@ -231,10 +207,7 @@ module.exports = {
 
             return q_ig(opts.id)
             .then(function (data){
-                return {
-                    statusCode: 200,
-                    data: profileFilter.instagram[action](data[0].slice(0, 100))
-                }
+                return { data: profileFilter.instagram[action](data[0].slice(0, 100)) }
             })
         }
     }

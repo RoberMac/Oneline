@@ -8,7 +8,7 @@ var filter = {
                     name: item.user.name,
                     avatar: item.user.profile_image_url_https,
                     screen_name: item.user.screen_name,
-                    id_str: item.user.id_str
+                    uid: item.user.id_str
                 })
             })
 
@@ -37,7 +37,7 @@ var filter = {
                     name: item.full_name,
                     avatar: item.profile_picture,
                     screen_name: item.username,
-                    id: item.id
+                    uid: item.id
                 })
             })
 
@@ -51,7 +51,7 @@ var filter = {
                     name: item.from.full_name,
                     avatar: item.from.profile_picture,
                     screen_name: item.from.username,
-                    id: item.from.id,
+                    uid: item.from.id,
                     text: item.text,
                     created_at: item.created_time * 1000
                 })

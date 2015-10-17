@@ -10,7 +10,9 @@ var express      = require('express'),
     morgan       = require('morgan'),
     helmet       = require('helmet'),
     passport     = require('passport'),
-    compress     = require('compression');
+    compress     = require('compression'),
+    limiter      = require('connect-ratelimit');
+
 
 // global variables
 global.Q = require('q')
@@ -49,8 +51,8 @@ var db = mongoose.connection
 // App Settings
 app.set('trust proxy', true)
 
-
 // Middleware
+app.use(limiter({ end: true }))
 app.use(compress())
 app.use(bodyParser.json({ limit: 5120000 }))
 app.use(cookieParser())
@@ -87,7 +89,13 @@ app.set('view engine', 'jade')
 
 // 保護 endpoints
 var jwt = require('jsonwebtoken');
-app.use(['/timeline', '/actions', '/auth/revoke', '/auth/replicant/deckard', '/upload'], function (req, res, next){
+app.use([
+    '/timeline',
+    '/actions',
+    '/auth/revoke',
+    '/auth/replicant/deckard',
+    '/upload'
+], function (req, res, next){
     var tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [],
         validPassports = {},
         invalidToken = [];

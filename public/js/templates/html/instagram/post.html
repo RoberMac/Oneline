@@ -1,10 +1,10 @@
 <div class="timeline__profile">
     <button ng-click="setControlCenter('userProfile')" user-profile="::item.user" provider="instagram" from="timeline" type="button">
-        <img class="timeline__profile__avatar timeline__profile__avatar--instagram" ng-src="{{::item.user.profile_picture}}">
+        <img class="timeline__profile__avatar timeline__profile__avatar--instagram" ng-src="{{::item.user.avatar}}">
     </button>
     <div class="timeline__profile__fullname">
-        <a ng-href="//instagram.com/{{::item.user.username}}" target="_blank">
-            <strong ng-bind="::item.user.full_name"></strong>
+        <a ng-href="//instagram.com/{{::item.user.screen_name}}" target="_blank">
+            <strong ng-bind="::item.user.name"></strong>
         </a>
     </div>
 </div>

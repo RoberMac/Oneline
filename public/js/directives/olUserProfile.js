@@ -12,13 +12,7 @@ angular.module('Oneline.olUserProfileDirectives', [])
                 var _profile  = scope.profile,
                     _from     = attrs.from,
                     _provider = attrs.provider,
-                    _uid      = _provider === 'twitter'
-                                    ? _profile.id_str
-                                : _provider === 'instagram'
-                                    ? _profile.id
-                                : _provider === 'weibo'
-                                    ? _profile.idstr
-                                : null
+                    _uid      = _profile.uid;
 
                 // Init
                 if (_from === 'controlCenter' && elem.hasClass('tips--frozen')) return;

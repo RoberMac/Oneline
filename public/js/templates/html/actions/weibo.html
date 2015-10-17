@@ -14,7 +14,7 @@
         <span class="actions__count" ng-attr-data-count="{{::item.comments_count > 0 ? item.comments_count : ''}}"></span>
     </button>
     <!-- Source -->
-    <a ng-href="//weibo.com/{{::item.user.idstr}}/{{::item.mid}}" target="_blank">
+    <a ng-href="//weibo.com/{{::item.user.uid}}/{{::item.mid}}" target="_blank">
         <button class="actions tips--deep" type="button">
             <svg class="actions__button" viewBox="0 0 26 26" data-source>
                 <use xlink:href="/public/img/icon-sprites.svg#source"></use>

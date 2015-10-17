@@ -100,7 +100,9 @@ angular.module('Oneline.timelineControllers', [])
      */
     $scope.toggleAction = function (action, item){
         var provider = item.provider,
-            id       = item.id_str;
+            type     = item.type,
+            id       = item.id_str,
+            name     = item.user.screen_name;
 
         // 過濾重複（或凍結的）請求
         if (olUI.isActionWait(action, id) || olUI.isActionFrozen(action, id)) return;
@@ -113,7 +115,7 @@ angular.module('Oneline.timelineControllers', [])
                 && ((action === 'retweet' && !isActive) || action === 'reply')
             )
         {
-            $scope.setControlCenter('write_' + provider + '-'+ action + ':' + id + ':' + item.user.screen_name)
+            $scope.setControlCenter('write_' + provider + '-'+ action + '-' + type + ':' + id + ':' + name)
             return;
         }
 

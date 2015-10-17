@@ -1,5 +1,5 @@
-<span class="cursor--pointer">
-    <a ng-href="//weibo.com/{{::item.retweet.user.idstr}}/{{::item.retweet.mid}}" target="_blank">
+<span class="cursor--pointer" data-quote-id="{{::item.retweet.id_str}}">
+    <a ng-href="//weibo.com/{{::item.retweet.user.uid}}/{{::item.retweet.mid}}" target="_blank">
         <button class="actions tips--deep" type="button">
             <svg class="actions__button" viewBox="0 0 26 26" data-source>
                 <use xlink:href="/public/img/icon-sprites.svg#source"></use>

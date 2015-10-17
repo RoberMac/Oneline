@@ -77,18 +77,7 @@ router.get('/replicant/deckard', function (req, res, next){
         code = crypto.createHash('md5')
                 .update(JSON.stringify(passports) + Date.now())
                 .digest('hex').slice(0, 7),
-        tokenList = [];
-
-    Object.keys(passports).forEach(function (provider){
-        var token = jwt.sign({
-            'provider': provider,
-            'userId'  : passports[provider]
-        }, process.env.KEY, {
-            expiresInMinutes: 60 * 24 * 7
-        })
-
-        tokenList.push(token)
-    })
+        tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [];
 
     // 保存於數據庫
     q_replicantFindOne({ id: code })

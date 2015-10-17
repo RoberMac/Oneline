@@ -99,16 +99,16 @@ angular.module('Oneline.olControlCenterDirectives', [])
             var _info       = $scope.controlCenter.split(':'),
                 _id         = _info[1],
                 _provider   = _info[0].split('-')[0].split('_')[1],
-                _type       = _info[0].split('-')[1];
+                _action     = _info[0].split('-')[1];
 
             Action.get({
-                action: _type,
+                action: _action,
                 provider: _provider,
                 id: _id
             })
             .$promise
             .then(function (res){
-                $scope.readType  = _type 
+                $scope.readType  = _action 
                 $scope.readItems = res.data
             })
             .catch(function (){
@@ -129,13 +129,14 @@ angular.module('Oneline.olControlCenterDirectives', [])
             var _info       = scope.controlCenter.split(':'),
                 _id         = _info[1],
                 _provider   = _info[0].split('-')[0].split('_')[1],
-                _type       = _info[0].split('-')[1],
-                __type      = '',
-                _limitCount = _type === 'tweet' || _type === 'reply' || _provider === 'weibo'
+                _action     = _info[0].split('-')[1],
+                __action    = '',
+                _type       = _info[0].split('-')[2],
+                _limitCount = _action === 'tweet' || _action === 'reply' || _provider === 'weibo'
                                     ? 140
-                                    : _type === 'retweet'
-                                        ? 116
-                                        : null
+                                : _action === 'retweet'
+                                    ? 116
+                                : null
 
             var _button      = elem.find('button'),
                 submitButton = _button.eq(_button.length - 1),
@@ -148,16 +149,8 @@ angular.module('Oneline.olControlCenterDirectives', [])
              */
             var _cancelMask = document.querySelector('.cancelMask__wrapper'),
                 cancelMask  = angular.element(_cancelMask);
-            if (_type === 'reply' || _type === 'retweet'){
-                // 添加 `@username` 前綴
-                if (_provider === 'twitter' && _type === 'reply'){
-                    statusElem.val('@' + _info[2] + ' ')
-                } 
-                // 允許直接提交 -> 「轉推」
-                else if (_type === 'retweet'){
-                    statusElem.prop('required', false)
-                    submitButton.prop('disabled', false)
-                }
+            if (_action === 'reply' || _action === 'retweet'){
+                var _sourceElem = angular.element(document.querySelector('[data-id="' + _id + '"]'));
                 /**
                  * 預覽「源推」
                  *
@@ -165,7 +158,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 cancelMask
                 .children()
                 .append(
-                    angular.element(document.querySelector('[data-id="' + _id + '"]'))
+                    _sourceElem
                     .clone()
                     .removeClass('divider--top divider--bottom')
                 );
@@ -178,9 +171,35 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 .parent()
                 .removeClass('tips--frozen');
                 // 「回覆」／「轉推」提醒
-                typeButton = angular.element(_cancelMask.querySelector('[data-' + _type + ']'));
+                typeButton = angular.element(_cancelMask.querySelector('[data-' + _action + ']'));
                 typeButton.parent().removeClass('tips--deep tips--frozen')
-            } else if (_type === 'tweet'){
+
+                /**
+                 * 初始化輸入框
+                 *
+                 */
+                statusElem[0].focus()
+                // 添加 `@username` 前綴
+                if (_provider === 'twitter' && _action === 'reply'){
+                    statusElem.val(extractMentions(_sourceElem.find('p')[0].innerText, '@' + _info[2]))
+                }
+                // 允許直接提交 -> 「轉推」
+                else if (_action === 'retweet'){
+                    if (_provider === 'weibo'){
+                        statusElem.val(
+                            _type === 'tweet'
+                                ? ''
+                            : _type === 'retweet'
+                                ? '//@' + _info[2] + ': 转发微博'
+                            : '//@' + _info[2] + ': ' + _sourceElem.find('p')[0].innerText
+                        )
+                        statusElem[0].setSelectionRange(0, 0)
+                    }
+
+                    statusElem.prop('required', false)
+                    submitButton.prop('disabled', false)
+                }
+            } else if (_action === 'tweet'){
                 var _profile = JSON.parse(localStorage.getItem('profile_' + _provider)) || {};
                 scope.tweetPreview = {
                     user: {
@@ -204,10 +223,11 @@ angular.module('Oneline.olControlCenterDirectives', [])
              * 監聽事件
              *
              */
-            var status = '';
             elem
             .on('submit', function (e){
                 e.preventDefault()
+
+                var status = statusElem.val().trim();
 
                 var params = {
                     status: status
@@ -219,13 +239,13 @@ angular.module('Oneline.olControlCenterDirectives', [])
                         media_ids: elem.find('media-upload').data('media_ids')
                     })
 
-                    if (_type === 'retweet' && status.length > 0){
-                        __type = 'quote'
+                    if (_action === 'retweet' && status.length > 0){
+                        __action = 'quote'
 
                         params.status = status + ' https://twitter.com/' + _info[2] + '/status/' + _id
                     }
                 } else if (_provider === 'weibo'){
-                    if (_type === 'tweet'){
+                    if (_action === 'tweet'){
                         angular.extend(params, {
                             geo: elem.find('geo-picker').data('geo')
                         })
@@ -236,18 +256,18 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 submitButton.addClass('write__btn--send--sending')
                 // Fire
                 Action.update({
-                    action: __type || _type,
+                    action: __action || _action,
                     provider: _provider,
                     id: _id || 0
                 }, { params: params })
                 .$promise
                 .then(function (data){
 
-                    if (_type === 'retweet'){
+                    if (_action === 'retweet'){
                         olUI.setActionState('retweet', _id, 'active')
                         olUI.actionData('retweet', _id, data.id_str)
 
-                        if (__type === 'quote'){
+                        if (__action === 'quote'){
                             // 凍結
                             olUI.setActionState('retweet', _id, 'frozen')
                         } else {
@@ -268,16 +288,16 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 })
             })
             .on('input', function (){
-                // 更新推文內容
-                status = statusElem.val().trim()
+                var status = statusElem.val().trim()
                 // Live Preview: linkify
                 if (scope.tweetPreview){
                     scope.tweetPreview.text = $filter('linkify')(status, _provider)
                     scope.$apply()
                 }
                 // 超字提醒
-                var statusLength = status.length
-                if (statusLength > _limitCount || statusLength === 0){
+                var statusLength = _provider === 'weibo' ? weiboLength(status) : status.length
+                if (statusLength > _limitCount 
+                    || (statusLength === 0 && _action !== 'retweet')){
                     submitButton.prop('disabled', true)
                 } else {
                     submitButton.prop('disabled', false)
@@ -287,11 +307,43 @@ angular.module('Oneline.olControlCenterDirectives', [])
 
                 // 動畫
                 submitButton.addClassTemporarily('write__btn--send--typing', 700)
-                typeButton ? typeButton.addClassTemporarily('actions__button--' + _type + '--active', 300) : null
+                typeButton ? typeButton.addClassTemporarily('actions__button--' + _action + '--active', 300) : null
             })
             .on('$destroy', function (){
                 elem.off()
             });
+
+            /**
+             * Helper
+             *
+             */
+            function weiboLength (status){
+                var _ascii_len = (status.match(/[\x00-\x7F]+/g) || []).join('').length;
+                var _nonAscii_len = status.length - _ascii_len;
+
+                return _nonAscii_len + Math.round(_ascii_len / 2);
+            }
+            function extractMentions (status, sourceUser){
+                var _mentions = [sourceUser],
+                    _str = ' ';
+
+                // Extract
+                _mentions = _mentions.concat(status.match(/(|\s)*@([\w]+)/g) || [])
+                // Trim
+                _mentions = _mentions.map(function (item){
+                    return item.trim()
+                })
+                // Remove Duplicates
+                _mentions = _mentions.filter(function(item, pos) {
+                    return _mentions.indexOf(item) == pos;
+                })
+                // Concat
+                _mentions.forEach(function (item){
+                    _str = _str + item + ' '
+                })
+
+                return _str;
+            }
         }
     }
 }])

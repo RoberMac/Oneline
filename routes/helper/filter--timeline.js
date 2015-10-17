@@ -103,7 +103,7 @@ var filter = {
                 created_at: Date.parse(new Date(item.created_time * 1000)),
                 id_str: item.id,
                 type: 'post',
-                user: item.user,
+                user: trimInstagramUser(item.user),
                 text: item.caption && item.caption.text
                         ? item.caption.text
                         : null,
@@ -167,6 +167,15 @@ var filter = {
                 var retweetType = item.text === '转发微博' ? 'retweet' : 'quote',
                     retweetItem = item.retweeted_status;
 
+                retweetType === 'retweet'
+                    ? extend(weiboObj, {
+                        id_str: retweetItem.idstr,
+                        retweet_count: retweetItem.reposts_count,
+                        comments_count: retweetItem.comments_count,
+                        favorite_count: retweetItem.attitudes_count
+                    })
+                : null
+
                 extend(weiboObj, {
                     type: retweetType,
                     retweet: {
@@ -225,16 +234,25 @@ var filter = {
 function trimTweetUser (user){
     return {
         name: user.name,
-        id_str: user.id_str,
+        uid: user.id_str,
         screen_name: user.screen_name,
         avatar: user.profile_image_url_https
+    }
+}
+function trimInstagramUser (user){
+    return {
+        name: user.full_name,
+        avatar: user.profile_picture,
+        screen_name: user.username,
+        uid: user.id,
+        created_at: user.created_time * 1000
     }
 }
 function trimWeiboUser (user){
     if (!user){
         user = {
             name: '微博小秘书',
-            idstr: '1642909335',
+            uid: '1642909335',
             screen_name: '微博小秘书',
             avatar_large: 'http://tp4.sinaimg.cn/1642909335/180/22867541466/1'
         }
@@ -242,7 +260,7 @@ function trimWeiboUser (user){
 
     return {
         name: user.name,
-        idstr: user.idstr,
+        uid: user.idstr,
         screen_name: user.screen_name,
         avatar: user.profile_image_url
     }
