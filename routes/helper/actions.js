@@ -67,7 +67,8 @@ module.exports = {
                     extend(tOpts, {
                         status: opts.params.status,
                         media_ids: opts.params.media_ids,
-                        trim_user: true
+                        trim_user: true,
+                        possibly_sensitive: opts.params.sensitive
                     })
                     if (opts.params.geo){
                         extend(tOpts, {
@@ -125,6 +126,7 @@ module.exports = {
             case 'star':
                 action_str = 'favorites/' + (opts.method === 'put' ? 'create' : 'destroy')
                 break;
+            case 'quote':
             case 'retweet':
                 action_str = 'statuses/' + (/put|post|get/.test(opts.method)
                                                 ? 'repost'
@@ -169,6 +171,7 @@ module.exports = {
                     }
                 case 'like':
                 case 'star':
+                case 'quote':
                 case 'retweet':
                     return { id_str: data.idstr }
                     break;

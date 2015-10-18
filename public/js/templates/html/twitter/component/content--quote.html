@@ -1,4 +1,4 @@
 <div class="timeline__content">
     <p class="timeline__text" trim-media-link="{{::item.quote.mediaLink}}" linkify="twitter" ng-bind-html="::item.quote.text"></p>
-    <div ng-if="::item.quote.media" ng-include=" 'media/twitter--quote.html' "></div>
+    <div ng-if="::item.quote.media && item.quote.media.length > 0" ng-include=" 'media/twitter--quote.html' "></div>
 </div>

@@ -101,22 +101,22 @@
         position: relative;
         size: 27px;
 
-        &--geo {
+        &--left {
             float: left;
 
             svg {
-                size: 12px 17px;
+                height: 20px;
             }
         }
         &--media {
             float: left;
             display: inline-block;
-            line-height: 24px;
+            line-height: 22px;
             text-align: center;
             cursor: pointer;
 
             svg {
-                size: 17px 14px;
+                size: 18px;
                 vertical-align: middle;
             }
         }

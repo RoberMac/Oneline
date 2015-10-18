@@ -5,7 +5,8 @@
     <div class="write__toolBar">
         <!-- left -->
         <geo-picker></geo-picker>
-        <media-upload provider="twitter"></media-upload>
+        <media-upload ng-show="item.media.length < 4" class="animate--faster" provider="twitter"></media-upload>
+        <toggle-sensitive ng-if="item.media.length > 0" class="animate--faster"></toggle-sensitive>
         <!-- right -->
         <button class="write__btn write__btn--send icon--twitter tips" type="submit" data-count disabled>
             <svg viewBox="0 0 113 72">
@@ -14,7 +15,11 @@
         </button>
     </div>
 
-    <div class="write__previews"></div>
+    <div class="write__previews">
+        <span ng-repeat="item in item.media" class="write__previews__item tips--active tips--inprocess animate--faster" ng-attr-data-mediaId="{{::item.fakeId}}">
+            <img ng-src="{{::item.image_url}}">
+        </span>
+    </div>
 </form>
 <div class="switch-icon">
     <button ng-if="::controlCenter.indexOf('write_twitter-retweet') >= 0" ng-click="setControlCenter('', 'read_twitter-retweet:' + controlCenter.split(':')[1])" class="icon--twitter animate--faster tips" type="button">
