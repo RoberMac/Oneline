@@ -19,7 +19,7 @@ module.exports = function (params){
                 statusCode = 400
             } finally {
                 deferred.reject({
-                    statusCode: res.statusCode,
+                    statusCode: statusCode,
                     msg: body
                 })
             }

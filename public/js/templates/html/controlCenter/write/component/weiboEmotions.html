@@ -1,0 +1,9 @@
+<button class="write__btn write__btn--left tips--deep" type="button">
+    <svg viewBox="0 0 200 200">
+        <use xlink:href="/public/img/icon-sprites.svg#emotions"></use>
+    </svg>
+</button>
+<div ng-if="isShowEmotions" class="write__emotions overflow--y animate--faster">
+    <button ng-repeat="emotion in ::emotionsList" type="button" ng-click="insertEmotion(emotion)" weibo-emotify ng-bind="::'[' + emotion + ']'">
+    </button>
+</div>

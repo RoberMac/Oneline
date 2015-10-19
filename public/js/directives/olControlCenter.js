@@ -119,8 +119,10 @@ angular.module('Oneline.olControlCenterDirectives', [])
         }]
     }
 }])
-.directive('write', ['$compile', '$templateRequest', '$filter', 'Action', 'olUI',
-    function ($compile, $templateRequest, $filter, Action, olUI){
+.directive('write', ['$compile', '$templateRequest', '$timeout', '$filter',
+    'weiboEmotify', 'Action', 'olUI',
+    function ($compile, $templateRequest, $timeout, $filter, 
+        weiboEmotify, Action, olUI){
 
     return {
         restrict: 'A',
@@ -147,32 +149,39 @@ angular.module('Oneline.olControlCenterDirectives', [])
              * 初始化輸入框
              *
              */
+            statusElem[0].focus()
             if (_action !== 'tweet'){
                 var __sourceElem = document.querySelector('[data-id="' + _id + '"]'),
                     _sourceElem = angular.element(__sourceElem);
 
-                statusElem[0].focus()
-                // 添加 `@username` 前綴
-                if (_provider === 'twitter' && _action === 'reply'){
-                    statusElem.val(extractMentions(_sourceElem.find('p')[0].innerText, '@' + _info[2]))
-                }
-                // 允許直接提交 -> 「轉推」
-                else if (_action === 'retweet'){
-                    __action = 'retweet'
+                switch (_action){
+                    case 'reply':
+                        if (_provider === 'twitter'){
+                            statusElem.val(
+                                extractMentions(
+                                    _sourceElem.find('p')[0].innerText, '@' + _info[2]
+                                )
+                            )
+                        }
+                        break;
+                    case 'retweet':
+                        __action = 'retweet'
+                        if (_provider === 'weibo'){
+                            __action = _type !== 'tweet' ?  'quote' : 'retweet'
 
-                    if (_provider === 'weibo'){
-                        statusElem.val(
-                            _type === 'tweet'
-                                ? ''
-                            : _type === 'retweet'
-                                ? '//@' + _info[2] + ': 转发微博'
-                            : '//@' + _info[2] + ': ' + _sourceElem.find('p')[0].innerText
-                        )
-                        statusElem[0].setSelectionRange(0, 0)
-                    }
-
-                    statusElem.prop('required', false)
-                    submitButton.prop('disabled', false)
+                            statusElem.val(
+                                _type === 'tweet'
+                                    ? ''
+                                : _type === 'retweet'
+                                    ? '//@' + _info[2] + ': 转发微博'
+                                : '//@' + _info[2] + ': ' + _sourceElem.find('p')[0].innerText
+                            )
+                            statusElem[0].setSelectionRange(0, 0)
+                        }
+                        // 允許直接提交 -> 「轉推」
+                        statusElem.prop('required', false)
+                        submitButton.prop('disabled', false)
+                        break;
                 }
             }
             /**
@@ -190,12 +199,17 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 },
                 media: [],
                 text: statusElem.val().trim(),
-                created_at: Date.now()
+                created_at: Date.now(),
+                type: __action
             }
-            if (_action === 'retweet'){
-                generateRetweetUser()
-            }
-            generateTemplate(_action === 'reply' ? 'tweet' : _action)
+
+            __action === 'retweet'
+                ? generateRetweetUser()
+            : __action === 'quote'
+                ? generateQuoteUser()
+            : null
+
+            generateTemplate(_action === 'reply' ? 'tweet' : __action || _action)
 
             /**
              * 監聽事件
@@ -244,7 +258,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                         olUI.setActionState('retweet', _id, 'active')
                         olUI.actionData('retweet', _id, data.id_str)
 
-                        if (__action === 'quote'){
+                        if (__action === 'quote' && _provider === 'twitter'){
                             // 凍結
                             olUI.setActionState('retweet', _id, 'frozen')
                         } else {
@@ -270,7 +284,8 @@ angular.module('Oneline.olControlCenterDirectives', [])
 
                 // 刷新預覽
                 scope.item.text = status
-                angular.element(_mask.find('p')[0]).html($filter('linkify')(status, _provider))
+                refreshPreviewText(status)
+
                 // retweet & quote 切換
                 if (_action === 'retweet'){
                     // Retweet -> Quote
@@ -301,7 +316,9 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 submitButton.attr('data-count', statusLength > 0 ? statusLength : '')
                 // 動畫
                 submitButton.addClassTemporarily('write__btn--send--typing', 700)
-                typeButton ? typeButton.addClassTemporarily('actions__button--' + _action + '--active', 300) : null
+                typeButton
+                    ? typeButton.addClassTemporarily('actions__button--' + _action + '--active', 300)
+                : null
             })
             .on('$destroy', function (){
                 elem.off()
@@ -380,6 +397,8 @@ angular.module('Oneline.olControlCenterDirectives', [])
                     .empty() // 清空
                     .append($compile(html)(scope)) // 插入
                 })
+                // TODO: 取消「其他操作」／「頭像」點擊
+                refreshPreviewText(scope.item.text)
             }
             function generateRetweetUser(){
                 angular.extend(scope.item, {
@@ -390,7 +409,9 @@ angular.module('Oneline.olControlCenterDirectives', [])
                             avatar: extractSource('avatar'),
                             screen_name: extractSource('screen_name')
                         }
-                    }
+                    },
+                    media: [],
+                    type: 'retweet'
                 })
             }
             function generateQuoteUser(){
@@ -403,7 +424,25 @@ angular.module('Oneline.olControlCenterDirectives', [])
                         screen_name: extractSource('screen_name')
                     }
                 }
-                angular.extend(scope.item, _provider === 'twitter' ? { quote: obj } : { retweet: obj })
+                angular.extend(
+                    scope.item, 
+                    _provider === 'twitter'
+                        ? { quote: obj, type: 'quote' } 
+                    : { retweet: obj, type: 'quote' }
+                )
+            }
+            function refreshPreviewText(status){
+                status = $filter('linkify')(status, _provider) || ''
+
+                $timeout(function (){
+                    if (_provider === 'twitter'){
+                        angular.element(_mask.find('p')[0]).html(status)
+                    } else {
+                        weiboEmotify.then(function (emotify){
+                            angular.element(_mask.find('p')[0]).html(emotify(status) || '')
+                        })
+                    }
+                })
             }
         }
     }
@@ -502,36 +541,45 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 reader.onload = function (e) {
                     var previewURL = URL.createObjectURL(dataURLtoBlob(e.target.result));
 
-                    // Twitter Preview
                     scope.item.media.push({
                         type: "photo",
                         image_url: previewURL,
                         fakeId: fakeId
                     })
-                    $compile(angular.element(document.querySelector('.cancelMask__wrapper'))
-                        .contents()
-                    )(scope)
+
+
+                    var _media = angular.element(
+                        document.querySelector('.cancelMask__wrapper .timeline__media')
+                    );
+
+                    if (_media.length <= 0){
+                        angular.element(document.querySelector('.cancelMask__wrapper .timeline__content'))
+                        .append('<div class="timeline__media"></div>')
+
+                        _media = angular.element(
+                            document.querySelector('.cancelMask__wrapper .timeline__media')
+                        );
+                    }
+                    _media.append('<div class="timeline__media--large" data-mediaId="'
+                        + fakeId
+                        + '"><img src="' + previewURL + '"></div>')
                 }
 
                 reader.readAsDataURL(file)
             }
             function removeImagePreview (fakeId){
-                var previewItem = document.querySelector('[data-mediaId="' + fakeId + '"]');
+                var previewItem = angular.element(
+                    document.querySelectorAll('[data-mediaId="' + fakeId + '"]')
+                );
 
-                angular.element(previewItem).remove()
-
-                // Twitter Preview
                 scope.item.media = scope.item.media.filter(function (item){
                     return item.fakeId !== fakeId
                 })
-                $compile(angular.element(document.querySelector('.cancelMask__wrapper'))
-                    .contents()
-                )(scope)
             }
             function attachMediaId (fakeId, media_id){
                 var previewItem = angular.element(
-                                    document.querySelector('[data-mediaId="' + fakeId + '"]')
-                                );
+                    document.querySelectorAll('[data-mediaId="' + fakeId + '"]')
+                );
 
                 previewItem
                 .removeClass('tips--inprocess')
@@ -546,11 +594,9 @@ angular.module('Oneline.olControlCenterDirectives', [])
                         ? elem.removeData('media_ids')
                     : uploadBtn.data('media_ids', media_ids)
 
-                    // Twitter Preview
+                    previewItem.remove()
+
                     scope.item.media.splice(index, 1)
-                    $compile(angular.element(document.querySelector('.cancelMask__wrapper'))
-                        .contents()
-                    )(scope)
                 })
                 .on('$destroy', function (){
                     previewItem.off('click')
@@ -599,6 +645,59 @@ angular.module('Oneline.olControlCenterDirectives', [])
             })
             .on('$destroy', function (){
                 sensitiveElem.off('click')
+            })
+        }
+    }
+})
+.directive('weiboEmotions', function (){
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: 'controlCenter/write/component/weiboEmotions.html',
+        controller: ['$scope', function($scope){
+            $scope.insertEmotion = function (emotion){
+                emotion = '[' + emotion + ']'
+
+                var statusElem = document.querySelector('textarea'),
+                    _start = statusElem.selectionStart,
+                    _end = statusElem.selectionEnd,
+                    _after = _start + emotion.length;
+
+                if (_start || _start == '0') {
+                    statusElem.value = statusElem.value.substring(0, _start)
+                        + emotion
+                        + statusElem.value.substring(_end, statusElem.value.length);
+                } else {
+                    statusElem.value += emotion;
+                }
+
+                angular.element(statusElem).parent().triggerHandler('input')
+                statusElem.setSelectionRange(_after, _after)
+                statusElem.focus()
+            }
+        }],
+        link: function (scope, elem, attrs){
+            var emotionsElem = elem.find('button');
+            var emotionsList = '笑cry|微笑|嘻嘻|哈哈|可爱|可怜|挖鼻|吃惊|害羞|挤眼|'
+                                +'闭嘴|鄙视|爱你|泪|偷笑|亲亲|生病|太开心|白眼|右哼哼|'
+                                +'左哼哼|嘘|衰|委屈|吐|哈欠|抱抱|怒|疑问|馋嘴|拜拜|思考|'
+                                +'汗|困|睡|钱|失望|酷|色|哼|鼓掌|晕|悲伤|抓狂|黑线|阴险|怒骂|互粉|'
+                                +'心|伤心|猪头|熊猫|兔子|ok|耶|good|NO|赞|来|'
+                                +'弱|草泥马|给力|围观|威武|奥特曼|礼物|钟|话筒|蜡烛|蛋糕|'
+                                + '带着微博去旅行|最右|泪流满面|江南style|去旅行|doge|喵喵';
+
+            scope.isShowEmotions = false
+            scope.emotionsList = emotionsList.split('|')
+
+            emotionsElem
+            .on('click', function (){
+                emotionsElem.toggleClass('tips--active')
+                scope.isShowEmotions = !scope.isShowEmotions
+
+                document.querySelector('textarea').focus()
+            })
+            .on('$destroy', function (){
+                emotionsElem.off('click')
             })
         }
     }

@@ -186,6 +186,35 @@
             }
         }
     }
+    &__emotions {
+        position: absolute * * calc(7px + 25vh) 0;
+        size: 100% 17vh;
+        padding: 10px 10px 0 10px;
+        border-radius: 3px;
+        background-color: var(--color-gray-drak);
+
+        button {
+            position: relative;
+            margin-bottom: 10px;
+            border: 1px solid;
+            border-color: var(--color-gray-drak);
+            lost-column: 1/11;
+
+            &::before {
+                content: '';
+                padding-top: 100%;
+                float: left;
+            }
+            &:hover {
+                border-color: var(--color-weibo);
+            }
+
+            img {
+                float: left;
+                width: 100%;
+            }
+        }
+    }
 }
 
 .read {

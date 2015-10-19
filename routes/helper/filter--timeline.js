@@ -164,7 +164,7 @@ var filter = {
 
             // Retweet & Quote
             if (item.retweeted_status){
-                var retweetType = item.text === '转发微博' ? 'retweet' : 'quote',
+                var retweetType = /^转发微博|Repost|轉發微博$/.test(item.text) ? 'retweet' : 'quote',
                     retweetItem = item.retweeted_status;
 
                 retweetType === 'retweet'

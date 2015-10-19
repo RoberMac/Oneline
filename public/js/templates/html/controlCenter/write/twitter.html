@@ -4,8 +4,9 @@
 
     <div class="write__toolBar">
         <!-- left -->
-        <geo-picker></geo-picker>
-        <media-upload ng-show="item.media.length < 4" class="animate--faster" provider="twitter"></media-upload>
+        <geo-picker ng-if="item.type !== 'retweet'" class="animate--faster"></geo-picker>
+        <!--            ⬇️ 使用 ng-show 防止 mediaIds 丟失 -->
+        <media-upload ng-show="item.type !== 'retweet' && item.media.length < 4" class="animate--faster" provider="twitter"></media-upload>
         <toggle-sensitive ng-if="item.media.length > 0" class="animate--faster"></toggle-sensitive>
         <!-- right -->
         <button class="write__btn write__btn--send icon--twitter tips" type="submit" data-count disabled>
