@@ -3,7 +3,7 @@
 <div ng-include=" 'weibo/component/content--retweet.html' "></div>
 
 <a class="timeline--retweet__profile__avatar" ng-href="//weibo.com/n/{{::item.user.screen_name}}" target="_blank">
-    <img class="timeline__profile__avatar" ng-src="{{::item.user.avatar}}" alt="avatar">
+    <img class="timeline__profile__avatar" ng-src="{{::item.user.avatar.replace('/50/', '/180/')}}" alt="avatar">
 </a>
 
 <div ng-include=" 'actions/weibo.html' "></div>

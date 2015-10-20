@@ -1,12 +1,15 @@
 <div class="timeline__media">
-    <a ng-if="::!item.videos" ng-href="{{::item.images.standard_resolution}}" class="icon--instagram" target="_blank">
-        <svg class="timeline__media__jumpButton tips--deep animate--faster" viewBox="0 0 100 100">
-            <use xlink:href="/public/img/icon-sprites.svg#eyeball"></use>
-        </svg>
-    </a>
 
-    <img ng-if="::!item.videos" ng-srcset="{{::item.images.low_resolution}} 960w, {{::item.images.standard_resolution}} 1280w" sizes="100vw" ng-src="{{::item.images.low_resolution}}" handle-image-error>
+    <div ng-if="::!item.videos" class="timeline__media--instagram">
+        <a ng-href="{{::item.images.standard_resolution}}" class="icon--instagram" target="_blank">
+            <svg class="timeline__media__jumpButton tips--deep animate--faster" viewBox="0 0 100 100">
+                <use xlink:href="/public/img/icon-sprites.svg#eyeball"></use>
+            </svg>
+        </a>
 
-    <ol-video ng-if="::item.videos" ol-src="::item.videos.standard_resolution" ol-poster="::item.images.low_resolution"></ol-video>
+        <img ng-src="{{::item.images.standard_resolution}}" handle-image-error>
+    </div>
+
+    <ol-video ng-if="::item.videos" ol-src="{{::item.videos.standard_resolution}}" ol-poster="{{::item.images.low_resolution}}"></ol-video>
 
 </div>

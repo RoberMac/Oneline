@@ -13,7 +13,7 @@ module.exports = {
         var q_twit_get = Q.nbind(T.get, T);
         var tOpts = {
             include_entities: false,
-            count: opts.count || 20
+            count: opts.count || 100
         };
 
         if (opts.since_id){
@@ -60,7 +60,7 @@ module.exports = {
     weibo: function (opts){
         var wOpts = {
             access_token: opts.token,
-            count: opts.count || 50
+            count: opts.count || 100
         };
 
         if (opts.since_id){

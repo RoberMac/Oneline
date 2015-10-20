@@ -200,6 +200,10 @@
             border-color: var(--color-gray-drak);
             lost-column: 1/11;
 
+            @media (--all-mobile-devices){
+                lost-column: 1/7;
+            }
+
             &::before {
                 content: '';
                 padding-top: 100%;

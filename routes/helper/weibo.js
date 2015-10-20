@@ -18,6 +18,11 @@ module.exports = function (params){
             } catch (e){
                 statusCode = 400
             } finally {
+                switch (body.error_code){
+                    case 21327:
+                        statusCode = 401
+                        break;
+                }
                 deferred.reject({
                     statusCode: statusCode,
                     msg: body

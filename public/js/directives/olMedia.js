@@ -3,8 +3,8 @@ angular.module('Oneline.olMediaDirectives', [])
     return {
         restrict: 'E',
         scope: {
-            olPoster: '=',
-            olSrc: '='
+            olPoster: '@',
+            olSrc: '@'
         },
         templateUrl: 'media/video.html',
         link: function (scope, elem, attrs){
@@ -13,7 +13,8 @@ angular.module('Oneline.olMediaDirectives', [])
 
             video.setAttribute('src', scope.olSrc)
 
-            elem.on('click', function (){
+            elem
+            .on('click', function (){
                 video.paused ? video.play() : video.pause()
                 playIcon.toggleClass('timeline__media__playButton--playing')
 
@@ -21,8 +22,12 @@ angular.module('Oneline.olMediaDirectives', [])
                     video.removeAttribute('loop')
                 })
             })
+            .on('$destroy', function (){
+                elem.off()
+            })
 
-            angular.element(video).on('ended', function (){
+            angular.element(video)
+            .on('ended', function (){
                 playIcon.removeClass('timeline__media__playButton--playing')
             })
         }
@@ -32,7 +37,8 @@ angular.module('Oneline.olMediaDirectives', [])
     return {
         restrict: 'A',
         link: function (scope, elem, attrs){
-            elem.on('click', function (){
+            elem
+            .on('click', function (){
                 var wrapper_thumb  = elem.parent(),
                     wrapper_large  = wrapper_thumb.next(),
                     img_thumb      = wrapper_thumb.children(),
@@ -40,8 +46,10 @@ angular.module('Oneline.olMediaDirectives', [])
                     jump_elem      = wrapper_large.find('a');
 
                 // 設置小圖樣式
-                img_thumb.removeClass('timeline__media--active')
-                img_thumb.addClass('timeline__media--inactive')
+                img_thumb
+                .removeClass('timeline__media--active')
+                .addClass('timeline__media--inactive')
+
                 elem.addClass('timeline__media--active timeline__media--loading')
                 wrapper_thumb.addClass('timeline__media--small')
                 // 設置大圖樣式
@@ -53,7 +61,6 @@ angular.module('Oneline.olMediaDirectives', [])
                 img_large.on('load', function (){
                     img_thumb.length === 1 ? elem.parent().remove() : null
                     elem.removeClass('timeline__media--loading')
-                    // wrapper_large.removeClass('cursor--next')
                     img_large.off('load')
                 })
                 // 附加數據
@@ -63,6 +70,9 @@ angular.module('Oneline.olMediaDirectives', [])
                     })  
                     img_large.data('urlList', urlList)
                 }
+            })
+            .on('$destroy', function (){
+                elem.off()
             })
         }
     }
@@ -74,7 +84,8 @@ angular.module('Oneline.olMediaDirectives', [])
 
             if (attrs.imageCount > 1){
                 // 光標提示
-                elem.on('mousemove', function (e){
+                elem
+                .on('mousemove', function (e){
                     if (e.offsetX - elem[0].offsetWidth / 2 > 0){
                         elem.removeClass('cursor--pre')
                         elem.addClass('cursor--next')
@@ -84,7 +95,7 @@ angular.module('Oneline.olMediaDirectives', [])
                     }
                 })
                 // 上／下一幅
-                elem.on('click', function (){
+                .on('click', function (){
                     var urlList = elem.data('urlList') || [],
                         currentIndex = urlList.indexOf(elem.attr('src')),
                         index = elem.hasClass('cursor--next') ? currentIndex + 1 : currentIndex - 1;
@@ -99,9 +110,10 @@ angular.module('Oneline.olMediaDirectives', [])
                         target = angular.element(img_thumb[index]);
 
                     // 設置圖片地址
-                    elem.attr('src', urlList[index])
+                    elem
+                    .attr('src', urlList[index])
                     // 設置外鏈
-                    elem.next().attr('href', urlList[index].replace('bmiddle', 'large'))
+                    .next().attr('href', urlList[index].replace('bmiddle', 'large'))
                     // 設置小圖樣式
                     img_thumb.removeClass('timeline__media--active timeline__media--loading')
                     target.addClass('timeline__media--active timeline__media--loading')
@@ -112,6 +124,9 @@ angular.module('Oneline.olMediaDirectives', [])
                         elem.off('load')
                     })
                 })
+                .on('$destroy', function (){
+                    elem.off()
+                })
             }
         }
     }
@@ -120,11 +135,26 @@ angular.module('Oneline.olMediaDirectives', [])
     return {
         restrict: 'A',
         link: function (scope, elem, attrs){
-            elem.on('error', function (){
+            elem
+            .on('error', function (){
                 if (elem.attr('src') === '') return;
 
                 elem.attr('src', 'data:image/svg+xml;utf8,<svg viewBox="0 0 529 530" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M51.245 150.775c-3.454-1.729-5.458-.098-4.476 3.638l.706 2.688c8.01 30.498-2.986 73.86-24.566 96.854l-.662.706c-2.643 2.816-1.649 5.288 2.193 5.52l136.636 8.237c9.376.565 23.953-2.031 32.554-5.798l21.279-9.319-13.768-18.801c-5.55-7.579-16.851-17.127-25.254-21.333l-124.642-62.392z" fill="#000"/><path d="M9.298 290.938c13.001 129.203 122.073 230.062 254.702 230.062 141.385 0 256-114.615 256-256s-114.615-256-256-256c-84.794 0-159.96 41.226-206.547 104.728" stroke="#000" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/><path d="M361.259 190.733c-4.06-1.129-8.339-1.733-12.759-1.733-26.234 0-47.5 21.266-47.5 47.5 0 4.115.523 8.109 1.507 11.917" stroke="#000" stroke-width="17" stroke-linecap="round"/><path d="M213.468 406.97c13.141-16.776 37.347-28.026 65.032-28.026 30.37 0 56.552 13.538 68.536 33.056" stroke="#000" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/></g></svg>')
             })
+        }
+    }
+})
+.directive('olLazyImage', function (){
+    return {
+        restrict: 'A',
+        scope: {
+            ratio: '@olLazyImage'
+        },
+        link: function (scope, elem, attrs){
+            var _ratio = scope.ratio,
+                _width = elem[0].width;
+
+            elem.css('height', _width / _ratio + 'px')
         }
     }
 })

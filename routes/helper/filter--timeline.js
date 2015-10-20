@@ -273,15 +273,26 @@ function filterTweetMedia(items){
     var cache = [];
 
     items.forEach(function (item){
+        var _sizes = item.sizes.medium;
+
         var mediaObj = {
             type: item.type,
-            image_url: item.media_url_https
+            image_url: item.media_url_https,
+            ratio: (_sizes.w / _sizes.h).toFixed(2)
         }
 
         // 'animated_gif' / 'video'
         if (item.type !== 'photo'){
+            var _video = item.video_info.variants
+            .filter(function (video){
+                return video.content_type === "video/mp4"
+            })
+            .sort(function (v1, v2){
+                return v1.bitrate - v2.bitrate
+            })[0];
+
             extend(mediaObj, {
-                video_url: item.video_info.variants[0].url
+                video_url: _video.url
             })
         }
 

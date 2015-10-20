@@ -67,20 +67,20 @@
         }
         &--thumb {
             img {
-                width: 80px;
+                size: 80px;
                 margin-right: 7px;
                 cursor: zoom-in;
                 border-radius: 1px;
 
                 @media (--all-mobile-devices){
-                    width: calc(100% / 9 - 3px);
+                    size: calc(100% / 9 - 3px);
                     margin-right: 3px;
                 }
             }
         }
         &--small {
             img {
-                width: calc(100% / 9 - 7px);
+                size: calc(100% / 9 - 7px);
                 margin-right: 7px;
                 cursor: pointer;
                 border-radius: 50%;
@@ -114,6 +114,7 @@
             position: absolute 3px 3px * *;
             size: 17px;
             cursor: pointer;
+            z-index: 3;
         }
         &__playButton {
             position: absolute 0 * * 0;
@@ -122,6 +123,15 @@
             
             &--playing {
                 opacity: 0;
+            }
+        }
+        &--instagram {
+            position: relative;
+            padding-bottom: 100%;
+            overflow: hidden;
+
+            > img {
+                position: absolute 0 * * 0;
             }
         }
     }
@@ -174,34 +184,40 @@
     &--twitter {
         .timeline__profile__avatar {
             border-color: var(--color-twitter);
-            background-color: var(--color-twitter);
         }
         .timeline__content {
             a, a:visited {
                 color: var(--color-twitter);
             }
         }
+        img {
+            background: inline('background--twitter.png') repeat;
+        }
     }
     &--instagram {
         .timeline__profile__avatar {
             border-color: var(--color-instagram);
-            background-color: var(--color-instagram);
         }
         .timeline__content {
             a, a:visited {
                 color: var(--color-instagram);
             }
         }
+        img {
+            background: inline('background--instagram.png') repeat;
+        }
     }
     &--weibo {
         .timeline__profile__avatar {
             border-color: var(--color-weibo);
-            background-color: var(--color-weibo);
         }
         .timeline__content {
             a, a:visited {
                 color: var(--color-weibo);
             }
+        }
+        img {
+            background: inline('background--weibo.png') repeat;
         }
     }
 

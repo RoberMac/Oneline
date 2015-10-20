@@ -397,7 +397,9 @@ angular.module('Oneline.olControlCenterDirectives', [])
                     .empty() // 清空
                     .append($compile(html)(scope)) // 插入
                 })
-                // TODO: 取消「其他操作」／「頭像」點擊
+                $timeout(function (){
+                    _mask.find('button').css('pointer-events', 'none')
+                })
                 refreshPreviewText(scope.item.text)
             }
             function generateRetweetUser(){

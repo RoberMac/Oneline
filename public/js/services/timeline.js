@@ -3,7 +3,6 @@ angular.module('Oneline.timelineServices', [])
     function($q, $state, Timeline, timelineCache, olUI, olTokenHelper){
 
     var time_pointer   = Date.now();
-    var retrieve_count = 90;
     var TIME_RANGE     = 1800000;
 
     /**
@@ -54,7 +53,6 @@ angular.module('Oneline.timelineServices', [])
     }
     this.initTimelineSettings = function (){
         time_pointer = Date.now()
-        retrieve_count = 50
     }
     /**
      * 「新／舊帖文」相關
@@ -161,7 +159,6 @@ angular.module('Oneline.timelineServices', [])
         var defer = $q.defer()
 
         var _this = this;
-        var count = retrieve_count;
 
         function fetchPosts(invalidList){
             var defer = $q.defer()
@@ -169,7 +166,7 @@ angular.module('Oneline.timelineServices', [])
             var max_id_str = _this.getId('oldPosts', invalidList);
 
             Timeline
-            .load({ id: max_id_str, count: count })
+            .load({ id: max_id_str, count: 100 })
             .$promise
             .then(function (oldPosts){
                 if (!oldPosts || (oldPosts.data && oldPosts.data.length < 1)){
@@ -182,9 +179,6 @@ angular.module('Oneline.timelineServices', [])
                     oldPosts.data.splice(0, 1)
                 }
                 _this.storePosts('oldPosts', oldPosts, providerList)
-
-                // 若一次未能滿足，下次獲取時「加量」
-                count < 100 ? count += 10 : null
 
                 defer.resolve()
             })
@@ -219,8 +213,6 @@ angular.module('Oneline.timelineServices', [])
         fetchPosts(invalidList)
         .then(isLoadFin)
         .then(function (){
-            retrieve_count < 100 ? retrieve_count += 10 : null
-
             defer.resolve()
         })
         .catch(function (err){
@@ -237,7 +229,7 @@ angular.module('Oneline.timelineServices', [])
         Timeline
         .load({
             id: _this.getId('newPosts', providerList),
-            count: 70
+            count: 100
         })
         .$promise
         .then(function (newPosts){
@@ -266,7 +258,7 @@ angular.module('Oneline.timelineServices', [])
         time_pointer = now - TIME_RANGE
 
         this.updateOldPostsCount(providerList)
-
+        console.time('filter')
         return timelineData.filter(function (item){
             return now - item.created_at < TIME_RANGE
         })
@@ -303,25 +295,32 @@ angular.module('Oneline.timelineServices', [])
         var _step = step;
         step = _step ? _step : 1
 
-        if (err.status === 401){
-            var invalidToken = err.data.invalidToken || ['twitter', 'instagram', 'weibo'];
+        switch (err.status){
+            case 304:
+                olUI.setLoading('done', step)
+                break;
+            case 401:
+                var invalidToken = err.data.invalidToken || ['twitter', 'instagram', 'weibo'];
 
-            invalidToken.forEach(function (provider){
-                olTokenHelper.removeToken(provider)
-            })
-            $state.go('settings')
-        } else if (err.status === 429){
-            var _safeTime = err.data.reset * 1000,
-                safeTime  = new Date(_safeTime).toLocaleTimeString('en-GB').substring(0, 5);
+                invalidToken.forEach(function (provider){
+                    olTokenHelper.removeToken(provider)
+                })
+                $state.go('settings')
+                break;
+            case 429:
+                var _safeTime = err.data.reset * 1000,
+                    safeTime  = new Date(_safeTime).toLocaleTimeString('en-GB').substring(0, 5);
 
-            olUI.setLoading('fail', step)
-            olUI.setPostsCount('newPosts', safeTime)
-            console.log(_safeTime, _safeTime - Date.now())
-            setTimeout(function (){
-                olUI.setPostsCount('newPosts', '⟳')
-            }, _safeTime - Date.now())
-        } else {
-            olUI.setLoading('fail', step)
+                olUI.setLoading('fail', step)
+                olUI.setPostsCount('newPosts', safeTime)
+                console.log(_safeTime, _safeTime - Date.now())
+                setTimeout(function (){
+                    olUI.setPostsCount('newPosts', '⟳')
+                }, _safeTime - Date.now())
+                break;
+            default:
+                olUI.setLoading('fail', step)
+                break;
         }
     }
 }])
