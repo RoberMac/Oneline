@@ -1,7 +1,7 @@
 angular.module('Oneline.timelineControllers', [])
-.controller('timelineCtrl', ['$scope', '$q', 
+.controller('timelineCtrl', ['$scope', '$q', '$animate',
     'Timeline', 'olUI', 'olTimelineHelper', 'olActionsHelper', 'timelineCache',
-    function($scope, $q, 
+    function($scope, $q, $animate,
         Timeline, olUI, olTimelineHelper, olActionsHelper, timelineCache){
 
 
@@ -9,9 +9,14 @@ angular.module('Oneline.timelineControllers', [])
      * 初始化時間線
      */
     $scope.timelineData = []
+    $scope.$on('ngRepeatFinished', function (){
+        $animate.enabled(true)
+    })
     olTimelineHelper.initTimelineSettings()
     olTimelineHelper.initLoad($scope.providerList)
     .then(function (){
+        $animate.enabled(false)
+
         $scope.timelineData = olTimelineHelper.extractOldPosts($scope.providerList)
 
         registerAutoRefresh()
@@ -75,6 +80,8 @@ angular.module('Oneline.timelineControllers', [])
             }
         })
         .then(function (data){
+            $animate.enabled(false)
+
             if (data[1] === 'newPosts'){
                 var allPosts = $scope.timelineData.concat(data[0]);
 

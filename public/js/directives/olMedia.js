@@ -151,10 +151,9 @@ angular.module('Oneline.olMediaDirectives', [])
             ratio: '@olLazyImage'
         },
         link: function (scope, elem, attrs){
-            var _ratio = scope.ratio,
-                _width = elem[0].width;
+            var _ratio = scope.ratio;
 
-            elem.css('height', _width / _ratio + 'px')
+            elem.css('padding-bottom', _ratio * 100 + '%')
         }
     }
 })

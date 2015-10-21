@@ -27,7 +27,8 @@ angular.module('Oneline', [
     'Oneline.olMediaDirectives',
     'Oneline.olTextDirectives',
     'Oneline.olControlCenterDirectives',
-    'Oneline.olUserProfileDirectives'
+    'Oneline.olUserProfileDirectives',
+    'Oneline.olUtilsDirectives'
 ])
 .config(['$locationProvider', '$stateProvider', '$compileProvider',
     '$urlRouterProvider', '$httpProvider', 'jwtInterceptorProvider', 'weiboEmotifyProvider',

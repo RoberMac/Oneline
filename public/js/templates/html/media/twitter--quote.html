@@ -1,12 +1,12 @@
 <div class="timeline__media">
-    <div ng-repeat="media in ::item.quote.media" class="timeline__media--large">
+    <div ng-repeat="media in ::item.quote.media" class="timeline__media--large" ol-lazy-image="{{::media.ratio}}">
         <a ng-if="::media.type === 'photo'" ng-href="{{::media.image_url}}:large" class="icon--twitter" target="_blank">
             <svg class="timeline__media__jumpButton tips--deep animate--faster" viewBox="0 0 100 100">
                 <use xlink:href="/public/img/icon-sprites.svg#eyeball"></use>
             </svg>
         </a>
 
-        <img ng-if="::media.type === 'photo'" ng-src="{{::media.image_url}}" handle-image-error ol-lazy-image="{{::media.ratio}}">
+        <img ng-if="::media.type === 'photo'" ng-src="{{::media.image_url}}" handle-image-error>
 
         <ol-video ng-if="::media.type !== 'photo'" ol-src="{{::media.video_url}}" ol-poster="{{::media.image_url + ':small'}}"></ol-video>
     </div>

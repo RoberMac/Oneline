@@ -15,14 +15,15 @@ module.exports = function (params){
             var statusCode;
             try {
                 statusCode = res.statusCode;
-            } catch (e){
-                statusCode = 400
-            } finally {
+
                 switch (body.error_code){
                     case 21327:
                         statusCode = 401
                         break;
                 }
+            } catch (e){
+                statusCode = 400
+            } finally {
                 deferred.reject({
                     statusCode: statusCode,
                     msg: body

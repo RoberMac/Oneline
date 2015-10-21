@@ -56,7 +56,7 @@
         }
 
         img, video {
-            width: 100%;
+            size: 100% auto;
             border-radius: 3px;
         }
         video {
@@ -64,6 +64,17 @@
         }
         &--large {
             position: relative;
+            margin: 3px 0;
+            overflow: hidden;
+
+            &--instagram {
+                padding-bottom: 100%;
+            }
+
+            > img, video {
+                position: absolute 0 * * 0;
+                height: 100%;
+            }
         }
         &--thumb {
             img {
@@ -125,15 +136,6 @@
                 opacity: 0;
             }
         }
-        &--instagram {
-            position: relative;
-            padding-bottom: 100%;
-            overflow: hidden;
-
-            > img {
-                position: absolute 0 * * 0;
-            }
-        }
     }
 
     &--quote {
@@ -191,7 +193,7 @@
             }
         }
         img {
-            background: inline('background--twitter.png') repeat;
+            background: var(--color-white) inline('background--twitter.png') repeat;
         }
     }
     &--instagram {
@@ -204,7 +206,7 @@
             }
         }
         img {
-            background: inline('background--instagram.png') repeat;
+            background: var(--color-white) inline('background--instagram.png') repeat;
         }
     }
     &--weibo {
@@ -217,7 +219,7 @@
             }
         }
         img {
-            background: inline('background--weibo.png') repeat;
+            background: var(--color-white) inline('background--weibo.png') repeat;
         }
     }
 
