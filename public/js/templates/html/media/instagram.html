@@ -1,6 +1,6 @@
 <div class="timeline__media">
 
-    <div ng-if="::!item.videos" class="timeline__media--large timeline__media--large--instagram">
+    <div ng-if="::!item.videos" class="timeline__media--large" ol-lazy-image="{{::item.images.ratio}}">
         <a ng-href="{{::item.images.standard_resolution}}" class="icon--instagram" target="_blank">
             <svg class="timeline__media__jumpButton tips--deep animate--faster" viewBox="0 0 100 100">
                 <use xlink:href="/public/img/icon-sprites.svg#eyeball"></use>

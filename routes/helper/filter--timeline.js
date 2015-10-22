@@ -104,13 +104,8 @@ var filter = {
                 id_str: item.id,
                 type: 'post',
                 user: trimInstagramUser(item.user),
-                text: item.caption && item.caption.text
-                        ? item.caption.text
-                        : null,
-                images: {
-                    low_resolution: item.images.low_resolution.url,
-                    standard_resolution: item.images.standard_resolution.url
-                },
+                text: item.caption && item.caption.text,
+                images: filterInstagramImages(item.images),
                 favorite_count: item.likes.count,
                 favorited: item.user_has_liked,
                 reply_count: item.comments.count,
@@ -300,6 +295,16 @@ function filterTweetMedia(items){
     })
 
     return cache
+}
+function filterInstagramImages (images){
+    var _low = images.low_resolution,
+        _standard = images.standard_resolution;
+
+    return {
+        low_resolution: _low.url,
+        standard_resolution: _standard.url,
+        ratio: (_standard.height / _standard.width).toFixed(5)
+    }
 }
 function filterWeiboMedia(items){
     var cache = [];

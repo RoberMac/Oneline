@@ -67,10 +67,6 @@
             margin: 3px 0;
             overflow: hidden;
 
-            &--instagram {
-                padding-bottom: 100%;
-            }
-
             > img, video {
                 position: absolute 0 * * 0;
                 height: 100%;
