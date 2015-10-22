@@ -44,7 +44,6 @@
         }
     }
     &__media {
-        display: block;
         position: relative;
         width: 100%;
         margin: 17px 0 0 0;
@@ -56,7 +55,8 @@
         }
 
         img, video {
-            size: 100% auto;
+            max-width: 100%;
+            max-height: 100vh;
             border-radius: 3px;
         }
         video {
@@ -69,7 +69,8 @@
 
             > img, video {
                 position: absolute 0 * * 0;
-                height: 100%;
+                size: 100% 100%;
+                max-height: none;
             }
         }
         &--thumb {

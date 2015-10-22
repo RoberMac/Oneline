@@ -1,7 +1,7 @@
 <button ng-click="loadMore(1)" class="loadMore loadMore--initLoad loadMore--loading loadMore__count animate--faster" data-count type="button">
 </button>
 
-<div class="timeline" ng-repeat="item in timelineData | orderBy: '-created_at'" data-id="{{::item.id_str}}" data-date on-finish-render="ngRepeatFinished">
+<div class="timeline" ng-repeat="item in timelineData | orderBy: '-created_at'" data-id="{{::item.id_str}}" data-date>
 
     <div ng-class="::'timeline--' + item.provider" ng-include="::item.provider + '/' + item.type + '.html'"></div>
 

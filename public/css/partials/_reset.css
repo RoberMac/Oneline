@@ -143,12 +143,18 @@ img, video {
         &:hover {
             opacity: 1;
         }
+        &--peace {
+            opacity: .3;
+        }
     }
     &--active {
         opacity: 1;
 
         &:hover {
             opacity: .7;
+        }
+        &--peace {
+            opacity: 1;
         }
     }
     &--frozen {

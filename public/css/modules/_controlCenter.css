@@ -274,6 +274,7 @@
 
             img {
                 width: 1em;
+                margin: 0 .1em;
             }
 
             a, a:visited {
@@ -307,6 +308,6 @@
     position: absolute * 3px calc(100% + 3px) *;
 
     button {
-        width: 27px;
+        width: 37px;
     }
 }

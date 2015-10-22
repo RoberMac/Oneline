@@ -96,33 +96,35 @@ angular.module('Oneline.olMediaDirectives', [])
                 })
                 // 上／下一幅
                 .on('click', function (){
-                    var urlList = elem.data('urlList') || [],
-                        currentIndex = urlList.indexOf(elem.attr('src')),
+                    var img_large = elem.find('img');
+                    var urlList = img_large.data('urlList') || [],
+                        currentIndex = urlList.indexOf(img_large.attr('src')),
                         index = elem.hasClass('cursor--next') ? currentIndex + 1 : currentIndex - 1;
 
                     if (index < 0 || index > urlList.length - 1) return;
 
                     var img_thumb = angular.element(
                                         angular.element(
-                                            elem.parent().parent().children()[0]
+                                            elem.parent().children()[0]
                                         ).children()
                                     ),
                         target = angular.element(img_thumb[index]);
 
-                    // 設置圖片地址
-                    elem
-                    .attr('src', urlList[index])
-                    // 設置外鏈
-                    .next().attr('href', urlList[index].replace('bmiddle', 'large'))
                     // 設置小圖樣式
                     img_thumb.removeClass('timeline__media--active timeline__media--loading')
                     target.addClass('timeline__media--active timeline__media--loading')
+
+                    img_large
                     // 大圖加載完畢
-                    elem.on('load', function (){
+                    .on('load', function (){
                         // 設置小圖樣式
                         target.removeClass('timeline__media--loading')
-                        elem.off('load')
+                        img_large.off('load')
                     })
+                    // 設置圖片地址
+                    .attr('src', urlList[index])
+                    // 設置外鏈
+                    .next().attr('href', urlList[index].replace('bmiddle', 'large'))
                 })
                 .on('$destroy', function (){
                     elem.off()

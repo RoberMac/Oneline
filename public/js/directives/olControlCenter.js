@@ -119,10 +119,8 @@ angular.module('Oneline.olControlCenterDirectives', [])
         }]
     }
 }])
-.directive('write', ['$compile', '$templateRequest', '$timeout', '$filter',
-    'weiboEmotify', 'Action', 'olUI',
-    function ($compile, $templateRequest, $timeout, $filter, 
-        weiboEmotify, Action, olUI){
+.directive('write', ['Action', 'olUI', 'writeHelper',
+    function (Action, olUI, writeHelper){
 
     return {
         restrict: 'A',
@@ -158,7 +156,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                     case 'reply':
                         if (_provider === 'twitter'){
                             statusElem.val(
-                                extractMentions(
+                                writeHelper.extractMentions(
                                     _sourceElem.find('p')[0].innerText, '@' + _info[2]
                                 )
                             )
@@ -188,8 +186,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
              * 初始化 Live Preview
              *
              */
-            var _profile = JSON.parse(localStorage.getItem('profile_' + _provider)) || {},
-                _mask    = angular.element(document.querySelector('.cancelMask__wrapper'));
+            var _profile = JSON.parse(localStorage.getItem('profile_' + _provider)) || {};
 
             scope.item = {
                 user: {
@@ -204,12 +201,12 @@ angular.module('Oneline.olControlCenterDirectives', [])
             }
 
             __action === 'retweet'
-                ? generateRetweetUser()
+                ? angular.extend(scope.item, writeHelper.generateRetweetUser(_id, _type, _provider))
             : __action === 'quote'
-                ? generateQuoteUser()
+                ? angular.extend(scope.item, writeHelper.generateQuoteUser(_id, _type, _provider))
             : null
 
-            generateTemplate(_action === 'reply' ? 'tweet' : __action || _action)
+            writeHelper.generateTemplate(_action === 'reply' ? 'tweet' : __action || _action, scope, _provider)
 
             /**
              * 監聽事件
@@ -280,27 +277,27 @@ angular.module('Oneline.olControlCenterDirectives', [])
             })
             .on('input', function (){
                 var status = statusElem.val().trim(),
-                    statusLength = _provider === 'weibo' ? weiboLength(status) : status.length;
+                    statusLength = _provider === 'weibo' ? writeHelper.weiboLength(status) : status.length;
 
                 // 刷新預覽
                 scope.item.text = status
-                refreshPreviewText(status)
+                writeHelper.refreshPreviewText(status, _provider)
 
                 // retweet & quote 切換
                 if (_action === 'retweet'){
                     // Retweet -> Quote
                     if (status.length > 0){
                         if (__action === 'retweet'){
-                            generateQuoteUser()
-                            generateTemplate('quote')
+                            angular.extend(scope.item, writeHelper.generateQuoteUser(_id, _type, _provider))
+                            writeHelper.generateTemplate('quote', scope, _provider)
                         }
                         __action = 'quote'
                     }
                     // Quote -> Retweet
                     else {
                         if (__action === 'quote'){
-                            generateRetweetUser()
-                            generateTemplate('retweet')
+                            angular.extend(scope.item, writeHelper.generateRetweetUser(_id, _type, _provider))
+                            writeHelper.generateTemplate('retweet', scope, _provider)
                         }
                         __action = 'retweet'
                     }
@@ -323,129 +320,6 @@ angular.module('Oneline.olControlCenterDirectives', [])
             .on('$destroy', function (){
                 elem.off()
             });
-
-            /**
-             * Helper
-             *
-             */
-            function weiboLength (status){
-                var _ascii_len = (status.match(/[\x00-\x7F]+/g) || []).join('').length;
-                var _nonAscii_len = status.length - _ascii_len;
-
-                return _nonAscii_len + Math.round(_ascii_len / 2);
-            }
-            function extractMentions (status, sourceUser){
-                var _mentions = [sourceUser],
-                    _str = ' ';
-
-                // Extract
-                _mentions = _mentions.concat(status.match(/(|\s)*@([\w]+)/g) || [])
-                // Trim
-                _mentions = _mentions.map(function (item){
-                    return item.trim()
-                })
-                // Remove Duplicates
-                _mentions = _mentions.filter(function(item, pos) {
-                    return _mentions.indexOf(item) == pos;
-                })
-                // Concat
-                _mentions.forEach(function (item){
-                    _str = _str + item + ' '
-                })
-
-                return _str;
-            }
-            function extractSource (type){
-                var index = _type === 'quote' ? 1 : 0;
-                    link_prefix = _provider === 'twitter'
-                                        ? '//twitter.com/'
-                                    : _provider === 'weibo'
-                                        ? '//weibo.com/n/'
-                                    : null;
-
-                switch (type){
-                    case 'text':
-                        return __sourceElem.querySelectorAll('p')[index]
-                                .innerText
-                        break;
-                    case 'name':
-                        return __sourceElem.querySelectorAll('.timeline__profile__fullname strong')[index]
-                                .innerText
-                        break;
-                    case 'avatar':
-                        return __sourceElem.querySelectorAll('.timeline__profile__avatar')[index]
-                                .getAttribute('src')
-                        break;
-                    case 'screen_name':
-                        return __sourceElem.querySelectorAll('.timeline__profile__fullname a')[index]
-                                .getAttribute('href').replace(link_prefix, '')
-                        break;
-                    case 'created_at':
-                        return __sourceElem.querySelectorAll('[relative-date]')[index]
-                                .getAttribute('relative-date')
-                        break;
-                }
-            }
-            function generateTemplate(type){
-                var _template = _provider + '/' + type + '.html';
-
-                $templateRequest(_template)
-                .then(function (html){
-                    html = '<div class="timeline timeline--' + _provider + '">' + html + '</div>'
-
-                    _mask.children()
-                    .empty() // 清空
-                    .append($compile(html)(scope)) // 插入
-                })
-                $timeout(function (){
-                    _mask.find('button').css('pointer-events', 'none')
-                })
-                refreshPreviewText(scope.item.text)
-            }
-            function generateRetweetUser(){
-                angular.extend(scope.item, {
-                    text: extractSource('text'),
-                    retweet: {
-                        user: {
-                            name: extractSource('name'),
-                            avatar: extractSource('avatar'),
-                            screen_name: extractSource('screen_name')
-                        }
-                    },
-                    media: [],
-                    type: 'retweet'
-                })
-            }
-            function generateQuoteUser(){
-                var obj = {
-                    text: extractSource('text'),
-                    created_at: extractSource('created_at'),
-                    user: {
-                        name: extractSource('name'),
-                        avatar: extractSource('avatar'),
-                        screen_name: extractSource('screen_name')
-                    }
-                }
-                angular.extend(
-                    scope.item, 
-                    _provider === 'twitter'
-                        ? { quote: obj, type: 'quote' } 
-                    : { retweet: obj, type: 'quote' }
-                )
-            }
-            function refreshPreviewText(status){
-                status = $filter('linkify')(status, _provider) || ''
-
-                $timeout(function (){
-                    if (_provider === 'twitter'){
-                        angular.element(_mask.find('p')[0]).html(status)
-                    } else {
-                        weiboEmotify.then(function (emotify){
-                            angular.element(_mask.find('p')[0]).html(emotify(status) || '')
-                        })
-                    }
-                })
-            }
         }
     }
 }])
@@ -459,10 +333,10 @@ angular.module('Oneline.olControlCenterDirectives', [])
 
             geoPickerBtn
             .on('click', function (){
-                if (geoPickerBtn.hasClass('tips--active')){
+                if (geoPickerBtn.hasClass('tips--active--peace')){
 
                     geoPickerBtn
-                    .removeClass('tips--active tips--inprocess')
+                    .removeClass('tips--active--peace tips--inprocess')
                     .removeData('geo')
 
                 } else {
@@ -471,7 +345,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                     $window.navigator.geolocation.getCurrentPosition(function (pos){
 
                         geoPickerBtn
-                        .addClass('tips--active')
+                        .addClass('tips--active--peace')
                         .removeClass('tips--inprocess')
                         .data('geo', {
                             lat: pos.coords.latitude,
@@ -493,7 +367,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
         }
     }
 }])
-.directive('mediaUpload', ['$compile', 'Media', function ($compile, Media){
+.directive('mediaUpload', ['Media', function (Media){
     return {
         restrict: 'E',
         templateUrl: 'controlCenter/write/component/mediaUpload.html',
@@ -505,6 +379,11 @@ angular.module('Oneline.olControlCenterDirectives', [])
             .on('change', function (){
                 var fd   = new FormData(),
                     file = uploadBtn[0].files[0];
+
+                // 轉推」／「引用」切換時，清空之前上傳過的圖片數據
+                if (!document.querySelector('.write__previews__item')){
+                    uploadBtn.data('media_ids', [])
+                }
 
                 // Preview
                 var fakeId = Date.now()
@@ -525,6 +404,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 .catch(function (err){
                     removeImagePreview(fakeId)
                 })
+                // 允許上傳重複圖片
                 uploadBtn[0].value = ''
 
             })
@@ -539,32 +419,42 @@ angular.module('Oneline.olControlCenterDirectives', [])
              */
             function addImagePreview (file, fakeId){
                 var reader = new FileReader();
+                var image  = new Image();
 
                 reader.onload = function (e) {
                     var previewURL = URL.createObjectURL(dataURLtoBlob(e.target.result));
+
+                    image.src = previewURL
+                    image.onload = function (){
+                        var _ratio = (image.height / image.width).toFixed(5)
+
+                        var _media = angular.element(
+                            document.querySelector('.cancelMask__wrapper .timeline__media')
+                        );
+
+                        if (_media.length <= 0){
+                            angular.element(document.querySelector('.cancelMask__wrapper .timeline__content'))
+                            .append('<div class="timeline__media"></div>')
+
+                            _media = angular.element(
+                                document.querySelector('.cancelMask__wrapper .timeline__media')
+                            );
+                        }
+                        _media
+                        .append('<div class="timeline__media--large" data-mediaId="'
+                            + fakeId
+                            + '" data-ratio="'
+                            + _ratio
+                            + '"><img src="' + previewURL + '"></div>'
+                        )
+                    }
 
                     scope.item.media.push({
                         type: "photo",
                         image_url: previewURL,
                         fakeId: fakeId
                     })
-
-
-                    var _media = angular.element(
-                        document.querySelector('.cancelMask__wrapper .timeline__media')
-                    );
-
-                    if (_media.length <= 0){
-                        angular.element(document.querySelector('.cancelMask__wrapper .timeline__content'))
-                        .append('<div class="timeline__media"></div>')
-
-                        _media = angular.element(
-                            document.querySelector('.cancelMask__wrapper .timeline__media')
-                        );
-                    }
-                    _media.append('<div class="timeline__media--large" data-mediaId="'
-                        + fakeId
-                        + '"><img src="' + previewURL + '"></div>')
+                    scope.$apply()
                 }
 
                 reader.readAsDataURL(file)
@@ -577,11 +467,15 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 scope.item.media = scope.item.media.filter(function (item){
                     return item.fakeId !== fakeId
                 })
+                scope.$apply()
             }
             function attachMediaId (fakeId, media_id){
                 var previewItem = angular.element(
                     document.querySelectorAll('[data-mediaId="' + fakeId + '"]')
                 );
+
+                angular.element(previewItem[0])
+                .css('padding-bottom', previewItem.attr('data-ratio') * 100 + '%')
 
                 previewItem
                 .removeClass('tips--inprocess')
@@ -599,6 +493,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                     previewItem.remove()
 
                     scope.item.media.splice(index, 1)
+                    scope.$apply()
                 })
                 .on('$destroy', function (){
                     previewItem.off('click')
@@ -641,9 +536,9 @@ angular.module('Oneline.olControlCenterDirectives', [])
 
             sensitiveElem
             .on('click', function (){
-                sensitiveElem.hasClass('tips--active')
-                    ? sensitiveElem.removeClass('tips--active').data('sensitive', false)
-                : sensitiveElem.addClass('tips--active').data('sensitive', true)
+                sensitiveElem.hasClass('tips--active--peace')
+                    ? sensitiveElem.removeClass('tips--active--peace').data('sensitive', false)
+                : sensitiveElem.addClass('tips--active--peace').data('sensitive', true)
             })
             .on('$destroy', function (){
                 sensitiveElem.off('click')
@@ -693,8 +588,10 @@ angular.module('Oneline.olControlCenterDirectives', [])
 
             emotionsElem
             .on('click', function (){
-                emotionsElem.toggleClass('tips--active')
-                scope.isShowEmotions = !scope.isShowEmotions
+                emotionsElem.toggleClass('tips--active--peace')
+                scope.$apply(function (){
+                    scope.isShowEmotions = !scope.isShowEmotions
+                })
 
                 document.querySelector('textarea').focus()
             })

@@ -1,9 +1,9 @@
 <div class="timeline__media overflow--x timeline__media--thumb">
     <img class="animate--faster" ng-repeat="media in ::item.media" ng-src="{{:: media.image_url}}" ng-class="::{ 'timeline__media--gif': media.type ==='gif' }" ol-image-thumb handle-image-error>
 </div>
-<div class="timeline__media timeline__media--hide">
-    <img src="" alt="weibo_large_photo" select-image image-count="{{:: item.media.length}}" handle-image-error>
-    <a href="" target="_blank" class="icon--weibo">
+<div class="timeline__media timeline__media--hide" select-image image-count="{{:: item.media.length}}">
+    <img src="" alt="weibo_large_photo" handle-image-error>
+    <a href="" target="_blank" class="icon--weibo" ng-click="$event.stopPropagation()">
         <svg class="timeline__media__jumpButton tips--deep animate--faster" viewBox="0 0 100 100">
             <use xlink:href="/public/img/icon-sprites.svg#eyeball"></use>
         </svg>

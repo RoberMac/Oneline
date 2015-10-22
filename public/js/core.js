@@ -7,7 +7,6 @@ angular.module('Oneline', [
     // Vendors
     'ui.router',
     'angular-jwt',
-    'angular-storage',
     'linkify',
     'weibo-emotify',
     // Templates
@@ -23,6 +22,7 @@ angular.module('Oneline', [
     'Oneline.relativeDateServices',
     'Oneline.tokenHelperServices',
     'Oneline.UIServices',
+    'Oneline.utilsServices',
     // Directives
     'Oneline.olMediaDirectives',
     'Oneline.olTextDirectives',
@@ -30,15 +30,17 @@ angular.module('Oneline', [
     'Oneline.olUserProfileDirectives',
     'Oneline.olUtilsDirectives'
 ])
-.config(['$locationProvider', '$stateProvider', '$compileProvider',
+.config(['$locationProvider', '$stateProvider', '$compileProvider', '$animateProvider',
     '$urlRouterProvider', '$httpProvider', 'jwtInterceptorProvider', 'weiboEmotifyProvider',
-    function($locationProvider, $stateProvider, $compileProvider,
+    function($locationProvider, $stateProvider, $compileProvider, $animateProvider,
         $urlRouterProvider, $httpProvider, jwtInterceptorProvider, weiboEmotifyProvider) {
 
 
     $locationProvider.html5Mode(true)
 
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|blob|data|mailto):/)
+
+    $animateProvider.classNameFilter(/animate--\w+/)
 
     // 配置每次請求攜帶 JWT
     jwtInterceptorProvider.tokenGetter = function() {
