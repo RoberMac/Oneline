@@ -1,5 +1,5 @@
 angular.module('Oneline.tokenHelperServices', [])
-.service('olTokenHelper', ['jwtHelper', function(jwtHelper){
+.service('olTokenHelper', ['jwtHelper', 'store', function(jwtHelper, store){
 
 
     /* 添加 token */
@@ -67,25 +67,5 @@ angular.module('Oneline.tokenHelperServices', [])
                 return provider !== jwtHelper.decodeToken(token).provider
             })
         }
-    }
-    var store = {
-        get: function (key){
-            return parseJSON(localStorage.getItem(key))
-        },
-        set: function (key, value){
-            localStorage.setItem(key, JSON.stringify(value))
-        },
-        remove: function (key){
-            localStorage.removeItem(key)
-        }
-    }
-    function parseJSON(data){
-        try {
-            data = JSON.parse(data)
-        } catch (e) {
-        } finally {
-            return data
-        }
-    }
-    
+    }    
 }])

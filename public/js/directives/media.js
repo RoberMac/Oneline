@@ -1,4 +1,4 @@
-angular.module('Oneline.olMediaDirectives', [])
+angular.module('Oneline.mediaDirectives', [])
 .directive('olVideo', function (){
     return {
         restrict: 'E',

@@ -1,4 +1,4 @@
-angular.module('Oneline.olTextDirectives', [])
+angular.module('Oneline.textDirectives', [])
 .directive('trimMediaLink', ['$timeout', function ($timeout){
     return {
         restrict: 'A',

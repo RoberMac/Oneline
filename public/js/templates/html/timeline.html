@@ -1,11 +1,25 @@
 <button ng-click="loadMore(1)" class="loadMore loadMore--initLoad loadMore--loading loadMore__count animate--faster" data-count type="button">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" fill-rule="evenodd">
+            <path class="animate--faster" d="M57.5 100c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z" fill="#2AA9E0"/>
+            <path class="animate--faster" d="M115 100c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z" fill="#3F5D87"/>
+            <path class="animate--faster" d="M172.5 100c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z" fill="#E6162D"/>
+        </g>
+    </svg>
 </button>
 
-<div class="timeline" ng-repeat="item in timelineData | orderBy: '-created_at'" data-id="{{::item.id_str}}" data-date>
+<div class="timeline" ng-repeat="item in timelineData | orderBy: '-created_at'" data-id="{{::item.id_str}}" data-date on-finish-render="ngRepeatFinished">
 
     <div ng-class="::'timeline--' + item.provider" ng-include="::item.provider + '/' + item.type + '.html'"></div>
 
 </div>
 
 <button ng-click="loadMore(-1)" class="loadMore loadMore--initLoad loadMore__count animate--faster" data-count type="button">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" fill-rule="evenodd">
+            <path class="animate--faster" d="M57.5 100c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z" fill="#2AA9E0"/>
+            <path class="animate--faster" d="M115 100c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z" fill="#3F5D87"/>
+            <path class="animate--faster" d="M172.5 100c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z" fill="#E6162D"/>
+        </g>
+    </svg>
 </button>

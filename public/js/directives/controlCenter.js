@@ -1,5 +1,5 @@
-angular.module('Oneline.olControlCenterDirectives', [])
-.directive('replicantDeckard', ['Replicant', function (Replicant){
+angular.module('Oneline.controlCenterDirectives', [])
+.directive('replicantDeckard', ['Replicant', 'store', function (Replicant, store){
     return {
         restrict: 'A',
         link: function (scope, elem, attrs){
@@ -20,7 +20,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
 
                 var profileList = [];
                 scope.providerList.forEach(function (provider){
-                    var profile = JSON.parse(localStorage.getItem('profile_' + provider));
+                    var profile = store.get('profile_' + provider);
 
                     if (profile){
                         profileList.push(profile)
@@ -53,7 +53,9 @@ angular.module('Oneline.olControlCenterDirectives', [])
         }
     }
 }])
-.directive('replicantRachael', ['Replicant', 'olTokenHelper', function (Replicant, olTokenHelper){
+.directive('replicantRachael', ['Replicant', 'olTokenHelper', 'store', 
+    function (Replicant, olTokenHelper, store){
+
     return {
         restrict: 'A',
         link: function (scope, elem, attrs){
@@ -80,7 +82,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                         scope.updateProviderList()
                         // 處理 Profile
                         data.profileList.forEach(function (profile){
-                            localStorage.setItem('profile_' + profile._provider, JSON.stringify(profile))
+                            store.set('profile_' + profile._provider, profile)
                         })
                     }
 
@@ -119,12 +121,24 @@ angular.module('Oneline.olControlCenterDirectives', [])
         }]
     }
 }])
-.directive('write', ['Action', 'olUI', 'writeHelper',
-    function (Action, olUI, writeHelper){
+.directive('write', ['$filter', 'Action', 'olUI', 'olWrite', 'store',
+    function ($filter, Action, olUI, olWrite, store){
 
     return {
         restrict: 'A',
         scope: false,
+        controller: ['$scope', function ($scope){
+            var _regex = {
+                twitter: /(|\s)*@([\w]*)$/,
+                instagram: /(|\s)*@([\w\.]*)$/,
+                weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
+            };
+
+            $scope.insertMention = function (mention, provider){
+                olWrite.removeText(_regex[provider])
+                olWrite.insertText(mention.trim() + ' ')
+            }
+        }],
         link: function (scope, elem, attrs){
             var _info       = scope.controlCenter.split(':'),
                 _id         = _info[1],
@@ -156,7 +170,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
                     case 'reply':
                         if (_provider === 'twitter'){
                             statusElem.val(
-                                writeHelper.extractMentions(
+                                olWrite.extractMentions(
                                     _sourceElem.find('p')[0].innerText, '@' + _info[2]
                                 )
                             )
@@ -186,8 +200,16 @@ angular.module('Oneline.olControlCenterDirectives', [])
              * 初始化 Live Preview
              *
              */
-            var _profile = JSON.parse(localStorage.getItem('profile_' + _provider)) || {};
+            var _profile = store.get('profile_' + _provider) || {},
+                _mentionsList = store.get('mentions_' + _provider),
+                _regex = {
+                    twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
+                    instagram: /(|\s)*@([\w\.]*)$/,
+                    weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
+                };
 
+            scope.isShowMentions = false
+            scope.mentionsList = _mentionsList
             scope.item = {
                 user: {
                     name: _profile.displayName,
@@ -201,12 +223,12 @@ angular.module('Oneline.olControlCenterDirectives', [])
             }
 
             __action === 'retweet'
-                ? angular.extend(scope.item, writeHelper.generateRetweetUser(_id, _type, _provider))
+                ? angular.extend(scope.item, olWrite.generateRetweetUser(_id, _type, _provider))
             : __action === 'quote'
-                ? angular.extend(scope.item, writeHelper.generateQuoteUser(_id, _type, _provider))
+                ? angular.extend(scope.item, olWrite.generateQuoteUser(_id, _type, _provider))
             : null
 
-            writeHelper.generateTemplate(_action === 'reply' ? 'tweet' : __action || _action, scope, _provider)
+            olWrite.generateTemplate(_action === 'reply' ? 'tweet' : __action || _action, scope, _provider)
 
             /**
              * 監聽事件
@@ -276,28 +298,51 @@ angular.module('Oneline.olControlCenterDirectives', [])
                 })
             })
             .on('input', function (){
-                var status = statusElem.val().trim(),
-                    statusLength = _provider === 'weibo' ? writeHelper.weiboLength(status) : status.length;
+                var _status = statusElem.val(),
+                    status = _status.trim().length > 0 ? _status : _status.trim(),
+                    statusLength = _provider === 'weibo' ? olWrite.weiboLength(status) : status.length;
+
+                // 判斷是否呼出「提及」用戶列表
+                var mention = status.match(_regex[_provider]);
+                if (mention){
+                    var filterMentionsList = $filter('limitTo')(
+                            $filter('filter')(
+                                _mentionsList,
+                                _provider === 'twitter'
+                                    ? { $: mention[2].trim() }
+                                : mention[2].trim()
+                            )
+                    , 100);
+
+                    if (filterMentionsList.length > 0){
+                        scope.isShowMentions = true
+                        scope.mentionsList = filterMentionsList
+                    } else {
+                        scope.isShowMentions = false
+                    }
+                } else if (scope.isShowMentions){
+                    scope.isShowMentions = false
+                }
 
                 // 刷新預覽
                 scope.item.text = status
-                writeHelper.refreshPreviewText(status, _provider)
+                olWrite.refreshPreviewText(status, _provider)
 
                 // retweet & quote 切換
                 if (_action === 'retweet'){
                     // Retweet -> Quote
                     if (status.length > 0){
                         if (__action === 'retweet'){
-                            angular.extend(scope.item, writeHelper.generateQuoteUser(_id, _type, _provider))
-                            writeHelper.generateTemplate('quote', scope, _provider)
+                            angular.extend(scope.item, olWrite.generateQuoteUser(_id, _type, _provider))
+                            olWrite.generateTemplate('quote', scope, _provider)
                         }
                         __action = 'quote'
                     }
                     // Quote -> Retweet
                     else {
                         if (__action === 'quote'){
-                            angular.extend(scope.item, writeHelper.generateRetweetUser(_id, _type, _provider))
-                            writeHelper.generateTemplate('retweet', scope, _provider)
+                            angular.extend(scope.item, olWrite.generateRetweetUser(_id, _type, _provider))
+                            olWrite.generateTemplate('retweet', scope, _provider)
                         }
                         __action = 'retweet'
                     }
@@ -546,7 +591,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
         }
     }
 })
-.directive('weiboEmotions', function (){
+.directive('weiboEmotions', ['olWrite', function (olWrite){
     return {
         restrict: 'E',
         scope: {},
@@ -555,22 +600,7 @@ angular.module('Oneline.olControlCenterDirectives', [])
             $scope.insertEmotion = function (emotion){
                 emotion = '[' + emotion + ']'
 
-                var statusElem = document.querySelector('textarea'),
-                    _start = statusElem.selectionStart,
-                    _end = statusElem.selectionEnd,
-                    _after = _start + emotion.length;
-
-                if (_start || _start == '0') {
-                    statusElem.value = statusElem.value.substring(0, _start)
-                        + emotion
-                        + statusElem.value.substring(_end, statusElem.value.length);
-                } else {
-                    statusElem.value += emotion;
-                }
-
-                angular.element(statusElem).parent().triggerHandler('input')
-                statusElem.setSelectionRange(_after, _after)
-                statusElem.focus()
+                olWrite.insertText(emotion)
             }
         }],
         link: function (scope, elem, attrs){
@@ -600,4 +630,4 @@ angular.module('Oneline.olControlCenterDirectives', [])
             })
         }
     }
-})
+}])

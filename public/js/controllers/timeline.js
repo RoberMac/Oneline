@@ -1,14 +1,17 @@
 angular.module('Oneline.timelineControllers', [])
 .controller('timelineCtrl', ['$scope', '$q',
-    'Timeline', 'olUI', 'olTimelineHelper', 'olActionsHelper', 'timelineCache',
+    'Timeline', 'olUI', 'olTimelineHelper', 'timelineCache', 'olRecord',
     function($scope, $q,
-        Timeline, olUI, olTimelineHelper, olActionsHelper, timelineCache){
+        Timeline, olUI, olTimelineHelper, timelineCache, olRecord){
 
 
     /**
      * 初始化時間線
      */
     $scope.timelineData = []
+    $scope.$on('ngRepeatFinished', function (){
+        olRecord.mentions($scope.providerList)
+    })      
     olTimelineHelper.initTimelineSettings()
     olTimelineHelper.initLoad($scope.providerList)
     .then(function (){
@@ -125,7 +128,7 @@ angular.module('Oneline.timelineControllers', [])
         olUI.setActionState(action, id, 'wait')
         olUI.setActionState(action, id, isActive ? 'inactive' : 'active')
         // 發送請求
-        olActionsHelper.toggleAction(action, provider, id, isActive)
+        olTimelineHelper.toggleAction(action, provider, id, isActive)
         .catch(function (err){
             olUI.setActionState(action, id, isActive ? 'active' : 'inactive')
         })

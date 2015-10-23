@@ -30,7 +30,6 @@
 @custom-media --tablet-landscape (768px <= device-width <= 1024px) and (orientation : landscape),(768px <= width <= 1024px) and (orientation : landscape);
 
 @custom-selector :--onelineSize .oneline, .controlCenter, .cancelMask;
-@custom-selector :--timelineStyle .timeline, .loadMore;
 @custom-selector :--dividerLine .divider--top::before, .divider--bottom::before;
 @custom-selector :--dividerText .divider--top::after, .divider--bottom::after;
 

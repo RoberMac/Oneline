@@ -78,8 +78,18 @@ module.exports = {
                     }
                     break;
                 case 'follow':
-                    action_str = 'friendships/' + (opts.method === 'put' ? 'create' : 'destroy')
-                    extend(tOpts, { id: opts.id })
+                    action_str = _GET
+                                    ? 'friends/list'
+                                : 'friendships/' + (opts.method === 'put' ? 'create' : 'destroy')
+
+                    _GET
+                        ? extend(tOpts, {
+                            user_id: opts.id,
+                            count: 200,
+                            skip_status: true,
+                            include_user_entities: false
+                        })
+                    : extend(tOpts, { id: opts.id })
                     break;
                 default:
                     throw { statusCode: 404 };
@@ -89,12 +99,17 @@ module.exports = {
             return q_twit(action_str, tOpts)
             .then(function (data){
                 if (_GET){
+                    var _data ;
                     switch (action){
                         case 'retweet':
                         case 'reply':
-                            return { data: profileFilter.twitter[action](data[0]) }
+                            _data = data[0]
+                            break;
+                        case 'follow':
+                            _data = data.users
                             break;
                     }
+                    return { data: profileFilter.twitter[action](_data) }
                 } else {
                     switch (action){
                         case 'retweet':

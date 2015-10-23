@@ -16,19 +16,18 @@ angular.module('Oneline', [
     'Oneline.settingsControllers',
     'Oneline.timelineControllers',
     // Services
+    'Oneline.utilsServices',
     'Oneline.timelineServices',
-    'Oneline.actionsServices',
     'Oneline.RESTfulServices',
-    'Oneline.relativeDateServices',
     'Oneline.tokenHelperServices',
     'Oneline.UIServices',
-    'Oneline.utilsServices',
+    'Oneline.controlCenterServices',
     // Directives
-    'Oneline.olMediaDirectives',
-    'Oneline.olTextDirectives',
-    'Oneline.olControlCenterDirectives',
-    'Oneline.olUserProfileDirectives',
-    'Oneline.olUtilsDirectives'
+    'Oneline.utilsDirectives',
+    'Oneline.mediaDirectives',
+    'Oneline.textDirectives',
+    'Oneline.controlCenterDirectives',
+    'Oneline.userProfileDirectives'
 ])
 .config(['$locationProvider', '$stateProvider', '$compileProvider', '$animateProvider',
     '$urlRouterProvider', '$httpProvider', 'jwtInterceptorProvider', 'weiboEmotifyProvider',

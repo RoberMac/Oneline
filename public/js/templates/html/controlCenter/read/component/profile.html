@@ -28,7 +28,15 @@
     </a>
 </div>
 <!-- 加載動畫 -->
-<div ng-if="!user.timeline && !user.protected" class="loadMore loadMore--loading"></div>
+<div ng-if="!user.timeline && !user.protected" class="loadMore loadMore--loading">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" fill-rule="evenodd">
+            <path class="animate--faster" d="M57.5 100c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z" fill="#2AA9E0"/>
+            <path class="animate--faster" d="M115 100c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z" fill="#3F5D87"/>
+            <path class="animate--faster" d="M172.5 100c0-8.3-6.7-15-15-15s-15 6.7-15 15 6.7 15 15 15 15-6.7 15-15z" fill="#E6162D"/>
+        </g>
+    </svg>
+</div>
 <!-- 是否為私人帳號 -->
 <div ng-if="user.protected" class="profile__locked">
     <svg viewBox="0 0 40 40">

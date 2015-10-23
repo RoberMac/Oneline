@@ -1,12 +1,11 @@
-:--timelineStyle {
+.timeline {
     position: relative;
     margin: 36px 7px;
     padding: 0 10px;
     background-color: var(--color-white);
     cursor: default;
     border-radius: 3px;
-}
-.timeline {    
+
     &__profile {
         position: relative -24px * *;
         text-align: center;
@@ -257,61 +256,61 @@
     background-color: var(--color-gray);
 }
 .loadMore {
+    position: relative;
     display: block;
-    size: calc(100% - 14px) 40px;
-    margin: 0px 7px;
-    border: 1px solid var(--color-gray);
+    size: 48px;
+    margin: 0 auto;
+    padding: 0;
     font-size: var(--font-size-base);
-    cursor: pointer;
+    border-radius: 50%;
+    background-color: var(--color-white);
 
     &:hover {
-        background-color: transparent;
+        &::before {
+            content: '';
+        }
     }
     &:first-child {
+        margin-bottom: 60px;
         z-index: 3;
     }
     &:last-child {
         z-index: 2;
     }
+    path {
+        opacity: 0;
+    }
+
     &__count::before {
         content: attr(data-count);
         position: absolute 0 * * 0;
         width: 100%;
         color: var(--color-gray-drak);
         text-align: center;
-        line-height: 40px;
+        line-height: 48px;
+        z-index: 4;
     }
     &--initLoad {
-        position: absolute calc(50% - 20px) * *;
-        background-color: transparent;
+        position: absolute calc(50% - 24px) * * calc(50% - 24px);
         cursor: default;
     }
     &--loading {
-        background-color: transparent;
 
-        &::before {
-            content: '';
-            position: absolute 19px * * 0;
-            size: 100% 2px;
-            background-color: var(--color-black);
-            transform-origin: left;
-            border-radius: 1px;
-            animation: loadAnimate 2.7s infinite linear;
+        path:nth-child(1) {
+            animation: loadAnimate--twitter 1.2s linear infinite;
         }
+        path:nth-child(2) {
+            animation: loadAnimate--instagram 1.2s linear infinite;
+        }
+        path:nth-child(3) {
+            animation: loadAnimate--weibo 1.2s linear infinite;
+        }
+
         &--fail {
-            cursor: pointer;
+            background-color: var(--color-black);
 
             &::before {
-                animation: loadAnimate--fail 7.7s infinite linear;
-            }
-            &::after {
-                content: attr(data-count);
-                position: absolute 0 0 * *;
-                size: 25% 100%;
-                color: var(--color-black);
-                text-align: center;
-                line-height: 40px;
-                border-left: 7px solid var(--color-black);
+                color: var(--color-white);
             }
         }
     }

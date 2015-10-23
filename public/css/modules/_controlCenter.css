@@ -192,6 +192,7 @@
         padding: 10px 10px 0 10px;
         border-radius: 3px;
         background-color: var(--color-gray-drak);
+        z-index: 2;
 
         button {
             position: relative;
@@ -219,6 +220,27 @@
             }
         }
     }
+    &__mentions {
+        position: absolute -32px * * 0;
+        size: 100% 32px;
+        background-color: var(--color-gray-drak);
+        z-index: 3;
+        white-space: nowrap;
+        &::-webkit-scrollbar { 
+            display: none; 
+        }
+
+        button {
+            padding: 3px;
+            height: 32px;
+            border-right: 1px solid var(--color-gray);
+            border-radius: 0;
+
+            &:hover {
+                background-color: var(--color-gray);
+            }
+        }
+    }
 }
 
 .read {
@@ -227,9 +249,6 @@
     size: 100% 17vh;
     font-size: var(--font-size-base) var(--line-height-base);
 
-    .loadMore {
-        width: calc(100% - 34px);
-    }
     &--reply {
         padding: 0;
     }

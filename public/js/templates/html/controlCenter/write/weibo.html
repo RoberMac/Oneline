@@ -16,6 +16,9 @@
 
     <div class="write__previews"></div>
 </form>
+<div ng-if="isShowMentions" class="write__mentions overflow--x animate--faster">
+    <button ng-repeat="mention in mentionsList" ng-click="insertMention(mention, 'weibo')" ng-bind="mention"></button>
+</div>
 <div class="switch-icon">
     <button ng-if="::controlCenter.indexOf('write_weibo-reply') >= 0" ng-click="setControlCenter('', 'read_weibo-reply:' + controlCenter.split(':')[1])" class="icon--weibo animate--faster tips" type="button">
         <svg viewBox="0 0 283 150">

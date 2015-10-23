@@ -1,4 +1,4 @@
-angular.module('Oneline.olUserProfileDirectives', [])
+angular.module('Oneline.userProfileDirectives', [])
 .directive('userProfile', ['$timeout', '$compile', '$templateRequest', 'Action', 
     function($timeout, $compile, $templateRequest, Action){
 

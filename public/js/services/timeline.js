@@ -1,6 +1,8 @@
 angular.module('Oneline.timelineServices', [])
-.service('olTimelineHelper', ['$q', '$state', 'Timeline', 'timelineCache', 'olUI', 'olTokenHelper',
-    function($q, $state, Timeline, timelineCache, olUI, olTokenHelper){
+.service('olTimelineHelper', ['$q', '$state',
+    'Timeline', 'timelineCache', 'olUI', 'olTokenHelper', 'Action',
+    function($q, $state,
+        Timeline, timelineCache, olUI, olTokenHelper, Action){
 
     var time_pointer   = Date.now();
     var TIME_RANGE     = 1800000;
@@ -322,5 +324,37 @@ angular.module('Oneline.timelineServices', [])
                 olUI.setLoading('fail', step)
                 break;
         }
+    }
+    // Action
+    this.toggleAction = function (action, provider, id, isActive){
+        var method = isActive ? 'destroy' : 'create',
+            _id = id;
+
+        if (action === 'retweet' && method === 'destroy'){
+            id = olUI.actionData(action, _id)
+        }
+
+        return Action[method]({ action: action, provider: provider, id: id })
+        .$promise
+        .then(function (data){
+
+            if (method === 'create'){
+                if (action === 'retweet'){
+                    olUI.actionData(action, _id, data.id_str)
+                }
+
+                if (action !== 'star'){
+                    var count = ~~olUI.actionData(action, _id, null, 'count') + 1;
+
+                    olUI.actionData(action, _id, count, 'count')
+                }
+            } else {
+                if (action !== 'star'){
+                    var count = ~~olUI.actionData(action, _id, null, 'count') - 1;
+
+                    olUI.actionData(action, _id, count > 0 ? count : '', 'count')
+                }
+            }
+        })
     }
 }])

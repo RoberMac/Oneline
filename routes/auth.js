@@ -32,7 +32,7 @@ router.get('/:provider/callback', function (req, res, next){
         'provider': req.user.provider,
         'userId'  : req.user.userId
     }, process.env.KEY, {
-        expiresInMinutes: 60 * 24 * 7
+        expiresIn: '7d'
     })
 
     res.render('authCallback', {

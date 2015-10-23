@@ -26,6 +26,19 @@ var filter = {
                 following: data.following,
                 protected: data.protected
             }
+        },
+        follow: function (data){
+            var cache = [];
+
+            data.forEach(function (item){
+                cache.push({
+                    name: item.name,
+                    avatar: item.profile_image_url_https,
+                    screen_name: item.screen_name
+                })
+            })
+
+            return cache;
         }
     },
     instagram: {

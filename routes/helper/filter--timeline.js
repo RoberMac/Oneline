@@ -247,9 +247,9 @@ function trimWeiboUser (user){
     if (!user){
         user = {
             name: '微博小秘书',
-            uid: '1642909335',
+            idstr: '1642909335',
             screen_name: '微博小秘书',
-            avatar: 'https://tpssl.weibo.cn/1642909335/180/22867541466/1'
+            profile_image_url: 'https://tpssl.weibo.cn/1642909335/180/22867541466/1'
         }
     }
 
