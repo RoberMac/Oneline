@@ -38,7 +38,8 @@
         cursor: text;
 
         img {
-            width: 1.5em;
+            width: 1.4em;
+            margin: 0 .1em;
             vertical-align: text-bottom;
         }
     }
@@ -180,6 +181,10 @@
     }
     
     &--twitter {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(42, 169, 224, 0.7);
+        }
         .timeline__profile__avatar {
             border-color: var(--color-twitter);
         }
@@ -193,6 +198,10 @@
         }
     }
     &--instagram {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(63, 93, 135, 0.7);
+        }
         .timeline__profile__avatar {
             border-color: var(--color-instagram);
         }
@@ -206,6 +215,10 @@
         }
     }
     &--weibo {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(230, 22, 45, 0.7);
+        }
         .timeline__profile__avatar {
             border-color: var(--color-weibo);
         }
@@ -265,11 +278,6 @@
     border-radius: 50%;
     background-color: var(--color-white);
 
-    &:hover {
-        &::before {
-            content: '';
-        }
-    }
     &:first-child {
         margin-bottom: 60px;
         z-index: 3;
@@ -277,14 +285,14 @@
     &:last-child {
         z-index: 2;
     }
-    path {
-        opacity: 0;
+    
+    svg {
+        position: absolute 0 * * 0;
     }
-
     &__count::before {
         content: attr(data-count);
         position: absolute 0 * * 0;
-        width: 100%;
+        size: 100%;
         color: var(--color-gray-drak);
         text-align: center;
         line-height: 48px;
@@ -295,15 +303,21 @@
         cursor: default;
     }
     &--loading {
+        &::before {
+            content: '';
+        }
 
-        path:nth-child(1) {
-            animation: loadAnimate--twitter 1.2s linear infinite;
+        circle {
+            fill: var(--color-gray);
         }
-        path:nth-child(2) {
-            animation: loadAnimate--instagram 1.2s linear infinite;
+        circle:nth-child(1) {
+            animation: loadAnimate--twitter 1.7s linear infinite;
         }
-        path:nth-child(3) {
-            animation: loadAnimate--weibo 1.2s linear infinite;
+        circle:nth-child(2) {
+            animation: loadAnimate--instagram 1.7s linear infinite;
+        }
+        circle:nth-child(3) {
+            animation: loadAnimate--weibo 1.7s linear infinite;
         }
 
         &--fail {
@@ -311,6 +325,11 @@
 
             &::before {
                 color: var(--color-white);
+            }
+
+            circle {
+                animation: none !important;
+                fill: var(--color-gray);
             }
         }
     }

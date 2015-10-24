@@ -1,25 +1,25 @@
 @keyframes loadAnimate--twitter {
-    0, 100% {
-        opacity: 0;
+    0, 33.3%, 100% {
+        fill: var(--color-gray);
     }
-    16.7%, 33.3% {
-        opacity: 1;
+    16.6% {
+        fill: var(--color-twitter);
     }
 }
 @keyframes loadAnimate--instagram {
-    0, 100% {
-        opacity: 0;
+    0, 33.3%, 66.7%, 100% {
+        fill: var(--color-gray);
     }
-    33.3%, 50% {
-        opacity: 1;
+    50% {
+        fill: var(--color-instagram);
     }
 }
 @keyframes loadAnimate--weibo {
-    0, 100% {
-        opacity: 0;
+    0, 66.7%, 100% {
+        fill: var(--color-gray);
     }
-    50%, 66.7% {
-        opacity: 1;
+    83.3% {
+        fill: var(--color-weibo);
     }
 }
 @keyframes imgLoadAnimate {

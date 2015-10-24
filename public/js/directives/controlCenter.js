@@ -129,7 +129,7 @@ angular.module('Oneline.controlCenterDirectives', [])
         scope: false,
         controller: ['$scope', function ($scope){
             var _regex = {
-                twitter: /(|\s)*@([\w]*)$/,
+                twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
                 instagram: /(|\s)*@([\w\.]*)$/,
                 weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
             };
