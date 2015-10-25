@@ -39,7 +39,8 @@ router.get('/:provider/callback', function (req, res, next){
         provider: req.olProvider,
         token: token,
         profile: {
-            displayName: req.user.displayName,
+            uid        : req.user.userId,
+            name       : req.user.name,
             avatar     : req.user.avatar,
             screen_name: req.user.screen_name,
             _provider  : req.olProvider

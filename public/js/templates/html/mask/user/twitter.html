@@ -11,17 +11,17 @@
             </a>
         </div>
         <div ng-if="::user.timeline">
-            <button class="profile__following tips--deep" ng-class="::{'profile__following--active tips--active': user.following}" type="button" toggle-following="twitter:{{::user.uid}}">
+            <button class="profile__following tips--deep" ng-class="::{'icon--twitter tips--active': user.following}" type="button" toggle-following="twitter:{{::user.uid}}">
                 <svg viewBox="0 0 60 60">
                     <use xlink:href="/public/img/icon-sprites.svg#following"></use>
                 </svg>
             </button>
         </div>
         <!-- https://groups.google.com/d/msg/angular/5clM0kjHXq8/Hh0DngpjtPwJ -->
-        <div ng-if="true" ng-include=" 'controlCenter/read/component/profile.html' " onload="_p_type = 'tweet'; _p_provider = 'twitter' "></div>
+        <div ng-if="true" ng-include=" 'mask/user/component/profile.html' " onload="_p_type = 'tweet'; _p_provider = 'twitter' "></div>
 
         <!-- Timeline -->
-        <div ng-if="::user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline" ng-class=" item.type === 'retweet' ? 'profile__timeline--retweet' : 'profile__timeline' ">
+        <div ng-if="::user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline" ng-class=" item.type === 'retweet' ? 'maskTimeline--gutter' : 'maskTimeline' ">
 
             <div ng-if="::item.type === 'retweet'" class="timeline__profile">
                 <a ng-href="//twitter.com/{{::item.retweet.user.screen_name}}" target="_blank">
@@ -46,7 +46,7 @@
             <!-- Quote -->
             <div ng-if="::item.type === 'quote'" class="timeline timeline--quote timeline--quote--twitter">
 
-                <div ng-include=" 'controlCenter/read/component/quote__profile.html' "></div>
+                <div ng-include=" 'mask/user/component/quote__profile.html' "></div>
 
                 <div ng-include=" 'twitter/component/content--quote.html' "></div>
 
@@ -90,4 +90,6 @@
             </span>
             <span class="timeline__time tips" relative-date="{{::item.created_at}}"></span>
         </div>
+    </div>
+
 </div>

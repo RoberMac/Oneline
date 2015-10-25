@@ -40,13 +40,15 @@
     &--right {
         left: 60%;
     }
+    &--row {
+        margin: calc(33.3vh - 140px) 0;
+    }
     &:hover &__button {
         opacity: 1;
     }
 
     &__button {
         size: 70px;
-        cursor: pointer;
         opacity: 0;
         filter: grayscale(100%);
 
@@ -61,12 +63,6 @@
         }
         &--inactive {
             display: none;
-        }
-        &--twitter {
-            fill: var(--color-twitter);
-        }
-        &--weibo {
-            fill: var(--color-weibo);
         }
     }
 

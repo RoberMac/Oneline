@@ -1,3 +1,29 @@
+.cancelMask {
+    position: absolute 0 * *;
+    height: 100%;
+    z-index: 4;
+    cursor: pointer;
+    background-color: var(--color-black-alpha);
+    ::-webkit-scrollbar {
+        display: none; 
+    }
+
+    &__wrapper {
+        position: absolute;
+        size: 100% 100%;
+
+        &--userProfile, &--replicant {
+            height: 100%;
+        }
+        &--write {
+            height: 66.7%;
+        }
+        &--read, &--notification {
+            height: 83%;
+        }
+    }
+}
+
 .profile {
     padding: 0 0 7px 0;
 
@@ -39,10 +65,6 @@
     &__following {
         position: absolute 3px 3px * *;
         size: 17px;
-
-        svg {
-            fill: #000;
-        }
     }
     &__biography {
         position: relative -17px * *;
@@ -59,30 +81,6 @@
             stroke-width: 7px;
         }
     }
-    &__timeline {
-        padding: 10px 10px 0px 10px;
-        margin: 17px;
-        background-color: var(--color-gray);
-
-        .timeline__content {
-            top: 0;
-        }
-        .timeline__media, .timeline__text {
-            margin: 0 0 17px 0;
-        }
-        .timeline--quote {
-            top: 0;
-            margin-top: 36px;
-            background-color: var(--color-gray-drak);
-        }
-        .actions__count::after {
-            color: var(--color-steel);
-        }
-    }
-    &__timeline--retweet {
-        margin: 36px 17px 17px;
-        background-color: var(--color-gray);
-    }
     &--instagram {
         .profile__biography {
             background-color: var(--color-instagram);
@@ -94,16 +92,6 @@
         .profile__website {
             svg {
                 stroke: var(--color-instagram);
-            }
-        }
-        .profile__count__column {
-            svg {
-                fill: var(--color-instagram);
-            }
-        }
-        .profile__following--active {
-            svg {
-                fill: var(--color-instagram);
             }
         }
     }
@@ -118,17 +106,56 @@
         .profile__website {
             svg {
                 stroke: var(--color-twitter);
+            }   
+        }
+    }
+}
+
+.maskTimeline {
+    padding: 10px 10px 0px 10px;
+    margin: 17px;
+    background-color: var(--color-gray);
+
+    .timeline__content {
+        top: 0;
+    }
+    .timeline__media, .timeline__text {
+        margin: 0 0 17px 0;
+    }
+    .timeline--quote {
+        top: 0;
+        margin-top: 36px;
+        background-color: var(--color-gray-drak);
+    }
+    .actions__count::after {
+        color: var(--color-steel);
+    }
+
+    &--gutter {
+        margin: 36px 17px 17px;
+        padding: 0 10px;
+        background-color: var(--color-gray-drak);
+    }
+    &--notification {
+        &__title {
+            padding: 36px;
+            text-align: center;
+            user-select: none;
+
+            svg {
+                size: 1.6em;
             }
         }
-        .profile__count__column {
-            svg {
-                fill: var(--color-twitter);
-            }
+
+        .timeline__content {
+            top: -24px;
         }
-        .profile__following--active {
-            svg {
-                fill: var(--color-twitter);
-            }
+        .timeline__text, .timeline__media {
+            margin: 17px 0 0;
+        }
+        .timeline--quote {
+            top: -12px;
+            margin: 27px 7px 7px;
         }
     }
 }

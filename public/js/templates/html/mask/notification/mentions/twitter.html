@@ -1,0 +1,76 @@
+<div class="timeline profile maskTimeline--notification">
+    <div class="timeline--twitter profile--twitter">
+
+        <div class="maskTimeline--notification__title">
+            <svg viewBox="0 0 26 26">
+               <use xlink:href="/public/img/icon-sprites.svg#mentions"></use>
+            </svg>
+        </div>
+
+        <!-- 加載動畫 -->
+        <div ng-if="notifications.length <= 0" class="loadMore loadMore--loading">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <g fill="none" fill-rule="evenodd">
+                    <circle cx="42.5" cy="100" r="15"/>
+                    <circle cx="100" cy="100" r="15"/>
+                    <circle cx="157.5" cy="100.5" r="15"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Timeline -->
+        <div ng-if="notifications.length > 0">
+            <div class="timeline maskTimeline maskTimeline--gutter" ng-repeat="item in ::notifications">       
+
+                <div class="timeline__profile" ng-init="_author = item.type === 'retweet' ? item.retweet.user : item.user">
+                    <a ng-href="//twitter.com/{{::_author.screen_name}}" target="_blank">
+                        <img class="timeline__profile__avatar" ng-src="{{::_author.avatar.replace('normal', 'bigger')}}">
+                    </a>
+                    <div class="timeline__profile__fullname">
+                        <a ng-href="//twitter.com/{{::_author.screen_name}}" target="_blank">
+                            <strong ng-bind="::item.user.name"></strong>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="timeline__content">
+                    <p class="timeline__text" trim-quote-link="{{::item.type}}" linkify="twitter" ng-bind-html="::item.text"></p>
+                    <div ng-if="::item.media" ng-include=" 'media/twitter.html' "></div>
+                </div>
+
+                <a ng-if="::item.type === 'retweet'" class="timeline--retweet__profile__avatar" ng-href="//twitter.com/{{::item.user.screen_name}}" target="_blank">
+                    <img class="timeline__profile__avatar" ng-src="{{::item.user.avatar}}" alt="avatar">
+                </a>
+
+                <!-- Quote -->
+                <div ng-if="::item.type === 'quote'" class="timeline timeline--quote timeline--quote--twitter">
+
+                    <div ng-include=" 'mask/user/component/quote__profile.html' "></div>
+
+                    <div ng-include=" 'twitter/component/content--quote.html' "></div>
+
+                    <div ng-include=" 'actions/twitter--quote.html' "></div>
+
+                    <span class="timeline__time" relative-date="{{::item.quote.created_at}}"></span>
+
+                </div>
+
+                <span class="cursor--pointer">
+                    <!-- Source -->
+                    <a ng-href="//twitter.com/{{::item.user.screen_name}}/status/{{::item.id_str}}" target="_blank">
+                        <button class="actions tips--deep" type="button">
+                            <svg class="actions__button" viewBox="0 0 26 26">
+                                <use xlink:href="/public/img/icon-sprites.svg#source"></use>
+                            </svg>
+                            <span class="actions__count"></span>
+                        </button>
+                    </a>
+                </span>
+                <span class="timeline__time tips" relative-date="{{::item.created_at}}">
+                </span>
+
+            </div>
+        </div>
+
+    </div>
+</div>

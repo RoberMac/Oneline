@@ -13,13 +13,13 @@ var userSchema = new Schema({
         type     : String,
         require  : true
     },
-    displayName  : {
+    name         : {
         type     : String,
-        require  : true,
+        require  : true
     },
     screen_name  : {
         type     : String,
-        require  : true,
+        require  : true
     },
     provider     : {
         type     : String,

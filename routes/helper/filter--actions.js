@@ -1,3 +1,5 @@
+var timelineFilter = require('./filter--timeline');
+
 var filter = {
     twitter: {
         retweet: function (data){
@@ -39,6 +41,11 @@ var filter = {
             })
 
             return cache;
+        },
+        mentions: timelineFilter.twitter,
+        direct: function (data){
+            // TODO
+            return data;
         }
     },
     instagram: {

@@ -8,4 +8,7 @@
     <!-- Read -->
     <div ng-if="::controlCenter.indexOf('read_') >= 0" ng-include=" 'controlCenter/read/' + controlCenter.replace('read_', '').split('-')[0] + '.html' " class="animate--general">
     </div>
+    <!-- Notification -->
+    <div ng-if="::controlCenter.indexOf('notification_') >= 0" ng-include=" 'controlCenter/notification/' + controlCenter.replace('notification_', '').split('-')[0] + '.html' " class="animate--general">
+    </div>
 </div>

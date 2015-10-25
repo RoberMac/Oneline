@@ -6,7 +6,7 @@
     transform-origin: bottom;
     transform: scaleY(0);
 
-    &--replicant, &--write, &--read {
+    &--replicant, &--write, &--read, &--notification {
         transform: scaleY(1);
     }
     &--replicant {
@@ -15,33 +15,8 @@
     &--write {
         height: 33.3%;
     }
-    &--read {
+    &--read, &--notification {
         height: 17%;
-    }
-}
-.cancelMask {
-    position: absolute 0 * *;
-    height: 100%;
-    z-index: 4;
-    cursor: pointer;
-    background-color: var(--color-black-alpha);
-    ::-webkit-scrollbar {
-        display: none; 
-    }
-
-    &__wrapper {
-        position: absolute;
-        size: 100% 100%;
-
-        &--userProfile, &--replicant {
-            height: 100%;
-        }
-        &--write {
-            height: 66.7%;
-        }
-        &--read {
-            height: 83%;
-        }
     }
 }
 
@@ -322,7 +297,36 @@
             }
         }
     }
+
 }
+
+.notification {
+    &__column {
+        position: absolute 0 * *;
+        size: 50% 100%;
+
+        &:first-child {
+            left: 0;
+        }
+        &:last-child {
+            left: 50%;
+        }
+        &:hover {
+            background-color: var(--color-white);
+        }
+
+        svg {
+            width: 20%;
+        }
+
+        &--active {
+            background-color: var(--color-white);
+            cursor: default;
+            opacity: 1;
+        }
+    }
+}
+
 .switch-icon {
     position: absolute * 3px calc(100% + 3px) *;
 

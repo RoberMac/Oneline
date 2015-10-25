@@ -10,12 +10,31 @@
         </a>
     </div>
 
-    <div ng-if="isTimeline && !controlCenter && (providerList.indexOf('twitter') >= 0 || providerList.indexOf('weibo') >= 0)" class="animate--general">
-        <button class="menu__button animate--faster" ng-click="setControlCenter(providerList.indexOf('twitter') >= 0 ? 'write_twitter-tweet' : 'write_weibo-tweet')" type="button">
-            <svg viewBox="0 0 200 200" ng-class=":: providerList.indexOf('twitter') >= 0 ? 'menu__button--twitter' : 'menu__button--weibo' ">
-               <use xlink:href="/public/img/icon-sprites.svg#newTweet"></use>
-            </svg>
-        </button>
+    <div ng-if="isTimeline && !controlCenter" class="animate--general" ng-init="::_firstProvider = providerList.indexOf('twitter') >= 0 ? 'twitter' : providerList.indexOf('weibo') >= 0 ? 'weibo' : 'instagram'">
+        <!-- 寫推 -->
+        <div ng-if="_firstProvider !== 'instagram'" class="menu--row">
+            <button class="menu__button animate--faster" ng-class=":: 'icon--' + _firstProvider" ng-click="::setControlCenter('write_' + _firstProvider + '-tweet')" type="button">
+                <svg viewBox="0 0 200 200">
+                   <use xlink:href="/public/img/icon-sprites.svg#newTweet"></use>
+                </svg>
+            </button>
+        </div>
+        <!-- 用戶信息 -->
+        <div class="menu--row">
+            <button class="menu__button animate--faster" ng-class=":: 'icon--' + _firstProvider" ng-click="setControlCenter('userProfile')" user-profile provider="{{:: _firstProvider}}" from="timeline" type="button">
+                <svg viewBox="0 0 200 200">
+                   <use xlink:href="/public/img/icon-sprites.svg#profile"></use>
+                </svg>
+            </button>
+        </div>
+        <!-- 通知 -->
+        <div ng-if="_firstProvider !== 'instagram'" class="menu--row">
+            <button class="menu__button animate--faster" ng-class=":: 'icon--' + _firstProvider" ng-click="::setControlCenter('notification_' + _firstProvider)" type="button">
+                <svg viewBox="0 0 200 200">
+                   <use xlink:href="/public/img/icon-sprites.svg#notification"></use>
+                </svg>
+            </button>
+        </div>
     </div>
 
 </div>

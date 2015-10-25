@@ -35,7 +35,7 @@ angular.module('Oneline.rootControllers', [])
         $timeout(function (){
             var cancelMask = angular.element(document.querySelector('.cancelMask__wrapper')),
                 controlCenter = angular.element(document.querySelector('.controlCenter')),
-                type = state.match(/replicant|read|write|userProfile/);
+                type = state.match(/replicant|read|write|notification|userProfile/);
 
             if (type){
                 cancelMask.addClass('cancelMask__wrapper--' + type[0])
@@ -47,7 +47,7 @@ angular.module('Oneline.rootControllers', [])
         })
 
         function typeStr(prefix){
-            var typeList = ['replicant', 'read', 'write', 'userProfile'];
+            var typeList = ['replicant', 'read', 'write', 'notification', 'userProfile'];
 
             return typeList.map(function (i){return prefix + i }).join(' ')
         }

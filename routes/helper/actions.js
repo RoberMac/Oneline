@@ -3,7 +3,7 @@ var extend  = require('extend'),
     Ig      = require('instagram-node').instagram(),
     Weibo   = require('./weibo'),
     timelineFilter = require('./filter--timeline'),
-    profileFilter = require('./filter--profile');
+    profileFilter = require('./filter--actions');
 
 module.exports = {
     twitter: function (action, opts){
@@ -91,6 +91,23 @@ module.exports = {
                         })
                     : extend(tOpts, { id: opts.id })
                     break;
+                case 'mentions':
+                    action_str = 'statuses/mentions_timeline'
+
+                    extend(tOpts, {
+                        count: 20,
+                        include_entities: false,
+                        contributor_details: false
+                    })
+                    break;
+                case 'direct':
+                    action_str = 'direct_messages'
+
+                    extend(tOpts, {
+                        count: 20,
+                        include_entities: false
+                    })
+                    break;
                 default:
                     throw { statusCode: 404 };
                     break;
@@ -103,12 +120,15 @@ module.exports = {
                     switch (action){
                         case 'retweet':
                         case 'reply':
+                        case 'mentions':
+                        case 'direct':
                             _data = data[0]
                             break;
                         case 'follow':
                             _data = data.users
                             break;
                     }
+
                     return { data: profileFilter.twitter[action](_data) }
                 } else {
                     switch (action){

@@ -56,7 +56,7 @@ function oauth1 (token, tokenSecret, profile, done){
             var user = new User({
                 'id'         : id,
                 'userId'     : profile.id + '',
-                'displayName': profile.displayName,
+                'name'       : profile.displayName,
                 'screen_name': screen_name,
                 'provider'   : profile.provider,
                 'avatar'     : avatar,
@@ -100,7 +100,7 @@ function oauth2 (accessToken, refreshToken, profile, done){
             var user = new User({
                 'id'         : id,
                 'userId'     : profile.id + '',
-                'displayName': profile.displayName,
+                'name'       : profile.displayName,
                 'screen_name': screen_name,
                 'provider'   : profile.provider,
                 'avatar'     : avatar,

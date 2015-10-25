@@ -1,6 +1,6 @@
 angular.module('Oneline.userProfileDirectives', [])
-.directive('userProfile', ['$timeout', '$compile', '$templateRequest', 'Action', 
-    function($timeout, $compile, $templateRequest, Action){
+.directive('userProfile', ['$timeout', '$compile', '$templateRequest', 'Action', 'store',
+    function($timeout, $compile, $templateRequest, Action, store){
 
     return {
         restrict: 'A',
@@ -9,9 +9,9 @@ angular.module('Oneline.userProfileDirectives', [])
         },
         link: function (scope, elem, attrs){
             elem.on('click', function (){
-                var _profile  = scope.profile,
+                var _provider = attrs.provider,
+                    _profile  = scope.profile || store.get('profile_' + _provider),
                     _from     = attrs.from,
-                    _provider = attrs.provider,
                     _uid      = _profile.uid;
 
                 // Init
@@ -23,17 +23,15 @@ angular.module('Oneline.userProfileDirectives', [])
                     name: _profile.name,
                     uid: _uid
                 }
+
                 // Show Profile
                 $timeout(function (){
-                    var maskContainer = angular.element(
-                                            document.querySelector('.cancelMask__wrapper')
-                                        ).children();
+                    var _mask = angular.element(document.querySelector('.cancelMask__wrapper'));
 
-                    maskContainer.empty()
-
-                    $templateRequest('controlCenter/read/component/user--' + _provider + '.html')
+                    $templateRequest('mask/user/' + _provider + '.html')
                     .then(function (html){
-                        maskContainer
+                        _mask.children()
+                        .empty()
                         .append($compile(html)(scope))
                     })
                 })
@@ -71,10 +69,10 @@ angular.module('Oneline.userProfileDirectives', [])
         link: function (scope, elem, attrs){
             elem.on('click', function (){
                 var followed_by = angular.element(document.querySelectorAll('.profile__count__column')[1]),
-                    isFollowing = elem.hasClass('profile__following--active'),
                     _info       = attrs.toggleFollowing.split(':'),
                     _provider   = _info[0],
-                    _uid        = _info[1];
+                    _uid        = _info[1],
+                    isFollowing = elem.hasClass('icon--' + _provider);
 
                 elem.addClass('tips--inprocess')
                 Action[isFollowing ? 'destroy' : 'create']({
@@ -84,7 +82,7 @@ angular.module('Oneline.userProfileDirectives', [])
                 })
                 .$promise
                 .then(function (data){
-                    elem.toggleClass('profile__following--active tips--active')
+                    elem.toggleClass('tips--active icon--' + _provider)
 
                     var count = ~~followed_by.attr('data-count') + (isFollowing ? -1 : 1);
                     followed_by.attr('data-count', count)

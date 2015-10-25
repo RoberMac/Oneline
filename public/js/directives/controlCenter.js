@@ -121,6 +121,56 @@ angular.module('Oneline.controlCenterDirectives', [])
         }]
     }
 }])
+.directive('notification', ['$templateRequest', '$compile', '$timeout', 'Action',
+    function ($templateRequest, $compile, $timeout, Action){
+
+    return {
+        restrict: 'A',
+        scope: {},
+        link: function (scope, elem, attrs){
+            var _info = attrs.notification.split(':'),
+                _action = _info[0],
+                _provider = _info[1];
+
+            scope.notifications = []
+
+            elem
+            .on('click', function (){
+                if (elem.hasClass('notification__column--active')) return;
+
+                elem.parent().children().removeClass('notification__column--active')
+                elem.addClass('notification__column--active ')
+
+                var _mask = angular.element(document.querySelector('.cancelMask__wrapper'));
+
+                $templateRequest('mask/notification/' + _action + '/' + _provider + '.html')
+                .then(function (html){
+                    _mask.children()
+                    .empty()
+                    .append($compile(html)(scope))
+                })
+
+                Action.get({
+                    action: _action,
+                    provider: _provider,
+                    id: '0'
+                })
+                .$promise
+                .then(function (res){
+                    scope.notifications = res.data.data
+                })
+                .catch(function (err){
+                    _mask.children().empty()
+                    elem.removeClass('notification__column--active')
+                })
+
+            })
+            .on('$destroy', function (){
+                elem.off()
+            })
+        }
+    }
+}])
 .directive('write', ['$filter', 'Action', 'olUI', 'olWrite', 'store',
     function ($filter, Action, olUI, olWrite, store){
 
@@ -212,7 +262,7 @@ angular.module('Oneline.controlCenterDirectives', [])
             scope.mentionsList = _mentionsList
             scope.item = {
                 user: {
-                    name: _profile.displayName,
+                    name: _profile.name,
                     avatar: _profile.avatar,
                     screen_name: _profile.screen_name
                 },
