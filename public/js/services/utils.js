@@ -53,6 +53,7 @@ angular.module('Oneline.utilsServices', ['relativeDate'])
 })
 .service('olRecord', ['store', function(store){
     this.mentions = function (providerList){
+        var _MAX_COUNT = 2000;
         var regex = {
             twitter: /(|\s)*@([\w]+)/g,
             instagram: /(|\s)*@([\w\.]+)/g,
@@ -77,14 +78,31 @@ angular.module('Oneline.utilsServices', ['relativeDate'])
 
             // From Tweet Text
             angular.forEach(angular.element(_target[0]), function (item){
+
                 var mentions = item.innerText.match(regex[provider]);
 
                 if (!mentions) return;
 
                 if (provider === 'twitter'){
                     mentions = mentions.map(function (i){
-                        return { 's': i }
+                        return { 's': i.trim() }
                     })
+                }
+
+                if (_mentionsList.length >= _MAX_COUNT){
+                    if (provider === 'twitter'){
+                        var _len = mentions.length;
+                        _mentionsList = _mentionsList.filter(function (item){
+                            if (!item.hasOwnProperty('u') && _len > 0){
+                                _len --
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        })
+                    } else {
+                        _mentionsList.splice(0, mentions.length) 
+                    }
                 }
 
                 _mentionsList = _mentionsList.concat(mentions)
@@ -107,7 +125,7 @@ angular.module('Oneline.utilsServices', ['relativeDate'])
                     mentions = { 's': mentions, 'u': _item.find('strong').text() }
                 }
 
-                _mentionsList = _mentionsList.concat(mentions)
+                _mentionsList.push(mentions)
             })
 
             // Store

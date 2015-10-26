@@ -121,53 +121,49 @@ angular.module('Oneline.controlCenterDirectives', [])
         }]
     }
 }])
-.directive('notification', ['$templateRequest', '$compile', '$timeout', 'Action',
-    function ($templateRequest, $compile, $timeout, Action){
+.directive('notification', ['$compile', '$timeout',
+    function ($compile, $timeout){
 
     return {
         restrict: 'A',
-        scope: {},
         link: function (scope, elem, attrs){
-            var _info = attrs.notification.split(':'),
-                _action = _info[0],
-                _provider = _info[1];
+            var _provider = attrs.notification,
+                mentionsBtn = angular.element(elem.find('button')[0]),
+                directBtn = angular.element(elem.find('button')[1]);
 
-            scope.notifications = []
+            // Init load `mentions`
+            generateTemplate(mentionsBtn, 'mentions')()
 
-            elem
-            .on('click', function (){
-                if (elem.hasClass('notification__column--active')) return;
-
-                elem.parent().children().removeClass('notification__column--active')
-                elem.addClass('notification__column--active ')
-
-                var _mask = angular.element(document.querySelector('.cancelMask__wrapper'));
-
-                $templateRequest('mask/notification/' + _action + '/' + _provider + '.html')
-                .then(function (html){
-                    _mask.children()
-                    .empty()
-                    .append($compile(html)(scope))
-                })
-
-                Action.get({
-                    action: _action,
-                    provider: _provider,
-                    id: '0'
-                })
-                .$promise
-                .then(function (res){
-                    scope.notifications = res.data.data
-                })
-                .catch(function (err){
-                    _mask.children().empty()
-                    elem.removeClass('notification__column--active')
-                })
-
-            })
+            // Bind Event
+            mentionsBtn
+            .on('click', generateTemplate(mentionsBtn, 'mentions'))
             .on('$destroy', function (){
-                elem.off()
+                mentionsBtn.off()
             })
+
+            directBtn
+            .on('click', generateTemplate(directBtn, 'direct')) 
+            .on('$destroy', function (){
+                directBtn.off()
+            })
+
+            function generateTemplate(notiBtn, _action){
+                return function (){
+                    if (notiBtn.hasClass('notification__column--active')) return;
+
+                    notiBtn.parent().children().removeClass('notification__column--active')
+                    notiBtn.addClass('notification__column--active ')
+
+                    $timeout(function (){
+                        var _mask = angular.element(document.querySelector('.cancelMask__wrapper')),
+                            html = '<' + _action + ' provider="' + _provider + '"></' + _action + '>';
+
+                        _mask.children()
+                        .empty()
+                        .append($compile(html)(scope))
+                    })
+                }
+            }
         }
     }
 }])

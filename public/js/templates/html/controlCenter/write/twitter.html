@@ -22,8 +22,8 @@
         </span>
     </div>
 </form>
-<div ng-if="isShowMentions" class="write__mentions overflow--x animate--faster">
-    <button ng-repeat="mention in mentionsList" ng-click="insertMention(mention.s, 'twitter')" ng-bind="mention.s"></button>
+<div ng-if="isShowMentions" class="write__mentions overflow--x animate--faster" disable-back>
+    <button ng-repeat="mention in mentionsList" ng-click="insertMention(mention.s, 'twitter')" ng-bind="mention.u || mention.s"></button>
 </div>
 <div class="switch-icon">
     <button ng-if="::controlCenter.indexOf('write_twitter-retweet') >= 0" ng-click="setControlCenter('', 'read_twitter-retweet:' + controlCenter.split(':')[1])" class="icon--twitter animate--faster tips" type="button">

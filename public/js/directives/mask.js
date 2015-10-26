@@ -1,4 +1,8 @@
-angular.module('Oneline.userProfileDirectives', [])
+angular.module('Oneline.maskDirectives', [])
+/**
+ * 查看用戶信息
+ *
+ */
 .directive('userProfile', ['$timeout', '$compile', '$templateRequest', 'Action', 'store',
     function($timeout, $compile, $templateRequest, Action, store){
 
@@ -93,6 +97,88 @@ angular.module('Oneline.userProfileDirectives', [])
                 .finally(function (){
                     elem.removeClass('tips--inprocess')
                 })
+            })
+        }
+    }
+}])
+/**
+ * 查看「提及」
+ *
+ */
+.directive('mentions', ['Action', function (Action){
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: 'mask/notification/mentions/twitter.html',
+        link: function (scope, elem, attrs){
+            var loadMoreBtn = angular.element(
+                    document.querySelector('.maskTimeline--notification .loadMore--loading')
+                ), _min_id, _max_id, _isFirstLoad = true;
+
+            // Init
+            scope.notifications = []
+            // Fire
+            loadMentions()
+            // Event
+            loadMoreBtn
+            .on('click', function (){
+                if (loadMoreBtn.hasClass('loadMoreBtn--loading')) return;
+
+                loadMentions(_max_id)
+            })
+
+            function loadMentions(max_id){
+                loadMoreBtn.addClass('loadMore--loading')
+
+                Action.get({
+                    action: 'mentions',
+                    provider: attrs.provider,
+                    id: max_id || 0
+                })
+                .$promise
+                .then(function (res){
+                    res = res.data;
+
+                    if (!_isFirstLoad){
+                        res.data.splice(0, 1)
+                    } else {
+                        _isFirstLoad = false
+                    }
+
+                    scope.notifications = scope.notifications.concat(res.data)
+                    _min_id = res.max_id
+                    _max_id = res.min_id
+
+                    loadMoreBtn.removeClass('loadMore--initLoad loadMore--loading')
+                })
+                .catch(function (err){
+                    loadMoreBtn.addClass('loadMore--loading--fail')
+                })
+            }
+        }
+    }
+}])
+/**
+ * 查看「私信」
+ *
+ */
+.directive('direct', ['Action', function (Action){
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: 'mask/notification/mentions/twitter.html',
+        link: function (scope, elem, attrs){
+            scope.notifications = []
+            Action.get({
+                action: 'direct',
+                provider: attrs.provider,
+                id: '0'
+            })
+            .$promise
+            .then(function (res){
+                scope.notifications = res.data.data
+            })
+            .catch(function (err){
             })
         }
     }

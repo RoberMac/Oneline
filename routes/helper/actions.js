@@ -99,6 +99,13 @@ module.exports = {
                         include_entities: false,
                         contributor_details: false
                     })
+
+                    if (~~opts.id){
+                        extend(tOpts, {
+                            max_id: opts.id
+                        })
+                    }
+
                     break;
                 case 'direct':
                     action_str = 'direct_messages'

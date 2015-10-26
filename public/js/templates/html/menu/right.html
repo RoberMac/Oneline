@@ -20,15 +20,15 @@
             </button>
         </div>
         <!-- 用戶信息 -->
-        <div class="menu--row">
+<!--         <div class="menu--row">
             <button class="menu__button animate--faster" ng-class=":: 'icon--' + _firstProvider" ng-click="setControlCenter('userProfile')" user-profile provider="{{:: _firstProvider}}" from="timeline" type="button">
                 <svg viewBox="0 0 200 200">
                    <use xlink:href="/public/img/icon-sprites.svg#profile"></use>
                 </svg>
             </button>
-        </div>
+        </div> -->
         <!-- 通知 -->
-        <div ng-if="_firstProvider !== 'instagram'" class="menu--row">
+        <div ng-if="_firstProvider === 'twitter'" class="menu--row">
             <button class="menu__button animate--faster" ng-class=":: 'icon--' + _firstProvider" ng-click="::setControlCenter('notification_' + _firstProvider)" type="button">
                 <svg viewBox="0 0 200 200">
                    <use xlink:href="/public/img/icon-sprites.svg#notification"></use>

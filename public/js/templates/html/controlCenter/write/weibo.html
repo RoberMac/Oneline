@@ -16,7 +16,7 @@
 
     <div class="write__previews"></div>
 </form>
-<div ng-if="isShowMentions" class="write__mentions overflow--x animate--faster">
+<div ng-if="isShowMentions" class="write__mentions overflow--x animate--faster" disable-back>
     <button ng-repeat="mention in mentionsList" ng-click="insertMention(mention, 'weibo')" ng-bind="mention"></button>
 </div>
 <div class="switch-icon">

@@ -2,25 +2,16 @@
     <div class="timeline--twitter profile--twitter">
 
         <div class="maskTimeline--notification__title">
-            <svg viewBox="0 0 26 26">
-               <use xlink:href="/public/img/icon-sprites.svg#mentions"></use>
-            </svg>
-        </div>
-
-        <!-- 加載動畫 -->
-        <div ng-if="notifications.length <= 0" class="loadMore loadMore--loading">
-            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <g fill="none" fill-rule="evenodd">
-                    <circle cx="42.5" cy="100" r="15"/>
-                    <circle cx="100" cy="100" r="15"/>
-                    <circle cx="157.5" cy="100.5" r="15"/>
-                </g>
-            </svg>
+            <a href="https://twitter.com/mentions" target="_blank">
+                <svg viewBox="0 0 26 26">
+                   <use xlink:href="/public/img/icon-sprites.svg#mentions"></use>
+                </svg>
+            </a>
         </div>
 
         <!-- Timeline -->
         <div ng-if="notifications.length > 0">
-            <div class="timeline maskTimeline maskTimeline--gutter" ng-repeat="item in ::notifications">       
+            <div class="timeline maskTimeline maskTimeline--gutter" ng-repeat="item in notifications">       
 
                 <div class="timeline__profile" ng-init="_author = item.type === 'retweet' ? item.retweet.user : item.user">
                     <a ng-href="//twitter.com/{{::_author.screen_name}}" target="_blank">
@@ -71,6 +62,17 @@
 
             </div>
         </div>
+
+        <!-- 加載動畫 & 加載更多 -->
+        <button class="loadMore loadMore--initLoad loadMore--loading animate--faster" type="button">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <g fill="none" fill-rule="evenodd">
+                    <circle cx="42.5" cy="100" r="15"/>
+                    <circle cx="100" cy="100" r="15"/>
+                    <circle cx="157.5" cy="100.5" r="15"/>
+                </g>
+            </svg>
+        </button>
 
     </div>
 </div>

@@ -82,6 +82,10 @@
         }
     }
     &--instagram {
+        .loadMore {
+            transform: scale(.7);
+            background-color: var(--color-instagram);
+        }
         .profile__biography {
             background-color: var(--color-instagram);
 
@@ -96,6 +100,10 @@
         }
     }
     &--twitter {
+        .loadMore {
+            transform: scale(.7);
+            background-color: var(--color-twitter);
+        }
         .profile__biography {
             background-color: var(--color-twitter);
 
@@ -134,7 +142,7 @@
     &--gutter {
         margin: 36px 17px 17px;
         padding: 0 10px;
-        background-color: var(--color-gray-drak);
+        background-color: var(--color-gray);
     }
     &--notification {
         &__title {

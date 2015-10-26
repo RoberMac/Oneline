@@ -32,7 +32,8 @@ var filter = {
                     retweet: {
                         created_at: Date.parse(item.retweeted_status.created_at),
                         user: trimTweetUser(item.retweeted_status.user)
-                    }
+                    },
+                    favorite_count: item.retweeted_status.favorite_count
                 })
 
                 if (item.retweeted_status.extended_entities && item.retweeted_status.extended_entities.media){

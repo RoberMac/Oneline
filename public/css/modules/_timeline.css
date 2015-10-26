@@ -321,7 +321,7 @@
         }
 
         &--fail {
-            background-color: var(--color-black);
+            background-color: var(--color-black) !important;
 
             &::before {
                 color: var(--color-white);
