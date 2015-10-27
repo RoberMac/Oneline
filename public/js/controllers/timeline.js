@@ -1,8 +1,8 @@
 angular.module('Oneline.timelineControllers', [])
 .controller('timelineCtrl', ['$scope', '$q',
-    'Timeline', 'olUI', 'olTimelineHelper', 'timelineCache', 'olRecord',
+    'Timeline', 'olUI', 'olTimelineHelper', 'timelineCache',
     function($scope, $q,
-        Timeline, olUI, olTimelineHelper, timelineCache, olRecord){
+        Timeline, olUI, olTimelineHelper, timelineCache){
 
 
     /**
@@ -10,7 +10,7 @@ angular.module('Oneline.timelineControllers', [])
      */
     $scope.timelineData = []
     $scope.$on('ngRepeatFinished', function (){
-        olRecord.mentions($scope.providerList)
+        olTimelineHelper.recordMentions($scope.providerList)
     })      
     olTimelineHelper.initTimelineSettings()
     olTimelineHelper.initLoad($scope.providerList)

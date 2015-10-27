@@ -1,13 +1,9 @@
 <div class="read overflow--y" ng-class="{'read--reply': readType === 'reply'}" read>
 
-    <div ng-if="!readType" class="loadMore loadMore--initLoad loadMore--loading animate--faster">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
-                <circle cx="42.5" cy="100" r="15"/>
-                <circle cx="100" cy="100" r="15"/>
-                <circle cx="157.5" cy="100.5" r="15"/>
-            </g>
-        </svg>
+    <div ng-if="!readType" class="loadMore loadMore--initLoad">
+        <div class="loadMore__btn loadMore__btn--loading animate--faster">
+            <load-more-icon></load-more-icon>
+        </div>
     </div>
 
     <div ng-if="readType === 'retweet'" class="read__like">

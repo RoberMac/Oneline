@@ -100,10 +100,13 @@ module.exports = {
                         contributor_details: false
                     })
 
-                    if (~~opts.id){
-                        extend(tOpts, {
-                            max_id: opts.id
-                        })
+                    if (opts.id !== '0'){
+                        var _mentionsId = opts.id.split('-')[1],
+                            _mentionsIdObj = opts.id.indexOf('max') >= 0
+                                                ? { max_id: _mentionsId }
+                                            : { since_id: _mentionsId };
+
+                        extend(tOpts, _mentionsIdObj)
                     }
 
                     break;

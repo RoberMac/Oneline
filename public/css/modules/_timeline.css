@@ -269,68 +269,122 @@
     background-color: var(--color-gray);
 }
 .loadMore {
-    position: relative;
-    display: block;
-    size: 48px;
-    margin: 0 auto;
-    padding: 0;
-    font-size: var(--font-size-base);
-    border-radius: 50%;
-    background-color: var(--color-white);
+    position: absolute * * * calc(50% - 35px);
+    size: 70px;
+    overflow: hidden;
 
     &:first-child {
-        margin-bottom: 60px;
+        top: 0;
         z-index: 3;
+
+        .loadMore__btn {
+            top: -17px;
+
+            &:hover {
+                top: 7px;
+            }
+            @media (--all-mobile-devices){
+                top: 7px;
+            }
+        }
     }
     &:last-child {
+        bottom: auto;
         z-index: 2;
+
+        .loadMore__btn {
+            bottom: -39px;
+
+            &:hover {
+                bottom: -15px;
+            }
+            @media (--all-mobile-devices){
+                bottom: -15px;
+            }
+        }
     }
-    
-    svg {
-        position: absolute 0 * * 0;
-    }
-    &__count::before {
-        content: attr(data-count);
-        position: absolute 0 * * 0;
-        size: 100%;
-        color: var(--color-gray-drak);
-        text-align: center;
-        line-height: 48px;
-        z-index: 4;
-    }
+
     &--initLoad {
-        position: absolute calc(50% - 24px) * * calc(50% - 24px);
-        cursor: default;
+        position: absolute calc(50% - 35px) * * !important;
+
+        &:first-child .loadMore__btn {
+            top: 11px !important;
+        }
+        &:last-child .loadMore__btn {
+            bottom: -11px !important;
+        }
     }
-    &--loading {
-        &::before {
-            content: '';
+
+    &__btn {
+        position: relative;
+        display: block;
+        size: 48px;
+        margin: 0 auto;
+        padding: 0;
+        font-size: var(--font-size-base);
+        border-radius: 50%;
+        background-color: var(--color-white);
+
+        svg {
+            position: absolute 0 * * 0;
         }
 
-        circle {
-            fill: var(--color-gray);
+        &--count::before {
+            content: attr(data-count);
+            position: absolute 0 * * 0;
+            size: 100%;
+            color: var(--color-gray-drak);
+            text-align: center;
+            line-height: 48px;
+            z-index: 4;
         }
-        circle:nth-child(1) {
-            animation: loadAnimate--twitter 1.7s linear infinite;
-        }
-        circle:nth-child(2) {
-            animation: loadAnimate--instagram 1.7s linear infinite;
-        }
-        circle:nth-child(3) {
-            animation: loadAnimate--weibo 1.7s linear infinite;
-        }
-
-        &--fail {
-            background-color: var(--color-black) !important;
-
+        &--loading {
+            &[class~="loadMore__btn--new"] {
+                top: 7px !important;
+            }
+            &[class~="loadMore__btn--old"] {
+                bottom: -15px !important;
+            }
+            cursor: default;
             &::before {
-                color: var(--color-white);
+                content: '';
             }
 
             circle {
-                animation: none !important;
                 fill: var(--color-gray);
             }
+            circle:nth-child(1) {
+                animation: loadAnimate--twitter 1.7s linear infinite;
+            }
+            circle:nth-child(2) {
+                animation: loadAnimate--instagram 1.7s linear infinite;
+            }
+            circle:nth-child(3) {
+                animation: loadAnimate--weibo 1.7s linear infinite;
+            }
+
+            &--fail {
+                background-color: var(--color-black) !important;
+                cursor: pointer;
+
+                &::before {
+                    color: var(--color-white);
+                }
+
+                circle {
+                    animation: none !important;
+                    fill: var(--color-gray);
+                }
+            }
+        }
+        &--twitter {
+            background-color: var(--color-twitter);
+        }
+        &--instagram {
+            background-color: var(--color-instagram);
+        }
+        &--weibo {
+            background-color: var(--color-weibo);
         }
     }
 }

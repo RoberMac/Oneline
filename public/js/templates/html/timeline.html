@@ -1,12 +1,8 @@
-<button ng-click="loadMore(1)" class="loadMore loadMore--initLoad loadMore--loading loadMore__count animate--faster" data-count type="button">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <g fill="none" fill-rule="evenodd">
-            <circle cx="42.5" cy="100" r="15"/>
-            <circle cx="100" cy="100" r="15"/>
-            <circle cx="157.5" cy="100.5" r="15"/>
-        </g>
-    </svg>
-</button>
+<div class="loadMore loadMore--initLoad">
+    <button ng-click="loadMore(1)" class="loadMore__btn loadMore__btn--loading loadMore__btn--new loadMore__btn--count animate--faster" data-count type="button" js-load-timeline>
+        <load-more-icon></load-more-icon>
+    </button>
+</div>
 
 <div class="timeline" ng-repeat="item in timelineData | orderBy: '-created_at'" data-id="{{::item.id_str}}" data-date on-finish-render="ngRepeatFinished">
 
@@ -14,12 +10,8 @@
 
 </div>
 
-<button ng-click="loadMore(-1)" class="loadMore loadMore--initLoad loadMore__count animate--faster" data-count type="button">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <g fill="none" fill-rule="evenodd">
-            <circle cx="42.5" cy="100" r="15"/>
-            <circle cx="100" cy="100" r="15"/>
-            <circle cx="157.5" cy="100.5" r="15"/>
-        </g>
-    </svg>
-</button>
+<div class="loadMore loadMore--initLoad">
+    <button ng-click="loadMore(-1)" class="loadMore__btn loadMore__btn--count loadMore__btn--old animate--faster" data-count type="button" js-load-timeline>
+        <load-more-icon></load-more-icon>
+    </button>
+</div>

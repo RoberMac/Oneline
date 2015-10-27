@@ -27,16 +27,6 @@
         </svg>
     </a>
 </div>
-<!-- 加載動畫 -->
-<div ng-if="!user.timeline && !user.protected" class="loadMore loadMore--loading">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <g fill="none" fill-rule="evenodd">
-            <circle cx="42.5" cy="100" r="15"/>
-            <circle cx="100" cy="100" r="15"/>
-            <circle cx="157.5" cy="100.5" r="15"/>
-        </g>
-    </svg>
-</div>
 <!-- 是否為私人帳號 -->
 <div ng-if="user.protected" class="profile__locked">
     <svg viewBox="0 0 40 40">

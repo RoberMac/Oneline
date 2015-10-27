@@ -115,8 +115,8 @@ angular.module('Oneline.controlCenterDirectives', [])
             })
             .catch(function (){
                 angular
-                .element(document.querySelector('.read .loadMore'))
-                .addClass('loadMore--loading--fail')
+                .element(document.querySelector('.read .loadMore__btn'))
+                .addClass('loadMore__btn--loading--fail')
             })
         }]
     }
@@ -247,7 +247,7 @@ angular.module('Oneline.controlCenterDirectives', [])
              *
              */
             var _profile = store.get('profile_' + _provider) || {},
-                _mentionsList = store.get('mentions_' + _provider),
+                _mentionsList = store.get('mentions_' + _provider) || [],
                 _regex = {
                     twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
                     instagram: /(|\s)*@([\w\.]*)$/,

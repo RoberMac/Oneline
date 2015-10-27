@@ -35,3 +35,17 @@ angular.module('Oneline.utilsDirectives', [])
         }
     };
 })
+.directive('loadMoreIcon', function (){
+    return {
+        restrict: 'E',
+        replace: true,
+        template: '\
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">\
+                <g fill="none" fill-rule="evenodd">\
+                    <circle cx="42.5" cy="100" r="15"/>\
+                    <circle cx="100" cy="100" r="15"/>\
+                    <circle cx="157.5" cy="100.5" r="15"/>\
+                </g>\
+            </svg>'
+    }
+})

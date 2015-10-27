@@ -25,9 +25,10 @@
 }
 
 .profile {
-    padding: 0 0 7px 0;
+    padding: 7px 0;
 
     &__avatar {
+        top: -31px;
         left: calc(50% - 24px);
     }
     &__locked {
@@ -82,10 +83,6 @@
         }
     }
     &--instagram {
-        .loadMore {
-            transform: scale(.7);
-            background-color: var(--color-instagram);
-        }
         .profile__biography {
             background-color: var(--color-instagram);
 
@@ -100,10 +97,6 @@
         }
     }
     &--twitter {
-        .loadMore {
-            transform: scale(.7);
-            background-color: var(--color-twitter);
-        }
         .profile__biography {
             background-color: var(--color-twitter);
 
@@ -145,13 +138,16 @@
         background-color: var(--color-gray);
     }
     &--notification {
+        margin: 70px 7px 0;
+        padding: 7px 0;
+
         &__title {
-            padding: 36px;
+            position: absolute 3px 3px * *;
             text-align: center;
             user-select: none;
 
             svg {
-                size: 1.6em;
+                size: 1em;
             }
         }
 

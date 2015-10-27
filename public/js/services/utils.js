@@ -51,94 +51,9 @@ angular.module('Oneline.utilsServices', ['relativeDate'])
         }
     }
 })
-.service('olRecord', ['store', function(store){
-    this.mentions = function (providerList){
-        var _MAX_COUNT = 2000;
-        var regex = {
-            twitter: /(|\s)*@([\w]+)/g,
-            instagram: /(|\s)*@([\w\.]+)/g,
-            weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g
-        };
-        var prefix = {
-            twitter: '//twitter.com/',
-            instagram: '//instagram.com/',
-            weibo: '//weibo.com/n/'
-        };
-
-        providerList.forEach(function (provider){
-            if (provider === 'instagram') return;
-
-            var _mentionsList = store.get('mentions_' + provider) || [],
-                _target = [
-                    document.querySelectorAll('.timeline--' + provider + ' p'),
-                    document.querySelectorAll(
-                        '.timeline--' + provider + ' .timeline__profile__fullname a'
-                    )
-                ];
-
-            // From Tweet Text
-            angular.forEach(angular.element(_target[0]), function (item){
-
-                var mentions = item.innerText.match(regex[provider]);
-
-                if (!mentions) return;
-
-                if (provider === 'twitter'){
-                    mentions = mentions.map(function (i){
-                        return { 's': i.trim() }
-                    })
-                }
-
-                if (_mentionsList.length >= _MAX_COUNT){
-                    if (provider === 'twitter'){
-                        var _len = mentions.length;
-                        _mentionsList = _mentionsList.filter(function (item){
-                            if (!item.hasOwnProperty('u') && _len > 0){
-                                _len --
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        })
-                    } else {
-                        _mentionsList.splice(0, mentions.length) 
-                    }
-                }
-
-                _mentionsList = _mentionsList.concat(mentions)
-            })
-            // Trim
-            if (provider === 'weibo'){
-                _mentionsList = _mentionsList.map(function(i){return i.trim()})
-            }
-
-            // From Tweet Author
-            angular.forEach(angular.element(_target[1]), function (item){
-                var _item = angular.element(item),
-                    _href = _item.attr('href');
-
-                if (!_href) return;
-
-                var mentions = '@' + _href.replace(prefix[provider], '');
-
-                if (provider === 'twitter'){
-                    mentions = { 's': mentions, 'u': _item.find('strong').text() }
-                }
-
-                _mentionsList.push(mentions)
-            })
-
-            // Store
-            store.set(
-                'mentions_' + provider,
-                provider === 'twitter'
-                    ? arrayUnique_obj(_mentionsList)
-                : arrayUnique_literal(_mentionsList)
-            )
-        })
-    }
+.service('arrayUnique', function(){
     // via http://jszen.com/best-way-to-get-unique-values-of-an-array-in-javascript.7.html
-    function arrayUnique_literal(a){
+    this.literal = function (a){
         var n = {},r=[];
         for(var i = 0; i < a.length; i++) 
         {
@@ -150,7 +65,7 @@ angular.module('Oneline.utilsServices', ['relativeDate'])
         }
         return r;
     }
-    function arrayUnique_obj(a){
+    this.obj = function (a){
         var flags = [], output = [], l = a.length, i;
         for (i = 0; i < l; i++) {
             if(flags[a[i].s]) continue;
@@ -160,5 +75,6 @@ angular.module('Oneline.utilsServices', ['relativeDate'])
             output.push(a[i]);
         }
         return output;
-    }
-}])
+    }    
+})
+

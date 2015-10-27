@@ -17,7 +17,7 @@
 
 .oneline {
     position: absolute 0 * *;
-    padding: 7px 0;
+    padding: 70px 0 0;
     height: 100%;
     background-color: var(--color-black);
     filter: brightness(1);

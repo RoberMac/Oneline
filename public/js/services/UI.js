@@ -21,23 +21,29 @@ angular.module('Oneline.UIServices', [])
     }
     // 設置是否為「正在加載」
     this.setLoading = function (type, step){
-        var loadingElem = angular.element(document.getElementsByClassName('loadMore')[step === 1 ? 0 : 1]);
+        var loadingElem = angular.element(
+            document.querySelectorAll('[js-load-timeline]')[step === 1 ? 0 : 1]
+        );
 
         if (type === 'start'){
-            loadingElem.removeClass('loadMore--loading--fail')
-            loadingElem.addClass('loadMore--loading')
+            loadingElem.removeClass('loadMore__btn--loading--fail')
+            loadingElem.addClass('loadMore__btn--loading')
         } else if (type === 'done') {
-            loadingElem.removeClass('loadMore--initLoad loadMore--loading loadMore--loading--fail')
+            loadingElem.removeClass('loadMore__btn--loading loadMore__btn--loading--fail')
+            .parent().removeClass('loadMore--initLoad')
         } else if (type === 'fail'){
-            loadingElem.addClass('loadMore--loading loadMore--loading--fail')
+            loadingElem.addClass('loadMore__btn--loading loadMore__btn--loading--fail')
         }
     }
     // 判斷是否「正在加載」
     this.isLoading = function (step){
-        var loadingElem = angular.element(document.getElementsByClassName('loadMore')[step === 1 ? 0 : 1]);
+        var loadingElem = angular.element(
+            document.querySelectorAll('[js-load-timeline]')[step === 1 ? 0 : 1]
+        );
 
-        return (loadingElem.hasClass('loadMore--loading') && !loadingElem.hasClass('loadMore--loading--fail'))
-                || loadingElem.hasClass('loadMore--initLoad')
+        return (loadingElem.hasClass('loadMore__btn--loading') &&
+                !loadingElem.hasClass('loadMore__btn--loading--fail')) ||
+                loadingElem.parent().hasClass('loadMore__btn--initLoad');
     }
     // 設置上次閱讀位置提醒
     this.setDivider = function (step){
@@ -81,7 +87,7 @@ angular.module('Oneline.UIServices', [])
 
 
         document
-        .getElementsByClassName('loadMore__count')[isNewPosts ? 0 : 1]
+        .getElementsByClassName('loadMore__btn--count')[isNewPosts ? 0 : 1]
         .setAttribute('data-count', msg)
     }
     /**

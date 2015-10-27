@@ -1,8 +1,8 @@
 angular.module('Oneline.timelineServices', [])
 .service('olTimelineHelper', ['$q', '$state',
-    'Timeline', 'timelineCache', 'olUI', 'olTokenHelper', 'Action',
+    'Timeline', 'timelineCache', 'olUI', 'olTokenHelper', 'Action', 'store', 'arrayUnique',
     function($q, $state,
-        Timeline, timelineCache, olUI, olTokenHelper, Action){
+        Timeline, timelineCache, olUI, olTokenHelper, Action, store, arrayUnique){
 
     var time_pointer   = Date.now();
     var TIME_RANGE     = 1800000;
@@ -355,6 +355,92 @@ angular.module('Oneline.timelineServices', [])
                     olUI.actionData(action, _id, count > 0 ? count : '', 'count')
                 }
             }
+        })
+    }
+    // 紀錄時間線上出現的「提及」用戶
+    this.recordMentions = function (providerList){
+        var _MAX_COUNT = 2000;
+        var regex = {
+            twitter: /(|\s)*@([\w]+)/g,
+            instagram: /(|\s)*@([\w\.]+)/g,
+            weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g
+        };
+        var prefix = {
+            twitter: '//twitter.com/',
+            instagram: '//instagram.com/',
+            weibo: '//weibo.com/n/'
+        };
+
+        providerList.forEach(function (provider){
+            if (provider === 'instagram') return;
+
+            var _mentionsList = store.get('mentions_' + provider) || [],
+                _target = [
+                    document.querySelectorAll('.timeline--' + provider + ' p'),
+                    document.querySelectorAll(
+                        '.timeline--' + provider + ' .timeline__profile__fullname a'
+                    )
+                ];
+
+            // From Tweet Text
+            angular.forEach(angular.element(_target[0]), function (item){
+
+                var mentions = item.innerText.match(regex[provider]);
+
+                if (!mentions) return;
+
+                if (provider === 'twitter'){
+                    mentions = mentions.map(function (i){
+                        return { 's': i.trim() }
+                    })
+                }
+
+                if (_mentionsList.length >= _MAX_COUNT){
+                    if (provider === 'twitter'){
+                        var _len = mentions.length;
+                        _mentionsList = _mentionsList.filter(function (item){
+                            if (!item.hasOwnProperty('u') && _len > 0){
+                                _len --
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        })
+                    } else {
+                        _mentionsList.splice(0, mentions.length) 
+                    }
+                }
+
+                _mentionsList = _mentionsList.concat(mentions)
+            })
+            // Trim
+            if (provider === 'weibo'){
+                _mentionsList = _mentionsList.map(function(i){return i.trim()})
+            }
+
+            // From Tweet Author
+            angular.forEach(angular.element(_target[1]), function (item){
+                var _item = angular.element(item),
+                    _href = _item.attr('href');
+
+                if (!_href) return;
+
+                var mentions = '@' + _href.replace(prefix[provider], '');
+
+                if (provider === 'twitter'){
+                    mentions = { 's': mentions, 'u': _item.find('strong').text() }
+                }
+
+                _mentionsList.push(mentions)
+            })
+
+            // Store
+            store.set(
+                'mentions_' + provider,
+                provider === 'twitter'
+                    ? arrayUnique.obj(_mentionsList)
+                : arrayUnique.literal(_mentionsList)
+            )
         })
     }
 }])

@@ -105,57 +105,99 @@ angular.module('Oneline.maskDirectives', [])
  * 查看「提及」
  *
  */
-.directive('mentions', ['Action', function (Action){
+.directive('mentions', ['$timeout', 'store', 'Action', 
+    function ($timeout, store, Action){
+
     return {
         restrict: 'E',
         scope: {},
         templateUrl: 'mask/notification/mentions/twitter.html',
-        link: function (scope, elem, attrs){
-            var loadMoreBtn = angular.element(
-                    document.querySelector('.maskTimeline--notification .loadMore--loading')
-                ), _min_id, _max_id, _isFirstLoad = true;
+        controller: ['$scope', '$element',function ($scope, $element){
+            var _provider = $element.attr('provider'),
+                _key = 'notification_m_' + _provider,
+                _info = store.get(_key) || {},
+                _notifications = _info.notifications,
+                _min_id = _info.min_id,
+                _max_id = _info.max_id;
 
             // Init
-            scope.notifications = []
-            // Fire
-            loadMentions()
+            $scope.notifications = []
+            if (_notifications && _notifications.length > 0){
+                $timeout(function (){
+                    $scope.notifications = _notifications
+                    angular.element(document.querySelectorAll('[js-load-mentions]'))
+                    .removeClass('loadMore__btn--loading')
+                    .parent().removeClass('loadMore--initLoad')
+                }, 700)
+            } else {
+                loadMentions()
+            }
+
             // Event
-            loadMoreBtn
-            .on('click', function (){
-                if (loadMoreBtn.hasClass('loadMoreBtn--loading')) return;
+            $scope.loadMentions = function (type){
+                var loadMoreBtn = angular.element(
+                        document.querySelector('[js-load-mentions="' + type + '"]')
+                    );
 
-                loadMentions(_max_id)
-            })
+                if (loadMoreBtn.hasClass('loadMore__btn--loading')) return;
 
-            function loadMentions(max_id){
-                loadMoreBtn.addClass('loadMore--loading')
+                loadMentions(type, loadMoreBtn)
+            }
+
+            function loadMentions(type, loadMoreBtn){
+                loadMoreBtn = loadMoreBtn || angular.element(document.querySelectorAll('[js-load-mentions]'))
+                loadMoreBtn.addClass('loadMore__btn--loading').removeClass('loadMore__btn--loading--fail')
+
+                var id = type && (_max_id || _min_id)
+                            ? type === 'min' 
+                                ? type + 'Id-' + _max_id
+                            : type + 'Id-' + _min_id
+                        : 0;
 
                 Action.get({
                     action: 'mentions',
-                    provider: attrs.provider,
-                    id: max_id || 0
+                    provider: _provider,
+                    id: id
                 })
                 .$promise
                 .then(function (res){
                     res = res.data;
 
-                    if (!_isFirstLoad){
+                    // Load Old
+                    if (type === 'max'){
                         res.data.splice(0, 1)
-                    } else {
-                        _isFirstLoad = false
+                        // 無更舊消息
+                        if (res.data.length === 0){
+                            loadMoreBtn.remove()
+                        }
+                        _min_id = res.min_id
+                    }
+                    // First Load
+                    else if (!id){
+                        _min_id = res.min_id
+                        _max_id = res.max_id
+                    }
+                    // Load New
+                    else {
+                        _max_id = res.max_id || _max_id
                     }
 
-                    scope.notifications = scope.notifications.concat(res.data)
-                    _min_id = res.max_id
-                    _max_id = res.min_id
-
-                    loadMoreBtn.removeClass('loadMore--initLoad loadMore--loading')
+                    $scope.notifications = $scope.notifications.concat(res.data)
+                    // Store
+                    store.set(_key, {
+                        notifications: $scope.notifications,
+                        min_id: _min_id,
+                        max_id: _max_id
+                    })
+                    // UI
+                    loadMoreBtn.removeClass('loadMore__btn--loading')
+                    .parent().removeClass('loadMore--initLoad')
                 })
                 .catch(function (err){
-                    loadMoreBtn.addClass('loadMore--loading--fail')
+                    loadMoreBtn.addClass('loadMore__btn--loading--fail')
                 })
             }
-        }
+        }]
     }
 }])
 /**

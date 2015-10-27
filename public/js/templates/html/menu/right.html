@@ -10,7 +10,7 @@
         </a>
     </div>
 
-    <div ng-if="isTimeline && !controlCenter" class="animate--general" ng-init="::_firstProvider = providerList.indexOf('twitter') >= 0 ? 'twitter' : providerList.indexOf('weibo') >= 0 ? 'weibo' : 'instagram'">
+    <div ng-if="isTimeline && !controlCenter" ng-init="::_firstProvider = providerList.indexOf('twitter') >= 0 ? 'twitter' : providerList.indexOf('weibo') >= 0 ? 'weibo' : 'instagram'">
         <!-- 寫推 -->
         <div ng-if="_firstProvider !== 'instagram'" class="menu--row">
             <button class="menu__button animate--faster" ng-class=":: 'icon--' + _firstProvider" ng-click="::setControlCenter('write_' + _firstProvider + '-tweet')" type="button">
@@ -32,6 +32,16 @@
             <button class="menu__button animate--faster" ng-class=":: 'icon--' + _firstProvider" ng-click="::setControlCenter('notification_' + _firstProvider)" type="button">
                 <svg viewBox="0 0 200 200">
                    <use xlink:href="/public/img/icon-sprites.svg#notification"></use>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div ng-if="isTimeline && controlCenter">
+        <div ng-click="setControlCenter('')" class="menu--row">
+            <button class="menu__button animate--faster" type="button">
+                <svg viewBox="0 0 200 200">
+                   <use xlink:href="/public/img/icon-sprites.svg#cancel"></use>
                 </svg>
             </button>
         </div>

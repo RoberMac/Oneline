@@ -10,7 +10,7 @@ angular.module('Oneline.controlCenterServices', [])
     }
     this.extractMentions = function (status, sourceUser){
         var _mentions = [sourceUser],
-            _str = ' ';
+            _str = '';
 
         // Extract
         _mentions = _mentions.concat(status.match(/(|\s)*@([\w]+)/g) || [])

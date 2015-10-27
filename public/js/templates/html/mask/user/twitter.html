@@ -1,3 +1,10 @@
+<!-- 加載動畫 -->
+<div ng-if="!user.timeline && !user.protected" class="loadMore loadMore--initLoad">
+    <div class="loadMore__btn loadMore__btn--loading loadMore__btn--new animate--faster">
+        <load-more-icon></load-more-icon>
+    </div>
+</div>
+
 <div class="timeline profile">
 
     <div class="timeline--twitter profile--twitter">
