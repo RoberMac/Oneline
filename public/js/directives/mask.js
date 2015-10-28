@@ -102,11 +102,10 @@ angular.module('Oneline.maskDirectives', [])
     }
 }])
 /**
- * 查看「提及」
+ * 查看「提及」& 「私信」
  *
  */
-.directive('mentions', ['$timeout', 'store', 'Action', 
-    function ($timeout, store, Action){
+.directive('mentions', ['$timeout', 'olNotification', function ($timeout, olNotification){
 
     return {
         restrict: 'E',
@@ -114,26 +113,27 @@ angular.module('Oneline.maskDirectives', [])
         templateUrl: 'mask/notification/mentions/twitter.html',
         controller: ['$scope', '$element',function ($scope, $element){
             var _provider = $element.attr('provider'),
-                _key = 'notification_m_' + _provider,
-                _info = store.get(_key) || {},
-                _notifications = _info.notifications,
-                _min_id = _info.min_id,
-                _max_id = _info.max_id;
+                _notifications;
 
             // Init
             $scope.notifications = []
+            _notifications = olNotification.initLoad(_provider, 'mentions');
+
             if (_notifications && _notifications.length > 0){
                 $timeout(function (){
                     $scope.notifications = _notifications
+
                     angular.element(document.querySelectorAll('[js-load-mentions]'))
                     .removeClass('loadMore__btn--loading')
                     .parent().removeClass('loadMore--initLoad')
                 }, 700)
             } else {
-                loadMentions()
+                olNotification.load()
+                .then(function (data){
+                    $scope.notifications = data
+                })
             }
 
-            // Event
             $scope.loadMentions = function (type){
                 var loadMoreBtn = angular.element(
                         document.querySelector('[js-load-mentions="' + type + '"]')
@@ -141,60 +141,9 @@ angular.module('Oneline.maskDirectives', [])
 
                 if (loadMoreBtn.hasClass('loadMore__btn--loading')) return;
 
-                loadMentions(type, loadMoreBtn)
-            }
-
-            function loadMentions(type, loadMoreBtn){
-                loadMoreBtn = loadMoreBtn || angular.element(document.querySelectorAll('[js-load-mentions]'))
-                loadMoreBtn.addClass('loadMore__btn--loading').removeClass('loadMore__btn--loading--fail')
-
-                var id = type && (_max_id || _min_id)
-                            ? type === 'min' 
-                                ? type + 'Id-' + _max_id
-                            : type + 'Id-' + _min_id
-                        : 0;
-
-                Action.get({
-                    action: 'mentions',
-                    provider: _provider,
-                    id: id
-                })
-                .$promise
-                .then(function (res){
-                    res = res.data;
-
-                    // Load Old
-                    if (type === 'max'){
-                        res.data.splice(0, 1)
-                        // 無更舊消息
-                        if (res.data.length === 0){
-                            loadMoreBtn.remove()
-                        }
-                        _min_id = res.min_id
-                    }
-                    // First Load
-                    else if (!id){
-                        _min_id = res.min_id
-                        _max_id = res.max_id
-                    }
-                    // Load New
-                    else {
-                        _max_id = res.max_id || _max_id
-                    }
-
-                    $scope.notifications = $scope.notifications.concat(res.data)
-                    // Store
-                    store.set(_key, {
-                        notifications: $scope.notifications,
-                        min_id: _min_id,
-                        max_id: _max_id
-                    })
-                    // UI
-                    loadMoreBtn.removeClass('loadMore__btn--loading')
-                    .parent().removeClass('loadMore--initLoad')
-                })
-                .catch(function (err){
-                    loadMoreBtn.addClass('loadMore__btn--loading--fail')
+                olNotification.load(type, loadMoreBtn)
+                .then(function (data){
+                    $scope.notifications = data
                 })
             }
         }]
@@ -204,24 +153,72 @@ angular.module('Oneline.maskDirectives', [])
  * 查看「私信」
  *
  */
-.directive('direct', ['Action', function (Action){
+.directive('direct', ['$timeout', '$filter', 'olNotification',
+    function ($timeout, $filter, olNotification){
+
     return {
         restrict: 'E',
         scope: {},
-        templateUrl: 'mask/notification/mentions/twitter.html',
-        link: function (scope, elem, attrs){
-            scope.notifications = []
-            Action.get({
-                action: 'direct',
-                provider: attrs.provider,
-                id: '0'
-            })
-            .$promise
-            .then(function (res){
-                scope.notifications = res.data.data
-            })
-            .catch(function (err){
-            })
-        }
+        templateUrl: 'mask/notification/direct/twitter.html',
+        controller: ['$scope', '$element', 'store', function ($scope, $element, store){
+            var _provider = $element.attr('provider'),
+                _uid = store.get('profile_' + _provider).uid,
+                _notifications;
+
+            // Init
+            $scope.notifications = []
+            $scope.senderList = []
+            $scope._uid = _uid
+
+            _notifications = olNotification.initLoad(_provider, 'direct');
+
+            if (_notifications && _notifications.length > 0){
+                $timeout(function (){
+                    updateDirect(_notifications)
+
+                    angular.element(document.querySelectorAll('[js-load-direct]'))
+                    .removeClass('loadMore__btn--loading')
+                    .parent().removeClass('loadMore--initLoad')
+                }, 700)
+            } else {
+                olNotification.load()
+                .then(function (data){
+                    updateDirect(data)
+                })
+            }
+
+            $scope.loadDirect = function (type){
+                var loadMoreBtn = angular.element(
+                        document.querySelector('[js-load-direct="' + type + '"]')
+                    );
+
+                if (loadMoreBtn.hasClass('loadMore__btn--loading')) return;
+
+                olNotification.load(type, loadMoreBtn)
+                .then(function (data){
+                    updateDirect(data)
+                })
+            }
+
+            $scope.showDirect = function (senderId){
+                var senderBtn = angular.element(
+                    document.querySelector('[js-direct-sender="' + senderId + '"]')
+                );
+
+                // Enter
+                $scope.notifications = $filter('filter')(_notifications, function (value, index, array){
+                    return value.sender.uid === senderId || 
+                            (value.sender.uid === _uid && value.recipient.uid === senderId)
+                })
+                // UI
+                senderBtn.parent().children().removeClass('tips--active--peace')
+                senderBtn.addClass('tips--active--peace')
+            }
+
+            function updateDirect(data){
+                _notifications = data
+                $scope.senderList = olNotification.extractSenders(data, _uid)
+            }
+        }]
     }
 }])

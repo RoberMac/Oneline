@@ -28,7 +28,7 @@
         <div ng-if="true" ng-include=" 'mask/user/component/profile.html' " onload="_p_type = 'tweet'; _p_provider = 'twitter' "></div>
 
         <!-- Timeline -->
-        <div ng-if="::user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline" ng-class=" item.type === 'retweet' ? 'maskTimeline--gutter' : 'maskTimeline' ">
+        <div ng-if="::user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline" ng-class=" item.type === 'retweet' ? 'mask__gutter' : 'mask__timeline' ">
 
             <div ng-if="::item.type === 'retweet'" class="timeline__profile">
                 <a ng-href="//twitter.com/{{::item.retweet.user.screen_name}}" target="_blank">

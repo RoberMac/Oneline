@@ -21,7 +21,7 @@
         <div ng-if="true" ng-include=" 'mask/user/component/profile.html' " onload="_p_type = 'post'; _p_provider = 'instagram' "></div>
 
         <!-- Timeline -->
-        <div ng-if="::user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline maskTimeline">
+        <div ng-if="::user.timeline.length > 0" ng-repeat="item in ::user.timeline" class="timeline mask__timeline">
 
             <div class="timeline__content">
                 <div ng-include=" 'media/instagram.html' "></div>

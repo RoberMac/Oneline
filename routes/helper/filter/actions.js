@@ -1,4 +1,7 @@
-var timelineFilter = require('./filter--timeline');
+var extend = require('extend'),
+    timelineFilter = require('./timeline'),
+    filterUtils = require('./utils');
+
 
 var filter = {
     twitter: {
@@ -44,8 +47,52 @@ var filter = {
         },
         mentions: timelineFilter.twitter,
         direct: function (data){
-            // TODO
-            return data;
+            var cache = [];
+
+            data.forEach(function (item){
+                var directObj = {
+                    created_at: Date.parse(item.created_at),
+                    id_str: item.id_str,
+                    text: item.text,
+                    sender: {
+                        name: item.sender.name,
+                        uid: item.sender.id_str,
+                        screen_name: item.sender.screen_name,
+                        avatar: item.sender.profile_image_url_https
+                    },
+                    recipient: {
+                        name: item.recipient.name,
+                        uid: item.recipient.id_str,
+                        screen_name: item.recipient.screen_name,
+                        avatar: item.recipient.profile_image_url_https
+                    }
+                }
+
+                if (item.entities && item.entities.media){
+                    extend(directObj, {
+                        media: filterUtils.twitter.media(item.entities.media)
+                    })
+
+                    console.log(directObj)
+                }
+
+                cache.push(directObj)
+            })
+
+            var returnObj = { data: cache },
+                firstData = data[0],
+                lastData  = data[data.length - 1];
+
+            if (lastData){
+                extend(returnObj, {
+                    min_id  : lastData.id_str,
+                    min_date: Date.parse(lastData.created_at),
+                    max_id  : firstData.id_str,
+                    max_date: Date.parse(firstData.created_at)
+                })
+            }
+
+            return returnObj;
         }
     },
     instagram: {

@@ -22,6 +22,7 @@ angular.module('Oneline', [
     'Oneline.tokenHelperServices',
     'Oneline.UIServices',
     'Oneline.controlCenterServices',
+    'Oneline.maskServices',
     // Directives
     'Oneline.utilsDirectives',
     'Oneline.mediaDirectives',

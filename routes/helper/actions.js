@@ -2,8 +2,8 @@ var extend  = require('extend'),
     Twit    = require('twit'),
     Ig      = require('instagram-node').instagram(),
     Weibo   = require('./weibo'),
-    timelineFilter = require('./filter--timeline'),
-    profileFilter = require('./filter--actions');
+    timelineFilter = require('./filter/timeline'),
+    actionsFilter = require('./filter/actions');
 
 module.exports = {
     twitter: function (action, opts){
@@ -21,22 +21,64 @@ module.exports = {
             q_twit = Q.nbind(T[_GET ? 'get' : 'post'], T),
             action_str;
 
-        if (action === 'user'){
-            return Q.all([
-                q_twit('users/show', { user_id: opts.id, include_entities: false }),
-                q_twit('statuses/user_timeline', {
-                    user_id: opts.id,
-                    count: 7,
-                    trim_user: false,
-                    exclude_replies: false,
-                    contributor_details: false,
-                    include_rts: true
-                })
-            ])
-            .spread(function (userData, timelineData){
-                var data = profileFilter.twitter.user(userData[0]);
+        if (action === 'user' || action === 'direct'){
+            var _action_str1, _action_str2, _tOpts1, _tOpts2;
 
-                extend(data, { timeline: timelineFilter.twitter(timelineData[0]).data })
+            switch (action){
+                case 'user':
+                    _action_str1 = 'users/show'
+                    _action_str2 = 'statuses/user_timeline'
+                    _tOpts1 = { user_id: opts.id, include_entities: false }
+                    _tOpts2 = {
+                        user_id: opts.id,
+                        count: 7,
+                        trim_user: false,
+                        exclude_replies: false,
+                        contributor_details: false,
+                        include_rts: true
+                    }
+                    break;
+                case 'direct':
+                    _action_str1 = 'direct_messages'
+                    _action_str2 = 'direct_messages/sent'
+                    _tOpts1 = _tOpts2 = { count: 200, include_entities: true }
+
+                    if (opts.id !== '0'){
+                        var _directId = opts.id.split('-')[1],
+                            _directIdObj = opts.id.indexOf('max') >= 0
+                                                ? { max_id: _directId }
+                                            : { since_id: _directId };
+
+                        extend(_tOpts1, _directIdObj)
+                        extend(_tOpts2, _directIdObj)
+                    }
+                    break;
+            }
+
+            return Q.all([
+                q_twit(_action_str1, _tOpts1),
+                q_twit(_action_str2, _tOpts2)
+            ])
+            .spread(function (data1, data2){
+                var data;
+                switch (action){
+                    case 'user':
+                        data = actionsFilter.twitter.user(data1[0]);
+                        extend(data, { timeline: timelineFilter.twitter(data2[0]).data })
+                        break;
+                    case 'direct':
+                        data1 = actionsFilter.twitter.direct(data1[0])
+                        data2 = actionsFilter.twitter.direct(data2[0])
+
+                        data = {
+                            data    : data1.data.concat(data2.data),
+                            min_id  : data1.min_date < data2.min_date ? data1.min_id : data2.min_id,
+                            min_date: Math.min(data1.min_date, data2.min_date) || undefined,
+                            max_id  : data1.max_date > data2.max_date ? data1.max_id : data2.max_id,
+                            max_date: Math.max(data1.max_date, data2.max_date) || undefined
+                        }
+                        break;
+                }
 
                 return { data: data }
             })
@@ -95,7 +137,7 @@ module.exports = {
                     action_str = 'statuses/mentions_timeline'
 
                     extend(tOpts, {
-                        count: 20,
+                        count: 200,
                         include_entities: false,
                         contributor_details: false
                     })
@@ -110,14 +152,6 @@ module.exports = {
                     }
 
                     break;
-                case 'direct':
-                    action_str = 'direct_messages'
-
-                    extend(tOpts, {
-                        count: 20,
-                        include_entities: false
-                    })
-                    break;
                 default:
                     throw { statusCode: 404 };
                     break;
@@ -131,7 +165,6 @@ module.exports = {
                         case 'retweet':
                         case 'reply':
                         case 'mentions':
-                        case 'direct':
                             _data = data[0]
                             break;
                         case 'follow':
@@ -139,7 +172,7 @@ module.exports = {
                             break;
                     }
 
-                    return { data: profileFilter.twitter[action](_data) }
+                    return { data: actionsFilter.twitter[action](_data) }
                 } else {
                     switch (action){
                         case 'retweet':
@@ -210,7 +243,7 @@ module.exports = {
                 case 'reply':
                     switch (_GET){
                         case true:
-                            return { data: profileFilter.weibo.reply(data.comments) }
+                            return { data: actionsFilter.weibo.reply(data.comments) }
                             break;
                         case false:
                     }
@@ -232,7 +265,7 @@ module.exports = {
                 Q.nbind(Ig.user_media_recent, Ig)(opts.id, { count: 7 })
             ])
             .spread(function (userData, timelineData){
-                var data = profileFilter.instagram.user(userData[0]);
+                var data = actionsFilter.instagram.user(userData[0]);
 
                 extend(data, { timeline: timelineFilter.instagram(timelineData[0]).data })
 
@@ -255,7 +288,7 @@ module.exports = {
 
             return q_ig(opts.id)
             .then(function (data){
-                return { data: profileFilter.instagram[action](data[0].slice(0, 100)) }
+                return { data: actionsFilter.instagram[action](data[0].slice(0, 100)) }
             })
         }
     }

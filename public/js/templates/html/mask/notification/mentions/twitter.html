@@ -4,10 +4,16 @@
     </button>
 </div>
 
-<div ng-if="notifications.length > 0" class="timeline profile maskTimeline--notification">
+<div ng-if="loadState === 'loadFin' && notifications.length === 0" class="mask__empty icon--inactive">
+    <svg viewBox="0 0 26 26">
+        <use xlink:href="/public/img/icon-sprites.svg#mentions"></use>
+    </svg>
+</div>
+
+<div ng-if="notifications.length > 0" class="timeline profile mask__notification overflow--y">
     <div class="timeline--twitter profile--twitter">
 
-        <div class="maskTimeline--notification__title">
+        <div class="mask__source">
             <a href="https://twitter.com/mentions" target="_blank">
                 <svg viewBox="0 0 26 26">
                    <use xlink:href="/public/img/icon-sprites.svg#mentions"></use>
@@ -16,7 +22,7 @@
         </div>
 
         <!-- Timeline -->
-        <div class="timeline maskTimeline maskTimeline--gutter" ng-repeat="item in notifications | orderBy: '-created_at' track by item.id_str">
+        <div class="timeline mask__timeline mask__gutter" ng-repeat="item in notifications | orderBy: '-created_at' track by item.id_str">
 
             <div class="timeline__profile" ng-init="_author = item.type === 'retweet' ? item.retweet.user : item.user">
                 <a ng-href="//twitter.com/{{::_author.screen_name}}" target="_blank">
@@ -24,7 +30,7 @@
                 </a>
                 <div class="timeline__profile__fullname">
                     <a ng-href="//twitter.com/{{::_author.screen_name}}" target="_blank">
-                        <strong ng-bind="::item.user.name"></strong>
+                        <strong ng-bind="::_author.name"></strong>
                     </a>
                 </div>
             </div>
@@ -34,8 +40,8 @@
                 <div ng-if="::item.media" ng-include=" 'media/twitter.html' "></div>
             </div>
 
-            <a ng-if="::item.type === 'retweet'" class="timeline--retweet__profile__avatar" ng-href="//twitter.com/{{::item.user.screen_name}}" target="_blank">
-                <img class="timeline__profile__avatar" ng-src="{{::item.user.avatar}}" alt="avatar">
+            <a ng-if="::item.type === 'retweet'" class="timeline--retweet__profile__avatar" ng-href="//twitter.com/{{::_author.screen_name}}" target="_blank">
+                <img class="timeline__profile__avatar" ng-src="{{::_author.avatar}}" alt="avatar">
             </a>
 
             <!-- Quote -->
@@ -53,7 +59,7 @@
 
             <span class="cursor--pointer">
                 <!-- Source -->
-                <a ng-href="//twitter.com/{{::item.user.screen_name}}/status/{{::item.id_str}}" target="_blank">
+                <a ng-href="//twitter.com/{{::_author.screen_name}}/status/{{::item.id_str}}" target="_blank">
                     <button class="actions tips--deep" type="button">
                         <svg class="actions__button" viewBox="0 0 26 26">
                             <use xlink:href="/public/img/icon-sprites.svg#source"></use>
@@ -70,9 +76,8 @@
     </div>
 </div>
 
-<!-- 加載更多 -->
-<div ng-if="notifications.length > 10" class="loadMore">
-    <button ng-click="loadMentions('max')" class="loadMore__btn loadMore__btn--twitter loadMore__btn--old animate--faster" type="button" js-load-mentions="max">
+<div class="loadMore">
+    <button ng-if="notifications.length > 10" ng-click="loadMentions('max')" class="loadMore__btn loadMore__btn--twitter loadMore__btn--old animate--faster" type="button" js-load-mentions="max">
         <load-more-icon></load-more-icon>
     </button>    
 </div>

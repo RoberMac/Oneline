@@ -146,6 +146,8 @@
         }
         .timeline {
             &__profile {
+                top: -20px;
+
                 &__avatar {
                     size: 40px;
                 }
