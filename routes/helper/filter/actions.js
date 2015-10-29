@@ -72,8 +72,6 @@ var filter = {
                     extend(directObj, {
                         media: filterUtils.twitter.media(item.entities.media)
                     })
-
-                    console.log(directObj)
                 }
 
                 cache.push(directObj)

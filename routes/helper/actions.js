@@ -72,9 +72,13 @@ module.exports = {
 
                         data = {
                             data    : data1.data.concat(data2.data),
-                            min_id  : data1.min_date < data2.min_date ? data1.min_id : data2.min_id,
+                            min_id  : (data1.min_date < data2.min_date
+                                            ? data1.min_id
+                                        : data2.min_id) || data1.min_id || data2.min_id,
                             min_date: Math.min(data1.min_date, data2.min_date) || undefined,
-                            max_id  : data1.max_date > data2.max_date ? data1.max_id : data2.max_id,
+                            max_id  : (data1.max_date > data2.max_date 
+                                            ? data1.max_id
+                                        : data2.max_id) || data1.max_id || data2.max_id,
                             max_date: Math.max(data1.max_date, data2.max_date) || undefined
                         }
                         break;

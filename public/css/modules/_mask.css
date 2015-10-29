@@ -18,8 +18,11 @@
         &--write {
             height: 66.7%;
         }
-        &--read, &--notification {
+        &--read {
             height: 83%;
+        }
+        &--notification {
+            height: 93%;
         }
     }
 }
@@ -141,8 +144,8 @@
     &__notification {
         position: relative 70px * *;
         margin: 0 7px 0;
-        padding: 0;
-        height: calc(83vh - 140px);
+        padding: 7px 3px;
+        height: calc(93vh - 140px - 48px);
 
         .timeline__content {
             top: -24px;
@@ -217,9 +220,9 @@
         }
         &__time {
             position: absolute;
-            bottom: -7px;
+            bottom: -3px;
             color: #89a;
-            font-size: 11px;
+            font-size: 9px;
             cursor: pointer;
         }
     }

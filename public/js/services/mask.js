@@ -1,7 +1,8 @@
 angular.module('Oneline.maskServices', [])
-.service('olNotification', ['$q', 'store', 'Action', function($q, store, Action){
+.service('olNotification', ['$q', '$filter', 'store', 'Action', 
+    function($q, $filter, store, Action){
 
-    var _provider, _action, _key, _notifications, _min_id, _max_id;
+    var _provider, _action, _key, _notifications, _max_id;
 
     this.initLoad = function (provider, action){
         _provider = provider
@@ -12,88 +13,93 @@ angular.module('Oneline.maskServices', [])
 
         _info = store.get(_key) || {}
         _notifications = _info.notifications || []
-        _min_id = _info.min_id
         _max_id = _info.max_id
 
         return _notifications;
     }
-    this.load = function(type, loadMoreBtn){
+    this.load = function(isInitLoad){
         var defer = $q.defer()
 
-        loadMoreBtn = loadMoreBtn || angular.element(document.querySelectorAll('[js-load-' + _action + ']'))
-        loadMoreBtn.addClass('loadMore__btn--loading').removeClass('loadMore__btn--loading--fail')
-
-        var id = type && (_max_id || _min_id)
-                    ? type === 'min' 
-                        ? type + 'Id-' + _max_id
-                    : type + 'Id-' + _min_id
-                : 0;
 
         Action.get({
             action: _action,
             provider: _provider,
-            id: id
+            id: isInitLoad || !_max_id ? 0 : 'minId-' + _max_id
         })
         .$promise
         .then(function (res){
             res = res.data;
 
-            // Load Old
-            if (type === 'max'){
-                res.data.splice(0, 1)
-                // 無更舊消息
-                if (res.data.length === 0){
-                    loadMoreBtn.remove()
-                }
-                _min_id = res.min_id
-            }
-            // First Load
-            else if (!id){
-                _min_id = res.min_id
-                _max_id = res.max_id
-            }
-            // Load New
-            else {
-                _max_id = res.max_id || _max_id
-            }
+             _max_id = res.max_id || _max_id
 
             // Store
             if (res.data.length > 0){
                 _notifications = _notifications.concat(res.data)
                 store.set(_key, {
                     notifications: _notifications,
-                    min_id: _min_id,
                     max_id: _max_id
                 })
             }
 
-            // UI
-            loadMoreBtn.removeClass('loadMore__btn--loading')
-            .parent().removeClass('loadMore--initLoad')
-
             defer.resolve(_notifications)
         })
         .catch(function (err){
-            loadMoreBtn.addClass('loadMore__btn--loading--fail')
-
             defer.reject(err)
         })
 
         return defer.promise;
     }
-    this.extractSenders = function (items, _uid){
-        var cache = [];
+    this.extractDirect = function (_authUid){
+        var senderList = []
+        var conversations = {}
         var _sender_uid_list = [];
 
-        for (var i = 0, len = items.length; i < len; i++){
-            var sender = items[i].sender;
+        // Extract
+        for (var i = 0, len = _notifications.length; i < len; i++){
+            var sender = _notifications[i].sender;
 
-            if (sender.uid !== _uid && _sender_uid_list.indexOf(sender.uid) < 0){
-                cache.push(items[i].sender)
+            if (sender.uid !== _authUid && _sender_uid_list.indexOf(sender.uid) < 0){
+                senderList.push(_notifications[i].sender)
+
                 _sender_uid_list.push(sender.uid)
             }
         }
 
-        return cache;
+        // Sort & Insert Conversation
+        if (senderList.length === 1){
+            var _uid = senderList[0].uid;
+
+            conversations[_uid] = extractConversation(_uid, _authUid)
+        } else {
+            senderList = senderList.sort(function (sender1, sender2){
+                var uid1 = sender1.uid,
+                    uid2 = sender2.uid;
+
+                // Insert Conversation
+                var conversation1 = extractConversation(uid1, _authUid),
+                    conversation2 = extractConversation(uid2, _authUid);
+
+                conversations[uid1] = conversation1
+                conversations[uid2] = conversation2
+
+                // Sort
+                var latestCreatedAt1 = conversation1[conversation1.length - 1].created_at;
+                    latestCreatedAt2 = conversation2[conversation2.length - 1].created_at;
+
+                return latestCreatedAt1 < latestCreatedAt2;
+            })
+        }
+
+        return [senderList, conversations];
+    }
+
+    function extractConversation (uid, _authUid){
+        return $filter('orderBy')(
+            $filter('filter')(_notifications, function (item, index, array){
+                return item.sender.uid === uid || 
+                        (item.sender.uid === _authUid && item.recipient.uid === uid)
+            })
+        , 'created_at')
     }
 }])
+

@@ -1,19 +1,13 @@
-<div class="loadMore loadMore--initLoad">
-    <button ng-click="loadDirect('min')" class="loadMore__btn loadMore__btn--twitter loadMore__btn--loading loadMore__btn--new animate--faster" type="button" js-load-direct="min">
+<div class="loadMore" ng-class="{'loadMore--initLoad': loadState === 'initLoad'}">
+    <button ng-click="loadDirect('new')" class="loadMore__btn loadMore__btn--twitter loadMore__btn--new animate--faster" ng-class="{'loadMore__btn--loading': loadState !== 'loadFin', 'loadMore__btn--loading--fail': loadState === 'loadFail'}" type="button">
         <load-more-icon></load-more-icon>
     </button>
 </div>
 
-<div ng-if="loadState === 'loadFin' && notifications.length === 0" class="mask__empty icon--inactive">
-    <svg viewBox="0 0 28 23">
-        <use xlink:href="/public/img/icon-sprites.svg#direct"></use>
-    </svg>
-</div>
-
-<div ng-if="notifications.length > 0" class="timeline profile mask__notification overflow--y">
+<div ng-if="notifications.length > 0" class="timeline profile mask__notification overflow--y animate--faster">
     <div class="timeline--twitter profile--twitter">
 
-        <div class="timeline mask__msg" ng-repeat="item in notifications | orderBy: 'created_at' track by item.id_str" ng-class="::item.sender.uid === _uid ? 'mask__msg--me' : 'mask__msg--others'">
+        <div class="timeline mask__msg" ng-repeat="item in notifications track by item.id_str" ng-class="::item.sender.uid === _authUid ? 'mask__msg--me' : 'mask__msg--others'">
 
             <div class="mask__msg__content">
                 <p class="mask__msg__text" trim-quote-link="{{::item.type}}" linkify="twitter" ng-bind-html="::item.text"></p>

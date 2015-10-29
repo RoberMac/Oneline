@@ -111,39 +111,42 @@ angular.module('Oneline.maskDirectives', [])
         restrict: 'E',
         scope: {},
         templateUrl: 'mask/notification/mentions/twitter.html',
-        controller: ['$scope', '$element',function ($scope, $element){
+        controller: ['$scope', '$element', function ($scope, $element){
             var _provider = $element.attr('provider'),
                 _notifications;
 
             // Init
             $scope.notifications = []
+            $scope.loadState = 'initLoad'
             _notifications = olNotification.initLoad(_provider, 'mentions');
 
             if (_notifications && _notifications.length > 0){
                 $timeout(function (){
                     $scope.notifications = _notifications
-
-                    angular.element(document.querySelectorAll('[js-load-mentions]'))
-                    .removeClass('loadMore__btn--loading')
-                    .parent().removeClass('loadMore--initLoad')
+                    $scope.loadState = 'loadFin'
                 }, 700)
             } else {
-                olNotification.load()
+                olNotification.load(true)
                 .then(function (data){
                     $scope.notifications = data
+                    $scope.loadState = 'loadFin'
+                })
+                .catch(function (err){
+                    $scope.loadState = 'loadFail'
                 })
             }
 
             $scope.loadMentions = function (type){
-                var loadMoreBtn = angular.element(
-                        document.querySelector('[js-load-mentions="' + type + '"]')
-                    );
+                if ($scope.loadState === 'loading') return;
 
-                if (loadMoreBtn.hasClass('loadMore__btn--loading')) return;
-
-                olNotification.load(type, loadMoreBtn)
+                $scope.loadState = 'loading'
+                olNotification.load(false)
                 .then(function (data){
                     $scope.notifications = data
+                    $scope.loadState = 'loadFin'
+                })
+                .catch(function (err){
+                    $scope.loadState = 'loadFail'
                 })
             }
         }]
@@ -162,62 +165,85 @@ angular.module('Oneline.maskDirectives', [])
         templateUrl: 'mask/notification/direct/twitter.html',
         controller: ['$scope', '$element', 'store', function ($scope, $element, store){
             var _provider = $element.attr('provider'),
-                _uid = store.get('profile_' + _provider).uid,
-                _notifications;
+                _authUid = store.get('profile_' + _provider).uid,
+                _notifications, _conversation, _currentSender;
 
             // Init
             $scope.notifications = []
             $scope.senderList = []
-            $scope._uid = _uid
+            $scope._authUid = _authUid
+            $scope.loadState = 'initLoad'
 
             _notifications = olNotification.initLoad(_provider, 'direct');
 
             if (_notifications && _notifications.length > 0){
                 $timeout(function (){
-                    updateDirect(_notifications)
-
-                    angular.element(document.querySelectorAll('[js-load-direct]'))
-                    .removeClass('loadMore__btn--loading')
-                    .parent().removeClass('loadMore--initLoad')
+                    updateDirect()
                 }, 700)
             } else {
-                olNotification.load()
+                olNotification.load(true)
                 .then(function (data){
-                    updateDirect(data)
+                    updateDirect()
+                })
+                .catch(function (err){
+                    $scope.loadState = 'loadFail'
                 })
             }
 
             $scope.loadDirect = function (type){
-                var loadMoreBtn = angular.element(
-                        document.querySelector('[js-load-direct="' + type + '"]')
-                    );
+                if ($scope.loadState === 'loading') return;
 
-                if (loadMoreBtn.hasClass('loadMore__btn--loading')) return;
+                $scope.loadState = 'loading'
 
-                olNotification.load(type, loadMoreBtn)
+                olNotification.load(false)
                 .then(function (data){
-                    updateDirect(data)
+                    updateDirect()
+                })
+                .catch(function (err){
+                    $scope.loadState = 'loadFail'
                 })
             }
 
             $scope.showDirect = function (senderId){
-                var senderBtn = angular.element(
-                    document.querySelector('[js-direct-sender="' + senderId + '"]')
-                );
-
-                // Enter
-                $scope.notifications = $filter('filter')(_notifications, function (value, index, array){
-                    return value.sender.uid === senderId || 
-                            (value.sender.uid === _uid && value.recipient.uid === senderId)
-                })
-                // UI
-                senderBtn.parent().children().removeClass('tips--active--peace')
-                senderBtn.addClass('tips--active--peace')
+                // 顯示與當前用戶的談話
+                if (_currentSender === senderId){
+                    showDirect(senderId)
+                } else {
+                    $scope.notifications = []
+                    $timeout(function (){
+                        showDirect(senderId)
+                    }, 350)
+                }
+                // 更新 `_currentSender`
+                _currentSender = senderId
             }
 
-            function updateDirect(data){
-                _notifications = data
-                $scope.senderList = olNotification.extractSenders(data, _uid)
+            function updateDirect(){
+                var cache = olNotification.extractDirect(_authUid)
+
+                if (cache[0].length > 0 && Object.keys(cache[1]).length > 0){
+                    $scope.senderList = cache[0]
+                    _conversation = cache[1]
+                    $scope.showDirect(_currentSender || $scope.senderList[0].uid)
+                }
+
+                $scope.loadState = 'loadFin'
+            }
+            function showDirect(senderId){
+                $scope.notifications = _conversation[senderId]
+
+                $timeout(function (){
+                    var senderBtn = angular.element(
+                        document.querySelector('[js-direct-sender="' + senderId + '"]')
+                    );
+
+                    // UI
+                    senderBtn.parent().children().removeClass('tips--active--peace')
+                    senderBtn.addClass('tips--active--peace')
+                    // Scroll to Bottom
+                    var msgElem = document.querySelector('.mask__notification');
+                    msgElem.scrollTop = msgElem.scrollHeight
+                })
             }
         }]
     }

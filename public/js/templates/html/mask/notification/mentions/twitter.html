@@ -1,13 +1,7 @@
-<div class="loadMore loadMore--initLoad">
-    <button ng-click="loadMentions('min')" class="loadMore__btn loadMore__btn--twitter loadMore__btn--loading loadMore__btn--new animate--faster" type="button" js-load-mentions="min">
+<div class="loadMore" ng-class="{'loadMore--initLoad': loadState === 'initLoad'}">
+    <button ng-click="loadMentions('new')" class="loadMore__btn loadMore__btn--twitter loadMore__btn--new animate--faster" ng-class="{'loadMore__btn--loading': loadState !== 'loadFin', 'loadMore__btn--loading--fail': loadState === 'loadFail'}" type="button">
         <load-more-icon></load-more-icon>
     </button>
-</div>
-
-<div ng-if="loadState === 'loadFin' && notifications.length === 0" class="mask__empty icon--inactive">
-    <svg viewBox="0 0 26 26">
-        <use xlink:href="/public/img/icon-sprites.svg#mentions"></use>
-    </svg>
 </div>
 
 <div ng-if="notifications.length > 0" class="timeline profile mask__notification overflow--y">
@@ -74,10 +68,4 @@
         </div>
 
     </div>
-</div>
-
-<div class="loadMore">
-    <button ng-if="notifications.length > 10" ng-click="loadMentions('max')" class="loadMore__btn loadMore__btn--twitter loadMore__btn--old animate--faster" type="button" js-load-mentions="max">
-        <load-more-icon></load-more-icon>
-    </button>    
 </div>
