@@ -254,6 +254,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                     weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
                 };
 
+            scope.isLeftPopup = false
             scope.isShowMentions = false
             scope.mentionsList = _mentionsList
             scope.item = {
@@ -361,6 +362,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                     , 100);
 
                     if (filterMentionsList.length > 0){
+                        scope.isLeftPopup = olWrite.isLeftPopup()
                         scope.isShowMentions = true
                         scope.mentionsList = filterMentionsList
                     } else {
@@ -578,7 +580,7 @@ angular.module('Oneline.controlCenterDirectives', [])
 
                     media_ids.splice(index, 1)
                     media_ids.length <= 0
-                        ? elem.removeData('media_ids')
+                        ? uploadBtn.removeData('media_ids')
                     : uploadBtn.data('media_ids', media_ids)
 
                     previewItem.remove()
@@ -640,13 +642,17 @@ angular.module('Oneline.controlCenterDirectives', [])
 .directive('weiboEmotions', ['olWrite', function (olWrite){
     return {
         restrict: 'E',
-        scope: {},
         templateUrl: 'controlCenter/write/component/weiboEmotions.html',
         controller: ['$scope', function($scope){
+            $scope.isLeftPopup = false
+            $scope.isShowEmotions = false
+            $scope.emotionsList = []
+
             $scope.insertEmotion = function (emotion){
                 emotion = '[' + emotion + ']'
 
                 olWrite.insertText(emotion)
+                $scope.isLeftPopup = olWrite.isLeftPopup()
             }
         }],
         link: function (scope, elem, attrs){
@@ -657,15 +663,16 @@ angular.module('Oneline.controlCenterDirectives', [])
                                 +'汗|困|睡|钱|失望|酷|色|哼|鼓掌|晕|悲伤|抓狂|黑线|阴险|怒骂|互粉|'
                                 +'心|伤心|猪头|熊猫|兔子|ok|耶|good|NO|赞|来|'
                                 +'弱|草泥马|给力|围观|威武|奥特曼|礼物|钟|话筒|蜡烛|蛋糕|'
-                                + '带着微博去旅行|最右|泪流满面|江南style|去旅行|doge|喵喵';
+                                + '带着微博去旅行|最右|泪流满面|江南style|去旅行|doge|喵喵|'
+                                + '哆啦A梦花心|哆啦A梦害怕|哆啦A梦吃惊|静香微笑|大雄微笑|胖虎微笑|小夫微笑';
 
-            scope.isShowEmotions = false
             scope.emotionsList = emotionsList.split('|')
 
             emotionsElem
             .on('click', function (){
                 emotionsElem.toggleClass('tips--active--peace')
                 scope.$apply(function (){
+                    scope.isLeftPopup = olWrite.isLeftPopup()
                     scope.isShowEmotions = !scope.isShowEmotions
                 })
 

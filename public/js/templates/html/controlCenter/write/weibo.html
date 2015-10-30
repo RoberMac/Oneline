@@ -1,6 +1,7 @@
-<form name="newTweetForm" write>
+<form name="newTweetForm" write class="write__form">
 
     <textarea class="write__textarea animate--general" type="text" name="tweet" autocomplete="off" spellcheck="false" required></textarea>
+    <div class="write__textarea write__textarea--mirror"><span></span></div>
 
     <div class="write__toolBar">
         <!-- left -->
@@ -16,8 +17,12 @@
 
     <div class="write__previews"></div>
 </form>
-<div ng-if="isShowMentions" class="write__mentions overflow--x animate--faster" disable-back>
+<div ng-if="isShowMentions" class="write__mentions write__popup overflow--y animate--faster" ng-class="{'write__popup--left': isLeftPopup, 'write__popup--right': !isLeftPopup}">
     <button ng-repeat="mention in mentionsList" ng-click="insertMention(mention, 'weibo')" ng-bind="mention"></button>
+</div>
+<div ng-if="isShowEmotions" class="write__emotions write__popup overflow--y animate--faster" ng-class="{'write__popup--left': isLeftPopup, 'write__popup--right': !isLeftPopup}">
+    <button ng-repeat="emotion in ::emotionsList" type="button" ng-click="insertEmotion(emotion)" weibo-emotify ng-bind="::'[' + emotion + ']'">
+    </button>
 </div>
 <div class="switch-icon">
     <button ng-if="::controlCenter.indexOf('write_weibo-reply') >= 0" ng-click="setControlCenter('', 'read_weibo-reply:' + controlCenter.split(':')[1])" class="icon--weibo animate--faster tips" type="button">

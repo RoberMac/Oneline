@@ -117,7 +117,20 @@ angular.module('Oneline.controlCenterServices', [])
             statusElem.value = ''
         }
     }
+    this.isLeftPopup = function (){
+        var statusElem = document.querySelector('textarea'),
+            mirror = document.querySelector('.write__textarea span'),
+            _start = statusElem.selectionStart,
+            _width = statusElem.offsetWidth - 10;
 
+        mirror.innerHTML = statusElem.value.substr(0, _start).replace(/\n$/,"\n\001")
+
+        var _rects = mirror.getClientRects(),
+            _lastRect = _rects[_rects.length - 1],
+            _left = _lastRect.width;
+
+        return _left > _width / 2;
+    }
     function extractSource (type, _id, _type, _provider){
         var __sourceElem = document.querySelector('[data-id="' + _id + '"]'),
             index = _type === 'quote' ? 1 : 0,

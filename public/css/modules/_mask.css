@@ -29,6 +29,7 @@
 
 .profile {
     padding: 7px 0;
+    margin: 36px 7px 0 7px;
 
     &__avatar {
         top: -31px;

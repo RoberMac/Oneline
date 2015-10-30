@@ -154,7 +154,19 @@ module.exports = {
 
                         extend(tOpts, _mentionsIdObj)
                     }
+                    break;
+                case 'user_timeline':
+                    action_str = 'statuses/user_timeline'
 
+                    extend(tOpts, {
+                        user_id: opts.id.split(':')[0],
+                        max_id: opts.id.split(':')[1],
+                        count: 20,
+                        trim_user: false,
+                        exclude_replies: false,
+                        contributor_details: false,
+                        include_rts: true
+                    })
                     break;
                 default:
                     throw { statusCode: 404 };
@@ -169,6 +181,7 @@ module.exports = {
                         case 'retweet':
                         case 'reply':
                         case 'mentions':
+                        case 'user_timeline':
                             _data = data[0]
                             break;
                         case 'follow':
@@ -276,7 +289,7 @@ module.exports = {
                 return { data: data }
             })
         } else {
-            var q_ig;
+            var q_ig, iOpts = {};
 
             switch (action){
                 case 'like':
@@ -285,15 +298,26 @@ module.exports = {
                 case 'reply':
                     q_ig = Q.nbind(Ig.comments, Ig);
                     break;
+                case 'user_timeline':
+                    q_ig = Q.nbind(Ig.user_media_recent, Ig);
+                    break;
                 default:
                     throw { statusCode: 404 };
                     break;
             }
 
-            return q_ig(opts.id)
-            .then(function (data){
-                return { data: actionsFilter.instagram[action](data[0].slice(0, 100)) }
-            })
+
+            if (action === 'user_timeline'){
+                return q_ig(opts.id.split(':')[0], { max_id: opts.id.split(':')[1] })
+                .then(function (data){
+                    return { data: timelineFilter.instagram(data[0]) }
+                })
+            } else {
+                return q_ig(opts.id)
+                .then(function (data){
+                    return { data: actionsFilter.instagram[action](data[0].slice(0, 100)) }
+                })
+            }
         }
     }
 }

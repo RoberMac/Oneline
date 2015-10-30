@@ -275,7 +275,7 @@
     size: 70px;
     overflow: hidden;
 
-    &:first-child {
+    &--new {
         top: 0;
         z-index: 3;
 
@@ -290,7 +290,7 @@
             }
         }
     }
-    &:last-child {
+    &--old{
         bottom: auto;
         z-index: 2;
 
@@ -309,10 +309,10 @@
     &--initLoad {
         position: absolute calc(50% - 35px) * * !important;
 
-        &:first-child .loadMore__btn {
+        &.loadMore--new .loadMore__btn {
             top: 11px !important;
         }
-        &:last-child .loadMore__btn {
+        &.loadMore--old .loadMore__btn {
             bottom: -11px !important;
         }
     }

@@ -32,6 +32,7 @@ var filter = {
                 protected: data.protected
             }
         },
+        user_timeline: timelineFilter.twitter,
         follow: function (data){
             var cache = [];
 

@@ -1,6 +1,7 @@
-<form name="newTweetForm" write>
+<form name="newTweetForm" write class="write__form">
 
     <textarea class="write__textarea animate--general" type="text" name="tweet" autocomplete="off" spellcheck="false" required></textarea>
+    <div class="write__textarea write__textarea--mirror"><span></span></div>
 
     <div class="write__toolBar">
         <!-- left -->
@@ -22,7 +23,7 @@
         </span>
     </div>
 </form>
-<div ng-if="isShowMentions" class="write__mentions overflow--x animate--faster" disable-back>
+<div ng-if="isShowMentions" class="write__mentions write__popup overflow--y animate--faster" ng-class="{'write__popup--left': isLeftPopup, 'write__popup--right': !isLeftPopup}">
     <button ng-repeat="mention in mentionsList" ng-click="insertMention(mention.s, 'twitter')" ng-bind="mention.u || mention.s"></button>
 </div>
 <div class="switch-icon">

@@ -1,4 +1,32 @@
 angular.module('Oneline.maskServices', [])
+.service('olUserProfile', ['$q', 'Action', function($q, Action){
+
+    this.loadOldPosts = function (_provider, _uid){
+        var defer = $q.defer()
+
+        var timeline = document.querySelectorAll('.profile .timeline'),
+            _min_id  = angular.element(timeline[timeline.length - 1]).attr('data-id');
+
+        Action.get({
+            action: 'user_timeline',
+            provider: _provider,
+            id: _uid + ':' + _min_id
+        })
+        .$promise
+        .then(function (res){
+            if (_provider === 'twitter'){
+                res.data.data.splice(0, 1)
+            }
+
+            defer.resolve(res.data.data)
+        })
+        .catch(function (err){
+            defer.reject(err)
+        })
+
+        return defer.promise;
+    }
+}])
 .service('olNotification', ['$q', '$filter', 'store', 'Action', 
     function($q, $filter, store, Action){
 
