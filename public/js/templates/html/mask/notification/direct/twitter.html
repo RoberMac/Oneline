@@ -7,6 +7,15 @@
 <div ng-if="notifications.length > 0" class="timeline profile mask__notification overflow--y animate--faster">
     <div class="timeline--twitter profile--twitter">
 
+        <div class="mask__source">
+            <a href="https://twitter.com/messages" target="_blank">
+                <svg viewBox="0 0 28 23">
+                   <use xlink:href="/public/img/icon-sprites.svg#direct_msg"></use>
+                </svg>
+            </a>
+        </div>
+
+        <!-- Timeline -->
         <div class="timeline mask__msg" ng-repeat="item in notifications track by item.id_str" ng-class="::item.sender.uid === _authUid ? 'mask__msg--me' : 'mask__msg--others'">
 
             <div class="mask__msg__content">

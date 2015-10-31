@@ -115,9 +115,7 @@ var filter = {
                 link: item.link
             }
 
-            if (item.type === 'image'){
-
-            } else if (item.type === 'video'){
+            if (item.type === 'video'){
                 extend(igPost, {
                     videos: {
                         low_resolution: item.videos.low_resolution.url,
@@ -125,6 +123,13 @@ var filter = {
                     }
                 })
             }
+
+            if (item.users_in_photo.length > 0){
+                extend(igPost, {
+                    users_in_photo: item.users_in_photo,
+                })
+            }
+
             cache.push(igPost)
         })
 

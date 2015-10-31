@@ -302,7 +302,7 @@
         }
         &__time {
             position: absolute * 1px 1px *;
-            font-size: 9px;
+            font-size: var(--font-size-xx-small);
             color: #89A;
             cursor: pointer;
         }

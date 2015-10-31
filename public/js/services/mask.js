@@ -10,14 +10,11 @@ angular.module('Oneline.maskServices', [])
         Action.get({
             action: 'user_timeline',
             provider: _provider,
-            id: _uid + ':' + _min_id
+            id: _uid,
+            max_id: _min_id
         })
         .$promise
         .then(function (res){
-            if (_provider === 'twitter'){
-                res.data.data.splice(0, 1)
-            }
-
             defer.resolve(res.data.data)
         })
         .catch(function (err){
@@ -52,7 +49,8 @@ angular.module('Oneline.maskServices', [])
         Action.get({
             action: _action,
             provider: _provider,
-            id: isInitLoad || !_max_id ? 0 : 'minId-' + _max_id
+            id: 0,
+            min_id: isInitLoad ? null : _max_id
         })
         .$promise
         .then(function (res){

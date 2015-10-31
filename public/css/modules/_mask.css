@@ -145,7 +145,7 @@
     &__notification {
         position: relative 70px * *;
         margin: 0 7px 0;
-        padding: 7px 3px;
+        padding: 17px 3px 7px 3px;
         height: calc(93vh - 140px - 48px);
 
         .timeline__content {
@@ -163,9 +163,10 @@
         position: absolute 3px 3px * *;
         text-align: center;
         user-select: none;
+        z-index: 2;
 
         svg {
-            size: 1em;
+            width: 1.4em;
         }
     }
     &__msg {
@@ -223,7 +224,7 @@
             position: absolute;
             bottom: -3px;
             color: #89a;
-            font-size: 9px;
+            font-size: var(--font-size-xx-small);
             cursor: pointer;
         }
     }

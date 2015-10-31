@@ -16,7 +16,7 @@ angular.module('Oneline.timelineServices', [])
         var _this = this;
 
         Timeline
-        .initLoad()
+        .get()
         .$promise
         .then(function (posts){
             if (!posts || (posts.data && posts.data.length < 1)){
@@ -62,8 +62,7 @@ angular.module('Oneline.timelineServices', [])
      */
     // 獲取最「新／舊貼文」的 max_id / min_id
     this.getId = function (typeOfPosts, providerList){
-        var id_str1, id_str2,
-            posts = timelineCache.get(typeOfPosts);
+        var id_str1, id_str2;
 
         var str = ''
 
@@ -76,16 +75,15 @@ angular.module('Oneline.timelineServices', [])
         }
 
         providerList.forEach(function (provider, index){
-            var oldPosts = timelineCache.get('oldPosts'),
-                id_s = provider
+            var id_s = provider
                     + id_str1
                     + timelineCache.get(provider + id_str2)
-                    + (index === providerList.length - 1 ? '' : ',')
+                    + (index === providerList.length - 1 ? '' : ',');
 
             str += id_s
         })
 
-        return str
+        return str;
     }
     // 保存「新／舊貼文」
     this.storePosts = function (typeOfPosts, posts, providerList){
@@ -168,21 +166,16 @@ angular.module('Oneline.timelineServices', [])
             var max_id_str = _this.getId('oldPosts', invalidList);
 
             Timeline
-            .load({ id: max_id_str, count: 100 })
+            .get({ id: max_id_str })
             .$promise
             .then(function (oldPosts){
-                if (!oldPosts || (oldPosts.data && oldPosts.data.length < 1)){
+                if (!oldPosts || !oldPosts.data || (oldPosts.data && oldPosts.data.length < 1)){
                     defer.reject({ status: 304 })
-                    return;
-                }
+                } else {
+                    _this.storePosts('oldPosts', oldPosts, providerList)
 
-                // 過濾 Twitter 返回的「舊貼文」中包含 max_id 貼文
-                if (oldPosts.min_date.twitter){
-                    oldPosts.data.splice(0, 1)
+                    defer.resolve()
                 }
-                _this.storePosts('oldPosts', oldPosts, providerList)
-
-                defer.resolve()
             })
             .catch(function (err){
                 defer.reject(err)
@@ -190,30 +183,8 @@ angular.module('Oneline.timelineServices', [])
 
             return defer.promise;
         }
-        function isLoadFin(){
-            var defer = $q.defer()
-
-            _this.checkOldPosts(providerList)
-            .then(function (invalidList){
-                if (invalidList.length > 0){
-                    fetchPosts(invalidList)
-                    .then(isLoadFin)
-                    .then(function (){
-                        defer.resolve()
-                    })
-                    .catch(function (err){
-                        defer.reject(err)
-                    })
-                } else {
-                    defer.resolve()
-                }
-            })
-
-            return defer.promise;
-        }
 
         fetchPosts(invalidList)
-        .then(isLoadFin)
         .then(function (){
             defer.resolve()
         })
@@ -229,10 +200,7 @@ angular.module('Oneline.timelineServices', [])
             _this = this;
 
         Timeline
-        .load({
-            id: _this.getId('newPosts', providerList),
-            count: 100
-        })
+        .get({ id: _this.getId('newPosts', providerList) })
         .$promise
         .then(function (newPosts){
             if (newPosts.data && newPosts.data.length > 0){
@@ -260,7 +228,6 @@ angular.module('Oneline.timelineServices', [])
         time_pointer = now - TIME_RANGE
 
         this.updateOldPostsCount(providerList)
-        console.time('filter')
         return timelineData.filter(function (item){
             return now - item.created_at < TIME_RANGE
         })
@@ -311,13 +278,13 @@ angular.module('Oneline.timelineServices', [])
                 break;
             case 429:
                 var _safeTime = err.data.reset * 1000,
-                    safeTime  = new Date(_safeTime).toLocaleTimeString('en-GB').substring(0, 5);
+                    safeTime  = new Date(_safeTime).toLocaleTimeString('en-GB').substring(0, 5),
+                    typeOfPosts = step === 1 ? 'newPosts' : 'oldPosts';
 
                 olUI.setLoading('fail', step)
-                olUI.setPostsCount('newPosts', safeTime)
-                console.log(_safeTime, _safeTime - Date.now())
+                olUI.setPostsCount(typeOfPosts, safeTime)
                 setTimeout(function (){
-                    olUI.setPostsCount('newPosts', '⟳')
+                    olUI.setPostsCount(typeOfPosts, '⟳')
                 }, _safeTime - Date.now())
                 break;
             default:

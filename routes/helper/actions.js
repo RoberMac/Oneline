@@ -43,14 +43,10 @@ module.exports = {
                     _action_str2 = 'direct_messages/sent'
                     _tOpts1 = _tOpts2 = { count: 200, include_entities: true }
 
-                    if (opts.id !== '0'){
-                        var _directId = opts.id.split('-')[1],
-                            _directIdObj = opts.id.indexOf('max') >= 0
-                                                ? { max_id: _directId }
-                                            : { since_id: _directId };
+                    if (opts.query.min_id){
 
-                        extend(_tOpts1, _directIdObj)
-                        extend(_tOpts2, _directIdObj)
+                        extend(_tOpts1, { since_id: opts.query.min_id })
+                        extend(_tOpts2, { since_id: opts.query.min_id })
                     }
                     break;
             }
@@ -146,21 +142,16 @@ module.exports = {
                         contributor_details: false
                     })
 
-                    if (opts.id !== '0'){
-                        var _mentionsId = opts.id.split('-')[1],
-                            _mentionsIdObj = opts.id.indexOf('max') >= 0
-                                                ? { max_id: _mentionsId }
-                                            : { since_id: _mentionsId };
-
-                        extend(tOpts, _mentionsIdObj)
+                    if (opts.query.min_id){
+                        extend(tOpts, { since_id: opts.query.min_id })
                     }
                     break;
-                case 'user_timeline':
+                case 'user_timeline': // not support `since_id`
                     action_str = 'statuses/user_timeline'
 
                     extend(tOpts, {
-                        user_id: opts.id.split(':')[0],
-                        max_id: opts.id.split(':')[1],
+                        user_id: opts.id,
+                        max_id: opts.query.max_id,
                         count: 20,
                         trim_user: false,
                         exclude_replies: false,
@@ -181,7 +172,10 @@ module.exports = {
                         case 'retweet':
                         case 'reply':
                         case 'mentions':
+                            _data = data[0]
+                            break;
                         case 'user_timeline':
+                            data[0].splice(0, 1)
                             _data = data[0]
                             break;
                         case 'follow':
@@ -298,7 +292,7 @@ module.exports = {
                 case 'reply':
                     q_ig = Q.nbind(Ig.comments, Ig);
                     break;
-                case 'user_timeline':
+                case 'user_timeline': // not support `min_id`
                     q_ig = Q.nbind(Ig.user_media_recent, Ig);
                     break;
                 default:
@@ -308,7 +302,7 @@ module.exports = {
 
 
             if (action === 'user_timeline'){
-                return q_ig(opts.id.split(':')[0], { max_id: opts.id.split(':')[1] })
+                return q_ig(opts.id, { max_id: opts.query.max_id })
                 .then(function (data){
                     return { data: timelineFilter.instagram(data[0]) }
                 })

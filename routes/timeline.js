@@ -4,68 +4,20 @@ var router = require('express').Router(),
     feed   = require('./helper/timeline');
 
 
-// Handing `id` Params
-router.param('id', function (req, res, next, id){
-    var olIdObj   = {},
-        arrayOfId = id.split(',');
-
-    arrayOfId.forEach(function (id_str){
-        var key   = id_str.split('-')[0],
-            value = id_str.split('-')[1];
-
-        olIdObj[key] = value
-    })
-
-    req.olId = olIdObj
-
-    next()
-})
-// Handing `count` Params
-router.param('count', function (req, res, next, count){
-
-    req.olCount = count
-
-    next()
-})
-
-// Init Load
 router.get('/', function (req, res, next){
+    // Init
+    var olIdObj   = {};
 
-    Q.all([
-        q_userFindOne({id: 'twitter' + req.olPassports.twitter}),
-        q_userFindOne({id: 'instagram' + req.olPassports.instagram}),
-        q_userFindOne({id: 'weibo' + req.olPassports.weibo})
-    ])
-    .then(function (providerList){
-        var feedPromises = [],
-            _providerList = providerList.filter(function (provider){
-                return !!provider
-            })
+    if (req.query.id){
+        req.query.id.split(',').forEach(function (id_str){
+            var key   = id_str.split('-')[0],
+                value = id_str.split('-')[1];
 
-        if (_providerList.length < Object.keys(req.olPassports).length){
-            throw { statusCode: 401, invalidToken: ['twitter', 'instagram', 'weibo']}
-        }
-
-        providerList.forEach(function (userInfo, index){
-            if (!userInfo) return;
-
-            feedPromises[index] = feed[userInfo['provider']]({
-                token      : userInfo['token'],
-                tokenSecret: userInfo['tokenSecret']
-            })
+            olIdObj[key] = value
         })
+    }
 
-        return Q.all(feedPromises)
-    })
-    .then(handleData(req, res, next))
-    .fail(function (err){
-        next(err)
-    })
-})
-
-// Load More
-router.get('/:id/:count', function (req, res, next){
-
+    // Fire
     Q.all([
         q_userFindOne({id: 'twitter' + req.olPassports.twitter}),
         q_userFindOne({id: 'instagram' + req.olPassports.instagram}),
@@ -84,30 +36,28 @@ router.get('/:id/:count', function (req, res, next){
         providerList.forEach(function (userInfo, index){
             if (!userInfo) return;
 
-            var min_id = req.olId[userInfo['provider'] + '_minId'],
-                max_id = req.olId[userInfo['provider'] + '_maxId'];
+            var min_id = olIdObj[userInfo['provider'] + '_minId'],
+                max_id = olIdObj[userInfo['provider'] + '_maxId'];
 
-            if (!userInfo || !(min_id || max_id)) return;
-
-            feedPromises[index] = feed[userInfo['provider']]({
+            var opts = {
                 token      : userInfo['token'],
                 tokenSecret: userInfo['tokenSecret'],
-                since_id   : min_id,
                 min_id     : min_id,
-                max_id     : max_id,
-                count      : req.olCount
-            })
+                max_id     : max_id
+            }
+
+            feedPromises[index] = feed[userInfo['provider']](opts)
         })
 
         return Q.all(feedPromises)
     })
-    .then(handleData(req, res, next))
+    .then(handleData(res))
     .fail(function (err){
         next(err)
     })
 })
 
-function handleData(req, res, next){
+function handleData(res){
     return function (dataList){
         var providerList = ['twitter', 'instagram', 'weibo'],
             combineData = {

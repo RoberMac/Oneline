@@ -16,15 +16,18 @@ module.exports = {
             count: opts.count || 100
         };
 
-        if (opts.since_id){
-            tOpts.since_id = opts.since_id
+        if (opts.min_id){
+            tOpts.since_id = opts.min_id
         } else if (opts.max_id) {
             tOpts.max_id = opts.max_id
         }
 
         return q_twit_get('statuses/home_timeline', tOpts)
         .then(function (data){
-            return data
+            if (opts.max_id){
+                data[0].splice(0, 1)
+            }
+            return data;
         }, function (err){
             if (err.statusCode === 429){
                 return q_twit_get('application/rate_limit_status', { resources: ['statuses'] })
@@ -46,7 +49,7 @@ module.exports = {
         var q_ig_timeline   = Q.nbind(Ig.user_self_feed, Ig);
 
         var iOpts = {
-            count: opts.count || 20
+            count: opts.count || 100
         };
 
         if (opts.min_id){
@@ -63,8 +66,8 @@ module.exports = {
             count: opts.count || 100
         };
 
-        if (opts.since_id){
-            wOpts.since_id = opts.since_id
+        if (opts.min_id){
+            wOpts.since_id = opts.min_id
         } else if (opts.max_id) {
             wOpts.max_id = opts.max_id
         }
@@ -73,6 +76,12 @@ module.exports = {
             method: 'get',
             endpoint: 'statuses/home_timeline',
             opts: wOpts
+        })
+        .then(function (data){
+            if (opts.max_id){
+                data['statuses'].splice(0, 1)
+            }
+            return data;
         })
     }
 }

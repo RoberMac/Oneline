@@ -118,11 +118,48 @@
         &--loading {
             animation: imgLoadAnimate 1.7s infinite linear;
         }
-        &__jumpButton {
-            position: absolute 3px 3px * *;
+        &__icon {
+            position: absolute;
             size: 17px;
-            cursor: pointer;
             z-index: 3;
+
+            svg {
+                height: 17px;
+            }
+
+            &--origin {
+                top: 3px;
+                right: 3px;
+            }
+            &--users {
+                bottom: 3px;
+                left: 3px;
+            }
+        }
+        &__user_tag {
+            position: absolute;
+            display: none;
+            transform-origin: top;
+
+            &--pointer {
+                position: absolute -6px * * calc(50% - 7px);
+                border-color: transparent transparent var(--color-instagram) transparent;
+                border-style: solid;
+                border-width: 0 7px 14px 7px;
+            }
+            &--content {
+                img {
+                    display: inline-block;
+                    padding: 3px;
+                    size: 32px;
+                    max-height: 32px;
+                    max-width: 32px;
+                    color: var(--color-white);
+                    background: var(--color-instagram) !important;
+                    font-size: var(--font-size-small);
+                    border-radius: 50%;
+                }
+            }
         }
         &__playButton {
             position: absolute 0 * * 0;
@@ -375,7 +412,7 @@
 
                 circle {
                     animation: none !important;
-                    fill: var(--color-gray);
+                    fill: none;
                 }
             }
         }

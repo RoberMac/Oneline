@@ -3,8 +3,9 @@
 </div>
 <div class="timeline__media timeline__media--hide" select-image image-count="{{:: item.media.length}}">
     <img src="" alt="weibo_large_photo" handle-image-error>
-    <a href="" target="_blank" class="icon--weibo" ng-click="$event.stopPropagation()">
-        <svg class="timeline__media__jumpButton tips--deep animate--faster" viewBox="0 0 100 100">
+
+    <a href="" target="_blank" class="timeline__media__icon timeline__media__icon--origin icon--weibo tips--deep animate--faster" ng-click="$event.stopPropagation()">
+        <svg viewBox="0 0 100 100">
             <use xlink:href="/public/img/icon-sprites.svg#eyeball"></use>
         </svg>
     </a>

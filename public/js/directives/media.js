@@ -159,5 +159,87 @@ angular.module('Oneline.mediaDirectives', [])
         }
     }
 })
+.directive('usersInPhoto', function (){
+    return {
+        restrict: 'A',
+        scope: {
+            usersInPhoto: '='
+        },
+        link: function (scope, elem, attrs){
+            var usersInPhoto = scope.usersInPhoto;
 
+            elem
+            .on('click', function (){
+                var userTag = elem.parent().find('span'),
+                    mediaElem = elem.parent().parent()[0];
+
+                if (elem.hasClass('tips--active--peace')){
+                    elem.removeClass('tips--active--peace')
+                    userTag.parent().css('display', 'none')
+                } else {
+                    elem.addClass('tips--active--peace')
+
+                    usersInPhoto.forEach(function (user, index){
+                        var _elem = angular.element(userTag[index]),
+                            _w = mediaElem.offsetWidth,
+                            _h = mediaElem.offsetHeight,
+                            _x = user.position.x,
+                            _y = user.position.y,
+                            _deg = calcDegree(_x, _y, _w, _h);
+
+                        _elem.children().css({
+                            transform: 'rotate(' + ( - _deg ) + 'deg)'
+                        })
+
+                        _elem.parent().css({
+                            display: 'inline-block',
+                            top: _y * 100 + '%',
+                            left: 'calc(' + _x * 100 + '% - 16px)',
+                            transform: 'rotate(' + _deg + 'deg)'
+                        })
+                    })
+                }
+            })
+            .on('$destroy', function (){
+                elem.off()
+            })
+
+            function calcDegree(_x, _y, _w, _h){
+                var __w, __h, _deg;
+
+                if (_x > 0.5){
+                    __w = (1 - _x) * _w
+                    // 右下
+                    if (_y > 0.5){
+                        __h = (1 - _y) * _h
+                        _deg = ratio2deg(__h / __w) + 90
+                    }
+                    // 右上
+                    else {
+                        __h = _y * _h
+                        _deg = ratio2deg(__w / __h)
+                    }
+                }
+                else {
+                    __w = _x * _w
+                    // 左下
+                    if (_y > 0.5){
+                        __h = (1 - _y) * _h
+                        _deg = ratio2deg(__w / __h) + 180
+                    }
+                    // 左上
+                    else {
+                        __h = _y * _h
+                        _deg = - ratio2deg(__h / __w)
+                    }
+                }
+
+                return _deg;
+            }
+            function ratio2deg(_ratio){
+                return Math.atan(_ratio) * 180 / Math.PI;
+            }
+        }
+    }
+})
 

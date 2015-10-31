@@ -26,11 +26,14 @@ angular.module('Oneline.UIServices', [])
         );
 
         if (type === 'start'){
-            loadingElem.removeClass('loadMore__btn--loading--fail')
-            loadingElem.addClass('loadMore__btn--loading')
+            loadingElem
+            .removeClass('loadMore__btn--loading--fail')
+            .addClass('loadMore__btn--loading')
         } else if (type === 'done') {
-            loadingElem.removeClass('loadMore__btn--loading loadMore__btn--loading--fail')
-            .parent().removeClass('loadMore--initLoad')
+            loadingElem
+            .removeClass('loadMore__btn--loading loadMore__btn--loading--fail')
+            .parent()
+            .removeClass('loadMore--initLoad')
         } else if (type === 'fail'){
             loadingElem.addClass('loadMore__btn--loading loadMore__btn--loading--fail')
         }

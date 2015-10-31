@@ -34,7 +34,8 @@ router.all('/:action/:provider/:id', function (req, res, next){
             tokenSecret: found.tokenSecret,
             id         : req.olId,
             params     : req.body.params,
-            method     : req.method.toLowerCase()
+            method     : req.method.toLowerCase(),
+            query      : req.query
 
         })
     })

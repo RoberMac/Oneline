@@ -1,11 +1,8 @@
 angular.module('Oneline.RESTfulServices', [])
 .factory('Timeline', ['$resource', function($resource){
 
-    return $resource('/timeline/:id/:count', null, {
-        initLoad: {
-            method: 'GET'
-        },
-        load: {
+    return $resource('/timeline', null, {
+        get: {
             method : 'GET'
         }
     })
