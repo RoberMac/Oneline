@@ -39,6 +39,8 @@ router.get('/', function (req, res, next){
             var min_id = olIdObj[userInfo['provider'] + '_minId'],
                 max_id = olIdObj[userInfo['provider'] + '_maxId'];
 
+            if (Object.keys(olIdObj).length > 0 && !(min_id || max_id)) return;
+
             var opts = {
                 token      : userInfo['token'],
                 tokenSecret: userInfo['tokenSecret'],
