@@ -12,7 +12,7 @@
         position: absolute;
         size: 100% 100%;
 
-        &--userProfile, &--replicant {
+        &--fullmask, &--replicant {
             height: 100%;
         }
         &--write {
@@ -117,6 +117,30 @@
 }
 
 .mask {
+    &__menu {
+        &--row {
+            position: absolute;
+            left: calc(50% - 35px);
+
+            &--1 {
+                top: calc(50% - 35px);
+            }
+            &--2 {
+                &:first-child {
+                    top: calc(33.3% - 35px);
+                }
+                &:last-child {
+                    top: calc(66.7% - 35px);
+                }
+            }
+            &--3 {
+
+            }
+        }
+        &__button {
+            size: 70px;
+        }
+    }
     &__timeline {
         padding: 10px 10px 0px 10px;
         margin: 17px;

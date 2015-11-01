@@ -35,7 +35,7 @@ angular.module('Oneline.rootControllers', [])
         $timeout(function (){
             var cancelMask = angular.element(document.querySelector('.cancelMask__wrapper')),
                 controlCenter = angular.element(document.querySelector('.controlCenter')),
-                type = state.match(/replicant|read|write|notification|userProfile/);
+                type = state.match(/replicant|read|write|notification/);
 
             if (type){
                 cancelMask.addClass('cancelMask__wrapper--' + type[0])
@@ -47,7 +47,7 @@ angular.module('Oneline.rootControllers', [])
         })
 
         function typeStr(prefix){
-            var typeList = ['replicant', 'read', 'write', 'notification', 'userProfile'];
+            var typeList = ['replicant', 'read', 'write', 'notification'];
 
             return typeList.map(function (i){return prefix + i }).join(' ')
         }
@@ -61,11 +61,7 @@ angular.module('Oneline.rootControllers', [])
 
             currentState === 'settings'
                 ? $state.go('timeline')
-            : $scope.providerList.indexOf('twitter') >= 0
-                ? $scope.setControlCenter('write_twitter-tweet')
-            : $scope.providerList.indexOf('weibo') >= 0
-                ? $scope.setControlCenter('write_weibo-tweet')
-            : null
+            : angular.element(document.querySelector('[js-show-menu]')).triggerHandler('click')
         }
         // L -> R
         else {

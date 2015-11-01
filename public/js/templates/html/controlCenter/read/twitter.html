@@ -7,7 +7,7 @@
     </div>
 
     <div ng-if="readType === 'retweet'" class="read__like">
-        <button ng-repeat="item in ::readItems" class="read__like__avatar timeline__media--inactive" type="button" user-profile="::item" provider="twitter" from="controlCenter">
+        <button ng-repeat="item in ::readItems" class="read__like__avatar timeline__media--inactive" type="button" user-profile="twitter:controlCenter" ng-init="::_profile = item">
             <img ng-src="{{::item.avatar}}">
         </button>
 
@@ -20,7 +20,7 @@
 
     <ul ng-if="readType === 'reply'" class="read__reply">
         <li ng-repeat="item in ::readItems | orderBy: '- created_at'" class="vertically_center">
-            <button class="read__reply__avatar timeline__media--inactive" type="button" user-profile="::item" provider="twitter" from="controlCenter">
+            <button class="read__reply__avatar timeline__media--inactive" type="button" user-profile="twitter:controlCenter" ng-init="::_profile = item">
                 <img ng-src="{{::item.avatar}}">
             </button>
             <div class="read__reply__text">

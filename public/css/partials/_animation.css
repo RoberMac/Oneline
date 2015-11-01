@@ -32,6 +32,14 @@
         opacity: .3;
     }
 }
+@keyframes usersInPhotoAnimate {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 @keyframes errFormAnimate {
     0%, 100% {
         background-color: var(--color-white);

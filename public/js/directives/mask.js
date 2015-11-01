@@ -1,38 +1,59 @@
 angular.module('Oneline.maskDirectives', [])
 /**
+ * 菜單
+ *
+ */
+.directive('showMenu', ['olMask', function (olMask){
+    return {
+        restrict: 'A',
+        link: function (scope, elem, attrs){
+            elem
+            .on('click', function (){
+                var _provider = attrs.showMenu;
+
+                scope.setControlCenter('fullmask')
+                olMask.append('mask/menu/' + _provider + '.html', scope)
+            })
+            .on('$destroy', function (){
+                elem.off()
+            })
+        }
+    }
+}])
+/**
  * 查看用戶信息
  *
  */
-.directive('userProfile', ['$timeout', '$compile', '$templateRequest', 'Action', 'store', 'olUserProfile',
-    function($timeout, $compile, $templateRequest, Action, store, olUserProfile){
+.directive('userProfile', ['Action', 'store', 'olMask', 'olUserProfile',
+    function(Action, store, olMask, olUserProfile){
 
     return {
         restrict: 'A',
-        scope: {
-            profile: '=userProfile'
-        },
         link: function (scope, elem, attrs){
-            elem.on('click', function (){
-                var _provider = attrs.provider,
-                    _profile  = scope.profile || store.get('profile_' + _provider),
-                    _from     = attrs.from,
-                    _uid      = _profile.uid;
+            elem
+            .on('click', function (){
+                var _item     = scope.item,
+                    _provider = attrs.userProfile.split(':')[0],
+                    _from     = attrs.userProfile.split(':')[1],
+                    _profile  = scope._profile || store.get('profile_' + _provider);
+
 
                 // Init
                 if (_from === 'controlCenter' && elem.hasClass('tips--frozen')) return;
+                if (_from === 'timeline'){ scope.setControlCenter('fullmask') }
 
                 scope.loadState = 'initLoad'
                 scope.user = {
                     screen_name: _profile.screen_name,
                     avatar: _profile.avatar,
                     name: _profile.name,
-                    uid: _uid
+                    uid: _profile.uid
                 }
                 scope.loadUserTimeline = function (){
                     if (scope.loadState === 'loading') return;
 
                     scope.loadState = 'loading'
-                    olUserProfile.loadOldPosts(_provider, _uid)
+                    olUserProfile.loadOldPosts(_provider, _profile.uid)
                     .then(function (data){
                         scope.user.timeline = scope.user.timeline.concat(data)
 
@@ -44,23 +65,14 @@ angular.module('Oneline.maskDirectives', [])
                 }
 
                 // Show Profile
-                $timeout(function (){
-                    var _mask = angular.element(document.querySelector('.cancelMask__wrapper'));
-
-                    $templateRequest('mask/user/' + _provider + '.html')
-                    .then(function (html){
-                        _mask.children()
-                        .empty()
-                        .append($compile(html)(scope))
-                    })
-                })
+                olMask.append('mask/user/' + _provider + '.html', scope)
                 // Fire
                 _from === 'controlCenter' ? elem.addClass('timeline__media--loading') : null
 
                 Action.get({
                     action: 'user',
                     provider: _provider,
-                    id: _uid
+                    id: _profile.uid
                 })
                 .$promise
                 .then(function (res){
@@ -78,8 +90,7 @@ angular.module('Oneline.maskDirectives', [])
                      _from === 'controlCenter' ? elem.removeClass('timeline__media--loading') : null
                 })
             })
-
-            elem.on('$destroy', function (){
+            .on('$destroy', function (){
                 elem.off('click')
             })
         }

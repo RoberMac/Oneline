@@ -9,12 +9,17 @@ var extend = require('extend'),
 
 var filter = {
     twitter: function (data){
-        var cache = [];
+        var cache = [],
+            _now  = Date.now();
 
         data.forEach(function (item){
+            var _created_at = Date.parse(item.created_at);
+
+            if (_created_at > _now) return;
+
             var tweetObj = {
                 provider: 'twitter',
-                created_at: Date.parse(item.created_at),
+                created_at: _created_at,
                 id_str: item.id_str,
                 user: filterUtils.twitter.user(item.user),
                 text: item.text,
@@ -98,12 +103,17 @@ var filter = {
         return returnObj;
     },
     instagram: function (data){
-        var cache = [];
+        var cache = [],
+            _now  = Date.now();
 
         data.forEach(function (item){
+            var _created_at = Date.parse(new Date(item.created_time * 1000));
+
+            if (_created_at > _now) return;
+
             var igPost = {
                 provider: 'instagram',
-                created_at: Date.parse(new Date(item.created_time * 1000)),
+                created_at: _created_at,
                 id_str: item.id,
                 type: 'post',
                 user: filterUtils.instagram.user(item.user),
@@ -150,12 +160,17 @@ var filter = {
         return returnObj;
     },
     weibo: function (data){
-        var cache = [];
+        var cache = [],
+            _now  = Date.now();
 
         data.forEach(function (item){
+            var _created_at = Date.parse(item.created_at);
+
+            if (_created_at > _now) return;
+
             var weiboObj = {
                 provider: 'weibo',
-                created_at: Date.parse(item.created_at),
+                created_at: _created_at,
                 id_str: item.idstr,
                 mid: mid.encode(item.mid),
                 user: filterUtils.weibo.user(item.user),

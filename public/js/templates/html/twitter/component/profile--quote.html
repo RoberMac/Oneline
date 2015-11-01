@@ -1,5 +1,5 @@
 <div class="timeline__profile">
-    <button ng-click="setControlCenter('userProfile')" user-profile="::item.quote.user" provider="twitter" from="timeline" type="button">
+    <button user-profile="twitter:timeline" type="button" ng-init="::_profile = item.quote.user">
         <img class="timeline__profile__avatar" ng-src="{{::item.quote.user.avatar.replace('normal', 'bigger')}}">
     </button>
     <div class="timeline__profile__fullname">

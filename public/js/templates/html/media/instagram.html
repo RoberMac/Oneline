@@ -10,15 +10,15 @@
         <img ng-src="{{::item.images.standard_resolution}}" handle-image-error>
 
         <div ng-if="::item.users_in_photo">
-            <button class="timeline__media__icon timeline__media__icon--users icon--instagram tips--deep animate--faster" users-in-photo="item.users_in_photo">
+            <button class="timeline__media__icon timeline__media__icon--users icon--instagram tips--deep--peace animate--faster" users-in-photo="::item.users_in_photo">
                 <svg viewBox="0 0 102 118">
                     <use xlink:href="/public/img/icon-sprites.svg#users_in_photo"></use>
                 </svg>
             </button>
 
-            <a ng-repeat="user in ::item.users_in_photo" class="timeline__media__user_tag" ng-href="//instagram.com/{{::user.user.username}}" target="_blank">
-                <div class="timeline__media__user_tag--pointer"></div>
-                <span class="timeline__media__user_tag--content">
+            <a ng-repeat="user in ::item.users_in_photo" class="timeline__media__userTag animate--faster" ng-href="//instagram.com/{{::user.user.username}}" target="_blank">
+                <div class="timeline__media__userTag__pointer"></div>
+                <span class="timeline__media__userTag__content">
                     <img ng-src="{{::user.user.profile_picture}}">
                 </span>
             </a>

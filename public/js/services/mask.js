@@ -1,4 +1,20 @@
 angular.module('Oneline.maskServices', [])
+.service('olMask', ['$timeout', '$compile', '$templateRequest',
+    function($timeout, $compile, $templateRequest){
+
+    this.append = function (templateUrl, scope){
+        $timeout(function (){
+            var _mask = angular.element(document.querySelector('.cancelMask__wrapper'));
+
+            $templateRequest(templateUrl, scope)
+            .then(function (html){
+                _mask.children()
+                .empty()
+                .append($compile(html)(scope))
+            })
+        })
+    }
+}])
 .service('olUserProfile', ['$q', 'Action', function($q, Action){
 
     this.loadOldPosts = function (_provider, _uid){

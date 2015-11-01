@@ -65,7 +65,6 @@
         &--large {
             position: relative;
             margin: 3px 0;
-            overflow: hidden;
 
             > img, video {
                 position: absolute 0 * * 0;
@@ -132,22 +131,33 @@
                 right: 3px;
             }
             &--users {
-                bottom: 3px;
-                left: 3px;
+                size: 14px;
+                bottom: -15px;
+                left: 0;
+
+                svg {
+                    height: 14px;
+                }
             }
         }
-        &__user_tag {
+        &__userTag {
             position: absolute;
-            display: none;
-            transform-origin: top;
+            opacity: 0;
+            transform-origin: 14px -6px;
 
-            &--pointer {
+            &--show {
+                opacity: 1;
+            }
+            &--popup {
+                animation: usersInPhotoAnimate .7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            }
+            &__pointer {
                 position: absolute -6px * * calc(50% - 7px);
                 border-color: transparent transparent var(--color-instagram) transparent;
                 border-style: solid;
                 border-width: 0 7px 14px 7px;
             }
-            &--content {
+            &__content {
                 img {
                     display: inline-block;
                     padding: 3px;
@@ -301,7 +311,7 @@
 :--dividerText {
     content: attr(data-date);
     position: absolute * * * 0;
-    width: 100%;
+    size: 100% 20px;
     font-size: 10px 20px;
     font-weight: var(--font-weight-light);
     text-align: center;

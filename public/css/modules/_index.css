@@ -40,9 +40,6 @@
     &--right {
         left: 60%;
     }
-    &--row {
-        margin: calc(20vh - 30px) 0;
-    }
     &:hover &__button {
         opacity: 1;
     }

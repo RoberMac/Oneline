@@ -1,5 +1,5 @@
 <div class="timeline__profile">
-    <button ng-click="setControlCenter('userProfile')" user-profile="::item.user" provider="instagram" from="timeline" type="button">
+    <button user-profile="instagram:timeline" type="button" ng-init="::_profile = item.user">
         <img class="timeline__profile__avatar timeline__profile__avatar--instagram" ng-src="{{::item.user.avatar}}">
     </button>
     <div class="timeline__profile__fullname">

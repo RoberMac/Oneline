@@ -175,7 +175,7 @@ angular.module('Oneline.mediaDirectives', [])
 
                 if (elem.hasClass('tips--active--peace')){
                     elem.removeClass('tips--active--peace')
-                    userTag.parent().css('display', 'none')
+                    userTag.parent().removeClass('timeline__media__userTag--show')
                 } else {
                     elem.addClass('tips--active--peace')
 
@@ -191,11 +191,17 @@ angular.module('Oneline.mediaDirectives', [])
                             transform: 'rotate(' + ( - _deg ) + 'deg)'
                         })
 
-                        _elem.parent().css({
-                            display: 'inline-block',
+                        _elem.parent()
+                        .css({
                             top: _y * 100 + '%',
                             left: 'calc(' + _x * 100 + '% - 16px)',
-                            transform: 'rotate(' + _deg + 'deg)'
+                            transform: 'rotate(0deg)'
+                        })
+                        .addClass('timeline__media__userTag--show')
+                        .addClassTemporarily('timeline__media__userTag--popup', 700)
+                        .delay(777)
+                        .then(function (__elem){
+                            __elem.css('transform', 'rotate(' + _deg + 'deg)')
                         })
                     })
                 }
