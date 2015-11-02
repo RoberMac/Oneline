@@ -86,6 +86,20 @@
             stroke-width: 7px;
         }
     }
+    &--twitter {
+        .profile__biography {
+            background-color: var(--color-twitter);
+
+            a, a:visited {
+                color: #78D6FF;
+            }
+        }
+        .profile__website {
+            svg {
+                stroke: var(--color-twitter);
+            }   
+        }
+    }
     &--instagram {
         .profile__biography {
             background-color: var(--color-instagram);
@@ -100,18 +114,18 @@
             }
         }
     }
-    &--twitter {
+    &--weibo {
         .profile__biography {
-            background-color: var(--color-twitter);
+            background-color: var(--color-weibo);
 
             a, a:visited {
-                color: #78D6FF;
+                color: #FF7A88;
             }
         }
         .profile__website {
             svg {
-                stroke: var(--color-twitter);
-            }   
+                stroke: var(--color-weibo);
+            }
         }
     }
 }
@@ -134,7 +148,15 @@
                 }
             }
             &--3 {
-
+                &:nth-child(1) {
+                    top: calc(25% - 35px);
+                }
+                &:nth-child(2) {
+                    top: calc(50% - 35px);
+                }
+                &:nth-child(3) {
+                    top: calc(75% - 35px);
+                }
             }
         }
         &__button {

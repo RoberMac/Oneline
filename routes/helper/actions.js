@@ -5,64 +5,52 @@ var extend  = require('extend'),
     timelineFilter = require('./filter/timeline'),
     actionsFilter = require('./filter/actions');
 
-module.exports = {
-    twitter: function (action, opts){
 
-        var T = new Twit({
-            consumer_key       : process.env.TWITTER_KEY,
-            consumer_secret    : process.env.TWITTER_SECRET,
-            access_token       : opts.token,
-            access_token_secret: opts.tokenSecret
-        });
-
-        // Init
-        var tOpts  = {},
-            _GET   = opts.method === 'get',
-            q_twit = Q.nbind(T[_GET ? 'get' : 'post'], T),
-            action_str;
-
-        if (action === 'user' || action === 'direct'){
-            var _action_str1, _action_str2, _tOpts1, _tOpts2;
-
-            switch (action){
-                case 'user':
-                    _action_str1 = 'users/show'
-                    _action_str2 = 'statuses/user_timeline'
-                    _tOpts1 = { user_id: opts.id, include_entities: false }
-                    _tOpts2 = {
+var Actions = {
+    twitter: {
+        user: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'combination',
+                    endpoint: 'users/show',
+                    endpoint2: 'statuses/user_timeline',
+                    tOpts: { user_id: opts.id, include_entities: false },
+                    tOpts2: {
                         user_id: opts.id,
                         count: 7,
                         trim_user: false,
                         exclude_replies: false,
                         contributor_details: false,
                         include_rts: true
-                    }
-                    break;
-                case 'direct':
-                    _action_str1 = 'direct_messages'
-                    _action_str2 = 'direct_messages/sent'
-                    _tOpts1 = _tOpts2 = { count: 200, include_entities: true }
-
-                    if (opts.query.min_id){
-
-                        extend(_tOpts1, { since_id: opts.query.min_id })
-                        extend(_tOpts2, { since_id: opts.query.min_id })
-                    }
-                    break;
-            }
-
-            return Q.all([
-                q_twit(_action_str1, _tOpts1),
-                q_twit(_action_str2, _tOpts2)
-            ])
-            .spread(function (data1, data2){
-                var data;
-                switch (action){
-                    case 'user':
+                    },
+                    handleActionFunc: function (data1, data2){
+                        var data;
                         data = actionsFilter.twitter.user(data1[0]);
                         extend(data, { timeline: timelineFilter.twitter(data2[0]).data })
-                        break;
-                    case 'direct':
+                        return { data: data }
+                    }
+                }
+            }
+        },
+        direct: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'combination',
+                    endpoint: 'direct_messages',
+                    endpoint2: 'direct_messages/sent',
+                    tOpts: {
+                        count: 200,
+                        since_id: opts.query && opts.query.min_id,
+                        include_entities: true
+                    },
+                    tOpts2: {
+                        count: 200,
+                        since_id: opts.query && opts.query.min_id,
+                        include_entities: true
+                    },
+                    handleActionFunc: function (data1, data2){
+                        var data;
+
                         data1 = actionsFilter.twitter.direct(data1[0])
                         data2 = actionsFilter.twitter.direct(data2[0])
 
@@ -77,241 +65,496 @@ module.exports = {
                                         : data2.max_id) || data1.max_id || data2.max_id,
                             max_date: Math.max(data1.max_date, data2.max_date) || undefined
                         }
-                        break;
+
+                        return { data: data }
+                    }
                 }
-
-                return { data: data }
-            })
-        } else {
-
-            switch (action){
-                case 'like':
-                    action_str = 'favorites/' + (opts.method === 'put' ? 'create' : 'destroy')
-                    extend(tOpts, { id: opts.id, include_entities: false })
-                    break;
-                case 'retweet':
-                    action_str = 'statuses/' + (/put|post/.test(opts.method)
-                                                    ? 'retweet'
-                                                : _GET
-                                                    ? 'retweets'
-                                                : 'destroy')
-                    extend(tOpts, {
-                        id: opts.id,
-                        trim_user: _GET ? false : true,
-                        count: 50
-                    })
-                    break;
-                case 'reply':
-                    extend(tOpts, { in_reply_to_status_id: opts.id })
-                case 'quote':
-                case 'tweet':
-                    action_str = 'statuses/update'
-                    extend(tOpts, {
-                        status: opts.params.status,
-                        media_ids: opts.params.media_ids,
-                        trim_user: true,
-                        possibly_sensitive: opts.params.sensitive
-                    })
-                    if (opts.params.geo){
-                        extend(tOpts, {
-                            lat: opts.params.geo.lat,
-                            long: opts.params.geo.long
-                        })
-                    }
-                    break;
-                case 'follow':
-                    action_str = _GET
-                                    ? 'friends/list'
-                                : 'friendships/' + (opts.method === 'put' ? 'create' : 'destroy')
-
-                    _GET
-                        ? extend(tOpts, {
-                            user_id: opts.id,
-                            count: 200,
-                            skip_status: true,
-                            include_user_entities: false
-                        })
-                    : extend(tOpts, { id: opts.id })
-                    break;
-                case 'mentions':
-                    action_str = 'statuses/mentions_timeline'
-
-                    extend(tOpts, {
-                        count: 200,
-                        include_entities: false,
-                        contributor_details: false
-                    })
-
-                    if (opts.query.min_id){
-                        extend(tOpts, { since_id: opts.query.min_id })
-                    }
-                    break;
-                case 'user_timeline': // not support `since_id`
-                    action_str = 'statuses/user_timeline'
-
-                    extend(tOpts, {
-                        user_id: opts.id,
-                        max_id: opts.query.max_id,
-                        count: 20,
-                        trim_user: false,
-                        exclude_replies: false,
-                        contributor_details: false,
-                        include_rts: true
-                    })
-                    break;
-                default:
-                    throw { statusCode: 404 };
-                    break;
             }
-
-            return q_twit(action_str, tOpts)
-            .then(function (data){
-                if (_GET){
-                    var _data ;
-                    switch (action){
-                        case 'retweet':
-                        case 'reply':
-                        case 'mentions':
-                            _data = data[0]
-                            break;
-                        case 'user_timeline':
-                            data[0].splice(0, 1)
-                            _data = data[0]
-                            break;
-                        case 'follow':
-                            _data = data.users
-                            break;
-                    }
-
-                    return { data: actionsFilter.twitter[action](_data) }
-                } else {
-                    switch (action){
-                        case 'retweet':
-                        case 'quote':
-                            return { id_str: data[0].id_str }
-                            break;
-                        case 'like':
-                        case 'tweet':
-                        case 'reply':
-                        case 'follow':
-                            return { statusCode: 200 }
-                            break;
+        },
+        like: {
+            _put: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'favorites/create',
+                    tOpts: { id: opts.id, include_entities: false },
+                    handleActionFunc: function (data){
+                        return { msg: 'ok' }
                     }
                 }
-            })
+            },
+            _delete: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'favorites/destroy',
+                    tOpts: { id: opts.id, include_entities: false },
+                    handleActionFunc: function (data){
+                        return { msg: 'ok' }
+                    }
+                }
+            }
+        },
+        retweet: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/retweets',
+                    tOpts: { id: opts.id, count: 50, trim_user: false },
+                    handleActionFunc: function (data){
+                        return { data: actionsFilter.twitter['retweet'](data[0]) }
+                    }
+                }
+            },
+            _post: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/retweet',
+                    tOpts: { id: opts.id, trim_user: true },
+                    handleActionFunc: function (data){
+                        return { id_str: data[0].id_str }
+                    }
+                }
+            },
+            _delete: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/destroy',
+                    tOpts: { id: opts.id, trim_user: true },
+                    handleActionFunc: function (data){
+                        return { msg: 'ok' }
+                    }
+                }
+            },
+        },
+        reply: newStatuses('reply'),
+        quote: newStatuses('quote'),
+        tweet: newStatuses('tweet'),
+        follow: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'friends/list',
+                    tOpts: {
+                        user_id: opts.id,
+                        count: 200,
+                        skip_status: true,
+                        include_user_entities: false
+                    },
+                    handleActionFunc: function (data){
+                        return { data: actionsFilter.twitter['follow'](data.users) }
+                    }
+                }
+            },
+            _put: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'friendships/create',
+                    tOpts: { id: opts.id },
+                    handleActionFunc: function (data){
+                        return { msg: 'ok' }
+                    }
+                }
+            },
+            _delete: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'friendships/destroy',
+                    tOpts: { id: opts.id },
+                    handleActionFunc: function (data){
+                        return { msg: 'ok' }
+                    }
+                }
+            },
+        },
+        mentions: {
+            _get: function (opts){
+                var tOpts = {}
+                extend(tOpts, {
+                    count: 200,
+                    since_id: opts.query.min_id,
+                    include_entities: false,
+                    contributor_details: false
+                })
+
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/mentions_timeline',
+                    tOpts: tOpts,
+                    handleActionFunc: function (data){
+                        return { data: timelineFilter.twitter(data[0]) }
+                    }
+                }
+            }
+        },
+        user_timeline: {
+            _get: function (opts){
+                var tOpts = {}
+                extend(tOpts, {
+                    user_id: opts.id,
+                    max_id: opts.query && opts.query.max_id,
+                    count: 20,
+                    trim_user: false,
+                    exclude_replies: false,
+                    contributor_details: false,
+                    include_rts: true
+                })
+
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/user_timeline',
+                    tOpts: tOpts,
+                    handleActionFunc: function (data){
+                        data[0].splice(0, 1)
+                        return { data: timelineFilter.twitter(data[0]) }
+                    }
+                }
+            }
         }
     },
-    weibo: function (action, opts){
+    instagram: {
+        user: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'combination',
+                    endpoint: 'user',
+                    endpoint2: 'user_media_recent',
+                    iOpts2: { count: 7 },
+                    handleActionFunc: function (userData, timelineData){
+                        var data = actionsFilter.instagram.user(userData[0]);
+
+                        extend(data, { timeline: timelineFilter.instagram(timelineData[0]).data })
+
+                        return { data: data }
+                    }
+                }
+            }
+        },
+        like: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'likes',
+                    handleActionFunc: function (data){
+                        return { data: actionsFilter.instagram['like'](data[0].slice(0, 100)) }
+                    }
+                }
+            }
+        },
+        reply: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'comments',
+                    handleActionFunc: function (data){
+                        return { data: actionsFilter.instagram['reply'](data[0].slice(0, 100)) }
+                    }
+                }
+            }
+        },
+        user_timeline: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'user_media_recent',
+                    iOpts: { max_id: opts.query.max_id },
+                    handleActionFunc: function (data){
+                        return { data: timelineFilter.instagram(data[0]) }
+                    }
+                }
+            }
+        },
+    },
+    weibo: {
+        user: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'combination',
+                    endpoint: 'users/show',
+                    endpoint2: 'statuses/user_timeline',
+                    wOpts: { access_token: opts.token, uid: opts.id },
+                    wOpts2: {
+                        access_token: opts.token,
+                        uid: opts.id,
+                        count: 7
+                    },
+                    handleActionFunc: function (data1, data2){
+                        var data;
+                        data = actionsFilter.weibo.user(data1);
+                        extend(data, { timeline: timelineFilter.weibo(data2.statuses).data })
+                        return { data: data }
+                    }
+                }
+            }
+        },
+        star: {
+            _put: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'favorites/create',
+                    wOpts: { access_token: opts.token, id: opts.id },
+                    handleActionFunc: function (data){
+                        return { id_str: data.idstr }
+                    }
+                }
+            },
+            _delete: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'favorites/destroy',
+                    wOpts: { access_token: opts.token, id: opts.id },
+                    handleActionFunc: function (data){
+                        return { id_str: data.idstr }
+                    }
+                }
+            }
+        },
+        quote: {
+            _post: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/repost',
+                    wOpts: { access_token: opts.token, id: opts.id, status: opts.params.status },
+                    handleActionFunc: function (data){
+                        return { id_str: data.idstr }
+                    }
+                }
+            }
+        },
+        retweet: {
+            _post: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/repost',
+                    wOpts: { access_token: opts.token, id: opts.id, status: opts.params.status },
+                    handleActionFunc: function (data){
+                        return { id_str: data.idstr }
+                    }
+                }
+            },
+            _delete: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/destroy',
+                    wOpts: { access_token: opts.token, id: opts.id },
+                    handleActionFunc: function (data){
+                        return { id_str: data.idstr }
+                    }
+                }
+            }
+        },
+        reply: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'comments/show',
+                    wOpts: { access_token: opts.token, id: opts.id },
+                    handleActionFunc: function (data){
+                        return { data: actionsFilter.weibo.reply(data.comments) }
+                    }
+                }
+            },
+            _post: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'comments/create',
+                    wOpts: { access_token: opts.token, id: opts.id, comment: opts.params.status },
+                    handleActionFunc: function (data){
+                        return { id_str: data.idstr }
+                    }
+                }
+            }
+        },
+        tweet: {
+            _post: function (opts){
+                var wOpts = { access_token: opts.token, id: opts.id, status: opts.params.status };
+
+                extend(wOpts, {
+                    access_token: opts.token,
+                    id: opts.id,
+                    status: opts.params.status,
+                    lat: opts.params.geo && opts.params.geo.lat,
+                    long: opts.params.geo && opts.params.geo.long
+                })
+
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/update',
+                    wOpts: wOpts,
+                    handleActionFunc: function (data){
+                        return { msg: 'ok' }
+                    }
+                }
+            }
+        },
+        user_timeline: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/user_timeline',
+                    wOpts: {
+                        access_token: opts.token,
+                        uid: opts.id,
+                        count: 20,
+                        max_id: opts.query && opts.query.max_id
+                    },
+                    handleActionFunc: function (data){
+                        data.statuses.splice(0, 1)
+
+                        return { data: timelineFilter.weibo(data.statuses) }
+                    }
+                }
+            }   
+        }
+    }
+}
+
+function newStatuses(action){
+    return {
+        _post: function (opts){
+            var tOpts = {};
+            extend(tOpts, {
+                status: opts.params.status,
+                media_ids: opts.params.media_ids,
+                trim_user: true,
+                possibly_sensitive: opts.params.sensitive,
+                lat: opts.params.geo && opts.params.geo.lat,
+                long: opts.params.geo && opts.params.geo.long
+            })
+            if (action === 'reply' && opts.id){
+                extend(tOpts, {
+                    in_reply_to_status_id: opts.id
+                })
+            }
+
+            var handleActionFunc;
+            if (action === 'quote'){
+                handleActionFunc = function (data){
+                    return { id_str: data[0].id_str }
+                }
+            } else {
+                handleActionFunc = function (data){
+                    return { msg: 'ok' }
+                }
+            }
+
+            return {
+                triggerActionType: 'basic',
+                endpoint: 'statuses/update',
+                tOpts: tOpts,
+                handleActionFunc: handleActionFunc
+            }
+        }
+    }
+}
+
+
+
+module.exports = {
+    twitter: function (action, opts){
+        var T = new Twit({
+            consumer_key       : process.env.TWITTER_KEY,
+            consumer_secret    : process.env.TWITTER_SECRET,
+            access_token       : opts.token,
+            access_token_secret: opts.tokenSecret
+        });
 
         // Init
-        var wOpts  = { access_token: opts.token, id: opts.id },
-            _GET   = opts.method === 'get',
-            action_str;
+        var _method = '_' + opts.method;
+        var q_twit  = Q.nbind(T[_method === '_get' ? 'get' : 'post'], T);
 
-        switch (action){
-            case 'like':
-                action_str = 'attitudes/' + (opts.method === 'put' ? 'create' : 'destroy')
-                break;
-            case 'star':
-                action_str = 'favorites/' + (opts.method === 'put' ? 'create' : 'destroy')
-                break;
-            case 'quote':
-            case 'retweet':
-                action_str = 'statuses/' + (/put|post|get/.test(opts.method)
-                                                ? 'repost'
-                                            : 'destroy')
-                extend(wOpts, {
-                    status: opts.params && opts.params.status // `destroy` 時無 `opts.params` 
-                })
-                break;
-            case 'reply':
-                action_str = _GET ? 'comments/show' : 'comments/create'
-                _GET ? null : extend(wOpts, { comment: opts.params.status })
-                break;
-            case 'tweet':
-                action_str = 'statuses/update'
-                extend(wOpts, { status: opts.params.status })
-                if (opts.params.geo){
-                    extend(wOpts, {
-                        lat: opts.params.geo.lat,
-                        long: opts.params.geo.long
-                    })
-                }
-                break;
-            default:
-                throw { statusCode: 404 };
-                break;
+        var triggerAction = {
+            basic: function (t){
+                return q_twit(t.endpoint, t.tOpts)
+                .then(t.handleActionFunc);
+            },
+            combination: function (t){
+                return Q.all([
+                    q_twit(t.endpoint, t.tOpts),
+                    q_twit(t.endpoint2, t.tOpts2)
+                ]).spread(t.handleActionFunc);
+            }
         }
 
-        return Weibo({
-            method: _GET ? 'get' : 'post',
-            endpoint: action_str,
-            opts: wOpts
-        })
-        .then(function (data){
+        // Fire
+        try {
+            var t = Actions.twitter[action][_method](opts);
 
-            switch (action){
-                case 'reply':
-                    switch (_GET){
-                        case true:
-                            return { data: actionsFilter.weibo.reply(data.comments) }
-                            break;
-                        case false:
-                    }
-                case 'like':
-                case 'star':
-                case 'quote':
-                case 'retweet':
-                    return { id_str: data.idstr }
-                    break;
-            }
-        })
+            return triggerAction[t.triggerActionType](t)
+        } catch (e){
+            console.log(e)
+            throw { statusCode: 405 }
+        }
     },
     instagram: function (action, opts){
         Ig.use({ access_token : opts.token })
 
-        if (action === 'user'){
-            return Q.all([
-                Q.nbind(Ig.user, Ig)(opts.id),
-                Q.nbind(Ig.user_media_recent, Ig)(opts.id, { count: 7 })
-            ])
-            .spread(function (userData, timelineData){
-                var data = actionsFilter.instagram.user(userData[0]);
+        // Init
+        var _method = '_' + opts.method;
 
-                extend(data, { timeline: timelineFilter.instagram(timelineData[0]).data })
-
-                return { data: data }
-            })
-        } else {
-            var q_ig, iOpts = {};
-
-            switch (action){
-                case 'like':
-                    q_ig = Q.nbind(Ig.likes, Ig);
-                    break;
-                case 'reply':
-                    q_ig = Q.nbind(Ig.comments, Ig);
-                    break;
-                case 'user_timeline': // not support `min_id`
-                    q_ig = Q.nbind(Ig.user_media_recent, Ig);
-                    break;
-                default:
-                    throw { statusCode: 404 };
-                    break;
+        var triggerAction = {
+            basic: function (i){
+                return (i.iOpts
+                            ? Q.nbind(Ig[i.endpoint], Ig)(opts.id, i.iOpts)
+                        : Q.nbind(Ig[i.endpoint], Ig)(opts.id)
+                        ).then(i.handleActionFunc);
+            },
+            combination: function (i){
+                return Q.all([
+                    i.iOpts 
+                        ? Q.nbind(Ig[i.endpoint], Ig)(opts.id, i.iOpts)
+                    : Q.nbind(Ig[i.endpoint], Ig)(opts.id),
+                    i.iOpts2
+                        ? Q.nbind(Ig[i.endpoint2], Ig)(opts.id, i.iOpts2)
+                    : Q.nbind(Ig[i.endpoint2], Ig)(opts.id)
+                ]).spread(i.handleActionFunc)
             }
+        }
 
+        // Fire
+        try {
+            var i = Actions.instagram[action][_method](opts);
 
-            if (action === 'user_timeline'){
-                return q_ig(opts.id, { max_id: opts.query.max_id })
-                .then(function (data){
-                    return { data: timelineFilter.instagram(data[0]) }
+            return triggerAction[i.triggerActionType](i)
+        } catch (e){
+            throw { statusCode: 405 }
+        }
+    },
+    weibo: function (action, opts){
+        // Init
+        var _method = '_' + opts.method;
+
+        var triggerAction = {
+            basic: function (w){
+                return Weibo({
+                    method: opts.method,
+                    endpoint: w.endpoint,
+                    opts: w.wOpts
                 })
-            } else {
-                return q_ig(opts.id)
-                .then(function (data){
-                    return { data: actionsFilter.instagram[action](data[0].slice(0, 100)) }
-                })
+                .then(w.handleActionFunc)
+            },
+            combination: function (w){
+                return Q.all([
+                    Weibo({
+                        method: opts.method,
+                        endpoint: w.endpoint,
+                        opts: w.wOpts
+                    }),
+                    Weibo({
+                        method: opts.method,
+                        endpoint: w.endpoint2,
+                        opts: w.wOpts2
+                    })
+                ]).spread(w.handleActionFunc);
             }
+        }
+
+        // Fire
+        try {
+            var w = Actions.weibo[action][_method](opts);
+
+            return triggerAction[w.triggerActionType](w)
+        } catch (e){
+            console.log(e)
+            throw { statusCode: 405 }
         }
     }
 }

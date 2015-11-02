@@ -1,5 +1,4 @@
 var extend = require('extend'),
-    timelineFilter = require('./timeline'),
     filterUtils = require('./utils');
 
 
@@ -32,7 +31,6 @@ var filter = {
                 protected: data.protected
             }
         },
-        user_timeline: timelineFilter.twitter,
         follow: function (data){
             var cache = [];
 
@@ -46,7 +44,6 @@ var filter = {
 
             return cache;
         },
-        mentions: timelineFilter.twitter,
         direct: function (data){
             var cache = [];
 
@@ -138,6 +135,18 @@ var filter = {
         }
     },
     weibo: {
+        user: function (data){
+            return {
+                bio: data.description || '',
+                website: data.url || '',
+                counts: {
+                    follows: data.friends_count,
+                    followed_by: data.followers_count,
+                    statuses: data.statuses_count
+                },
+                following: data.following
+            }
+        },
         reply: function (data){
             var cache = [];
 

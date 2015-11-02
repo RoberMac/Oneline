@@ -12,18 +12,16 @@
 
     <!--                      ⬇️ 修復 $compile 失效的 BUG -->
     <div ng-if="isTimeline" ng-show="!controlCenter" ng-init="::_firstProvider = providerList.indexOf('twitter') >= 0 ? 'twitter' : providerList.indexOf('weibo') >= 0 ? 'weibo' : 'instagram'">
-        <div ng-if="_firstProvider !== 'instagram'">
-            <button class="menu__button animate--faster" ng-class="::'icon--' + _firstProvider" type="button" show-menu="{{::_firstProvider}}" js-show-menu>
-                <svg viewBox="0 0 200 200">
-                    <g fill-rule="evenodd">
-                        <circle fill="#F1F1F1" cx="100" cy="100" r="100"/>
-                        <path d="M96.63 30.143c1.862-3.393 4.88-3.392 6.74 0l10.26 18.714c1.862 3.393.232 6.143-3.634 6.143H90.004c-3.868 0-5.495-2.75-3.635-6.143l10.26-18.714z"/>
-                        <circle fill="#FFF" cx="100" cy="100" r="15"/>
-                        <rect fill="#FFF" ng-attr-fill="{{::_firstProvider === 'twitter' ? '#2AA9E0' : '#FFF'}}" x="86" y="145" width="28" height="28" rx="7"/>
-                    </g>
-                </svg>
-            </button>
-        </div>
+        <button class="menu__button animate--faster" ng-class="::'icon--' + _firstProvider" type="button" show-menu="{{::_firstProvider}}" js-show-menu>
+            <svg viewBox="0 0 200 200">
+                <g fill-rule="evenodd">
+                    <circle fill="#F1F1F1" cx="100" cy="100" r="100"/>
+                    <path fill="#FFF" ng-attr-fill="{{::_firstProvider === 'twitter' ? '#2AA9E0' : '#FFF'}}" d="M96.63 30.143c1.862-3.393 4.88-3.392 6.74 0l10.26 18.714c1.862 3.393.232 6.143-3.634 6.143H90.004c-3.868 0-5.495-2.75-3.635-6.143l10.26-18.714z"/>
+                    <circle cx="100" cy="100" r="15"/>
+                    <rect fill="#FFF" ng-attr-fill="{{::_firstProvider === 'twitter' ? '#2AA9E0' : '#FFF'}}" x="86" y="145" width="28" height="28" rx="7"/>
+                </g>
+            </svg>
+        </button>
     </div>
 
 
