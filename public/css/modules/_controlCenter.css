@@ -64,6 +64,7 @@
         size: 90% 60%;
         font-size: var(--font-size-base) var(--line-height-base);
         background-color: var(--color-white);
+        border-radius: 3px;
 
         &:disabled {
             background-color: var(--color-gray);

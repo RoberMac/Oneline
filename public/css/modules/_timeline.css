@@ -27,6 +27,34 @@
         font-size: 11px;
         cursor: pointer;
     }
+    &__location {
+        position: absolute 3px 3px * *;
+        height: 24px;
+
+        svg {
+            size: 20px;
+        }
+
+        &:hover {
+            .timeline__location__name {
+                display: inline-block;
+            }
+        }
+        &__name {
+            display: none;
+            position: absolute 0 24px * *;
+            width: 100px;
+            text-align: right;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 11px 24px;
+
+            @media (--all-mobile-devices){
+                display: inline-block;
+            }
+        }
+    }
     &__content {
         position: relative -24px * *;
     }

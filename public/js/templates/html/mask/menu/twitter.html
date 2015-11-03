@@ -1,18 +1,30 @@
 <!-- 寫推 -->
-<button class="mask__menu--row mask__menu--row--3 mask__menu__button icon--twitter tips animate--faster" ng-click="setControlCenter('', 'write_twitter-tweet')" type="button">
+<button class="mask__menu--row mask__menu--row--3 mask__menu--row--3--1 mask__menu__button icon--twitter tips animate--faster" ng-click="setControlCenter('', 'write_twitter-tweet')" type="button">
     <svg viewBox="0 0 200 200">
        <use xlink:href="/public/img/icon-sprites.svg#newTweet"></use>
     </svg>
 </button>
 <!-- 用戶信息 -->
-<button class="mask__menu--row mask__menu--row--3 mask__menu__button icon--twitter tips animate--faster" user-profile="twitter:timeline" type="button">
+<button class="mask__menu--row mask__menu--row--3 mask__menu--row--3--2 mask__menu__button icon--twitter tips animate--faster" user-profile="twitter:timeline" type="button">
     <svg viewBox="0 0 200 200">
        <use xlink:href="/public/img/icon-sprites.svg#profile"></use>
     </svg>
 </button>
 <!-- 通知 -->
-<button class="mask__menu--row mask__menu--row--3 mask__menu__button icon--twitter tips animate--faster" ng-click="setControlCenter('', 'notification_twitter')" type="button">
+<button class="mask__menu--row mask__menu--row--3 mask__menu--row--3--3 mask__menu__button icon--twitter tips animate--faster" ng-click="setControlCenter('', 'notification_twitter')" type="button">
     <svg viewBox="0 0 200 200">
        <use xlink:href="/public/img/icon-sprites.svg#notification"></use>
+    </svg>
+</button>
+
+
+<button ng-if="::providerList.indexOf('instagram') >= 0" class="mask__menu__button mask__menu__button--switch mask__menu__button--switch--left icon--instagram tips--deep--peace" type="button" show-menu="instagram">
+    <svg viewBox="0 0 77 77">
+        <use xlink:href="/public/img/icon-sprites.svg#2"></use>
+    </svg>
+</button>
+<button ng-if="::providerList.indexOf('weibo') >= 0" class="mask__menu__button mask__menu__button--switch mask__menu__button--switch--right icon--weibo tips--deep--peace" type="button" show-menu="weibo">
+    <svg viewBox="0 0 77 77">
+        <use xlink:href="/public/img/icon-sprites.svg#2"></use>
     </svg>
 </button>

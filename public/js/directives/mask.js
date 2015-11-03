@@ -11,8 +11,10 @@ angular.module('Oneline.maskDirectives', [])
             .on('click', function (){
                 var _provider = attrs.showMenu;
 
-                scope.setControlCenter('fullmask')
-                olMask.append('mask/menu/' + _provider + '.html', scope)
+                olMask.switch(scope)                
+                .then(function (){
+                    olMask.append('mask/menu/' + _provider + '.html', scope)
+                })
             })
             .on('$destroy', function (){
                 elem.off()
@@ -40,55 +42,64 @@ angular.module('Oneline.maskDirectives', [])
 
                 // Init
                 if (_from === 'controlCenter' && elem.hasClass('tips--frozen')) return;
-                if (_from === 'timeline'){ scope.setControlCenter('fullmask') }
-
-                scope.loadState = 'initLoad'
-                scope.user = {
-                    screen_name: _profile.screen_name,
-                    avatar: _profile.avatar,
-                    name: _profile.name,
-                    uid: _profile.uid
+                if (_from === 'timeline'){
+                    olMask.switch(scope)
+                    .then(function (){
+                        setup()
+                    })
+                } else {
+                    setup()
                 }
-                scope.loadUserTimeline = function (){
-                    if (scope.loadState === 'loading') return;
 
-                    scope.loadState = 'loading'
-                    olUserProfile.loadOldPosts(_provider, _profile.uid)
-                    .then(function (data){
-                        scope.user.timeline = scope.user.timeline.concat(data)
+                function setup(){
+                    scope.loadState = 'initLoad'
+                    scope.user = {
+                        screen_name: _profile.screen_name,
+                        avatar: _profile.avatar,
+                        name: _profile.name,
+                        uid: _profile.uid
+                    }
+                    scope.loadUserTimeline = function (){
+                        if (scope.loadState === 'loading') return;
+
+                        scope.loadState = 'loading'
+                        olUserProfile.loadOldPosts(_provider, _profile.uid)
+                        .then(function (data){
+                            scope.user.timeline = scope.user.timeline.concat(data)
+
+                            scope.loadState = 'loadFin'
+                        })
+                        .catch(function (err){
+                            scope.loadState = 'loadFail'
+                        })
+                    }
+
+                    // Show Profile
+                    olMask.append('mask/user/' + _provider + '.html', scope)
+                    // Fire
+                    _from === 'controlCenter' ? elem.addClass('timeline__media--loading') : null
+
+                    Action.get({
+                        action: 'user',
+                        provider: _provider,
+                        id: _profile.uid
+                    })
+                    .$promise
+                    .then(function (res){
+                        angular.extend(scope.user, res.data)
 
                         scope.loadState = 'loadFin'
+                        _from === 'controlCenter' ? elem.addClass('timeline__media--active') : null
                     })
-                    .catch(function (err){
+                    .catch(function (){
+                        scope.user.protected = true
                         scope.loadState = 'loadFail'
+                         _from === 'controlCenter' ? elem.addClass('tips--frozen') : null
+                    })
+                    .finally(function (){
+                         _from === 'controlCenter' ? elem.removeClass('timeline__media--loading') : null
                     })
                 }
-
-                // Show Profile
-                olMask.append('mask/user/' + _provider + '.html', scope)
-                // Fire
-                _from === 'controlCenter' ? elem.addClass('timeline__media--loading') : null
-
-                Action.get({
-                    action: 'user',
-                    provider: _provider,
-                    id: _profile.uid
-                })
-                .$promise
-                .then(function (res){
-                    angular.extend(scope.user, res.data)
-
-                    scope.loadState = 'loadFin'
-                    _from === 'controlCenter' ? elem.addClass('timeline__media--active') : null
-                })
-                .catch(function (){
-                    scope.user.protected = true
-                    scope.loadState = 'loadFail'
-                     _from === 'controlCenter' ? elem.addClass('tips--frozen') : null
-                })
-                .finally(function (){
-                     _from === 'controlCenter' ? elem.removeClass('timeline__media--loading') : null
-                })
             })
             .on('$destroy', function (){
                 elem.off('click')

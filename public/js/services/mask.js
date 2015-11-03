@@ -14,6 +14,11 @@ angular.module('Oneline.maskServices', [])
             })
         })
     }
+    this.switch = function (scope){
+        return scope.controlCenter
+                    ? scope.setControlCenter('', 'fullmask')
+                : scope.setControlCenter('fullmask');
+    }
 }])
 .service('olUserProfile', ['$q', 'Action', function($q, Action){
 

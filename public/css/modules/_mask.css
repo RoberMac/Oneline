@@ -2,7 +2,6 @@
     position: absolute 0 * *;
     height: 100%;
     z-index: 4;
-    cursor: pointer;
     background-color: var(--color-black-alpha);
     ::-webkit-scrollbar {
         display: none; 
@@ -140,27 +139,40 @@
                 top: calc(50% - 35px);
             }
             &--2 {
-                &:first-child {
+                &--1 {
                     top: calc(33.3% - 35px);
                 }
-                &:last-child {
+                &--2 {
                     top: calc(66.7% - 35px);
                 }
             }
             &--3 {
-                &:nth-child(1) {
+                &--1 {
                     top: calc(25% - 35px);
                 }
-                &:nth-child(2) {
+                &--2 {
                     top: calc(50% - 35px);
                 }
-                &:nth-child(3) {
+                &--3 {
                     top: calc(75% - 35px);
                 }
             }
         }
         &__button {
             size: 70px;
+
+            &--switch {
+                position: absolute;
+                top: calc(50% - 35px);
+
+                &--left {
+                    left: 0;
+                    transform: rotate(180deg);
+                }
+                &--right {
+                    right: 0;
+                }
+            }
         }
     }
     &__timeline {

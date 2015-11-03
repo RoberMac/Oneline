@@ -63,12 +63,11 @@ body {
     scrollbar-track-color: transparent;
 }
 
-input, button, select, textarea{
+input, button, select, textarea {
     margin: 0;
     padding: 0;
     border: 0;
     outline: 0px;
-
     appearance: none;
     border-radius: 3px;
 }

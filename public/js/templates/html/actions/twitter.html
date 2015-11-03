@@ -29,4 +29,13 @@
             <span class="actions__count"></span>
         </button>
     </a>
+    <!-- Location -->
+    <a ng-if="::item.location" ng-href="//twitter.com/search?q=place:{{::item.location.id}}" target="_blank">
+        <button class="timeline__location tips--deep" type="button">
+            <svg viewBox="0 0 26 26">
+                <use xlink:href="/public/img/icon-sprites.svg#location"></use>
+            </svg>
+            <span class="timeline__location__name" ng-bind="::item.location.name"></span>
+        </button>
+    </a>
 </span>

@@ -84,6 +84,16 @@ var filter = {
                 })
             }
 
+            // Location
+            if (item.place){
+                extend(tweetObj, {
+                    location: {
+                        id: item.place.id,
+                        name: item.place.name
+                    }
+                })
+            }
+
             cache.push(tweetObj)
         })
 

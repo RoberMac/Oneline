@@ -1,8 +1,8 @@
 angular.module('Oneline.rootControllers', [])
 .controller('rootController', [
-        '$rootScope', '$window', '$scope', '$timeout', '$state',
+        '$q', '$rootScope', '$window', '$scope', '$timeout', '$state',
         'olTokenHelper', 'olUI', 'timelineCache',
-    function ($rootScope, $window, $scope, $timeout, $state,
+    function ($q, $rootScope, $window, $scope, $timeout, $state,
         olTokenHelper, olUI, timelineCache){
 
 
@@ -24,12 +24,17 @@ angular.module('Oneline.rootControllers', [])
     }
     // 設置是否顯示「控制中心」
     $scope.setControlCenter = function (state, thenSwitchTo){
+        var defer = $q.defer()
+
         $scope.controlCenter = state
 
         if (thenSwitchTo){
             $timeout(function (){
                 $scope.setControlCenter(thenSwitchTo)
+                defer.resolve()
             }, 700)
+        } else {
+            defer.resolve()
         }
 
         $timeout(function (){
@@ -51,6 +56,8 @@ angular.module('Oneline.rootControllers', [])
 
             return typeList.map(function (i){return prefix + i }).join(' ')
         }
+
+        return defer.promise;
     }
     // Router
     $scope.goto = function (direction, e){

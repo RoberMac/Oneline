@@ -190,7 +190,11 @@ angular.module('Oneline.controlCenterDirectives', [])
                 _id         = _info[1],
                 _provider   = _info[0].split('-')[0].split('_')[1],
                 _action     = _info[0].split('-')[1],
-                __action    = '',
+                __action    = _action !== 'tweet'
+                                ? _provider === 'twitter'
+                                    ? 'retweet'
+                                : _type !== 'tweet' ?  'quote' : 'retweet'
+                            : '',
                 _type       = _info[0].split('-')[2],
                 _limitCount = _action === 'tweet' || _action === 'reply' || _provider === 'weibo'
                                     ? 140
@@ -207,41 +211,47 @@ angular.module('Oneline.controlCenterDirectives', [])
              * 初始化輸入框
              *
              */
-            statusElem[0].focus()
-            if (_action !== 'tweet'){
-                var __sourceElem = document.querySelector('[data-id="' + _id + '"]'),
-                    _sourceElem = angular.element(__sourceElem);
+            setTimeout(function (){
+                statusElem[0].focus()
 
-                switch (_action){
-                    case 'reply':
-                        if (_provider === 'twitter'){
-                            statusElem.val(
-                                olWrite.extractMentions(
-                                    _sourceElem.find('p')[0].innerText, '@' + _info[2]
+                if (_action !== 'tweet'){
+                    var __sourceElem = document.querySelector('[data-id="' + _id + '"]'),
+                        _sourceElem = angular.element(__sourceElem);
+
+                    switch (_action){
+                        case 'reply':
+                            if (_provider === 'twitter'){
+                                statusElem.val(
+                                    olWrite.extractMentions(
+                                        _sourceElem.find('p')[0].innerText, '@' + _info[2]
+                                    )
                                 )
-                            )
-                        }
-                        break;
-                    case 'retweet':
-                        __action = 'retweet'
-                        if (_provider === 'weibo'){
-                            __action = _type !== 'tweet' ?  'quote' : 'retweet'
-
-                            statusElem.val(
-                                _type === 'tweet'
-                                    ? ''
-                                : _type === 'retweet'
-                                    ? '//@' + _info[2] + ': 转发微博'
-                                : '//@' + _info[2] + ': ' + _sourceElem.find('p')[0].innerText
-                            )
-                            statusElem[0].setSelectionRange(0, 0)
-                        }
-                        // 允許直接提交 -> 「轉推」
-                        statusElem.prop('required', false)
-                        submitButton.prop('disabled', false)
-                        break;
+                            }
+                            break;
+                        case 'retweet':
+                            if (_provider === 'weibo'){
+                                statusElem.val(
+                                    _type === 'tweet'
+                                        ? ''
+                                    : _type === 'retweet'
+                                        ? '//@' + _info[2] + ': 转发微博'
+                                    : '//@' + _info[2] + ': ' + _sourceElem.find('p')[0].innerText
+                                )
+                                statusElem[0].setSelectionRange(0, 0)
+                            }
+                            // 允許直接提交 -> 「轉推」
+                            statusElem.prop('required', false)
+                            submitButton.prop('disabled', false)
+                            break;
+                    }
                 }
-            }
+
+                __action === 'retweet'
+                    ? angular.extend(scope.item, olWrite.generateRetweetUser(_id, _type, _provider))
+                : __action === 'quote'
+                    ? angular.extend(scope.item, olWrite.generateQuoteUser(_id, _type, _provider))
+                : null
+            }, 700)
             /**
              * 初始化 Live Preview
              *
@@ -268,12 +278,6 @@ angular.module('Oneline.controlCenterDirectives', [])
                 created_at: Date.now(),
                 type: __action
             }
-
-            __action === 'retweet'
-                ? angular.extend(scope.item, olWrite.generateRetweetUser(_id, _type, _provider))
-            : __action === 'quote'
-                ? angular.extend(scope.item, olWrite.generateQuoteUser(_id, _type, _provider))
-            : null
 
             olWrite.generateTemplate(_action === 'reply' ? 'tweet' : __action || _action, scope, _provider)
 
