@@ -14,39 +14,8 @@
         <div ng-if="true" ng-include=" 'mask/user/component/profile.html' " onload="_p_type = 'post'; _p_provider = 'instagram' "></div>
 
         <!-- Timeline -->
-        <div ng-if="::user.timeline.length > 0" ng-repeat="item in user.timeline" class="timeline mask__timeline" data-id="{{::item.id_str}}">
-
-            <div class="timeline__content">
-                <div ng-include=" 'media/instagram.html' "></div>
-                <p class="timeline__text" linkify="instagram">{{::item.text | html}}</p>
-            </div>
-
-            <span class="cursor--pointer">
-                <!-- Favorite -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 26 26">
-                        <use xlink:href="/public/img/icon-sprites.svg#favorite"></use>
-                    </svg>
-                    <span class="actions__count" ng-attr-data-count="{{::item.favorite_count > 0 ? item.favorite_count : ''}}"></span>
-                </button>
-                <!-- Reply -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 26 26">
-                        <use xlink:href="/public/img/icon-sprites.svg#reply">
-                    </svg>
-                    <span class="actions__count" ng-attr-data-count="{{::item.reply_count > 0 ? item.reply_count : ''}}"></span>
-                </button>
-                <!-- Source -->
-                <a ng-href="{{::item.link}}" target="_blank">
-                    <button class="actions tips--deep" type="button">
-                        <svg class="actions__button" viewBox="0 0 26 26">
-                            <use xlink:href="/public/img/icon-sprites.svg#source"></use>
-                        </svg>
-                        <span class="actions__count"></span>
-                    </button>
-                </a>
-            </span>
-            <span class="timeline__time tips" relative-date="{{::item.created_at}}"></span>
+        <div ng-if="user.timeline.length > 0">
+            <div ng-repeat="item in user.timeline | orderBy: '-created_at'" ng-include=" 'mask/component/user_timeline/instagram.html' "></div>
         </div>
     </div>
 

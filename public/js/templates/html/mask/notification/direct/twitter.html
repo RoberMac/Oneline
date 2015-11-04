@@ -19,7 +19,7 @@
         <div class="timeline mask__msg" ng-repeat="item in notifications track by item.id_str" ng-class="::item.sender.uid === _authUid ? 'mask__msg--me' : 'mask__msg--others'">
 
             <div class="mask__msg__content">
-                <p class="mask__msg__text" trim-quote-link="{{::item.type}}" linkify="twitter" ng-bind-html="::item.text"></p>
+                <p class="mask__msg__text" linkify="twitter" ng-bind-html="::item.text"></p>
                 <div ng-if="::item.media" ng-include=" 'media/twitter.html' "></div>
             </div>
 

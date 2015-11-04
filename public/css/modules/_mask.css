@@ -175,7 +175,7 @@
             }
         }
     }
-    &__timeline {
+    &__user_timeline {
         padding: 10px 10px 0px 10px;
         margin: 17px;
         background-color: var(--color-gray);
@@ -194,17 +194,23 @@
         .actions__count::after {
             color: var(--color-steel);
         }
+
+        &--gutter {
+            margin: 36px 17px 17px;
+            padding: 0 10px;
+            background-color: var(--color-gray);
+        }
+
+        &--location {
+            .timeline__content {
+                top: 14px;
+            }
+        }
     }
-    &__gutter {
+    &__timeline {
         margin: 36px 17px 17px;
         padding: 0 10px;
         background-color: var(--color-gray);
-    }
-    &__notification {
-        position: relative 70px * *;
-        margin: 0 7px 0;
-        padding: 17px 3px 7px 3px;
-        height: calc(93vh - 140px - 48px);
 
         .timeline__content {
             top: -24px;
@@ -215,6 +221,21 @@
         .timeline--quote {
             top: -12px;
             margin: 27px 7px 7px;
+        }
+    }
+    &__notification {
+        position: relative 70px * *;
+        margin: 0 7px 0;
+        padding: 17px 3px 7px 3px;
+        height: calc(93vh - 140px - 48px);
+    }
+    &__header {
+        position: relative;
+        padding: 10px;
+        text-align: center;
+
+        svg {
+            height: 2.7em;
         }
     }
     &__source {

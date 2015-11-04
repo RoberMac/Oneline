@@ -34,8 +34,7 @@ angular.module('Oneline.maskDirectives', [])
         link: function (scope, elem, attrs){
             elem
             .on('click', function (){
-                var _item     = scope.item,
-                    _provider = attrs.userProfile.split(':')[0],
+                var _provider = attrs.userProfile.split(':')[0],
                     _from     = attrs.userProfile.split(':')[1],
                     _profile  = scope._profile || store.get('profile_' + _provider);
 
@@ -80,9 +79,9 @@ angular.module('Oneline.maskDirectives', [])
                     _from === 'controlCenter' ? elem.addClass('timeline__media--loading') : null
 
                     Action.get({
-                        action: 'user',
+                        action: _provider !== 'weibo' || !scope._profile ? 'user' : 'user_in_tweet',
                         provider: _provider,
-                        id: _profile.uid
+                        id: _provider !== 'weibo' || !scope._profile ? _profile.uid : scope._id_str
                     })
                     .$promise
                     .then(function (res){
@@ -137,6 +136,60 @@ angular.module('Oneline.maskDirectives', [])
                 .finally(function (){
                     elem.removeClass('tips--inprocess')
                 })
+            })
+        }
+    }
+}])
+/**
+ * 查看目標「地理位置」附近的「貼文」
+ *
+ */
+.directive('location', ['Action', 'olMask', 
+    function (Action, olMask){
+
+    return {
+        restrict: 'A',
+        link: function (scope, elem, attrs){
+            elem
+            .on('click', function (){
+                var _location = scope._location,
+                    _provider = attrs.location;
+
+                // Init
+                olMask.switch(scope)
+                .then(function (){
+                    setup()
+                })
+
+                function setup(){
+                    scope.loadState = 'initLoad'
+                    scope.location = {
+                        name: _location.name
+                    }
+
+                    // Show Profile
+                    olMask.append('mask/location/' + _provider + '.html', scope)
+                    // Fire
+                    Action.get({
+                        action: 'location_timeline',
+                        provider: _provider,
+                        id: _location.id || 0,
+                        lat: _location.lat,
+                        long: _location.long
+                    })
+                    .$promise
+                    .then(function (res){
+                        scope.location.timeline = res.data
+
+                        scope.loadState = 'loadFin'
+                    })
+                    .catch(function (){
+                        scope.loadState = 'loadFail'
+                    })
+                }
+            })
+            .on('$destroy', function (){
+                elem.off('click')
             })
         }
     }

@@ -403,6 +403,41 @@ var Actions = {
                     }
                 }
             }   
+        },
+        user_in_tweet: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'place/statuses/show', // 😂
+                    wOpts: {
+                        access_token: opts.token,
+                        id: opts.id
+                    },
+                    handleActionFunc: function (_data){
+                        var data = actionsFilter.weibo.user(_data.user);
+
+                        extend(data, { timeline: timelineFilter.weibo([_data]).data })
+
+                        return { data: data }
+                    }
+                }
+            }  
+        },
+        location_timeline: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'place/nearby_timeline',
+                    wOpts: {
+                        access_token: opts.token,
+                        lat: opts.query && opts.query.lat,
+                        long: opts.query && opts.query.long
+                    },
+                    handleActionFunc: function (data){
+                        return { data: timelineFilter.weibo(data.statuses).data }
+                    }
+                }
+            } 
         }
     }
 }
@@ -495,7 +530,15 @@ module.exports = {
                 return (i.iOpts
                             ? Q.nbind(Ig[i.endpoint], Ig)(opts.id, i.iOpts)
                         : Q.nbind(Ig[i.endpoint], Ig)(opts.id)
-                        ).then(i.handleActionFunc);
+                        )
+                .then(i.handleActionFunc)
+                .catch(function (err){
+                    if (err.error_type){
+                        throw { statusCode: 400, msg: 'you cannot view this resource' }
+                    } else {
+                        throw err
+                    }
+                });
             },
             combination: function (i){
                 return Q.all([
@@ -505,7 +548,15 @@ module.exports = {
                     i.iOpts2
                         ? Q.nbind(Ig[i.endpoint2], Ig)(opts.id, i.iOpts2)
                     : Q.nbind(Ig[i.endpoint2], Ig)(opts.id)
-                ]).spread(i.handleActionFunc)
+                ])
+                .spread(i.handleActionFunc)
+                .catch(function (err){
+                    if (err.error_type){
+                        throw { statusCode: 400, msg: 'you cannot view this resource' }
+                    } else {
+                        throw err
+                    }
+                })
             }
         }
 

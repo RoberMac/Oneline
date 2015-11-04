@@ -1,0 +1,11 @@
+<div class="timeline mask__user_timeline" ng-class="::{'mask__user_timeline--location': item.location}" data-id="{{::item.id_str}}">
+    <div class="timeline__content">
+        <div ng-include=" 'media/instagram.html' "></div>
+        <p class="timeline__text" linkify="instagram">{{::item.text | html}}</p>
+    </div>
+
+    <!-- Actions -->
+    <div ng-include=" 'mask/component/actions/instagram.html' "></div>
+
+    <span class="timeline__time tips" relative-date="{{::item.created_at}}"></span>    
+</div>

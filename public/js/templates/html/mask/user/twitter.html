@@ -10,7 +10,7 @@
                 <strong ng-bind="::user.name"></strong>
             </a>
         </div>
-        <div ng-if="::user.timeline">
+        <div ng-if="user.timeline">
             <button class="profile__following tips--deep" ng-class="::{'icon--twitter tips--active': user.following}" type="button" toggle-following="twitter:{{::user.uid}}">
                 <svg viewBox="0 0 60 60">
                     <use xlink:href="/public/img/icon-sprites.svg#following"></use>
@@ -21,74 +21,8 @@
         <div ng-if="true" ng-include=" 'mask/user/component/profile.html' " onload="_p_type = 'tweet'; _p_provider = 'twitter' "></div>
 
         <!-- Timeline -->
-        <div ng-if="::user.timeline.length > 0" ng-repeat="item in user.timeline" class="timeline" ng-class=" item.type === 'retweet' ? 'mask__gutter' : 'mask__timeline' " data-id="{{::item.r_id_str || item.id_str}}">
-
-            <div ng-if="::item.type === 'retweet'" class="timeline__profile">
-                <a ng-href="//twitter.com/{{::item.retweet.user.screen_name}}" target="_blank">
-                    <img class="timeline__profile__avatar" ng-src="{{::item.retweet.user.avatar.replace('normal', 'bigger')}}">
-                </a>
-                <div class="timeline__profile__fullname">
-                    <a ng-href="//twitter.com/{{::item.retweet.user.screen_name}}" target="_blank">
-                        <strong ng-bind="::item.retweet.user.name"></strong>
-                    </a>
-                </div>
-            </div>
-
-            <div class="timeline__content">
-                <p class="timeline__text" trim-quote-link="{{::item.type}}" linkify="twitter" ng-bind-html="::item.text"></p>
-                <div ng-if="::item.media" ng-include=" 'media/twitter.html' "></div>
-            </div>
-
-            <a ng-if="::item.type === 'retweet'" class="timeline--retweet__profile__avatar" ng-href="//twitter.com/{{::item.user.screen_name}}" target="_blank">
-                <img class="timeline__profile__avatar" ng-src="{{::item.user.avatar}}" alt="avatar">
-            </a>
-
-            <!-- Quote -->
-            <div ng-if="::item.type === 'quote'" class="timeline timeline--quote timeline--quote--twitter">
-
-                <div ng-include=" 'mask/user/component/quote__profile.html' "></div>
-
-                <div ng-include=" 'twitter/component/content--quote.html' "></div>
-
-                <div ng-include=" 'actions/twitter--quote.html' "></div>
-
-                <span class="timeline__time" relative-date="{{::item.quote.created_at}}"></span>
-
-            </div>
-
-            <span class="cursor--pointer">
-                <!-- Favorite -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 26 26">
-                        <use xlink:href="/public/img/icon-sprites.svg#favorite"></use>
-                    </svg>
-                    <span class="actions__count" ng-attr-data-count="{{::item.favorite_count > 0 ? item.favorite_count : ''}}"></span>
-                </button>
-                <!-- Retweet -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 34 26" data-retweet>
-                        <use xlink:href="/public/img/icon-sprites.svg#retweet"></use>
-                    </svg>
-                    <span class="actions__count" ng-attr-data-count="{{::item.retweet_count > 0 ? item.retweet_count : ''}}"></span>
-                </button>
-                <!-- Reply -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 26 26">
-                        <use xlink:href="/public/img/icon-sprites.svg#reply">
-                    </svg>
-                    <span class="actions__count" ng-attr-data-count="{{::item.reply_count > 0 ? item.reply_count : ''}}"></span>
-                </button>
-                <!-- Source -->
-                <a ng-href="//twitter.com/{{::user.screen_name}}/status/{{::item.id_str}}" target="_blank">
-                    <button class="actions tips--deep" type="button">
-                        <svg class="actions__button" viewBox="0 0 26 26">
-                            <use xlink:href="/public/img/icon-sprites.svg#source"></use>
-                        </svg>
-                        <span class="actions__count"></span>
-                    </button>
-                </a>
-            </span>
-            <span class="timeline__time tips" relative-date="{{::item.created_at}}"></span>
+        <div ng-if="user.timeline.length > 0">
+            <div ng-repeat="item in user.timeline | orderBy: '-created_at'" ng-include=" 'mask/component/user_timeline/twitter.html' "></div>
         </div>
     </div>
 

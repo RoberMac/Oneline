@@ -1,29 +1,36 @@
 <span class="cursor--pointer">
     <!-- Favorite -->
-    <button ng-click="setControlCenter('read_instagram-like' + ':' + item.id_str)" class="actions tips--deep" ng-class="::{'icon--like': item.favorited}" type="button">
+    <button class="actions tips--frozen" type="button">
         <svg class="actions__button" viewBox="0 0 26 26">
             <use xlink:href="/public/img/icon-sprites.svg#favorite"></use>
         </svg>
         <span class="actions__count" ng-attr-data-count="{{::item.favorite_count > 0 ? item.favorite_count : ''}}"></span>
     </button>
+    <!-- Retweet -->
+    <button class="actions tips--frozen" type="button">
+        <svg class="actions__button" viewBox="0 0 34 26" data-retweet>
+            <use xlink:href="/public/img/icon-sprites.svg#retweet"></use>
+        </svg>
+        <span class="actions__count" ng-attr-data-count="{{::item.retweet_count > 0 ? item.retweet_count : ''}}"></span>
+    </button>
     <!-- Reply -->
-    <button ng-click="setControlCenter('read_instagram-reply' + ':' + item.id_str)" class="actions tips--deep" type="button">
+    <button class="actions tips--frozen" type="button">
         <svg class="actions__button" viewBox="0 0 26 26">
             <use xlink:href="/public/img/icon-sprites.svg#reply">
         </svg>
         <span class="actions__count" ng-attr-data-count="{{::item.reply_count > 0 ? item.reply_count : ''}}"></span>
     </button>
     <!-- Source -->
-    <a ng-href="{{::item.link}}" target="_blank">
+    <a ng-href="//twitter.com/{{::item.user.screen_name}}/status/{{::item.id_str}}" target="_blank">
         <button class="actions tips--deep" type="button">
-            <svg class="actions__button" viewBox="0 0 26 26" data-source>
+            <svg class="actions__button" viewBox="0 0 26 26">
                 <use xlink:href="/public/img/icon-sprites.svg#source"></use>
             </svg>
             <span class="actions__count"></span>
         </button>
     </a>
     <!-- Location -->
-    <a ng-if="::item.location" ng-href="//instagram.com/explore/locations/{{::item.location.id}}" target="_blank">
+    <a ng-if="::item.location" ng-href="//twitter.com/search?q=place%3A{{::item.location.id}}" target="_blank">
         <button class="timeline__location tips--deep" type="button">
             <svg viewBox="0 0 26 26">
                 <use xlink:href="/public/img/icon-sprites.svg#location"></use>

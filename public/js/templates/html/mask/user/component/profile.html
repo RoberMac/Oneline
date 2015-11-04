@@ -28,7 +28,7 @@
     </a>
 </div>
 <!-- 是否為私人帳號 -->
-<div ng-if="user.protected" class="profile__locked">
+<div ng-if="user.protected && !user.timeline.length" class="profile__locked">
     <svg viewBox="0 0 40 40">
         <use xlink:href="/public/img/icon-sprites.svg#locked"></use>
     </svg>

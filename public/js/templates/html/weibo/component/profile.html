@@ -1,9 +1,7 @@
 <div class="timeline__profile">
-    <a ng-href="//weibo.com/n/{{::item.user.screen_name}}" target="_blank">
-
+    <button user-profile="weibo:timeline" type="button" ng-init="::_profile = item.user; _id_str = item.id_str">
         <img class="timeline__profile__avatar" ng-src="{{::item.user.avatar.replace('/50/', '/180/')}}">
-
-    </a>
+    </button>
     <div class="timeline__profile__fullname">
         <a ng-href="//weibo.com/n/{{::item.user.screen_name}}" target="_blank">
             <strong ng-bind="::item.user.name"></strong>

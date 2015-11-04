@@ -11,15 +11,15 @@ angular.module('Oneline.textDirectives', [])
         }
     }
 }])
-.directive('trimQuoteLink', ['$timeout', function ($timeout){
+.directive('trimSuffixLink', ['$timeout', function ($timeout){
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-            if (attrs.trimQuoteLink === 'quote'){
-                var quoteLink = /(?:https?\:\/\/)+(?![^\s]*?")([\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?$/ig
+            if (attrs.trimSuffixLink !== 'false'){
+                var suffixLink = /(?:https?\:\/\/)+(?![^\s]*?")([\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?$/ig
 
                 $timeout(function () {
-                    element.html(element.html().replace(quoteLink, ''));
+                    element.html(element.html().replace(suffixLink, ''));
                 })
             }
         }

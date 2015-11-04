@@ -32,6 +32,7 @@
         height: 24px;
 
         svg {
+            fill: var(--color-steel);
             size: 20px;
         }
 
@@ -231,7 +232,7 @@
                 }
             }
             &__content {
-                top: -14px;
+                top: -14px !important;
             }
             &__text {
                 margin-top: 0;

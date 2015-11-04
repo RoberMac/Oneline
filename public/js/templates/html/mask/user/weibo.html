@@ -14,73 +14,8 @@
         <div ng-if="true" ng-include=" 'mask/user/component/profile.html' " onload="_p_type = 'tweet'; _p_provider = 'weibo' "></div>
 
         <!-- Timeline -->
-        <div ng-if="::user.timeline.length > 0" ng-repeat="item in user.timeline" class="timeline" ng-class=" item.type === 'retweet' ? 'mask__gutter' : 'mask__timeline' " data-id="{{::item.id_str}}">
-
-            <div ng-if="::item.type === 'retweet'" class="timeline__profile">
-                <a ng-href="//weibo.com/n/{{::item.retweet.user.screen_name}}" target="_blank">
-                    <img class="timeline__profile__avatar" ng-src="{{::item.retweet.user.avatar.replace('/50/', '/180/')}}">
-                </a>
-                <div class="timeline__profile__fullname">
-                    <a ng-href="//weibo.com/n/{{::item.retweet.user.screen_name}}" target="_blank">
-                        <strong ng-bind="::item.retweet.user.name"></strong>
-                    </a>
-                </div>
-            </div>
-
-            <div ng-if="::item.type !== 'retweet'" class="timeline__content">
-                <p class="timeline__text" linkify="weibo" weibo-emotify>{{::item.text | html}}</p>
-                <div ng-if="::item.media && item.type === 'tweet' && item.media.length > 0" ng-include=" 'media/weibo.html' "></div>
-            </div>
-
-            <div ng-if="::item.type === 'retweet'" class="timeline__content">
-                <p class="timeline__text" linkify="weibo" weibo-emotify>{{::item.retweet.text | html}}</p>
-
-                <div ng-if="::item.media && item.media.length > 0" ng-include=" 'media/weibo.html' "></div>
-            </div>
-
-            <a ng-if="::item.type === 'retweet'" class="timeline--retweet__profile__avatar" ng-href="//weibo.com/n/{{::item.user.screen_name}}" target="_blank">
-                <img class="timeline__profile__avatar" ng-src="{{::item.user.avatar}}" alt="avatar">
-            </a>
-
-            <!-- Quote -->
-            <div ng-if="::item.type === 'quote'" class="timeline timeline--quote timeline--quote--weibo">
-
-                <div ng-include=" 'weibo/component/profile--retweet.html' "></div>
-
-                <div ng-include=" 'weibo/component/content--retweet.html' "></div>
-
-                <div ng-include=" 'actions/weibo--quote.html' "></div>
-
-                <span class="timeline__time" relative-date="{{::item.retweet.created_at}}"></span>
-
-            </div>
-
-            <span class="cursor--pointer">
-                <!-- Retweet -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 34 26" data-retweet>
-                        <use xlink:href="/public/img/icon-sprites.svg#retweet"></use>
-                    </svg>
-                    <span class="actions__count" ng-attr-data-count="{{::item.retweet_count > 0 ? item.retweet_count : ''}}"></span>
-                </button>
-                <!-- Reply -->
-                <button class="actions tips--frozen" type="button">
-                    <svg class="actions__button" viewBox="0 0 26 26">
-                        <use xlink:href="/public/img/icon-sprites.svg#reply">
-                    </svg>
-                    <span class="actions__count" ng-attr-data-count="{{::item.comments_count > 0 ? item.comments_count : ''}}"></span>
-                </button>
-                <!-- Source -->
-                <a ng-href="//weibo.com/{{::item.user.uid}}/{{::item.mid}}" target="_blank">
-                    <button class="actions tips--deep" type="button">
-                        <svg class="actions__button" viewBox="0 0 26 26">
-                            <use xlink:href="/public/img/icon-sprites.svg#source"></use>
-                        </svg>
-                        <span class="actions__count"></span>
-                    </button>
-                </a>
-            </span>
-            <span class="timeline__time tips" relative-date="{{::item.created_at}}"></span>
+        <div ng-if="user.timeline.length > 0">
+            <div ng-repeat="item in user.timeline | orderBy: '-created_at'" ng-include=" 'mask/component/user_timeline/weibo.html' "></div>
         </div>
     </div>
 

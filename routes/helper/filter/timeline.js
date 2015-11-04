@@ -135,6 +135,7 @@ var filter = {
                 link: item.link
             }
 
+            // Video
             if (item.type === 'video'){
                 extend(igPost, {
                     videos: {
@@ -144,9 +145,20 @@ var filter = {
                 })
             }
 
+            // User In Photo
             if (item.users_in_photo.length > 0){
                 extend(igPost, {
                     users_in_photo: item.users_in_photo,
+                })
+            }
+
+            // Location
+            if (item.location){
+                extend(igPost, {
+                    location: {
+                        name: item.location.name,
+                        id: item.location.id
+                    }
                 })
             }
 
@@ -197,6 +209,7 @@ var filter = {
 
                 retweetType === 'retweet'
                     ? extend(weiboObj, {
+                        r_id_str: item.idstr,
                         id_str: retweetItem.idstr,
                         retweet_count: retweetItem.reposts_count,
                         comments_count: retweetItem.comments_count,
@@ -216,9 +229,10 @@ var filter = {
                 })
 
                 // media
-                if (retweetItem.pic_urls && retweetItem.pic_urls.length > 0){
+                if (retweetItem.pic_urls && retweetItem.pic_urls.length > 0 
+                    || retweetItem.pic_ids && retweetItem.pic_ids.length > 0){
                     extend(weiboObj, {
-                        media: filterUtils.weibo.media(retweetItem.pic_urls)
+                        media: filterUtils.weibo.media(retweetItem.pic_urls || retweetItem.pic_ids)
                     })
                 }
             }
@@ -230,9 +244,19 @@ var filter = {
             }
 
             // Media
-            if (item.pic_urls.length > 0){
+            if (item.pic_urls && item.pic_urls.length > 0 || item.pic_ids && item.pic_ids.length > 0){
                 extend(weiboObj, {
-                    media: filterUtils.weibo.media(item.pic_urls)
+                    media: filterUtils.weibo.media(item.pic_urls || item.pic_ids)
+                })
+            }
+
+            // Location
+            if (item.geo && item.geo.type === 'Point'){
+                extend(weiboObj, {
+                    location: {
+                        lat: item.geo.coordinates[0],
+                        long: item.geo.coordinates[1]
+                    }
                 })
             }
 

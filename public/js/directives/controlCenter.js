@@ -308,7 +308,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                 } else if (_provider === 'weibo'){
                     if (_action === 'tweet'){
                         angular.extend(params, {
-                            geo: elem.find('geo-picker').data('geo')
+                            geo: elem.find('geo-picker').find('button').data('geo')
                         })
                     }
                 }

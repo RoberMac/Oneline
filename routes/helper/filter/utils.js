@@ -88,6 +88,13 @@ function filterWeiboMedia(items){
     var cache = [];
 
     items.forEach(function (item){
+        // `pic_ids`
+        if (item.length <= 32){
+            item = {
+                thumbnail_pic: 'http://ww1.sinaimg.cn/thumbnail/' + item + '.jpg'
+            }
+        }
+
         var type = item.thumbnail_pic.indexOf('\.gif') > 0 ? 'gif' : 'photo',
             image_url = item.thumbnail_pic.replace('thumbnail', 'square');
 

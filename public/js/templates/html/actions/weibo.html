@@ -29,4 +29,10 @@
         </svg>
         <span class="actions__count"></span>
     </button>
+    <!-- Location -->
+    <button ng-if="::item.location" class="timeline__location tips--deep" type="button" location="weibo" ng-init="::_location = item.location">
+        <svg viewBox="0 0 26 26">
+            <use xlink:href="/public/img/icon-sprites.svg#location"></use>
+        </svg>
+    </button>
 </span>
