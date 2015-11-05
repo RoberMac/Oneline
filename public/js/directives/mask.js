@@ -26,8 +26,8 @@ angular.module('Oneline.maskDirectives', [])
  * 查看用戶信息
  *
  */
-.directive('userProfile', ['Action', 'store', 'olMask', 'olUserProfile',
-    function(Action, store, olMask, olUserProfile){
+.directive('userProfile', ['Action', 'store', 'olMask',
+    function(Action, store, olMask){
 
     return {
         restrict: 'A',
@@ -61,8 +61,12 @@ angular.module('Oneline.maskDirectives', [])
                     scope.loadUserTimeline = function (){
                         if (scope.loadState === 'loading') return;
 
+                        var timeline = document.querySelectorAll('.profile .timeline'),
+                            _min_id  = angular.element(timeline[timeline.length - 1]).attr('data-id');
+
                         scope.loadState = 'loading'
-                        olUserProfile.loadOldPosts(_provider, _profile.uid)
+
+                        olMask.loadOldPosts('user_timeline', _provider, _profile.uid, _min_id)
                         .then(function (data){
                             scope.user.timeline = scope.user.timeline.concat(data)
 
@@ -141,10 +145,10 @@ angular.module('Oneline.maskDirectives', [])
     }
 }])
 /**
- * 查看目標「地理位置」附近的「貼文」
+ * 搜索「貼文」（地理位置、Tags 等）
  *
  */
-.directive('location', ['Action', 'olMask', 
+.directive('search', ['Action', 'olMask', 
     function (Action, olMask){
 
     return {
@@ -152,8 +156,12 @@ angular.module('Oneline.maskDirectives', [])
         link: function (scope, elem, attrs){
             elem
             .on('click', function (){
-                var _location = scope._location,
-                    _provider = attrs.location;
+                var _info = attrs.search.split('---'),
+                    _provider = _info[0],
+                    _type = _info[1],
+                    _q = _info[2],
+                    _title = _info[3],
+                    _action = _provider === 'twitter' ? 'search' : _type + '_timeline';
 
                 // Init
                 olMask.switch(scope)
@@ -163,23 +171,44 @@ angular.module('Oneline.maskDirectives', [])
 
                 function setup(){
                     scope.loadState = 'initLoad'
-                    scope.location = {
-                        name: _location.name
+                    scope.search = {
+                        type: _type,
+                        title: _title,
+                        q: _q
                     }
 
+                    scope.loadMore = function (){
+                        if (scope.loadState === 'loading') return;
+
+                        var timeline = document.querySelectorAll('.profile .timeline'),
+                            min_timeline = angular.element(timeline[timeline.length - 1]),
+                            _min_id  = _provider === 'weibo'
+                                            ? min_timeline.attr('data-created')
+                                        : min_timeline.attr('data-id');
+
+                        scope.loadState = 'loading'
+
+                        olMask.loadOldPosts(_action, _provider, _q, _min_id)
+                        .then(function (data){
+                            scope.search.timeline = scope.search.timeline.concat(data)
+
+                            scope.loadState = 'loadFin'
+                        })
+                        .catch(function (err){
+                            scope.loadState = 'loadFail'
+                        })
+                    }
                     // Show Profile
-                    olMask.append('mask/location/' + _provider + '.html', scope)
+                    olMask.append('mask/search/' + _provider + '.html', scope)
                     // Fire
                     Action.get({
-                        action: 'location_timeline',
+                        action: _action,
                         provider: _provider,
-                        id: _location.id || 0,
-                        lat: _location.lat,
-                        long: _location.long
+                        id: _q
                     })
                     .$promise
                     .then(function (res){
-                        scope.location.timeline = res.data
+                        scope.search.timeline = res.data
 
                         scope.loadState = 'loadFin'
                     })

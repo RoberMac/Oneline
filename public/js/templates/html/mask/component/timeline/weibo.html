@@ -1,4 +1,4 @@
-<div class="timeline mask__timeline" data-id="{{::item.r_id_str || item.id_str}}">
+<div class="timeline mask__timeline" data-id="{{::item.r_id_str || item.id_str}}" data-created="{{::item.created_at}}">
 
     <div class="timeline__profile" ng-init="_author = item.type === 'retweet' ? item.retweet.user : item.user">
         <a ng-href="//weibo.com/n/{{::_author.screen_name}}" target="_blank">

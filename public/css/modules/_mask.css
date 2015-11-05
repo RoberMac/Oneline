@@ -181,14 +181,9 @@
         background-color: var(--color-gray);
 
         .timeline__content {
-            top: 0;
-        }
-        .timeline__media, .timeline__text {
-            margin: 0 0 17px 0;
+            top: -12px;
         }
         .timeline--quote {
-            top: 0;
-            margin-top: 36px;
             background-color: var(--color-gray-drak);
         }
         .actions__count::after {
@@ -202,26 +197,14 @@
         }
 
         &--location {
-            .timeline__content {
-                top: 14px;
+            .timeline__location {
+                transform: translateY(-10px);
             }
         }
     }
     &__timeline {
         margin: 36px 17px 17px;
-        padding: 0 10px;
         background-color: var(--color-gray);
-
-        .timeline__content {
-            top: -24px;
-        }
-        .timeline__text, .timeline__media {
-            margin: 17px 0 0;
-        }
-        .timeline--quote {
-            top: -12px;
-            margin: 27px 7px 7px;
-        }
     }
     &__notification {
         position: relative 70px * *;
@@ -230,12 +213,21 @@
         height: calc(93vh - 140px - 48px);
     }
     &__header {
-        position: relative;
-        padding: 10px;
+        padding: 17px;
         text-align: center;
 
-        svg {
-            height: 2.7em;
+        &__title {
+
+            > * {
+                display: inline-block;
+                height: 37px;
+                vertical-align: middle;
+            }
+
+            span {
+                font-size: var(--font-size-regular) 37px;
+                font-weight: var(--font-weight-light);
+            }
         }
     }
     &__source {

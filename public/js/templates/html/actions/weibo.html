@@ -30,7 +30,7 @@
         <span class="actions__count"></span>
     </button>
     <!-- Location -->
-    <button ng-if="::item.location" class="timeline__location tips--deep" type="button" location="weibo" ng-init="::_location = item.location">
+    <button ng-if="::item.location" class="timeline__location tips--deep" type="button" search="weibo---location---{{::item.location.lat}}_{{::item.location.long}}---位置">
         <svg viewBox="0 0 26 26">
             <use xlink:href="/public/img/icon-sprites.svg#location"></use>
         </svg>

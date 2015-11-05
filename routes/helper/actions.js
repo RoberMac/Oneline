@@ -204,10 +204,37 @@ var Actions = {
                     tOpts: tOpts,
                     handleActionFunc: function (data){
                         data[0].splice(0, 1)
-                        return { data: timelineFilter.twitter(data[0]) }
+                        return { data: timelineFilter.twitter(data[0]).data }
                     }
                 }
             }
+        },
+        search: {
+            _get: function (opts){
+                var tOpts = {
+                    access_token: opts.token,
+                    q: opts.id,
+                    count: 20,
+                    include_entities: false
+                };
+
+                if (opts.query.max_id){
+                    extend(tOpts, { max_id: opts.query.max_id })
+                }
+
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'search/tweets',
+                    tOpts: tOpts,
+                    handleActionFunc: function (data){
+                        if (opts.query.max_id){
+                            data[0].statuses.splice(0, 1)
+                        }
+
+                        return { data: timelineFilter.twitter(data[0].statuses).data }
+                    }
+                }
+            } 
         }
     },
     instagram: {
@@ -257,11 +284,23 @@ var Actions = {
                     endpoint: 'user_media_recent',
                     iOpts: { max_id: opts.query.max_id },
                     handleActionFunc: function (data){
-                        return { data: timelineFilter.instagram(data[0]) }
+                        return { data: timelineFilter.instagram(data[0]).data }
                     }
                 }
             }
         },
+        location_timeline: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'location_media_recent',
+                    iOpts: { max_id: opts.query.max_id },
+                    handleActionFunc: function (data){
+                        return { data: timelineFilter.instagram(data[0]).data }
+                    }
+                }
+            }
+        }
     },
     weibo: {
         user: {
@@ -399,7 +438,7 @@ var Actions = {
                     handleActionFunc: function (data){
                         data.statuses.splice(0, 1)
 
-                        return { data: timelineFilter.weibo(data.statuses) }
+                        return { data: timelineFilter.weibo(data.statuses).data }
                     }
                 }
             }   
@@ -425,15 +464,26 @@ var Actions = {
         },
         location_timeline: {
             _get: function (opts){
+                var wOpts = {
+                    access_token: opts.token,
+                    count: 20,
+                    lat: opts.id.split('_')[0],
+                    long: opts.id.split('_')[1]
+                }
+
+                if (opts.query.max_id){
+                    extend(wOpts, { endtime: opts.query.max_id.slice(0, -3) })
+                }
+
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'place/nearby_timeline',
-                    wOpts: {
-                        access_token: opts.token,
-                        lat: opts.query && opts.query.lat,
-                        long: opts.query && opts.query.long
-                    },
+                    wOpts: wOpts,
                     handleActionFunc: function (data){
+                        if (opts.query.max_id){
+                            data.statuses.splice(0, 1)
+                        }
+
                         return { data: timelineFilter.weibo(data.statuses).data }
                     }
                 }
@@ -572,11 +622,12 @@ module.exports = {
     weibo: function (action, opts){
         // Init
         var _method = '_' + opts.method;
+        var __method = opts.method === 'get' ? 'get' : 'post';
 
         var triggerAction = {
             basic: function (w){
                 return Weibo({
-                    method: opts.method,
+                    method: __method,
                     endpoint: w.endpoint,
                     opts: w.wOpts
                 })
@@ -585,12 +636,12 @@ module.exports = {
             combination: function (w){
                 return Q.all([
                     Weibo({
-                        method: opts.method,
+                        method: __method,
                         endpoint: w.endpoint,
                         opts: w.wOpts
                     }),
                     Weibo({
-                        method: opts.method,
+                        method: __method,
                         endpoint: w.endpoint2,
                         opts: w.wOpts2
                     })

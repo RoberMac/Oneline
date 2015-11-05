@@ -25,6 +25,14 @@
                 <span class="actions__count"></span>
             </button>
         </a>
+        <!-- Location -->
+        <a ng-if="::item.location" ng-href="//twitter.com/search?q=place%3A{{::item.location.id}}" target="_blank">
+            <button class="timeline__location tips--deep" type="button">
+                <svg viewBox="0 0 60 60">
+                   <use xlink:href="/public/img/icon-sprites.svg#location"></use>
+                </svg>
+            </button>
+        </a>
     </span>
 
     <span class="timeline__time tips" relative-date="{{::item.created_at}}"></span>

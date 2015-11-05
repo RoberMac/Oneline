@@ -1,0 +1,42 @@
+<div class="timeline mask__timeline" data-id="{{::item.id_str}}">
+
+    <div class="timeline__profile">
+        <a ng-href="//instagram.com/{{::item.user.screen_name}}" target="_blank">
+            <img class="timeline__profile__avatar timeline__profile__avatar--instagram" ng-src="{{::item.user.avatar}}">
+        </a>
+        <div class="timeline__profile__fullname">
+            <a ng-href="//instagram.com/{{::item.user.screen_name}}" target="_blank">
+                <strong ng-bind="::item.user.name || item.user.screen_name"></strong>
+            </a>
+        </div>
+    </div>
+
+    <div class="timeline__content">
+        <div ng-include=" 'media/instagram.html' "></div>
+        <p class="timeline__text" linkify="instagram">{{::item.text | html}}</p>
+    </div>
+
+    <!-- Actions -->
+    <span class="cursor--pointer">
+        <!-- Source -->
+        <a ng-href="{{::item.link}}" target="_blank">
+            <button class="actions tips--deep" type="button">
+                <svg class="actions__button" viewBox="0 0 26 26">
+                    <use xlink:href="/public/img/icon-sprites.svg#source"></use>
+                </svg>
+                <span class="actions__count"></span>
+            </button>
+        </a>
+        <!-- Location -->
+        <a ng-if="::item.location" ng-href="//instagram.com/explore/locations/{{::item.location.id}}" target="_blank">
+            <button class="timeline__location tips--deep" type="button">
+                <svg viewBox="0 0 26 26">
+                    <use xlink:href="/public/img/icon-sprites.svg#location"></use>
+                </svg>
+                <span class="timeline__location__name" ng-bind="::item.location.name"></span>
+            </button>
+        </a>
+    </span>
+
+    <span class="timeline__time tips" relative-date="{{::item.created_at}}"></span>    
+</div>

@@ -1,6 +1,6 @@
 angular.module('Oneline.maskServices', [])
-.service('olMask', ['$timeout', '$compile', '$templateRequest',
-    function($timeout, $compile, $templateRequest){
+.service('olMask', ['$q', '$timeout', '$compile', '$templateRequest', 'Action',
+    function($q, $timeout, $compile, $templateRequest, Action){
 
     this.append = function (templateUrl, scope){
         $timeout(function (){
@@ -19,24 +19,18 @@ angular.module('Oneline.maskServices', [])
                     ? scope.setControlCenter('', 'fullmask')
                 : scope.setControlCenter('fullmask');
     }
-}])
-.service('olUserProfile', ['$q', 'Action', function($q, Action){
-
-    this.loadOldPosts = function (_provider, _uid){
+    this.loadOldPosts = function (action, provider, id, min_id){
         var defer = $q.defer()
 
-        var timeline = document.querySelectorAll('.profile .timeline'),
-            _min_id  = angular.element(timeline[timeline.length - 1]).attr('data-id');
-
         Action.get({
-            action: 'user_timeline',
-            provider: _provider,
-            id: _uid,
-            max_id: _min_id
+            action: action,
+            provider: provider,
+            id: id,
+            max_id: min_id
         })
         .$promise
         .then(function (res){
-            defer.resolve(res.data.data)
+            defer.resolve(res.data)
         })
         .catch(function (err){
             defer.reject(err)
