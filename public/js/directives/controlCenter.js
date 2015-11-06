@@ -314,6 +314,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                         scope.isLeftPopup = olWrite.isLeftPopup()
                         scope.isShowMentions = true
                         scope.mentionsList = filterMentionsList
+                        scope.$apply()
                     } else {
                         scope.isShowMentions = false
                     }

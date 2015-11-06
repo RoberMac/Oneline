@@ -30,7 +30,8 @@ angular.module('Oneline.controlCenterServices', [])
         return _str;
     }
     this.generateTemplate = function (type, scope, _provider){
-        var _template = _provider + '/' + type + '.html',
+        var _this = this,
+            _template = _provider + '/' + type + '.html',
             _mask = angular.element(document.querySelector('.cancelMask__wrapper'));
 
         $templateRequest(_template)
@@ -44,7 +45,7 @@ angular.module('Oneline.controlCenterServices', [])
 
         $timeout(function (){
             _mask.find('button').css('pointer-events', 'none')
-            this.refreshPreviewText(scope.item.text, _provider)
+            _this.refreshPreviewText(scope.item.text, _provider)
         })
     }
     this.generateRetweetUser = function(_id, _type, _provider){
