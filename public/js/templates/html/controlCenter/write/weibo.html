@@ -16,6 +16,12 @@
     </div>
 
     <div class="write__previews"></div>
+
+    <button ng-if="!isShowLivePreview" ng-click="showLivePreview()" class="write__live-preview animate--faster tips" type="button">
+        <svg viewBox="0 0 200 100">
+            <use xlink:href="/public/img/icon-sprites.svg#show"></use>
+        </svg>
+    </button>
 </form>
 <div ng-if="isShowMentions" class="write__mentions write__popup overflow--y animate--faster" ng-class="{'write__popup--left': isLeftPopup, 'write__popup--right': !isLeftPopup}">
     <button ng-repeat="mention in mentionsList" ng-click="insertMention(mention, 'weibo')" ng-bind="mention"></button>

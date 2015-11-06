@@ -35,16 +35,17 @@ angular.module('Oneline.controlCenterServices', [])
 
         $templateRequest(_template)
         .then(function (html){
-            html = '<div class="timeline timeline--' + _provider + '">' + html + '</div>'
+            html = '<div class="timeline timeline--' + _provider + ' animate--enter">' + html + '</div>'
 
             _mask.children()
             .empty() // 清空
             .append($compile(html)(scope)) // 插入
         })
+
         $timeout(function (){
             _mask.find('button').css('pointer-events', 'none')
+            this.refreshPreviewText(scope.item.text, _provider)
         })
-        this.refreshPreviewText(scope.item.text, _provider)
     }
     this.generateRetweetUser = function(_id, _type, _provider){
         return {

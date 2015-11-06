@@ -205,6 +205,10 @@
     &__timeline {
         margin: 36px 17px 17px;
         background-color: var(--color-gray);
+
+        .timeline--quote {
+            background-color: var(--color-gray-drak);
+        }
     }
     &__notification {
         position: relative 70px * *;

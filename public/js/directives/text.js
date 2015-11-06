@@ -15,7 +15,7 @@ angular.module('Oneline.textDirectives', [])
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-            if (attrs.trimSuffixLink !== 'false'){
+            if (attrs.trimSuffixLink === 'true'){
                 var suffixLink = /(?:https?\:\/\/)+(?![^\s]*?")([\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?$/ig
 
                 $timeout(function () {

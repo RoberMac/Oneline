@@ -242,6 +242,14 @@
             }
         }
     }
+    &__live-preview {
+        position: absolute -40px * * calc(50% - 20px);
+        size: 40px;
+
+        svg {
+            width: 40px;
+        }
+    }
 }
 
 .read {

@@ -207,79 +207,24 @@ angular.module('Oneline.controlCenterDirectives', [])
                 statusElem   = elem.find('textarea'),
                 typeButton;
 
-            /**
-             * 初始化輸入框
-             *
-             */
+
             setTimeout(function (){
-                statusElem[0].focus()
-
-                if (_action !== 'tweet'){
-                    var __sourceElem = document.querySelector('[data-id="' + _id + '"]'),
-                        _sourceElem = angular.element(__sourceElem);
-
-                    switch (_action){
-                        case 'reply':
-                            if (_provider === 'twitter'){
-                                statusElem.val(
-                                    olWrite.extractMentions(
-                                        _sourceElem.find('p')[0].innerText, '@' + _info[2]
-                                    )
-                                )
-                            }
-                            break;
-                        case 'retweet':
-                            if (_provider === 'weibo'){
-                                statusElem.val(
-                                    _type === 'tweet'
-                                        ? ''
-                                    : _type === 'retweet'
-                                        ? '//@' + _info[2] + ': 转发微博'
-                                    : '//@' + _info[2] + ': ' + _sourceElem.find('p')[0].innerText
-                                )
-                                statusElem[0].setSelectionRange(0, 0)
-                            }
-                            // 允許直接提交 -> 「轉推」
-                            statusElem.prop('required', false)
-                            submitButton.prop('disabled', false)
-                            break;
-                    }
-                }
-
-                __action === 'retweet'
-                    ? angular.extend(scope.item, olWrite.generateRetweetUser(_id, _type, _provider))
-                : __action === 'quote'
-                    ? angular.extend(scope.item, olWrite.generateQuoteUser(_id, _type, _provider))
-                : null
+                initInput()
             }, 700)
-            /**
-             * 初始化 Live Preview
-             *
-             */
-            var _profile = store.get('profile_' + _provider) || {},
-                _mentionsList = store.get('mentions_' + _provider) || [],
+
+            var _mentionsList = store.get('mentions_' + _provider) || [],
                 _regex = {
                     twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
                     instagram: /(|\s)*@([\w\.]*)$/,
                     weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
                 };
 
+            scope.isShowLivePreview = false
             scope.isLeftPopup = false
             scope.isShowMentions = false
             scope.mentionsList = _mentionsList
-            scope.item = {
-                user: {
-                    name: _profile.name,
-                    avatar: _profile.avatar,
-                    screen_name: _profile.screen_name
-                },
-                media: [],
-                text: statusElem.val().trim(),
-                created_at: Date.now(),
-                type: __action
-            }
+            scope.showLivePreview = showLivePreview
 
-            olWrite.generateTemplate(_action === 'reply' ? 'tweet' : __action || _action, scope, _provider)
 
             /**
              * 監聽事件
@@ -376,27 +321,29 @@ angular.module('Oneline.controlCenterDirectives', [])
                     scope.isShowMentions = false
                 }
 
-                // 刷新預覽
-                scope.item.text = status
-                olWrite.refreshPreviewText(status, _provider)
+                if (scope.isShowLivePreview){
+                    // 刷新預覽
+                    scope.item.text = status
+                    olWrite.refreshPreviewText(status, _provider)
 
-                // retweet & quote 切換
-                if (_action === 'retweet'){
-                    // Retweet -> Quote
-                    if (status.length > 0){
-                        if (__action === 'retweet'){
-                            angular.extend(scope.item, olWrite.generateQuoteUser(_id, _type, _provider))
-                            olWrite.generateTemplate('quote', scope, _provider)
+                    // retweet & quote 切換
+                    if (_action === 'retweet'){
+                        // Retweet -> Quote
+                        if (status.length > 0){
+                            if (__action === 'retweet'){
+                                angular.extend(scope.item, olWrite.generateQuoteUser(_id, _type, _provider))
+                                olWrite.generateTemplate('quote', scope, _provider)
+                            }
+                            __action = 'quote'
                         }
-                        __action = 'quote'
-                    }
-                    // Quote -> Retweet
-                    else {
-                        if (__action === 'quote'){
-                            angular.extend(scope.item, olWrite.generateRetweetUser(_id, _type, _provider))
-                            olWrite.generateTemplate('retweet', scope, _provider)
+                        // Quote -> Retweet
+                        else {
+                            if (__action === 'quote'){
+                                angular.extend(scope.item, olWrite.generateRetweetUser(_id, _type, _provider))
+                                olWrite.generateTemplate('retweet', scope, _provider)
+                            }
+                            __action = 'retweet'
                         }
-                        __action = 'retweet'
                     }
                 }
                 // 超字提醒
@@ -417,6 +364,71 @@ angular.module('Oneline.controlCenterDirectives', [])
             .on('$destroy', function (){
                 elem.off()
             });
+
+
+            // 初始化輸入框
+            function initInput(){
+                statusElem[0].focus()
+
+                if (_action !== 'tweet'){
+                    var __sourceElem = document.querySelector('[data-id="' + _id + '"]'),
+                        _sourceElem = angular.element(__sourceElem);
+
+                    switch (_action){
+                        case 'reply':
+                            if (_provider === 'twitter'){
+                                statusElem.val(
+                                    olWrite.extractMentions(
+                                        _sourceElem.find('p')[0].innerText, '@' + _info[2]
+                                    )
+                                )
+                            }
+                            break;
+                        case 'retweet':
+                            if (_provider === 'weibo'){
+                                statusElem.val(
+                                    _type === 'tweet'
+                                        ? ''
+                                    : _type === 'retweet'
+                                        ? '//@' + _info[2] + ': 转发微博'
+                                    : '//@' + _info[2] + ': ' + _sourceElem.find('p')[0].innerText
+                                )
+                                statusElem[0].setSelectionRange(0, 0)
+                            }
+                            // 允許直接提交 -> 「轉推」
+                            statusElem.prop('required', false)
+                            submitButton.prop('disabled', false)
+                            break;
+                    }
+                }
+            }
+            // Live Preview
+            function showLivePreview(){
+                var _profile = store.get('profile_' + _provider) || {};
+
+                statusElem[0].focus()
+
+                scope.isShowLivePreview = true
+                scope.item = {
+                    user: {
+                        name: _profile.name,
+                        avatar: _profile.avatar,
+                        screen_name: _profile.screen_name
+                    },
+                    media: [],
+                    text: statusElem.val().trim(),
+                    created_at: Date.now(),
+                    type: __action
+                }
+
+                olWrite.generateTemplate(_action === 'reply' ? 'tweet' : __action || _action, scope, _provider)
+
+                __action === 'retweet'
+                    ? angular.extend(scope.item, olWrite.generateRetweetUser(_id, _type, _provider))
+                : __action === 'quote'
+                    ? angular.extend(scope.item, olWrite.generateQuoteUser(_id, _type, _provider))
+                : null
+            }
         }
     }
 }])
