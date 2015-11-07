@@ -19,6 +19,7 @@ angular.module('Oneline.mediaDirectives', [])
                 playIcon.toggleClass('timeline__media__playButton--playing')
 
                 elem.on('mouseout', function (){
+                    video.pause()
                     video.removeAttribute('loop')
                 })
             })

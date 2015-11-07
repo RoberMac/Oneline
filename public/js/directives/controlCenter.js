@@ -167,17 +167,17 @@ angular.module('Oneline.controlCenterDirectives', [])
         }
     }
 }])
-.directive('write', ['$filter', 'Action', 'olUI', 'olWrite', 'store',
-    function ($filter, Action, olUI, olWrite, store){
+.directive('write', ['$timeout', '$filter', 'Action', 'olUI', 'olWrite', 'store',
+    function ($timeout, $filter, Action, olUI, olWrite, store){
 
     return {
         restrict: 'A',
         scope: false,
         controller: ['$scope', function ($scope){
             var _regex = {
-                twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
-                instagram: /(|\s)*@([\w\.]*)$/,
-                weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
+                twitter: /@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
+                instagram: /@([\w\.]*)$/,
+                weibo: /@([\u4e00-\u9fa5\w-]*)$/
             };
 
             $scope.insertMention = function (mention, provider){
@@ -283,6 +283,10 @@ angular.module('Oneline.controlCenterDirectives', [])
                     }
 
                     scope.setControlCenter('')
+                    // 刪除草稿
+                    if (_action === 'tweet'){
+                        store.remove('newTweet_' + _provider)
+                    }
                 })
                 .catch(function (){
                     submitButton.prop('disabled', false)
@@ -299,28 +303,30 @@ angular.module('Oneline.controlCenterDirectives', [])
                     statusLength = _provider === 'weibo' ? olWrite.weiboLength(status) : status.length;
 
                 // 判斷是否呼出「提及」用戶列表
-                var mention = status.match(_regex[_provider]);
-                if (mention){
-                    var filterMentionsList = $filter('limitTo')(
-                            $filter('filter')(
-                                _mentionsList,
-                                _provider === 'twitter'
-                                    ? { $: mention[2].trim() }
-                                : mention[2].trim()
-                            )
-                    , 100);
+                $timeout(function (){
+                    var _start = statusElem[0].selectionStart
+                    var mention = status.slice(0, _start).match(_regex[_provider]);
+                    if (mention){
+                        var filterMentionsList = $filter('limitTo')(
+                                $filter('filter')(
+                                    _mentionsList,
+                                    _provider === 'twitter'
+                                        ? { $: mention[2].trim() }
+                                    : mention[2].trim()
+                                )
+                        , 100);
 
-                    if (filterMentionsList.length > 0){
-                        scope.isLeftPopup = olWrite.isLeftPopup()
-                        scope.isShowMentions = true
-                        scope.mentionsList = filterMentionsList
-                        scope.$apply()
-                    } else {
+                        if (filterMentionsList.length > 0){
+                            scope.isLeftPopup = olWrite.isLeftPopup()
+                            scope.isShowMentions = true
+                            scope.mentionsList = filterMentionsList
+                        } else {
+                            scope.isShowMentions = false
+                        }
+                    } else if (scope.isShowMentions){
                         scope.isShowMentions = false
                     }
-                } else if (scope.isShowMentions){
-                    scope.isShowMentions = false
-                }
+                })
 
                 if (scope.isShowLivePreview){
                     // 刷新預覽
@@ -361,6 +367,8 @@ angular.module('Oneline.controlCenterDirectives', [])
                 typeButton
                     ? typeButton.addClassTemporarily('actions__button--' + _action + '--active', 300)
                 : null
+                // 存儲與本地
+                store.set('newTweet_' + _provider, status)
             })
             .on('$destroy', function (){
                 elem.off()
@@ -371,36 +379,38 @@ angular.module('Oneline.controlCenterDirectives', [])
             function initInput(){
                 statusElem[0].focus()
 
-                if (_action !== 'tweet'){
-                    var __sourceElem = document.querySelector('[data-id="' + _id + '"]'),
-                        _sourceElem = angular.element(__sourceElem);
+                var __sourceElem = document.querySelector('[data-id="' + _id + '"]'),
+                    _sourceElem = angular.element(__sourceElem);
 
-                    switch (_action){
-                        case 'reply':
-                            if (_provider === 'twitter'){
-                                statusElem.val(
-                                    olWrite.extractMentions(
-                                        _sourceElem.find('p')[0].innerText, '@' + _info[2]
-                                    )
+                switch (_action){
+                    case 'tweet':
+                        statusElem.val(store.get('newTweet_' + _provider)) || ''
+                        elem.triggerHandler('input')
+                        break;
+                    case 'reply':
+                        if (_provider === 'twitter'){
+                            statusElem.val(
+                                olWrite.extractMentions(
+                                    _sourceElem.find('p')[0].innerText, '@' + _info[2]
                                 )
-                            }
-                            break;
-                        case 'retweet':
-                            if (_provider === 'weibo'){
-                                statusElem.val(
-                                    _type === 'tweet'
-                                        ? ''
-                                    : _type === 'retweet'
-                                        ? '//@' + _info[2] + ': 转发微博'
-                                    : '//@' + _info[2] + ': ' + _sourceElem.find('p')[0].innerText
-                                )
-                                statusElem[0].setSelectionRange(0, 0)
-                            }
-                            // 允許直接提交 -> 「轉推」
-                            statusElem.prop('required', false)
-                            submitButton.prop('disabled', false)
-                            break;
-                    }
+                            )
+                        }
+                        break;
+                    case 'retweet':
+                        if (_provider === 'weibo'){
+                            statusElem.val(
+                                _type === 'tweet'
+                                    ? ''
+                                : _type === 'retweet'
+                                    ? '//@' + _info[2] + ': 转发微博'
+                                : '//@' + _info[2] + ': ' + _sourceElem.find('p')[0].innerText
+                            )
+                            statusElem[0].setSelectionRange(0, 0)
+                        }
+                        // 允許直接提交 -> 「轉推」
+                        statusElem.prop('required', false)
+                        submitButton.prop('disabled', false)
+                        break;
                 }
             }
             // Live Preview

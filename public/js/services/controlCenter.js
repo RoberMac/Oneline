@@ -111,9 +111,16 @@ angular.module('Oneline.controlCenterServices', [])
         statusElem.focus()
     }
     this.removeText = function (regex){
-        var statusElem = document.querySelector('textarea');
+        var statusElem = document.querySelector('textarea'),
+            _start = statusElem.selectionStart;
 
-        statusElem.value = statusElem.value.replace(regex, ' ')
+        var _start_str = statusElem.value.slice(0, _start),
+            _end_str = statusElem.value.slice(_start);
+
+        statusElem.value = _start_str.replace(regex, '') + _end_str
+
+        _start -= 1
+        statusElem.setSelectionRange(_start, _start)
 
         if (statusElem.value.length === 1){
             statusElem.value = ''
