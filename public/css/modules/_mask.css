@@ -11,9 +11,6 @@
         position: absolute;
         size: 100% 100%;
 
-        &--fullmask, &--replicant {
-            height: 100%;
-        }
         &--write {
             height: 66.7%;
         }
@@ -27,9 +24,6 @@
 }
 
 .profile {
-    padding: 7px 0;
-    margin: 36px 7px 0 7px;
-
     &__avatar {
         top: -31px;
         left: calc(50% - 24px);
@@ -130,6 +124,9 @@
 }
 
 .mask {
+    padding: 7px 0;
+    margin: 36px 7px 0 7px;
+
     &__menu {
         &--row {
             position: absolute;
@@ -232,6 +229,15 @@
                 font-size: var(--font-size-regular) 37px;
                 font-weight: var(--font-weight-light);
             }
+        }
+        &--twitter {
+            color: var(--color-twitter);
+        }
+        &--instagram {
+            color: var(--color-instagram);
+        }
+        &--weibo {
+            color: var(--color-weibo);
         }
     }
     &__source {

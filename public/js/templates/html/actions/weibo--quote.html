@@ -1,10 +1,10 @@
 <span class="cursor--pointer" data-quote-id="{{::item.retweet.id_str}}">
-    <a ng-href="//weibo.com/{{::item.retweet.user.uid}}/{{::item.retweet.mid}}" target="_blank">
-        <button class="actions tips--deep" type="button">
+    <a ng-href="//weibo.com/{{::item.retweet.user.uid}}/{{::item.retweet.mid}}" target="_blank" role="button">
+        <span class="actions btn tips--deep">
             <svg class="actions__button" viewBox="0 0 26 26" data-source>
                 <use xlink:href="/public/img/icon-sprites.svg#source"></use>
             </svg>
             <span class="actions__count"></span>
-        </button>
+        </span>
     </a>
 </span>

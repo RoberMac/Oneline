@@ -14,13 +14,13 @@
         <span class="actions__count" ng-attr-data-count="{{::item.comments_count > 0 ? item.comments_count : ''}}"></span>
     </button>
     <!-- Source -->
-    <a ng-href="//weibo.com/{{::item.user.uid}}/{{::item.mid}}" target="_blank">
-        <button class="actions tips--deep" type="button">
+    <a ng-href="//weibo.com/{{::item.user.uid}}/{{::item.mid}}" target="_blank" role="button">
+        <span class="actions btn tips--deep">
             <svg class="actions__button" viewBox="0 0 26 26" data-source>
                 <use xlink:href="/public/img/icon-sprites.svg#source"></use>
             </svg>
             <span class="actions__count"></span>
-        </button>
+        </span>
     </a>
     <!-- Star -->
     <button ng-click="toggleAction('star', item)" class="actions tips--deep" type="button">
@@ -30,9 +30,11 @@
         <span class="actions__count"></span>
     </button>
     <!-- Location -->
-    <button ng-if="::item.location" class="timeline__location tips--deep" type="button" search="weibo---location---{{::item.location.lat}}_{{::item.location.long}}---位置">
-        <svg viewBox="0 0 26 26">
-            <use xlink:href="/public/img/icon-sprites.svg#location"></use>
-        </svg>
-    </button>
+    <a ng-if="::item.location" ng-href="/weibo/location/{{::item.location.lat}}_{{::item.location.long}}?x=位置" role="button">
+        <span class="timeline__location btn tips--deep">
+            <svg viewBox="0 0 26 26">
+                <use xlink:href="/public/img/icon-sprites.svg#location"></use>
+            </svg>
+        </span>
+    </a>
 </span>

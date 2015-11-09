@@ -10,19 +10,20 @@ var Actions = {
     twitter: {
         user: {
             _get: function (opts){
+                var user = isNaN(opts.id) ? { screen_name: opts.id } : { user_id: opts.id };
+
                 return {
                     triggerActionType: 'combination',
                     endpoint: 'users/show',
                     endpoint2: 'statuses/user_timeline',
-                    tOpts: { user_id: opts.id, include_entities: false },
-                    tOpts2: {
-                        user_id: opts.id,
+                    tOpts: extend(user, { include_entities: false }),
+                    tOpts2: extend(user, {
                         count: 7,
                         trim_user: false,
                         exclude_replies: false,
                         contributor_details: false,
                         include_rts: true
-                    },
+                    }),
                     handleActionFunc: function (data1, data2){
                         var data;
                         data = actionsFilter.twitter.user(data1[0]);
@@ -167,18 +168,15 @@ var Actions = {
         },
         mentions: {
             _get: function (opts){
-                var tOpts = {}
-                extend(tOpts, {
-                    count: 200,
-                    since_id: opts.query.min_id,
-                    include_entities: false,
-                    contributor_details: false
-                })
-
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/mentions_timeline',
-                    tOpts: tOpts,
+                    tOpts: extend({}, {
+                        count: 200,
+                        since_id: opts.query.min_id,
+                        include_entities: false,
+                        contributor_details: false
+                    }),
                     handleActionFunc: function (data){
                         return { data: timelineFilter.twitter(data[0]) }
                     }
@@ -187,21 +185,19 @@ var Actions = {
         },
         user_timeline: {
             _get: function (opts){
-                var tOpts = {}
-                extend(tOpts, {
-                    user_id: opts.id,
-                    max_id: opts.query && opts.query.max_id,
-                    count: 20,
-                    trim_user: false,
-                    exclude_replies: false,
-                    contributor_details: false,
-                    include_rts: true
-                })
+                var user = isNaN(opts.id) ? { screen_name: opts.id } : { user_id: opts.id };
 
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/user_timeline',
-                    tOpts: tOpts,
+                    tOpts: extend(user, {
+                        max_id: opts.query && opts.query.max_id,
+                        count: 20,
+                        trim_user: false,
+                        exclude_replies: false,
+                        contributor_details: false,
+                        include_rts: true
+                    }),
                     handleActionFunc: function (data){
                         data[0].splice(0, 1)
                         return { data: timelineFilter.twitter(data[0]).data }
@@ -240,7 +236,7 @@ var Actions = {
     instagram: {
         user: {
             _get: function (opts){
-                return {
+                var actionObj = {
                     triggerActionType: 'combination',
                     endpoint: 'user',
                     endpoint2: 'user_media_recent',
@@ -252,6 +248,20 @@ var Actions = {
 
                         return { data: data }
                     }
+                };
+
+                if (isNaN(opts.id)){
+                    return {
+                        triggerActionType: 'queue',
+                        endpoint: 'user_search',
+                        iOpts: { count: 1 },
+                        handleActionFunc: function (data){
+                            return { uid: data[0][0].id }
+                        },
+                        actionObj: actionObj
+                    }
+                } else {
+                    return actionObj;
                 }
             }
         },
@@ -279,7 +289,7 @@ var Actions = {
         },
         user_timeline: {
             _get: function (opts){
-                return {
+                var actionObj = {
                     triggerActionType: 'basic',
                     endpoint: 'user_media_recent',
                     iOpts: { max_id: opts.query.max_id },
@@ -287,15 +297,45 @@ var Actions = {
                         return { data: timelineFilter.instagram(data[0]).data }
                     }
                 }
+
+                if (isNaN(opts.id)){
+                    return {
+                        triggerActionType: 'queue',
+                        endpoint: 'user_search',
+                        iOpts: { count: 1 },
+                        handleActionFunc: function (data){
+                            return { uid: data[0][0].id }
+                        },
+                        actionObj: actionObj
+                    }
+                } else {
+                    return actionObj;
+                }
             }
         },
-        location_timeline: {
+        location: {
             _get: function (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'location_media_recent',
                     iOpts: { max_id: opts.query.max_id },
                     handleActionFunc: function (data){
+                        return { data: timelineFilter.instagram(data[0]).data }
+                    }
+                }
+            }
+        },
+        tags: {
+            _get: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'tag_media_recent',
+                    iOpts: { max_tag_id: opts.query.max_id && opts.query.max_id.split('_')[0] },
+                    handleActionFunc: function (data){
+                        if (opts.query.max_id){
+                            data[0].splice(0, 1)
+                        }
+
                         return { data: timelineFilter.instagram(data[0]).data }
                     }
                 }
@@ -462,7 +502,7 @@ var Actions = {
                 }
             }  
         },
-        location_timeline: {
+        location: {
             _get: function (opts){
                 var wOpts = {
                     access_token: opts.token,
@@ -606,6 +646,16 @@ module.exports = {
                     } else {
                         throw err
                     }
+                })
+            },
+            queue: function (i){
+                var _this = this;
+
+                return _this.basic(i)
+                .then(function (data){
+                    opts.id = data.uid
+                    i = i.actionObj
+                    return _this[i.triggerActionType](i);
                 })
             }
         }

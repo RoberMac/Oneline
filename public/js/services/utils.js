@@ -31,6 +31,9 @@ angular.module('Oneline.utilsServices', ['relativeDate'])
     years_from_now: '+ {{time}}y',
     over_a_year_from_now: '++ 1y'
 })
+.factory('timelineCache', ['$cacheFactory', function($cacheFactory){
+    return $cacheFactory('timelineCache')
+}])
 .service('store', function(){
     this.get = function (key){
         return parseJSON(localStorage.getItem(key))

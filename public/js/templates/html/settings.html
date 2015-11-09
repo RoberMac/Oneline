@@ -1,45 +1,68 @@
-<!-- Social -->
-<div class="social-wrapper animate--faster">
-    <!-- Twitter -->
-    <div class="social-list vertically_center">
-        <div>
-            <button class="social-icon animate--faster tips" ng-click="toggleAuth('twitter')" data-provider="twitter" type="button">
-                <svg viewBox="0 0 300 300">
-                    <use xlink:href="/public/img/icon-sprites.svg#twitter"></use>
-                </svg>
-            </button>
+<div class="oneline overflow--y animate--general">
+    <!-- Social -->
+    <div class="social-wrapper animate--faster">
+        <!-- Twitter -->
+        <div class="social-list vertically_center">
+            <div>
+                <button class="social-icon animate--faster tips" ng-click="toggleAuth('twitter')" ng-class="{'social-icon--active tips--active': providerList.indexOf('twitter') >= 0}" type="button">
+                    <svg viewBox="0 0 300 300">
+                        <use xlink:href="/public/img/icon-sprites.svg#twitter"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Instagram -->
+        <div class="social-list vertically_center">
+            <div>
+                <button class="social-icon animate--faster tips" ng-click="toggleAuth('instagram')" ng-class="{'social-icon--active tips--active': providerList.indexOf('instagram') >= 0}" type="button">
+                    <svg viewBox="0 0 775 300">
+                        <use xlink:href="/public/img/icon-sprites.svg#instagram"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Weibo -->
+        <div class="social-list vertically_center">
+            <div>
+                <button class="social-icon animate--faster tips" ng-click="toggleAuth('weibo')" ng-class="{'social-icon--active tips--active': providerList.indexOf('weibo') >= 0}" type="button">
+                    <svg viewBox="0 0 300 300">
+                        <use xlink:href="/public/img/icon-sprites.svg#weibo"></use>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
-    <!-- Instagram -->
-    <div class="social-list vertically_center">
-        <div>
-            <button class="social-icon animate--faster tips" ng-click="toggleAuth('instagram')" data-provider="instagram" type="button">
-                <svg viewBox="0 0 775 300">
-                    <use xlink:href="/public/img/icon-sprites.svg#instagram"></use>
-                </svg>
-            </button>
-        </div>
-    </div>
-    <!-- Weibo -->
-    <div class="social-list vertically_center">
-        <div>
-            <button class="social-icon animate--faster tips" ng-click="toggleAuth('weibo')" data-provider="weibo" type="button">
-                <svg viewBox="0 0 300 300">
-                    <use xlink:href="/public/img/icon-sprites.svg#weibo"></use>
-                </svg>
-            </button>
-        </div>
-    </div>
+
+    <!-- Replicant -->
+    <button ng-if="providerList.length > 0" ng-click="setControlCenter('replicant--deckard')" class="replicant-icon replicant-icon--deckard tips--deep--peace" type="button">
+        <svg viewBox="0 0 54 67">
+            <use xlink:href="/public/img/icon-sprites.svg#deckard"></use>
+        </svg>
+    </button>
+    <button ng-click="setControlCenter('replicant--rachael')" class="replicant-icon replicant-icon--rachael tips--deep--peace" type="button">
+        <svg viewBox="0 0 54 67">
+            <use xlink:href="/public/img/icon-sprites.svg#rachael"></use>
+        </svg>
+    </button>
 </div>
 
-<!-- Replicant -->
-<button ng-if="providerList.length > 0" ng-click="setControlCenter('replicant--deckard')" class="replicant-icon replicant-icon--deckard tips--deep animate--faster" type="button">
-    <svg viewBox="0 0 54 67">
-        <use xlink:href="/public/img/icon-sprites.svg#deckard"></use>
-    </svg>
-</button>
-<button ng-click="setControlCenter('replicant--rachael')" class="replicant-icon replicant-icon--rachael tips--deep animate--faster" type="button">
-    <svg viewBox="0 0 54 67">
-        <use xlink:href="/public/img/icon-sprites.svg#rachael"></use>
-    </svg>
-</button>
+<!-- Mask & ControlCenter -->
+<div ng-if="controlCenter" class="cancelMask animate--general" ng-click="setControlCenter('')">
+    <div class="cancelMask__wrapper overflow--y">
+        <div ng-click="$event.stopPropagation()"></div>
+    </div>
+</div>
+<div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter vertically_center animate--general"></div>
+
+<!-- Menu: Right -->
+<div ng-if="providerList.length > 0" class="menu menu--right vertically_center animate--faster">
+    <div>
+        <a href="/" role="button">
+            <span class="menu__button btn animate--faster">
+                <svg viewBox="0 0 200 200">
+                    <use xlink:href="/public/img/icon-sprites.svg#ok"></use>
+                </svg>
+            </span>
+        </a>
+    </div>
+</div>

@@ -1,15 +1,15 @@
 <div class="timeline__media">
 
-    <div ng-if="::!item.videos" class="timeline__media--large" ol-lazy-image="{{::item.images.ratio}}">
-        <a ng-href="{{::item.images.standard_resolution}}" class="timeline__media__icon timeline__media__icon--origin icon--instagram tips--deep animate--faster" target="_blank">
+    <div class="timeline__media--large" ol-lazy-image="{{::item.images.ratio}}">
+        <a ng-if="::!item.videos" ng-href="{{::item.images.standard_resolution}}" class="timeline__media__icon timeline__media__icon--origin icon--instagram tips--deep animate--faster" target="_blank">
             <svg viewBox="0 0 100 100">
                 <use xlink:href="/public/img/icon-sprites.svg#eyeball"></use>
             </svg>
         </a>
 
-        <img ng-src="{{::item.images.standard_resolution}}" handle-image-error>
+        <img ng-if="::!item.videos" ng-src="{{::item.images.standard_resolution}}" handle-image-error>
 
-        <div ng-if="::item.users_in_photo">
+        <div ng-if="::!item.videos && item.users_in_photo">
             <button class="timeline__media__icon timeline__media__icon--users icon--instagram tips--deep--peace animate--faster" users-in-photo="::item.users_in_photo">
                 <svg viewBox="0 0 102 118">
                     <use xlink:href="/public/img/icon-sprites.svg#users_in_photo"></use>
@@ -23,8 +23,9 @@
                 </span>
             </a>
         </div>
-    </div>
 
-    <ol-video ng-if="::item.videos" ol-src="{{::item.videos.standard_resolution}}" ol-poster="{{::item.images.low_resolution}}"></ol-video>
+
+        <ol-video ng-if="::item.videos" ol-src="{{::item.videos.standard_resolution}}" ol-poster="{{::item.images.low_resolution}}"></ol-video>
+    </div>
 
 </div>

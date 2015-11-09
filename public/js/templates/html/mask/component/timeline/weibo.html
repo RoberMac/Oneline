@@ -1,4 +1,4 @@
-<div class="timeline mask__timeline" data-id="{{::item.r_id_str || item.id_str}}" data-created="{{::item.created_at}}">
+<div class="timeline timeline--weibo mask__timeline" data-id="{{::item.r_id_str || item.id_str}}" data-created="{{::item.created_at}}">
 
     <div class="timeline__profile" ng-init="_author = item.type === 'retweet' ? item.retweet.user : item.user">
         <a ng-href="//weibo.com/n/{{::_author.screen_name}}" target="_blank">
@@ -17,21 +17,21 @@
     <!-- Actions -->
     <span class="cursor--pointer">
         <!-- Source -->
-        <a ng-href="//weibo.com/{{::_author.uid}}/{{::item.mid}}" target="_blank">
-            <button class="actions tips--deep" type="button">
+        <a ng-href="//weibo.com/{{::_author.uid}}/{{::item.mid}}" target="_blank" role="button">
+            <span class="actions btn tips--deep">
                 <svg class="actions__button" viewBox="0 0 26 26">
                     <use xlink:href="/public/img/icon-sprites.svg#source"></use>
                 </svg>
                 <span class="actions__count"></span>
-            </button>
+            </span>
         </a>
         <!-- Location -->
-        <a ng-if="::item.location" ng-href="//maps.google.com/maps?z=12&t=h&q=loc:{{::item.location.lat}}+{{::item.location.long}}" target="_blank">
-            <button class="timeline__location tips--deep" type="button">
+        <a ng-if="::item.location" ng-href="//maps.google.com/maps?z=12&t=h&q=loc:{{::item.location.lat}}+{{::item.location.long}}" target="_blank" role="button">
+            <span class="timeline__location btn tips--deep">
                 <svg viewBox="0 0 60 60">
                    <use xlink:href="/public/img/icon-sprites.svg#location"></use>
                 </svg>
-            </button>
+            </span>
         </a>
     </span>
 

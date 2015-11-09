@@ -1,32 +1,39 @@
-<div ng-if="loadState !== 'initLoad'" class="timeline profile animate--enter">
+<div ng-if="loadState !== 'initLoad'" class="timeline mask animate--enter">
 
-    <div class="timeline--instagram profile--instagram">
+    <div class="timeline--twitter">
         <!-- Header -->
-        <div ng-switch="::search.type" class="mask__header">
+        <div ng-switch="::mask.type" class="mask__header mask__header--instagram">
             <!-- Location -->
-            <a ng-switch-when="location" ng-href="//instagram.com/explore/locations/{{::search.q}}" target="_blank">
-                <button class="mask__header__title tips--deep" type="button">
+            <a ng-switch-when="location" ng-href="//instagram.com/explore/locations/{{mask.q}}" target="_blank" role="button">
+                <span class="mask__header__title btn icon--instagram tips--deep">
                     <svg viewBox="0 0 60 60">
                        <use xlink:href="/public/img/icon-sprites.svg#location"></use>
                     </svg>
-                    <span ng-bind="::search.title"></h3>
-                </button>
+                    <span ng-bind="mask.title"></h3>
+                </span>
             </a>
             <!-- Tags -->
+            <a ng-switch-when="tags" ng-href="//instagram.com/explore/tags/{{mask.q}}" target="_blank" role="button">
+                <span class="mask__header__title btn icon--instagram tips--deep">
+                    <svg viewBox="0 0 60 60">
+                       <use xlink:href="/public/img/icon-sprites.svg#tags"></use>
+                    </svg>
+                    <span ng-bind="mask.q"></h3>
+                </span>
+            </a>
         </div>
 
         <!-- Timeline -->
-        <div ng-if="search.timeline.length > 0">
-            <div ng-repeat="item in search.timeline | orderBy: '-created_at'" ng-include=" 'mask/component/timeline/instagram.html' ">
+        <div ng-if="mask.timeline.length > 0">
+            <div ng-repeat="item in mask.timeline | orderBy: '-created_at'" ng-include=" 'mask/component/timeline/instagram.html' ">
             </div>
         </div>
-
     </div>
 
 </div>
 
 <div class="loadMore loadMore--old" ng-class="{'loadMore--initLoad': loadState === 'initLoad'}">
-    <button ng-if="loadState === 'initLoad' || search.timeline.length >= 5" ng-click="loadMore()" class="loadMore__btn loadMore__btn--old loadMore__btn--instagram animate--faster"  ng-class="{'loadMore__btn--loading': loadState !== 'loadFin', 'loadMore__btn--loading--fail': loadState === 'loadFail'}" type="button">
+    <button ng-if="loadState === 'initLoad' || mask.timeline.length >= 5" ng-click="loadMaskTimeline()" class="loadMore__btn loadMore__btn--old loadMore__btn--instagram animate--faster"  ng-class="{'loadMore__btn--loading': loadState !== 'loadFin', 'loadMore__btn--loading--fail': loadState === 'loadFail'}" type="button">
         <load-more-icon></load-more-icon>
     </button>
 </div>

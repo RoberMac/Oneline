@@ -16,24 +16,11 @@
     <title>｜</title>
     <link rel="stylesheet" href="/public/dist/oneline.min.css">
 </head>
-<body ng-controller="rootController" ng-class="{'status--timeline': isTimeline}" ng-swipe-left="goto('left')" ng-swipe-right="goto('right')" ng-swipe-disable-mouse>
+<body ng-controller="rootController" ng-swipe-left="goto('left')" ng-swipe-right="goto('right')" ng-swipe-disable-mouse>
 
     <img style="display:none" src="/public/img/icon-sprites.svg" alt="CacheIt!">
 
-    <div ng-include=" 'menu/left.html' "></div>
-
-    <div class="oneline overflow--y animate--general">
-        <ui-view></ui-view>
-    </div>
-
-    <div ng-if="controlCenter" class="cancelMask animate--general" ng-click="setControlCenter('')">
-        <div class="cancelMask__wrapper overflow--y">
-            <div ng-click="$event.stopPropagation()"></div>
-        </div>
-    </div>
-    <div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter vertically_center animate--general"></div>
-
-    <div ng-include=" 'menu/right.html' "></div>
+    <div ui-view class="animate--general"></div>
 
     <script src="/public/dist/libs.min.js"></script>
     <script src="/public/dist/oneline.min.js"></script>

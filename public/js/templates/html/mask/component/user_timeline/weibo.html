@@ -1,4 +1,4 @@
-<div class="timeline" ng-class="::{'mask__user_timeline': item.type !== 'retweet', 'mask__user_timeline--gutter': item.type === 'retweet', 'mask__user_timeline--location': item.location}" data-id="{{::item.r_id_str || item.id_str}}">
+<div class="timeline timeline--weibo" ng-class="::{'mask__user_timeline': item.type !== 'retweet', 'mask__user_timeline--gutter': item.type === 'retweet', 'mask__user_timeline--location': item.location}" data-id="{{::item.r_id_str || item.id_str}}">
 
     <div ng-if="::item.type === 'retweet'" class="timeline__profile">
         <a ng-href="//weibo.com/n/{{::item.retweet.user.screen_name}}" target="_blank">

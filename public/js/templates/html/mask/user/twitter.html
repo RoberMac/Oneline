@@ -1,17 +1,17 @@
-<div ng-if="loadState !== 'initLoad'" class="timeline profile animate--enter">
+<div ng-if="loadState !== 'initLoad'" class="timeline mask animate--enter">
 
     <div class="timeline--twitter profile--twitter">
         <!-- Profile -->
-        <a class="timeline__profile profile__avatar" ng-href="//twitter.com/{{::user.screen_name}}" target="_blank">
-            <img class="timeline__profile__avatar" ng-src="{{::user.avatar.replace('normal', 'bigger')}}" alt="avatar">
+        <a class="timeline__profile profile__avatar" ng-href="//twitter.com/{{mask.screen_name}}" target="_blank">
+            <img class="timeline__profile__avatar" ng-src="{{mask.avatar.replace('normal', 'bigger')}}" alt="avatar">
         </a>
         <div class="timeline__profile timeline__profile__fullname">
-            <a ng-href="//twitter.com/{{::user.screen_name}}" target="_blank">
-                <strong ng-bind="::user.name"></strong>
+            <a ng-href="//twitter.com/{{mask.screen_name}}" target="_blank">
+                <strong ng-bind="mask.name"></strong>
             </a>
         </div>
-        <div ng-if="user.timeline">
-            <button class="profile__following tips--deep" ng-class="::{'icon--twitter tips--active': user.following}" type="button" toggle-following="twitter:{{::user.uid}}">
+        <div ng-if="mask.timeline">
+            <button class="profile__following tips--deep" ng-class="::{'icon--twitter tips--active': mask.following}" type="button" toggle-following="twitter:{{mask.uid}}">
                 <svg viewBox="0 0 60 60">
                     <use xlink:href="/public/img/icon-sprites.svg#following"></use>
                 </svg>
@@ -21,15 +21,15 @@
         <div ng-if="true" ng-include=" 'mask/user/component/profile.html' " onload="_p_type = 'tweet'; _p_provider = 'twitter' "></div>
 
         <!-- Timeline -->
-        <div ng-if="user.timeline.length > 0">
-            <div ng-repeat="item in user.timeline | orderBy: '-created_at'" ng-include=" 'mask/component/user_timeline/twitter.html' "></div>
+        <div ng-if="mask.timeline.length > 0">
+            <div ng-repeat="item in mask.timeline | orderBy: '-created_at'" ng-include=" 'mask/component/user_timeline/twitter.html' "></div>
         </div>
     </div>
 
 </div>
 
 <div class="loadMore loadMore--old" ng-class="{'loadMore--initLoad': loadState === 'initLoad'}">
-    <button ng-if="loadState === 'initLoad' || (user.timeline.length >= 7 && !user.protected)" ng-click="loadUserTimeline()" class="loadMore__btn loadMore__btn--old loadMore__btn--twitter animate--faster"  ng-class="{'loadMore__btn--loading': loadState !== 'loadFin', 'loadMore__btn--loading--fail': loadState === 'loadFail'}" type="button">
+    <button ng-if="loadState === 'initLoad' || (mask.timeline.length >= 7 && !mask.protected)" ng-click="loadMaskTimeline()" class="loadMore__btn loadMore__btn--old loadMore__btn--twitter animate--faster"  ng-class="{'loadMore__btn--loading': loadState !== 'loadFin', 'loadMore__btn--loading--fail': loadState === 'loadFail'}" type="button">
         <load-more-icon></load-more-icon>
     </button>
 </div>

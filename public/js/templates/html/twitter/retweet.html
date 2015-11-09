@@ -2,9 +2,10 @@
 
 <div ng-include=" 'twitter/component/content.html' "></div>
 
-<button class="timeline--retweet__profile__avatar" user-profile="twitter:timeline" type="button" ng-init="::_profile = item.user">
+
+<a class="timeline--retweet__profile__avatar" ng-href="/twitter/user/{{::item.user.screen_name}}">
     <img class="timeline__profile__avatar" ng-src="{{::item.user.avatar.replace('normal', 'bigger')}}" alt="avatar">
-</button>
+</a>
 
 <div ng-include=" 'actions/twitter.html' "></div>
 

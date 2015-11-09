@@ -1,10 +1,10 @@
 <div class="timeline__profile">
-    <button user-profile="twitter:timeline" type="button" ng-init="::_profile = item.quote.user">
+    <a ng-href="/twitter/user/{{::item.quote.user.screen_name}}">
         <img class="timeline__profile__avatar" ng-src="{{::item.quote.user.avatar.replace('normal', 'bigger')}}">
-    </button>
+    </a>
     <div class="timeline__profile__fullname">
         <a ng-href="//twitter.com/{{::item.quote.user.screen_name}}" target="_blank">
             <strong ng-bind="::item.quote.user.name"></strong>
-        <a>
+        </a>
     </div>
 </div>

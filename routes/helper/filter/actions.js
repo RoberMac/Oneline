@@ -19,7 +19,7 @@ var filter = {
             return cache;
         },
         user: function (data){
-            return {
+            var userObj = {
                 bio: data.description || '',
                 website: data.url || '',
                 counts: {
@@ -29,7 +29,11 @@ var filter = {
                 },
                 following: data.following,
                 protected: data.protected
-            }
+            };
+
+            extend(userObj, filterUtils.twitter.user(data))
+
+            return userObj;
         },
         follow: function (data){
             var cache = [];
@@ -123,7 +127,7 @@ var filter = {
             return cache;
         },
         user: function (data){
-            return {
+            var userObj = {
                 bio: data.bio || '',
                 website: data.website || '',
                 counts: {
@@ -131,12 +135,16 @@ var filter = {
                     followed_by: data.counts.followed_by,
                     statuses: data.counts.media
                 }
-            }
+            };
+
+            extend(userObj, filterUtils.instagram.user(data))
+
+            return userObj;
         }
     },
     weibo: {
         user: function (data){
-            return {
+            var userObj = {
                 bio: data.description || '',
                 website: data.url || '',
                 counts: {
@@ -145,7 +153,11 @@ var filter = {
                     statuses: data.statuses_count
                 },
                 following: data.following
-            }
+            };
+
+            extend(userObj, filterUtils.weibo.user(data))
+
+            return userObj;
         },
         reply: function (data){
             var cache = [];

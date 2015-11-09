@@ -15,6 +15,7 @@ angular.module('Oneline', [
     'Oneline.rootControllers',
     'Oneline.settingsControllers',
     'Oneline.timelineControllers',
+    'Oneline.maskControllers',
     // Services
     'Oneline.utilsServices',
     'Oneline.timelineServices',
@@ -53,23 +54,20 @@ angular.module('Oneline', [
     $stateProvider
         .state('settings', {
             url: '/settings',
-            templateProvider: ['$templateCache', function ($templateCache){
-                return $templateCache.get('settings.html')
-            }],
+            templateUrl: 'settings.html',
             controller: 'settingsCtrl'
         })
         .state('timeline', {
             url: "/",
-            templateProvider: ['$templateCache', function ($templateCache){
-                return $templateCache.get('timeline.html')
-            }],
+            templateUrl: 'timeline.html',
             controller: 'timelineCtrl'
+        })
+        .state('timeline.action', {
+            url: "^/{provider:twitter|instagram|weibo}/{action:user|tags|location}/:id?x",
+            controller: 'maskCtrl'
         })
 
     weiboEmotifyProvider.setEmotionsURL('/public/dist/emotions_v1.min.json')
-}])
-.factory('timelineCache', ['$cacheFactory', function($cacheFactory){
-    return $cacheFactory('timelineCache')
 }])
 .run(['$q', function ($q){
     /**

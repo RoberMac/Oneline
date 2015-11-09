@@ -14,19 +14,21 @@
         <span class="actions__count" ng-attr-data-count="{{::item.reply_count > 0 ? item.reply_count : ''}}"></span>
     </button>
     <!-- Source -->
-    <a ng-href="{{::item.link}}" target="_blank">
-        <button class="actions tips--deep" type="button">
+    <a ng-href="{{::item.link}}" target="_blank" role="button">
+        <span class="actions btn tips--deep">
             <svg class="actions__button" viewBox="0 0 26 26" data-source>
                 <use xlink:href="/public/img/icon-sprites.svg#source"></use>
             </svg>
             <span class="actions__count"></span>
-        </button>
+        </span>
     </a>
     <!-- Location -->
-    <button ng-if="::item.location" class="timeline__location tips--deep" type="button" search="instagram---location---{{::item.location.id}}---{{::item.location.name}}">
-        <svg viewBox="0 0 26 26">
-            <use xlink:href="/public/img/icon-sprites.svg#location"></use>
-        </svg>
-        <span class="timeline__location__name" ng-bind="::item.location.name"></span>
-    </button>
+    <a ng-if="::item.location" ng-href="/instagram/location/{{::item.location.id}}?x={{::item.location.name}}" role="button">
+        <span class="timeline__location btn tips--deep">
+            <svg viewBox="0 0 26 26">
+                <use xlink:href="/public/img/icon-sprites.svg#location"></use>
+            </svg>
+            <span class="timeline__location__name" ng-bind="::item.location.name"></span>
+        </span>
+    </a>
 </span>

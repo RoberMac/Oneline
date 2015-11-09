@@ -29,14 +29,14 @@ angular.module('Oneline.controlCenterServices', [])
 
         return _str;
     }
-    this.generateTemplate = function (type, scope, _provider){
+    this.generateTemplate = function (scope, _provider){
         var _this = this,
-            _template = _provider + '/' + type + '.html',
+            _template = 'mask/component/timeline/' + _provider + '.html',
             _mask = angular.element(document.querySelector('.cancelMask__wrapper'));
 
         $templateRequest(_template)
         .then(function (html){
-            html = '<div class="timeline timeline--' + _provider + ' animate--enter">' + html + '</div>'
+            html = '<div class="animate--enter">' + html + '</div>'
 
             _mask.children()
             .empty() // 清空
@@ -44,7 +44,14 @@ angular.module('Oneline.controlCenterServices', [])
         })
 
         $timeout(function (){
-            _mask.find('button').css('pointer-events', 'none')
+            angular.element(
+                document.querySelectorAll('.cancelMask__wrapper [role="button"]')
+            ).css('pointer-events', 'none')
+
+            angular.element(
+                document.querySelector('.cancelMask__wrapper .mask__timeline')
+            ).removeClass('mask__timeline')
+            console.log(scope.item.text)
             _this.refreshPreviewText(scope.item.text, _provider)
         })
     }

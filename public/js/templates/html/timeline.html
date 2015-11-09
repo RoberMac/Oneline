@@ -1,17 +1,72 @@
-<div class="loadMore loadMore--initLoad loadMore--new">
-    <button ng-click="loadMore(1)" class="loadMore__btn loadMore__btn--loading loadMore__btn--new loadMore__btn--count animate--faster" data-count type="button" js-load-timeline>
-        <load-more-icon></load-more-icon>
-    </button>
+<div class="oneline oneline--timeline overflow--y animate--general">
+
+    <div class="loadMore loadMore--initLoad loadMore--new">
+        <button ng-click="loadMore(1)" class="loadMore__btn loadMore__btn--loading loadMore__btn--new loadMore__btn--count animate--faster" data-count type="button" js-load-timeline>
+            <load-more-icon></load-more-icon>
+        </button>
+    </div>
+
+    <div class="timeline" ng-repeat="item in timelineData | orderBy: '-created_at'" data-id="{{::item.id_str}}" data-date on-finish-render="ngRepeatFinished">
+
+        <div ng-class="::'timeline--' + item.provider" ng-include="::item.provider + '/' + item.type + '.html'"></div>
+
+    </div>
+
+    <div class="loadMore loadMore--initLoad loadMore--old">
+        <button ng-click="loadMore(-1)" class="loadMore__btn loadMore__btn--count loadMore__btn--old animate--faster" data-count type="button" js-load-timeline>
+            <load-more-icon></load-more-icon>
+        </button>
+    </div>
+
 </div>
 
-<div class="timeline" ng-repeat="item in timelineData | orderBy: '-created_at'" data-id="{{::item.id_str}}" data-date on-finish-render="ngRepeatFinished">
-
-    <div ng-class="::'timeline--' + item.provider" ng-include="::item.provider + '/' + item.type + '.html'"></div>
-
+<!-- Mask & ControlCenter -->
+<div ng-if="controlCenter" class="cancelMask cancelMask--timeline animate--general" ng-click="setControlCenter('')">
+    <div class="cancelMask__wrapper overflow--y">
+        <div ng-click="$event.stopPropagation()"></div>
+    </div>
 </div>
+<div ui-view class="animate--general"></div>
+<div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter controlCenter--timeline vertically_center animate--general"></div>
 
-<div class="loadMore loadMore--initLoad loadMore--old">
-    <button ng-click="loadMore(-1)" class="loadMore__btn loadMore__btn--count loadMore__btn--old animate--faster" data-count type="button" js-load-timeline>
-        <load-more-icon></load-more-icon>
-    </button>
+<!-- Menu: Left -->
+<div class="menu menu--timeline menu--left menu--timeline--left vertically_center animate--faster">
+    <div>
+        <a href="/settings" role="button">
+            <span class="menu__button btn animate--faster">
+                <svg viewBox="0 0 200 200">
+                    <g fill="none">
+                        <circle fill="#F1F1F1" cx="100" cy="100" r="100"/>
+                        <circle fill="#FFF" ng-attr-fill="{{::providerList.indexOf('twitter') >= 0 ? '#2AA9E0' : '#FFF'}}" cx="100" cy="42.5" r="15"/>
+                        <circle fill="#FFF" ng-attr-fill="{{::providerList.indexOf('instagram') >= 0 ? '#3F5D87' : '#FFF'}}" cx="100" cy="100" r="15" />
+                        <circle fill="#FFF" ng-attr-fill="{{::providerList.indexOf('weibo') >= 0 ? '#E6162D' : '#FFF'}}" cx="100" cy="157.5" r="15"/>
+                    </g>
+                </svg>
+            </span>
+        </a>
+    </div>
+</div>
+<!-- Menu: Right -->
+<div class="menu menu--timeline menu--right menu--timeline--right vertically_center animate--faster">
+    <!--                      ⬇️ 修復 $compile 失效的 BUG -->
+    <div ng-show="!controlCenter" ng-init="::_firstProvider = providerList.indexOf('twitter') >= 0 ? 'twitter' : providerList.indexOf('weibo') >= 0 ? 'weibo' : 'instagram'">
+        <button class="menu__button animate--faster" ng-class="::'icon--' + _firstProvider" type="button" show-menu="{{::_firstProvider}}" js-show-menu>
+            <svg viewBox="0 0 200 200">
+                <g fill-rule="evenodd">
+                    <circle fill="#F1F1F1" cx="100" cy="100" r="100"/>
+                    <path fill ng-attr-fill="{{::_firstProvider !== 'instagram' ? null : '#FFF'}}" d="M96.63 30.143c1.862-3.393 4.88-3.392 6.74 0l10.26 18.714c1.862 3.393.232 6.143-3.634 6.143H90.004c-3.868 0-5.495-2.75-3.635-6.143l10.26-18.714z"/>
+                    <circle cx="100" cy="100" r="15"/>
+                    <rect fill="#FFF" ng-attr-fill="{{::_firstProvider === 'twitter' ? '#2AA9E0' : '#FFF'}}" x="86" y="145" width="28" height="28" rx="7"/>
+                </g>
+            </svg>
+        </button>
+    </div>
+
+    <div ng-if="controlCenter">
+        <button class="menu__button animate--faster" type="button" ng-click="setControlCenter('')">
+            <svg viewBox="0 0 200 200">
+                <use xlink:href="/public/img/icon-sprites.svg#cancel"></use>
+            </svg>
+        </button>
+    </div>
 </div>

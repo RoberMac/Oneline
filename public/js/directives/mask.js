@@ -52,23 +52,23 @@ angular.module('Oneline.maskDirectives', [])
 
                 function setup(){
                     scope.loadState = 'initLoad'
-                    scope.user = {
+                    scope.mask = {
                         screen_name: _profile.screen_name,
                         avatar: _profile.avatar,
                         name: _profile.name,
                         uid: _profile.uid
                     }
-                    scope.loadUserTimeline = function (){
+                    scope.loadMaskTimeline = function (){
                         if (scope.loadState === 'loading') return;
 
-                        var timeline = document.querySelectorAll('.profile .timeline'),
+                        var timeline = document.querySelectorAll('.mask .timeline'),
                             _min_id  = angular.element(timeline[timeline.length - 1]).attr('data-id');
 
                         scope.loadState = 'loading'
 
                         olMask.loadOldPosts('user_timeline', _provider, _profile.uid, _min_id)
                         .then(function (data){
-                            scope.user.timeline = scope.user.timeline.concat(data)
+                            scope.mask.timeline = scope.mask.timeline.concat(data)
 
                             scope.loadState = 'loadFin'
                         })
@@ -89,13 +89,13 @@ angular.module('Oneline.maskDirectives', [])
                     })
                     .$promise
                     .then(function (res){
-                        angular.extend(scope.user, res.data)
+                        angular.extend(scope.mask, res.data)
 
                         scope.loadState = 'loadFin'
                         _from === 'controlCenter' ? elem.addClass('timeline__media--active') : null
                     })
                     .catch(function (){
-                        scope.user.protected = true
+                        scope.mask.protected = true
                         scope.loadState = 'loadFail'
                          _from === 'controlCenter' ? elem.addClass('tips--frozen') : null
                     })
@@ -161,7 +161,7 @@ angular.module('Oneline.maskDirectives', [])
                     _type = _info[1],
                     _q = _info[2],
                     _title = _info[3],
-                    _action = _provider === 'twitter' ? 'search' : _type + '_timeline';
+                    _action = _provider === 'twitter' ? 'search' : _type;
 
                 // Init
                 olMask.switch(scope)
@@ -171,16 +171,16 @@ angular.module('Oneline.maskDirectives', [])
 
                 function setup(){
                     scope.loadState = 'initLoad'
-                    scope.search = {
+                    scope.mask = {
                         type: _type,
                         title: _title,
                         q: _q
                     }
 
-                    scope.loadMore = function (){
+                    scope.loadMaskTimeline = function (){
                         if (scope.loadState === 'loading') return;
 
-                        var timeline = document.querySelectorAll('.profile .timeline'),
+                        var timeline = document.querySelectorAll('.mask .timeline'),
                             min_timeline = angular.element(timeline[timeline.length - 1]),
                             _min_id  = _provider === 'weibo'
                                             ? min_timeline.attr('data-created')
@@ -190,7 +190,7 @@ angular.module('Oneline.maskDirectives', [])
 
                         olMask.loadOldPosts(_action, _provider, _q, _min_id)
                         .then(function (data){
-                            scope.search.timeline = scope.search.timeline.concat(data)
+                            scope.mask.timeline = scope.mask.timeline.concat(data)
 
                             scope.loadState = 'loadFin'
                         })
@@ -208,7 +208,7 @@ angular.module('Oneline.maskDirectives', [])
                     })
                     .$promise
                     .then(function (res){
-                        scope.search.timeline = res.data
+                        scope.mask.timeline = res.data
 
                         scope.loadState = 'loadFin'
                     })

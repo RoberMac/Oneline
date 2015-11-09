@@ -328,18 +328,18 @@ angular.module('Oneline.controlCenterDirectives', [])
                     }
                 })
 
+                // retweet & quote 切換
                 if (scope.isShowLivePreview){
                     // 刷新預覽
                     scope.item.text = status
                     olWrite.refreshPreviewText(status, _provider)
 
-                    // retweet & quote 切換
                     if (_action === 'retweet'){
                         // Retweet -> Quote
                         if (status.length > 0){
                             if (__action === 'retweet'){
                                 angular.extend(scope.item, olWrite.generateQuoteUser(_id, _type, _provider))
-                                olWrite.generateTemplate('quote', scope, _provider)
+                                olWrite.generateTemplate(scope, _provider)
                             }
                             __action = 'quote'
                         }
@@ -347,12 +347,24 @@ angular.module('Oneline.controlCenterDirectives', [])
                         else {
                             if (__action === 'quote'){
                                 angular.extend(scope.item, olWrite.generateRetweetUser(_id, _type, _provider))
-                                olWrite.generateTemplate('retweet', scope, _provider)
+                                olWrite.generateTemplate(scope, _provider)
                             }
                             __action = 'retweet'
                         }
                     }
+                } else {
+                    if (_action === 'retweet'){
+                        // Retweet -> Quote
+                        if (status.length > 0){
+                            __action = 'quote'
+                        }
+                        // Quote -> Retweet
+                        else {
+                            __action = 'retweet'
+                        }
+                    }
                 }
+
                 // 超字提醒
                 if (statusLength > _limitCount 
                     || (statusLength === 0 && _action !== 'retweet')){
@@ -432,7 +444,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                     type: __action
                 }
 
-                olWrite.generateTemplate(_action === 'reply' ? 'tweet' : __action || _action, scope, _provider)
+                olWrite.generateTemplate(scope, _provider)
 
                 __action === 'retweet'
                     ? angular.extend(scope.item, olWrite.generateRetweetUser(_id, _type, _provider))

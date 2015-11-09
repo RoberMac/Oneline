@@ -1,27 +1,27 @@
 <!-- 貼文數、粉絲數、追隨數 -->
-<div ng-if="::user.counts" class="profile__count">
-    <div class="profile__count__column" ng-class="::'icon--' + _p_provider" ng-attr-data-count="{{::user.counts.statuses}}">
+<div ng-if="mask.counts" class="profile__count">
+    <div class="profile__count__column" ng-class="::'icon--' + _p_provider" ng-attr-data-count="{{::mask.counts.statuses}}">
         <svg viewBox="0 0 60 60">
             <use xlink:href ng-attr-xlink:href="{{::'/public/img/icon-sprites.svg#' + _p_type}}"></use>
         </svg>
     </div>
-    <div class="profile__count__column" ng-class="::'icon--' + _p_provider" ng-attr-data-count="{{::user.counts.followed_by}}">
+    <div class="profile__count__column" ng-class="::'icon--' + _p_provider" ng-attr-data-count="{{::mask.counts.followed_by}}">
         <svg viewBox="0 0 60 60">
             <use xlink:href="/public/img/icon-sprites.svg#followed_by"></use>
         </svg>
     </div>
-    <div class="profile__count__column" ng-class="::'icon--' + _p_provider" ng-attr-data-count="{{::user.counts.follows}}">
+    <div class="profile__count__column" ng-class="::'icon--' + _p_provider" ng-attr-data-count="{{::mask.counts.follows}}">
         <svg viewBox="0 0 60 60">
             <use xlink:href="/public/img/icon-sprites.svg#follows"></use>
         </svg>
     </div>
 </div>
 <!-- 簡介 -->
-<div ng-if="::user.bio">
-    <p class="timeline__text profile__biography" linkify="{{::_p_provider}}">{{::user.bio | html}}</p>
+<div ng-if="mask.bio">
+    <p class="timeline__text profile__biography" linkify="{{::_p_provider}}">{{::mask.bio | html}}</p>
 </div>
-<div ng-if="::user.website" class="profile__website">
-    <a ng-href="{{::user.website}}" target="_blank">
+<div ng-if="mask.website" class="profile__website">
+    <a ng-href="{{::mask.website}}" target="_blank">
         <svg viewBox="0 0 100 100" class="tips animate--faster">
             <use xlink:href="/public/img/icon-sprites.svg#link"></use>
         </svg>

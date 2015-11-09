@@ -63,13 +63,22 @@ body {
     scrollbar-track-color: transparent;
 }
 
-input, button, select, textarea {
+input, button, select, textarea, .btn {
+    display: inline-block;
     margin: 0;
     padding: 0;
     border: 0;
     outline: 0px;
     appearance: none;
     border-radius: 3px;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    font: 11px BlinkMacSystemFont;
+    text-rendering: auto;
+    -webkit-writing-mode: horizontal-tb;
 }
 textarea {
     display: block;
@@ -80,15 +89,15 @@ textarea {
     font-family: inherit;
     font-size: inherit;
 }
-button {
+button, .btn {
     background-color: transparent;
     cursor: pointer;
+    text-align: center;
 }
 img, video {
     border: none;
     outline: none;
 }
-
 .vertically_center {
     align-items: center;
     display: flex;

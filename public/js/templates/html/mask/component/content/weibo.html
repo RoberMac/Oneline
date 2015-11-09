@@ -16,9 +16,22 @@
 <!-- Quote -->
 <div ng-if="::item.type === 'quote'" class="timeline timeline--quote timeline--quote--weibo">
 
-    <div ng-include=" 'mask/component/quote_profile/weibo.html' "></div>
+    <div class="timeline__profile">
+        <a ng-href="//weibo.com/n/{{::item.retweet.user.screen_name}}" target="_blank">
+            <img class="timeline__profile__avatar" ng-src="{{::item.retweet.user.avatar.replace('/50/', '/180/')}}">
+        </a>
+        <div class="timeline__profile__fullname">
+            <a ng-href="//weibo.com/n/{{::item.retweet.user.screen_name}}" target="_blank">
+                <strong ng-bind="::item.retweet.user.name"></strong>
+            </a>
+        </div>
+    </div>
 
-    <div ng-include=" 'weibo/component/content--retweet.html' "></div>
+    <div class="timeline__content">
+        <p class="timeline__text" linkify="weibo" weibo-emotify>{{::item.retweet.text | html}}</p>
+
+        <div ng-if="::item.media && item.media.length > 0" ng-include=" 'media/weibo.html' "></div>
+    </div>
 
     <div ng-include=" 'actions/weibo--quote.html' "></div>
 

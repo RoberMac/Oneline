@@ -10,7 +10,6 @@ angular.module('Oneline.rootControllers', [])
      * 初始化
      */
     $scope.providerList = olTokenHelper.getProviderList()
-    $scope.isTimeline = false
     $scope.controlCenter = ''
 
     // 刷新「社交網站列表」
@@ -19,12 +18,15 @@ angular.module('Oneline.rootControllers', [])
 
         $timeout(function (){
             $scope.providerList = providerList
-            olUI.updateSocialIcon(providerList)
         })
     }
     // 設置是否顯示「控制中心」
     $scope.setControlCenter = function (state, thenSwitchTo){
         var defer = $q.defer()
+
+        if (state === '' && $state.current.name === 'timeline.action'){
+            $state.go('timeline')
+        }
 
         $scope.controlCenter = state
 
@@ -40,7 +42,7 @@ angular.module('Oneline.rootControllers', [])
         $timeout(function (){
             var cancelMask = angular.element(document.querySelector('.cancelMask__wrapper')),
                 controlCenter = angular.element(document.querySelector('.controlCenter')),
-                type = state.match(/replicant|read|write|notification/);
+                type = state.match(/read|write|notification/);
 
             if (type){
                 cancelMask.addClass('cancelMask__wrapper--' + type[0])
@@ -52,7 +54,7 @@ angular.module('Oneline.rootControllers', [])
         })
 
         function typeStr(prefix){
-            var typeList = ['replicant', 'read', 'write', 'notification'];
+            var typeList = ['read', 'write', 'notification'];
 
             return typeList.map(function (i){return prefix + i }).join(' ')
         }
@@ -95,8 +97,6 @@ angular.module('Oneline.rootControllers', [])
             if (!olTokenHelper.isValidToken()){
                 event.preventDefault()
                 $state.go('settings')
-            } else {
-                $scope.isTimeline = true
             }
         }
     })
@@ -106,12 +106,11 @@ angular.module('Oneline.rootControllers', [])
             if (!olTokenHelper.isValidToken()){
                 olTokenHelper.clearInvalidToken()
             }
-            $scope.isTimeline = false
-        }
 
-        document.title = '｜'
-        timelineCache.removeAll()
-        $scope.updateProviderList()
-        $scope.setControlCenter('')
+            document.title = '｜'
+            timelineCache.removeAll()
+            $scope.updateProviderList()
+            $scope.setControlCenter('')
+        }
     })
 }])
