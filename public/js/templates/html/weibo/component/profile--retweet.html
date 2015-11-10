@@ -1,7 +1,7 @@
 <div class="timeline__profile">
-    <button user-profile="weibo:timeline" type="button" ng-init="::_profile = item.retweet.user; _id_str = item.retweet.id_str">
+    <a ng-href="//weibo.com/n/{{::item.retweet.user.screen_name}}" target="_blank">
         <img class="timeline__profile__avatar" ng-src="{{::item.retweet.user.avatar.replace('/50/', '/180/')}}">
-    </button>
+    </a>
     <div class="timeline__profile__fullname">
         <a ng-href="//weibo.com/n/{{::item.retweet.user.screen_name}}" target="_blank">
             <strong ng-bind="::item.retweet.user.name"></strong>

@@ -19,80 +19,95 @@ angular.module('Oneline.maskControllers', [])
                 : _id,
         _x = $stateParams.x;
 
-        if ($scope.providerList.indexOf(_provider) < 0){
-            $state.go('settings')
-        }
+    if ($scope.providerList.indexOf(_provider) < 0){
+        $state.go('settings')
+    }
+console.log('....')
+    // Init
+    var isReadCtrlCenter = $scope.controlCenter.indexOf('read') >= 0;
 
-        // Init
+    if (isReadCtrlCenter){
+        var readBtn = angular.element(document.querySelector('[data-btn="' + _id + '"]'));
+
+        if (readBtn.hasClass('tips--frozen')) return;
+
+        setup()
+    } else {
         olMask.switch($scope)
         .then(function (){
             setup()
         })
+    }
 
-        function setup(){
-            $scope.loadState = 'initLoad'
-            $scope.mask = {}
+    function setup(){
+        $scope.loadState = 'initLoad'
+        $scope.mask = {}
 
-            if (_action !== 'user'){
-                angular.extend($scope.mask, {
-                    type: _action,
-                    title: _x,
-                    q: _id
-                })
-            }
-
-            $scope.loadMaskTimeline = function (){
-                if ($scope.loadState === 'loading') return;
-
-                var _loadAction = _action === 'user' ? 'user_timeline' : __action,
-                    timeline = document.querySelectorAll('.mask .timeline'),
-                    min_timeline = angular.element(timeline[timeline.length - 1]),
-                    _min_id  = _provider === 'weibo'
-                                    ? min_timeline.attr('data-created')
-                                : min_timeline.attr('data-id');
-
-                $scope.loadState = 'loading'
-
-                olMask.loadOldPosts(_loadAction, _provider, _id, _min_id)
-                .then(function (data){
-                    $scope.mask.timeline = $scope.mask.timeline.concat(data)
-
-                    $scope.loadState = 'loadFin'
-                })
-                .catch(function (err){
-                    $scope.loadState = 'loadFail'
-                })
-            }
-
-            // Show Profile
-            var _url = 'mask/' + (_action === 'user' ? 'user' : 'search') + '/' + _provider + '.html';
-            olMask.append(_url, $scope)
-
-            // Fire
-            Action.get({
-                action: __action,
-                provider: _provider,
-                id: __id
-            })
-            .$promise
-            .then(function (res){
-                angular.extend(
-                    $scope.mask,
-                    _action === 'user'
-                        ? res.data
-                    : { timeline: res.data }
-                )
-                $scope.loadState = 'loadFin'
-            })
-            .catch(function (){
-                angular.extend($scope.mask, {
-                    avatar: '/public/img/src/locked.svg',
-                    protected: true
-                })
-                $scope.loadState = 'loadFail'
-            })
-            .finally(function (){
+        if (_action !== 'user'){
+            angular.extend($scope.mask, {
+                type: _action,
+                title: _x,
+                q: _id
             })
         }
+
+        $scope.loadMaskTimeline = function (){
+            if ($scope.loadState === 'loading') return;
+
+            var _loadAction = _action === 'user' ? 'user_timeline' : __action,
+                timeline = document.querySelectorAll('.mask .timeline'),
+                min_timeline = angular.element(timeline[timeline.length - 1]),
+                _min_id  = _provider === 'weibo'
+                                ? min_timeline.attr('data-created')
+                            : min_timeline.attr('data-id');
+
+            $scope.loadState = 'loading'
+
+            olMask.loadOldPosts(_loadAction, _provider, _id, _min_id)
+            .then(function (data){
+                $scope.mask.timeline = $scope.mask.timeline.concat(data)
+
+                $scope.loadState = 'loadFin'
+            })
+            .catch(function (err){
+                $scope.loadState = 'loadFail'
+            })
+        }
+
+        // Show Profile
+        var _url = 'mask/' + (_action === 'user' ? 'user' : 'search') + '/' + _provider + '.html';
+        olMask.append(_url, $scope)
+
+        // Fire
+        isReadCtrlCenter ? readBtn.addClass('timeline__media--loading') : null
+
+        Action.get({
+            action: __action,
+            provider: _provider,
+            id: __id
+        })
+        .$promise
+        .then(function (res){
+            angular.extend(
+                $scope.mask,
+                _action === 'user'
+                    ? res.data
+                : { timeline: res.data }
+            )
+            $scope.loadState = 'loadFin'
+            isReadCtrlCenter ? readBtn.addClass('timeline__media--active') : null
+        })
+        .catch(function (){
+            angular.extend($scope.mask, {
+                avatar: '/public/img/src/locked.svg',
+                protected: true
+            })
+            $scope.loadState = 'loadFail'
+            isReadCtrlCenter ? readBtn.addClass('tips--frozen') : null
+        })
+        .finally(function (){
+            isReadCtrlCenter ? readBtn.removeClass('timeline__media--loading') : null
+        })
+    }
 
 }])

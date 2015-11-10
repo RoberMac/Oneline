@@ -8,6 +8,6 @@
 
         <img ng-if="::media.type === 'photo'" ng-src="{{::media.image_url}}" handle-image-error>
 
-        <ol-video ng-if="::media.type !== 'photo'" ol-src="{{::media.video_url}}" ol-poster="{{::media.image_url + ':small'}}"></ol-video>
+        <ol-video ng-if="::media.type !== 'photo'" ol-src="{{::media.video_url}}" ol-poster="{{::media.image_url + ':small'}}" ol-id="{{::item.id_str}}"></ol-video>
     </div>
 </div>

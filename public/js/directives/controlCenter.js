@@ -190,11 +190,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                 _id         = _info[1],
                 _provider   = _info[0].split('-')[0].split('_')[1],
                 _action     = _info[0].split('-')[1],
-                __action    = _action !== 'tweet'
-                                ? _provider === 'twitter'
-                                    ? 'retweet'
-                                : _type !== 'tweet' ?  'quote' : 'retweet'
-                            : '',
+                __action    = '',
                 _type       = _info[0].split('-')[2],
                 _limitCount = _action === 'tweet' || _action === 'reply' || _provider === 'weibo'
                                     ? 140
@@ -204,8 +200,7 @@ angular.module('Oneline.controlCenterDirectives', [])
 
             var _button      = elem.find('button'),
                 submitButton = _button.eq(_button.length - 1),
-                statusElem   = elem.find('textarea'),
-                typeButton;
+                statusElem   = elem.find('textarea');
 
 
             setTimeout(function (){
@@ -299,8 +294,7 @@ angular.module('Oneline.controlCenterDirectives', [])
             })
             .on('input', function (){
                 var _status = statusElem.val(),
-                    status = _status.trim().length > 0 ? _status : _status.trim(),
-                    statusLength = _provider === 'weibo' ? olWrite.weiboLength(status) : status.length;
+                    status = _status.trim().length > 0 ? _status : _status.trim();
 
                 // 判斷是否呼出「提及」用戶列表
                 $timeout(function (){
@@ -366,6 +360,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                 }
 
                 // 超字提醒
+                var statusLength = _provider === 'weibo' ? olWrite.weiboLength(status) : status.length;
                 if (statusLength > _limitCount 
                     || (statusLength === 0 && _action !== 'retweet')){
                     submitButton.prop('disabled', true)
@@ -373,16 +368,15 @@ angular.module('Oneline.controlCenterDirectives', [])
                     submitButton.prop('disabled', false)
                 }
                 // 更新剩餘字數
-                submitButton.attr('data-count', statusLength > 0 ? statusLength : '')
-                // 動畫
-                submitButton.addClassTemporarily('write__btn--send--typing', 700)
-                typeButton
-                    ? typeButton.addClassTemporarily('actions__button--' + _action + '--active', 300)
-                : null
-                // 存儲與本地
-                store.set('newTweet_' + _provider, status)
+                submitButton
+                .attr('data-count', statusLength > 0 ? statusLength : '')
+                .addClassTemporarily('write__btn--send--typing', 700)
             })
             .on('$destroy', function (){
+                if (_action === 'tweet'){
+                    // 存儲於本地
+                    store.set('newTweet_' + _provider, statusElem.val())
+                }
                 elem.off()
             });
 
@@ -409,7 +403,10 @@ angular.module('Oneline.controlCenterDirectives', [])
                         }
                         break;
                     case 'retweet':
+                        __action = 'retweet'
                         if (_provider === 'weibo'){
+                            __action = _type !== 'tweet' ?  'quote' : 'retweet'
+
                             statusElem.val(
                                 _type === 'tweet'
                                     ? ''

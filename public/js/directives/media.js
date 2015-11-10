@@ -4,24 +4,31 @@ angular.module('Oneline.mediaDirectives', [])
         restrict: 'E',
         scope: {
             olPoster: '@',
-            olSrc: '@'
+            olSrc: '@',
+            olId: '@'
         },
         templateUrl: 'media/video.html',
         link: function (scope, elem, attrs){
-            var video = elem.children()[0],
-                playIcon = angular.element(elem.children()[1]);
+            var _C_PLAY_BTN = 'timeline__media__playButton--playing',
+                video = elem.children()[0];
 
             video.setAttribute('src', scope.olSrc)
 
             elem
             .on('click', function (){
-                video.paused ? video.play() : video.pause()
-                playIcon.toggleClass('timeline__media__playButton--playing')
+                var post = angular.element(document.querySelector('[data-id="' + scope.olId + '"]')),
+                    playIcon = angular.element(elem.children()[1]);
 
-                elem.on('mouseout', function (){
+                video.paused ? video.play() : video.pause()
+                playIcon.toggleClass(_C_PLAY_BTN)
+
+                post
+                .on('mouseleave', function (){
                     video.pause()
-                    playIcon.removeClass('timeline__media__playButton--playing')
+                    playIcon.removeClass(_C_PLAY_BTN)
                     video.removeAttribute('loop')
+
+                    post.off()
                 })
             })
             .on('$destroy', function (){
@@ -30,7 +37,7 @@ angular.module('Oneline.mediaDirectives', [])
 
             angular.element(video)
             .on('ended', function (){
-                playIcon.removeClass('timeline__media__playButton--playing')
+                playIcon.removeClass(_C_PLAY_BTN)
             })
         }
     }

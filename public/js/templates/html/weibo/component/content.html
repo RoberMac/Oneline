@@ -1,5 +1,5 @@
 <div class="timeline__content">
-    <p class="timeline__text" ol-linkify="weibo" weibo-emotify trim-suffix-link="{{::item.location}}">{{::item.text | html}}</p>
+    <p class="timeline__text" linkify="weibo" weibo-emotify trim-suffix-link="{{::!!item.location}}">{{::item.text | html}}</p>
 
     <div ng-if="::item.media && item.type === 'tweet' && item.media.length > 0" ng-include=" 'media/weibo.html' "></div>   
 </div>

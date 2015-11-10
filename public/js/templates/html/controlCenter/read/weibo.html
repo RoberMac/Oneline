@@ -6,18 +6,6 @@
         </div>
     </div>
 
-    <div ng-if="readType === 'retweet'" class="read__like">
-        <button ng-repeat="item in ::readItems" class="read__like__avatar timeline__media--inactive" type="button" user-profile="weibo:controlCenter" ng-init="::_profile = item">
-            <img ng-src="{{::item.avatar}}">
-        </button>
-
-        <div ng-if="readItems.length === 0" class="read--empty icon--inactive vertically_center">
-            <svg viewBox="0 0 34 26">
-                <use xlink:href="/public/img/icon-sprites.svg#retweet"></use>
-            </svg>
-        </div>
-    </div>
-
     <ul ng-if="readType === 'reply'" class="read__reply">
         <li ng-repeat="item in ::readItems | orderBy: '- created_at'" class="vertically_center">
             <a ng-href="//weibo.com/n/{{::item.screen_name}}" class="read__reply__avatar"  target="_blank">

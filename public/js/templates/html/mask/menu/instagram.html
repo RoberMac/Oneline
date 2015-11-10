@@ -1,11 +1,12 @@
 <!-- 用戶信息 -->
-<button class="mask__menu--row mask__menu--row--1 mask__menu__button icon--instagram tips animate--faster" user-profile="instagram:timeline" type="button">
-    <svg viewBox="0 0 200 200">
-       <use xlink:href="/public/img/icon-sprites.svg#profile"></use>
-    </svg>
-</button>
-
-
+<a ng-href="/instagram/user/{{::uid.instagram}}" role="button">
+    <span class="mask__menu--row mask__menu--row--1 mask__menu__button icon--instagram btn tips animate--faster">
+        <svg viewBox="0 0 200 200">
+           <use xlink:href="/public/img/icon-sprites.svg#profile"></use>
+        </svg>
+    </span>
+</a>
+<!-- Switch -->
 <button ng-if="::providerList.indexOf('weibo') >= 0" class="mask__menu__button mask__menu__button--switch mask__menu__button--switch--left icon--weibo tips--deep--peace" type="button" show-menu="weibo">
     <svg viewBox="0 0 77 77">
         <use xlink:href="/public/img/icon-sprites.svg#2"></use>

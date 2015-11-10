@@ -3,13 +3,19 @@ angular.module('Oneline.maskDirectives', [])
  * 菜單
  *
  */
-.directive('showMenu', ['olMask', function (olMask){
+.directive('showMenu', ['store', 'olMask', function (store, olMask){
     return {
         restrict: 'A',
         link: function (scope, elem, attrs){
             elem
             .on('click', function (){
                 var _provider = attrs.showMenu;
+
+                // Init UID
+                scope.uid = {}
+                scope.providerList.forEach(function (provider){
+                    scope.uid[provider] = store.get('profile_' + provider).uid
+                })
 
                 olMask.switch(scope)                
                 .then(function (){
@@ -18,94 +24,6 @@ angular.module('Oneline.maskDirectives', [])
             })
             .on('$destroy', function (){
                 elem.off()
-            })
-        }
-    }
-}])
-/**
- * 查看用戶信息
- *
- */
-.directive('userProfile', ['Action', 'store', 'olMask',
-    function(Action, store, olMask){
-
-    return {
-        restrict: 'A',
-        link: function (scope, elem, attrs){
-            elem
-            .on('click', function (){
-                var _provider = attrs.userProfile.split(':')[0],
-                    _from     = attrs.userProfile.split(':')[1],
-                    _profile  = scope._profile || store.get('profile_' + _provider);
-
-
-                // Init
-                if (_from === 'controlCenter' && elem.hasClass('tips--frozen')) return;
-                if (_from === 'timeline'){
-                    olMask.switch(scope)
-                    .then(function (){
-                        setup()
-                    })
-                } else {
-                    setup()
-                }
-
-                function setup(){
-                    scope.loadState = 'initLoad'
-                    scope.mask = {
-                        screen_name: _profile.screen_name,
-                        avatar: _profile.avatar,
-                        name: _profile.name,
-                        uid: _profile.uid
-                    }
-                    scope.loadMaskTimeline = function (){
-                        if (scope.loadState === 'loading') return;
-
-                        var timeline = document.querySelectorAll('.mask .timeline'),
-                            _min_id  = angular.element(timeline[timeline.length - 1]).attr('data-id');
-
-                        scope.loadState = 'loading'
-
-                        olMask.loadOldPosts('user_timeline', _provider, _profile.uid, _min_id)
-                        .then(function (data){
-                            scope.mask.timeline = scope.mask.timeline.concat(data)
-
-                            scope.loadState = 'loadFin'
-                        })
-                        .catch(function (err){
-                            scope.loadState = 'loadFail'
-                        })
-                    }
-
-                    // Show Profile
-                    olMask.append('mask/user/' + _provider + '.html', scope)
-                    // Fire
-                    _from === 'controlCenter' ? elem.addClass('timeline__media--loading') : null
-
-                    Action.get({
-                        action: _provider !== 'weibo' || !scope._profile ? 'user' : 'user_in_tweet',
-                        provider: _provider,
-                        id: _provider !== 'weibo' || !scope._profile ? _profile.uid : scope._id_str
-                    })
-                    .$promise
-                    .then(function (res){
-                        angular.extend(scope.mask, res.data)
-
-                        scope.loadState = 'loadFin'
-                        _from === 'controlCenter' ? elem.addClass('timeline__media--active') : null
-                    })
-                    .catch(function (){
-                        scope.mask.protected = true
-                        scope.loadState = 'loadFail'
-                         _from === 'controlCenter' ? elem.addClass('tips--frozen') : null
-                    })
-                    .finally(function (){
-                         _from === 'controlCenter' ? elem.removeClass('timeline__media--loading') : null
-                    })
-                }
-            })
-            .on('$destroy', function (){
-                elem.off('click')
             })
         }
     }
@@ -140,85 +58,6 @@ angular.module('Oneline.maskDirectives', [])
                 .finally(function (){
                     elem.removeClass('tips--inprocess')
                 })
-            })
-        }
-    }
-}])
-/**
- * 搜索「貼文」（地理位置、Tags 等）
- *
- */
-.directive('search', ['Action', 'olMask', 
-    function (Action, olMask){
-
-    return {
-        restrict: 'A',
-        link: function (scope, elem, attrs){
-            elem
-            .on('click', function (){
-                var _info = attrs.search.split('---'),
-                    _provider = _info[0],
-                    _type = _info[1],
-                    _q = _info[2],
-                    _title = _info[3],
-                    _action = _provider === 'twitter' ? 'search' : _type;
-
-                // Init
-                olMask.switch(scope)
-                .then(function (){
-                    setup()
-                })
-
-                function setup(){
-                    scope.loadState = 'initLoad'
-                    scope.mask = {
-                        type: _type,
-                        title: _title,
-                        q: _q
-                    }
-
-                    scope.loadMaskTimeline = function (){
-                        if (scope.loadState === 'loading') return;
-
-                        var timeline = document.querySelectorAll('.mask .timeline'),
-                            min_timeline = angular.element(timeline[timeline.length - 1]),
-                            _min_id  = _provider === 'weibo'
-                                            ? min_timeline.attr('data-created')
-                                        : min_timeline.attr('data-id');
-
-                        scope.loadState = 'loading'
-
-                        olMask.loadOldPosts(_action, _provider, _q, _min_id)
-                        .then(function (data){
-                            scope.mask.timeline = scope.mask.timeline.concat(data)
-
-                            scope.loadState = 'loadFin'
-                        })
-                        .catch(function (err){
-                            scope.loadState = 'loadFail'
-                        })
-                    }
-                    // Show Profile
-                    olMask.append('mask/search/' + _provider + '.html', scope)
-                    // Fire
-                    Action.get({
-                        action: _action,
-                        provider: _provider,
-                        id: _q
-                    })
-                    .$promise
-                    .then(function (res){
-                        scope.mask.timeline = res.data
-
-                        scope.loadState = 'loadFin'
-                    })
-                    .catch(function (){
-                        scope.loadState = 'loadFail'
-                    })
-                }
-            })
-            .on('$destroy', function (){
-                elem.off('click')
             })
         }
     }

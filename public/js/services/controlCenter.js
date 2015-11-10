@@ -51,7 +51,7 @@ angular.module('Oneline.controlCenterServices', [])
             angular.element(
                 document.querySelector('.cancelMask__wrapper .mask__timeline')
             ).removeClass('mask__timeline')
-            console.log(scope.item.text)
+
             _this.refreshPreviewText(scope.item.text, _provider)
         })
     }

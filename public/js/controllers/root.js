@@ -42,7 +42,7 @@ angular.module('Oneline.rootControllers', [])
         $timeout(function (){
             var cancelMask = angular.element(document.querySelector('.cancelMask__wrapper')),
                 controlCenter = angular.element(document.querySelector('.controlCenter')),
-                type = state.match(/read|write|notification/);
+                type = state.match(/replicant|read|write|notification/);
 
             if (type){
                 cancelMask.addClass('cancelMask__wrapper--' + type[0])
@@ -54,7 +54,7 @@ angular.module('Oneline.rootControllers', [])
         })
 
         function typeStr(prefix){
-            var typeList = ['read', 'write', 'notification'];
+            var typeList = ['replicant', 'read', 'write', 'notification'];
 
             return typeList.map(function (i){return prefix + i }).join(' ')
         }
@@ -89,7 +89,6 @@ angular.module('Oneline.rootControllers', [])
             })
         }
     })
-
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams){
         // * -> /
