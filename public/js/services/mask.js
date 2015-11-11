@@ -14,11 +14,6 @@ angular.module('Oneline.maskServices', [])
             })
         })
     }
-    this.switch = function (scope){
-        return scope.controlCenter
-                    ? scope.setControlCenter('', 'fullmask')
-                : scope.setControlCenter('fullmask');
-    }
     this.loadOldPosts = function (action, provider, id, min_id){
         var defer = $q.defer()
 

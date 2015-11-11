@@ -21,38 +21,42 @@ angular.module('Oneline.rootControllers', [])
         })
     }
     // 設置是否顯示「控制中心」
-    $scope.setControlCenter = function (state, thenSwitchTo){
+    $scope.setControlCenter = function (state){
         var defer = $q.defer()
 
         if (state === '' && $state.current.name === 'timeline.action'){
             $state.go('timeline')
         }
 
-        $scope.controlCenter = state
-
-        if (thenSwitchTo){
+        if ($scope.controlCenter && state !== ''){
+            setControlCenter('')
             $timeout(function (){
-                $scope.setControlCenter(thenSwitchTo)
+                setControlCenter(state)
                 defer.resolve()
             }, 700)
         } else {
+            setControlCenter(state)
             defer.resolve()
         }
 
-        $timeout(function (){
-            var cancelMask = angular.element(document.querySelector('.cancelMask__wrapper')),
-                controlCenter = angular.element(document.querySelector('.controlCenter')),
-                type = state.match(/replicant|read|write|notification/);
 
-            if (type){
-                cancelMask.addClass('cancelMask__wrapper--' + type[0])
-                controlCenter.addClass('controlCenter--' + type[0])
-            } else {
-                cancelMask.removeClass(typeStr('cancelMask__wrapper--'))
-                controlCenter.removeClass(typeStr('controlCenter--'))
-            }
-        })
+        function setControlCenter(state){
+            $scope.controlCenter = state
 
+            $timeout(function (){
+                var cancelMask = angular.element(document.querySelector('.cancelMask__wrapper')),
+                    controlCenter = angular.element(document.querySelector('.controlCenter')),
+                    type = state.match(/replicant|read|write|notification/);
+
+                if (type){
+                    cancelMask.addClass('cancelMask__wrapper--' + type[0])
+                    controlCenter.addClass('controlCenter--' + type[0])
+                } else {
+                    cancelMask.removeClass(typeStr('cancelMask__wrapper--'))
+                    controlCenter.removeClass(typeStr('controlCenter--'))
+                }
+            })
+        }
         function typeStr(prefix){
             var typeList = ['replicant', 'read', 'write', 'notification'];
 
@@ -100,7 +104,7 @@ angular.module('Oneline.rootControllers', [])
         }
     })
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams){
-        // * -> /settings
+        // * -> settings
         if (toState.name === 'settings'){
             if (!olTokenHelper.isValidToken()){
                 olTokenHelper.clearInvalidToken()
@@ -109,6 +113,10 @@ angular.module('Oneline.rootControllers', [])
             document.title = '｜'
             timelineCache.removeAll()
             $scope.updateProviderList()
+            $scope.setControlCenter('')
+        }
+        // timeline.action -> timeline
+        if (fromState.name === 'timeline.action' && (!toState.name || toState.name === 'timeline')){
             $scope.setControlCenter('')
         }
     })

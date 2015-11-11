@@ -1,17 +1,15 @@
 <!-- 寫推 -->
-<button class="mask__menu--row mask__menu--row--2 mask__menu--row--2--1 mask__menu__button icon--weibo tips animate--faster" ng-click="setControlCenter('', 'write_weibo-tweet')" type="button">
+<button class="mask__menu--row mask__menu--row--2 mask__menu--row--2--1 mask__menu__button icon--weibo tips animate--faster" ng-click="setControlCenter('write_weibo-tweet')" type="button">
     <svg viewBox="0 0 200 200">
        <use xlink:href="/public/img/icon-sprites.svg#newTweet"></use>
     </svg>
 </button>
 <!-- 用戶信息 -->
-<a ng-href="/weibo/user/{{::uid.weibo}}" role="button">
-    <span class="mask__menu--row mask__menu--row--2 mask__menu--row--2--2 mask__menu__button icon--weibo btn tips animate--faster">
-        <svg viewBox="0 0 200 200">
-           <use xlink:href="/public/img/icon-sprites.svg#profile"></use>
-        </svg>
-    </span>
-</a>
+<button user-profile="weibo" class="mask__menu--row mask__menu--row--2 mask__menu--row--2--2 mask__menu__button icon--weibo btn tips animate--faster" type="button">
+    <svg viewBox="0 0 200 200">
+       <use xlink:href="/public/img/icon-sprites.svg#profile"></use>
+    </svg>
+</button>
 
 <!-- Switch -->
 <button ng-if="::providerList.indexOf('twitter') >= 0" class="mask__menu__button mask__menu__button--switch mask__menu__button--switch--left icon--twitter tips--deep--peace" type="button" show-menu="twitter">

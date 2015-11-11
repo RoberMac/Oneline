@@ -33,12 +33,12 @@
     <button ng-repeat="mention in mentionsList" ng-click="insertMention(mention.s, 'twitter')" ng-bind="mention.u || mention.s"></button>
 </div>
 <div class="switch-icon">
-    <button ng-if="::controlCenter.indexOf('write_twitter-retweet') >= 0" ng-click="setControlCenter('', 'read_twitter-retweet:' + controlCenter.split(':')[1])" class="icon--twitter animate--faster tips" type="button">
+    <button ng-if="::controlCenter.indexOf('write_twitter-retweet') >= 0" ng-click="setControlCenter('read_twitter-retweet:' + controlCenter.split(':')[1])" class="icon--twitter animate--faster tips" type="button">
         <svg viewBox="0 0 283 150">
             <use xlink:href="/public/img/icon-sprites.svg#2Retweet"></use>
         </svg>
     </button>
-    <button ng-if="::providerList.indexOf('weibo') >= 0 && controlCenter.indexOf('write_twitter-tweet') >= 0" ng-click="setControlCenter('', 'write_weibo-tweet')" class="animate--faster tips--deep" type="button">
+    <button ng-if="::providerList.indexOf('weibo') >= 0 && controlCenter.indexOf('write_twitter-tweet') >= 0" ng-click="setControlCenter('write_weibo-tweet')" class="animate--faster tips--deep" type="button">
         <svg viewBox="0 0 283 150">
             <use xlink:href="/public/img/icon-sprites.svg#2Weibo"></use>
         </svg>

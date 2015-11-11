@@ -22,7 +22,7 @@ angular.module('Oneline.maskControllers', [])
     if ($scope.providerList.indexOf(_provider) < 0){
         $state.go('settings')
     }
-console.log('....')
+
     // Init
     var isReadCtrlCenter = $scope.controlCenter.indexOf('read') >= 0;
 
@@ -33,7 +33,7 @@ console.log('....')
 
         setup()
     } else {
-        olMask.switch($scope)
+        $scope.setControlCenter('fullmask')
         .then(function (){
             setup()
         })
@@ -57,7 +57,7 @@ console.log('....')
             var _loadAction = _action === 'user' ? 'user_timeline' : __action,
                 timeline = document.querySelectorAll('.mask .timeline'),
                 min_timeline = angular.element(timeline[timeline.length - 1]),
-                _min_id  = _provider === 'weibo'
+                _min_id  = _provider === 'weibo' && _action === 'location'
                                 ? min_timeline.attr('data-created')
                             : min_timeline.attr('data-id');
 

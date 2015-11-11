@@ -3,7 +3,7 @@ angular.module('Oneline.maskDirectives', [])
  * 菜單
  *
  */
-.directive('showMenu', ['store', 'olMask', function (store, olMask){
+.directive('showMenu', ['olMask', function (olMask){
     return {
         restrict: 'A',
         link: function (scope, elem, attrs){
@@ -11,19 +11,29 @@ angular.module('Oneline.maskDirectives', [])
             .on('click', function (){
                 var _provider = attrs.showMenu;
 
-                // Init UID
-                scope.uid = {}
-                scope.providerList.forEach(function (provider){
-                    scope.uid[provider] = store.get('profile_' + provider).uid
-                })
-
-                olMask.switch(scope)                
+                scope.setControlCenter('fullmask')              
                 .then(function (){
                     olMask.append('mask/menu/' + _provider + '.html', scope)
                 })
             })
             .on('$destroy', function (){
                 elem.off()
+            })
+        }
+    }
+}])
+.directive('userProfile', ['store', '$state', function (store, $state){
+    return {
+        restrict: 'A',
+        link: function (scope, elem, attrs){
+            elem.on('click', function (){
+                var _provider = attrs.userProfile;
+
+                $state.go('timeline.action', {
+                    provider: _provider,
+                    action: 'user',
+                    id: store.get('profile_' + _provider).uid
+                })
             })
         }
     }
