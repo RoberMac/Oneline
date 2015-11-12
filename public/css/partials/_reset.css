@@ -204,18 +204,24 @@ img, video {
 }
 .icon {
     &--twitter, &--retweet {
+        color: var(--color-twitter);
+
         svg {
-            fill: var(--color-twitter);
+            fill: var(--color-twitter) !important;
         }
     }
     &--instagram {
+        color: var(--color-instagram);
+
         svg {
-            fill: var(--color-instagram);
+            fill: var(--color-instagram) !important;
         }
     }
     &--weibo, &--like {
+        color: var(--color-weibo);
+
         svg {
-            fill: var(--color-weibo);
+            fill: var(--color-weibo) !important;
         }
     }
     &--reply {

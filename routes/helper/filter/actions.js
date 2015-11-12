@@ -19,9 +19,12 @@ var filter = {
             return cache;
         },
         user: function (data){
+            var entities = data.entities;
+
             var userObj = {
                 bio: data.description || '',
-                website: data.url || '',
+                location: data.location,
+                website: (data.url && entities.url.urls[0].expanded_url) || '',
                 counts: {
                     follows: data.friends_count,
                     followed_by: data.followers_count,
@@ -32,6 +35,14 @@ var filter = {
             };
 
             extend(userObj, filterUtils.twitter.user(data))
+
+            if (entities.description && entities.description.urls){
+                entities.description.urls.forEach(function (item){
+                    extend(userObj, {
+                        bio: userObj.bio.replace(item.url, item.expanded_url)
+                    })
+                })
+            }
 
             return userObj;
         },
@@ -146,6 +157,7 @@ var filter = {
         user: function (data){
             var userObj = {
                 bio: data.description || '',
+                location: location.data.location,
                 website: data.url || '',
                 counts: {
                     follows: data.friends_count,

@@ -10,13 +10,18 @@
                 <strong ng-bind="mask.name"></strong>
             </a>
         </div>
-        <div ng-if="mask.timeline">
-            <button class="profile__following tips--deep" ng-class="::{'icon--twitter tips--active': mask.following}" type="button" toggle-following="twitter:{{mask.uid}}">
-                <svg viewBox="0 0 60 60">
-                    <use xlink:href="/public/img/icon-sprites.svg#following"></use>
-                </svg>
-            </button>
-        </div>
+
+        <button class="profile__following tips--deep" ng-class="::{'icon--twitter tips--active': mask.following}" type="button" toggle-following="twitter:{{mask.uid}}">
+            <svg viewBox="0 0 60 60">
+                <use xlink:href="/public/img/icon-sprites.svg#following"></use>
+            </svg>
+        </button>
+        <span ng-if="mask.location" class="timeline__location icon--twitter">
+            <svg viewBox="0 0 60 60">
+               <use xlink:href="/public/img/icon-sprites.svg#location"></use>
+            </svg>
+            <span class="timeline__location__name" ng-bind="::mask.location"></span>
+        </span>
         <!-- https://groups.google.com/d/msg/angular/5clM0kjHXq8/Hh0DngpjtPwJ -->
         <div ng-if="true" ng-include=" 'mask/user/component/profile.html' " onload="_p_type = 'tweet'; _p_provider = 'twitter' "></div>
 

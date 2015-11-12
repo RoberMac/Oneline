@@ -4,7 +4,7 @@
         <!-- Header -->
         <div ng-switch="::mask.type" class="mask__header mask__header--instagram">
             <!-- Location -->
-            <a ng-switch-when="location" ng-href="//instagram.com/explore/locations/{{mask.q}}" target="_blank" role="button">
+            <a ng-switch-when="location" ng-href="//instagram.com/explore/locations/{{::mask.q}}" target="_blank" role="button">
                 <span class="mask__header__title btn icon--instagram tips--deep">
                     <svg viewBox="0 0 60 60">
                        <use xlink:href="/public/img/icon-sprites.svg#location"></use>
@@ -13,7 +13,7 @@
                 </span>
             </a>
             <!-- Tags -->
-            <a ng-switch-when="tags" ng-href="//instagram.com/explore/tags/{{mask.q}}" target="_blank" role="button">
+            <a ng-switch-when="tags" ng-href="//instagram.com/explore/tags/{{::mask.q}}" target="_blank" role="button">
                 <span class="mask__header__title btn icon--instagram tips--deep">
                     <svg viewBox="0 0 60 60">
                        <use xlink:href="/public/img/icon-sprites.svg#tags"></use>

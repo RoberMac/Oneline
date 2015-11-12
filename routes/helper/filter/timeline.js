@@ -43,10 +43,11 @@ var filter = {
                     favorite_count: item.retweeted_status.favorite_count
                 })
 
-                if (item.retweeted_status.extended_entities && item.retweeted_status.extended_entities.media){
+                var r_extended_entities = item.retweeted_status.extended_entities;
+                if (r_extended_entities && r_extended_entities.media){
                     extend(tweetObj, {
-                        media: filterUtils.twitter.media(item.retweeted_status.extended_entities.media),
-                        mediaLink: item.retweeted_status.extended_entities.media[0].url
+                        media: filterUtils.twitter.media(r_extended_entities.media),
+                        mediaLink: r_extended_entities.media[0].url
                     })
                 }
             } 
@@ -62,10 +63,11 @@ var filter = {
                     }
                 })
 
-                if (item.quoted_status.extended_entities && item.quoted_status.extended_entities.media){
+                var q_extended_entities = item.quoted_status.extended_entities;
+                if (q_extended_entities && q_extended_entities.media){
                     extend(tweetObj.quote, {
-                        media: filterUtils.twitter.media(item.quoted_status.extended_entities.media),
-                        mediaLink: item.quoted_status.extended_entities.media[0].url
+                        media: filterUtils.twitter.media(q_extended_entities.media),
+                        mediaLink: q_extended_entities.media[0].url
                     })
                 }
             }
@@ -77,10 +79,11 @@ var filter = {
             }
 
             // Media
-            if (item.extended_entities && item.extended_entities.media){
+            var t_extended_entities = item.extended_entities;
+            if (t_extended_entities && t_extended_entities.media){
                 extend(tweetObj, {
-                    media: filterUtils.twitter.media(item.extended_entities.media),
-                    mediaLink: item.extended_entities.media[0].url
+                    media: filterUtils.twitter.media(t_extended_entities.media),
+                    mediaLink: t_extended_entities.media[0].url
                 })
             }
 
@@ -252,10 +255,18 @@ var filter = {
 
             // Location
             if (item.geo && item.geo.type === 'Point'){
+                var _place_name, _place_id;
+
+                if (item.annotations && item.annotations[0].place){
+                    _place_name = item.annotations[0].place.title
+                    _place_id = item.annotations[0].place.poiid
+                }
+
                 extend(weiboObj, {
                     location: {
-                        lat: item.geo.coordinates[0],
-                        long: item.geo.coordinates[1]
+                        name: _place_name,
+                        id: _place_id,
+                        q: item.geo.coordinates[0] + '_' + item.geo.coordinates[1]
                     }
                 })
             }

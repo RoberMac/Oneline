@@ -4,12 +4,12 @@
         <!-- Header -->
         <div ng-switch="mask.type" class="mask__header mask__header--weibo">
             <!-- Location -->
-            <a ng-switch-when="location" ng-href="//maps.google.com/maps?z=12&t=h&q=loc:{{mask.q.split('_')[0]}}+{{mask.q.split('_')[1]}}" target="_blank" role="button">
+            <a ng-switch-when="location" ng-href="{{::mask.title ? '//weibo.com/p/100101' + mask.title.split('_')[1] : '//maps.google.com/maps?z=12&t=h&q=loc:' + mask.q.split('_')[0] + '+' + mask.q.split('_')[1]}}" target="_blank" role="button">
                 <span class="mask__header__title btn icon--weibo tips--deep">
                     <svg viewBox="0 0 60 60">
                        <use xlink:href="/public/img/icon-sprites.svg#location"></use>
                     </svg>
-                    <span ng-bind="mask.title"></h3>
+                    <span ng-bind="mask.title.split('_')[0]"></h3>
                 </span>
             </a>
             <!-- Tags -->

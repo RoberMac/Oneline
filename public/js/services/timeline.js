@@ -326,7 +326,8 @@ angular.module('Oneline.timelineServices', [])
     }
     // 紀錄時間線上出現的「提及」用戶
     this.recordMentions = function (providerList){
-        var _MAX_COUNT = 2000;
+        var _MAX_COUNT_L1 = 2000;
+        var _MAX_COUNT_L2 = 3000;
         var regex = {
             twitter: /(|\s)*@([\w]+)/g,
             instagram: /(|\s)*@([\w\.]+)/g,
@@ -349,22 +350,26 @@ angular.module('Oneline.timelineServices', [])
                     )
                 ];
 
-            // From Tweet Text
+            // 從（時間線上）貼文文本提取
             angular.forEach(angular.element(_target[0]), function (item){
 
                 var mentions = item.innerText.match(regex[provider]);
 
                 if (!mentions) return;
 
+                // Trim
+                mentions = mentions.map(function(i){return i.trim()})
+
                 if (provider === 'twitter'){
                     mentions = mentions.map(function (i){
-                        return { 's': i.trim() }
+                        return { 's': i }
                     })
                 }
+                // 控制最大存儲數 (Level 1: 去除 Twitter 文本提取項)
+                if (_mentionsList.length >= _MAX_COUNT_L1){
+                    var _len = mentions.length;
 
-                if (_mentionsList.length >= _MAX_COUNT){
                     if (provider === 'twitter'){
-                        var _len = mentions.length;
                         _mentionsList = _mentionsList.filter(function (item){
                             if (!item.hasOwnProperty('u') && _len > 0){
                                 _len --
@@ -374,18 +379,14 @@ angular.module('Oneline.timelineServices', [])
                             }
                         })
                     } else {
-                        _mentionsList.splice(0, mentions.length) 
+                        _mentionsList.splice(0, _len) 
                     }
                 }
 
                 _mentionsList = _mentionsList.concat(mentions)
             })
-            // Trim
-            if (provider === 'weibo'){
-                _mentionsList = _mentionsList.map(function(i){return i.trim()})
-            }
 
-            // From Tweet Author
+            // 從（時間線上）貼文貼主提取
             angular.forEach(angular.element(_target[1]), function (item){
                 var _item = angular.element(item),
                     _href = _item.attr('href');
@@ -401,13 +402,20 @@ angular.module('Oneline.timelineServices', [])
                 _mentionsList.push(mentions)
             })
 
+
+            // 去重
+            _mentionsList = provider === 'twitter'
+                                ? arrayUnique.obj(_mentionsList)
+                            : arrayUnique.literal(_mentionsList)
+
+            // 控制最大存儲數 (Level 2: 去除舊項)
+            if (_mentionsList.length >= _MAX_COUNT_L2){
+                var _len = _mentionsList.length - _MAX_COUNT_L2;
+                _mentionsList.splice(0, _len) 
+            }
+
             // Store
-            store.set(
-                'mentions_' + provider,
-                provider === 'twitter'
-                    ? arrayUnique.obj(_mentionsList)
-                : arrayUnique.literal(_mentionsList)
-            )
+            store.set('mentions_' + provider, _mentionsList)
         })
     }
 }])

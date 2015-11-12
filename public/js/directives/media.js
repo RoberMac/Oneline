@@ -10,34 +10,37 @@ angular.module('Oneline.mediaDirectives', [])
         templateUrl: 'media/video.html',
         link: function (scope, elem, attrs){
             var _C_PLAY_BTN = 'timeline__media__playButton--playing',
-                video = elem.children()[0];
+                _video = elem.children()[0];
 
-            video.setAttribute('src', scope.olSrc)
+            _video.setAttribute('src', scope.olSrc)
 
             elem
             .on('click', function (){
                 var post = angular.element(document.querySelector('[data-id="' + scope.olId + '"]')),
+                    video = angular.element(_video),
                     playIcon = angular.element(elem.children()[1]);
 
-                video.paused ? video.play() : video.pause()
+                _video.paused ? _video.play() : _video.pause()
                 playIcon.toggleClass(_C_PLAY_BTN)
 
                 post
                 .on('mouseleave', function (){
-                    video.pause()
+                    _video.pause()
                     playIcon.removeClass(_C_PLAY_BTN)
-                    video.removeAttribute('loop')
+                    _video.removeAttribute('loop')
 
                     post.off()
+                    video.off()
+                })
+
+                video
+                .on('ended', function (){
+                    playIcon.removeClass(_C_PLAY_BTN)
+                    video.off()
                 })
             })
             .on('$destroy', function (){
                 elem.off()
-            })
-
-            angular.element(video)
-            .on('ended', function (){
-                playIcon.removeClass(_C_PLAY_BTN)
             })
         }
     }

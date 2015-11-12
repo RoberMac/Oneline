@@ -25,7 +25,6 @@
 
 .profile {
     &__avatar {
-        top: -31px;
         left: calc(50% - 24px);
     }
     &__locked {
@@ -61,7 +60,7 @@
         position: absolute 3px 0 0 3px;
     }
     &__following {
-        position: absolute 3px 3px * *;
+        position: absolute 3px * * 3px;
         size: 17px;
     }
     &__biography {
@@ -139,7 +138,7 @@
 }
 
 .mask {
-    padding: 7px 0;
+    padding: 0 0 7px;
     margin: 36px 7px 0 7px;
 
     &__menu {

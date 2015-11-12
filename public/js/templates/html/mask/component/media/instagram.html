@@ -16,7 +16,7 @@
                 </svg>
             </button>
 
-            <a ng-repeat="user in ::item.users_in_photo" class="timeline__media__userTag animate--faster" ng-href="/instagram/user/{{::user.user.username}}">
+            <a ng-repeat="user in ::item.users_in_photo" class="timeline__media__userTag animate--faster" ng-href="//instagram.com/{{::user.user.username}}" target="_blank">
                 <div class="timeline__media__userTag__pointer"></div>
                 <span class="timeline__media__userTag__content">
                     <img ng-src="{{::user.user.profile_picture}}">
