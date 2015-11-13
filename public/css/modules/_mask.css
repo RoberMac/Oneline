@@ -60,7 +60,7 @@
         position: absolute 3px 0 0 3px;
     }
     &__following {
-        position: absolute 3px * * 3px;
+        position: absolute 5px * * 5px;
         size: 17px;
     }
     &__biography {
@@ -225,7 +225,18 @@
         position: relative 70px * *;
         margin: 0 7px 0;
         padding: 17px 3px 7px 3px;
-        height: calc(93vh - 140px - 48px);
+        height: calc(93vh - 140px);
+
+        &__source {
+            position: absolute 3px 3px * *;
+            text-align: center;
+            user-select: none;
+            z-index: 2;
+
+            svg {
+                width: 1.4em;
+            }
+        }
     }
     &__header {
         padding: 17px;
@@ -254,14 +265,57 @@
             color: var(--color-weibo);
         }
     }
-    &__source {
-        position: absolute 3px 3px * *;
-        text-align: center;
-        user-select: none;
-        z-index: 2;
+    &--empty {
+        position: absolute calc(50% - 50px) * * calc(50% - 50px);
+        size: 100px;
+    }
+}
 
-        svg {
-            width: 1.4em;
+.direct {
+
+    &__container {
+        position: absolute 17px * * 0px;
+        size: 100% calc(100% - 34px);
+    }
+    &__sender {
+        position: absolute -17px * * 5px;
+        width: 96px;
+        max-height: calc(93vh - 140px);
+        z-index: 3;
+        &::-webkit-scrollbar { 
+            display: none; 
+        }
+
+        button {
+            display: block;
+            position: relative;
+            margin-bottom: 3px;
+            size: 32px;
+
+            img {
+                width: 100%;
+                border-radius: 50%;
+            }
+
+            &:hover {
+                .direct__sender__name {
+                    opacity: 1;
+                }
+            }
+        }
+        &__name {
+            display: inline-block;
+            position: absolute 9px * * 37px;
+            padding: 1px;
+            width: 59px;
+            font-size: var(--font-size-xx-small) 14px;
+            color: var(--color-white);
+            background-color: var(--color-twitter);
+            border-radius: 3px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            opacity: 0;
         }
     }
     &__msg {
@@ -277,24 +331,24 @@
                 color: rgba(42, 169, 224, 0.7);
                 background-color: var(--color-gray);
             }
-            .mask__msg__content {
+            .direct__msg__content {
                 float: right;
                 color: var(--color-gray);
                 background-color: var(--color-twitter);
             }
-            .mask__msg__time {
+            .direct__msg__time {
                 right: 7px;
             }
         }
         &--others {
             float: left;
 
-            .mask__msg__content {
+            .direct__msg__content {
                 float: left;
                 color: var(--color-black);
                 background-color: var(--color-gray);
             }
-            .mask__msg__time {
+            .direct__msg__time {
                 left: 7px;
             }
         }
@@ -323,28 +377,14 @@
             cursor: pointer;
         }
     }
-    &__sender {
-        position: absolute * * 0;
-        size: 100% 48px;
-        background-color: var(--color-gray-drak);
-        z-index: 3;
-        white-space: nowrap;
-        &::-webkit-scrollbar { 
-            display: none; 
-        }
-
-        button {
-            size: 48px;
-            padding: 5px;
-
-            img {
-                width: 100%;
-                border-radius: 50%;
-            }
-        }
-    }
-    &--empty {
-        position: absolute calc(50% - 50px) * * calc(50% - 50px);
-        size: 100px;
+    &__write {
+        position: absolute calc(100% - 7px) * * 0;
+        size: 100% 32px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+        border-top: 1px solid var(--color-gray-drak);
+        background-color: var(--color-white);
     }
 }

@@ -70,6 +70,19 @@ var Actions = {
                         return { data: data }
                     }
                 }
+            },
+            _post: function (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'direct_messages/new',
+                    tOpts: {
+                        screen_name: opts.id,
+                        text: opts.params.text
+                    },
+                    handleActionFunc: function (data){
+                        return actionsFilter.twitter.direct([data[0]]);
+                    }
+                }
             }
         },
         like: {

@@ -27,7 +27,6 @@ angular.module('Oneline.mediaDirectives', [])
                 .on('mouseleave', function (){
                     _video.pause()
                     playIcon.removeClass(_C_PLAY_BTN)
-                    _video.removeAttribute('loop')
 
                     post.off()
                     video.off()

@@ -86,6 +86,19 @@
             }
         }
     }
+    &__input {
+        position: relative 0 * * 0;
+        size: 90% 100%;
+        padding: 7px;
+        font-size: var(--font-size-base) var(--line-height-base);
+        background-color: var(--color-white);
+        border-radius: 3px;
+
+        &--submit {
+            position: absolute 2.5px 1% * *;
+            size: 9% 27px;
+        }
+    }
     &__toolBar {
         position: relative 17% * *;
         margin: 7px auto;

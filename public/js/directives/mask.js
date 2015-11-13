@@ -73,7 +73,7 @@ angular.module('Oneline.maskDirectives', [])
     }
 }])
 /**
- * 查看「提及」& 「私信」
+ * 查看「提及」&「私信」
  *
  */
 .directive('mentions', ['$timeout', 'olNotification', function ($timeout, olNotification){
@@ -95,6 +95,7 @@ angular.module('Oneline.maskDirectives', [])
                 $timeout(function (){
                     $scope.notifications = _notifications
                     $scope.loadState = 'loadFin'
+                    $scope.loadMentions()
                 }, 700)
             } else {
                 olNotification.load(true)
@@ -107,7 +108,7 @@ angular.module('Oneline.maskDirectives', [])
                 })
             }
 
-            $scope.loadMentions = function (type){
+            $scope.loadMentions = function (){
                 if ($scope.loadState === 'loading') return;
 
                 $scope.loadState = 'loading'
@@ -123,10 +124,6 @@ angular.module('Oneline.maskDirectives', [])
         }]
     }
 }])
-/**
- * 查看「私信」
- *
- */
 .directive('direct', ['$timeout', '$filter', 'olNotification',
     function ($timeout, $filter, olNotification){
 
@@ -137,7 +134,7 @@ angular.module('Oneline.maskDirectives', [])
         controller: ['$scope', '$element', 'store', function ($scope, $element, store){
             var _provider = $element.attr('provider'),
                 _authUid = store.get('profile_' + _provider).uid,
-                _notifications, _conversation, _currentSender;
+                _notifications, _conversation, _currentSender, _senderList;
 
             // Init
             $scope.notifications = []
@@ -146,56 +143,78 @@ angular.module('Oneline.maskDirectives', [])
             $scope.loadState = 'initLoad'
 
             _notifications = olNotification.initLoad(_provider, 'direct');
-
+            // 從本地獲取
             if (_notifications && _notifications.length > 0){
                 $timeout(function (){
-                    updateDirect()
+                    $scope.updateDirect(_notifications)
+                    $scope.loadDirect()
                 }, 700)
-            } else {
+            }
+            // 初次獲取
+            else {
                 olNotification.load(true)
                 .then(function (data){
-                    updateDirect()
+                    $scope.updateDirect(data)
                 })
                 .catch(function (err){
                     $scope.loadState = 'loadFail'
                 })
             }
 
-            $scope.loadDirect = function (type){
+            $scope.loadDirect = function (){
                 if ($scope.loadState === 'loading') return;
 
                 $scope.loadState = 'loading'
 
                 olNotification.load(false)
                 .then(function (data){
-                    updateDirect()
+                    $scope.updateDirect(data)
                 })
                 .catch(function (err){
                     $scope.loadState = 'loadFail'
                 })
             }
 
-            $scope.showDirect = function (senderId){
-                // 顯示與當前用戶的談話
-                if (_currentSender === senderId){
-                    showDirect(senderId)
-                } else {
+            $scope.showDirect = function (sender, isUpdateDirect){
+                // 刷新
+                if (isUpdateDirect){
+                    showDirect(sender.uid)
+                    $scope.senderList = [sender]
+                }
+                // 顯示／隱藏
+                else if (_currentSender && _currentSender.uid === sender.uid){
+                    // 當前用戶插到最前
+                    _senderList = _senderList.filter(function (_sender){
+                       return _sender.uid !== sender.uid
+                    })
+                    _senderList.unshift(sender)
+
+                    if ($scope.senderList.length === _senderList.length){
+                        $scope.senderList = [sender]
+                    } else {
+                        $scope.senderList = _senderList
+                    }
+                }
+                // 切換
+                else {
                     $scope.notifications = []
                     $timeout(function (){
-                        showDirect(senderId)
+                        showDirect(sender.uid)
                     }, 350)
+
+                    $scope.senderList = [sender]
                 }
-                // 更新 `_currentSender`
-                _currentSender = senderId
+
+                _currentSender = sender
             }
 
-            function updateDirect(){
-                var cache = olNotification.extractDirect(_authUid)
+            $scope.updateDirect = function(_notifications){
+                var cache = olNotification.extractDirect(_authUid, _notifications)
 
                 if (cache[0].length > 0 && Object.keys(cache[1]).length > 0){
-                    $scope.senderList = cache[0]
+                    _senderList = cache[0]
                     _conversation = cache[1]
-                    $scope.showDirect(_currentSender || $scope.senderList[0].uid)
+                    $scope.showDirect(_currentSender || _senderList[0], true)
                 }
 
                 $scope.loadState = 'loadFin'
@@ -204,18 +223,51 @@ angular.module('Oneline.maskDirectives', [])
                 $scope.notifications = _conversation[senderId]
 
                 $timeout(function (){
-                    var senderBtn = angular.element(
-                        document.querySelector('[js-direct-sender="' + senderId + '"]')
-                    );
-
-                    // UI
-                    senderBtn.parent().children().removeClass('tips--active--peace')
-                    senderBtn.addClass('tips--active--peace')
                     // Scroll to Bottom
-                    var msgElem = document.querySelector('.mask__notification');
+                    var msgElem = document.querySelector('.direct__container');
                     msgElem.scrollTop = msgElem.scrollHeight
                 })
             }
         }]
+    }
+}])
+.directive('writeDirect', ['store', 'olWriteMini', function (store, olWriteMini){
+    return {
+        restrict: 'A',
+        require: '^direct',
+        templateUrl: 'mask/component/write-mini.html',
+        link: function (scope, elem, attrs){
+            // Init
+            olWriteMini.init(
+                elem.find('input'), // statusElem
+                elem.find('button') // submitButton
+            )
+            // Event
+            elem
+            .on('submit', function (e){
+                e.preventDefault()
+
+                var _provider = 'twitter';
+
+                olWriteMini.submit('twitter', 'direct', elem.attr('write-direct'))
+                .then(function (data){
+                    // Store
+                    var _notifications = store.get('notification_d_' + _provider).notifications;
+                    _notifications = _notifications.concat(data.data)
+                    store.set('notification_d_' + _provider, {
+                        notifications: _notifications,
+                        max_id: data.max_id
+                    })
+                    // Refresh
+                    scope.updateDirect(_notifications)
+                })
+            })
+            .on('input', function (){
+                olWriteMini.input()
+            })
+            .on('$destroy', function (){
+                elem.off()
+            })
+        }
     }
 }])

@@ -277,11 +277,9 @@ angular.module('Oneline.controlCenterDirectives', [])
                         }
                     }
 
-                    scope.setControlCenter('')
                     // 刪除草稿
-                    if (_action === 'tweet'){
-                        store.remove('newTweet_' + _provider)
-                    }
+                    statusElem.val('')
+                    scope.setControlCenter('')
                 })
                 .catch(function (){
                     submitButton.prop('disabled', false)

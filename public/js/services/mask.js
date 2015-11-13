@@ -55,7 +55,6 @@ angular.module('Oneline.maskServices', [])
     this.load = function(isInitLoad){
         var defer = $q.defer()
 
-
         Action.get({
             action: _action,
             provider: _provider,
@@ -85,17 +84,17 @@ angular.module('Oneline.maskServices', [])
 
         return defer.promise;
     }
-    this.extractDirect = function (_authUid){
+    this.extractDirect = function (_authUid, notifications){
         var senderList = []
         var conversations = {}
         var _sender_uid_list = [];
 
         // Extract
-        for (var i = 0, len = _notifications.length; i < len; i++){
-            var sender = _notifications[i].sender;
+        for (var i = 0, len = notifications.length; i < len; i++){
+            var sender = notifications[i].sender;
 
             if (sender.uid !== _authUid && _sender_uid_list.indexOf(sender.uid) < 0){
-                senderList.push(_notifications[i].sender)
+                senderList.push(notifications[i].sender)
 
                 _sender_uid_list.push(sender.uid)
             }
@@ -127,15 +126,73 @@ angular.module('Oneline.maskServices', [])
         }
 
         return [senderList, conversations];
-    }
 
-    function extractConversation (uid, _authUid){
-        return $filter('orderBy')(
-            $filter('filter')(_notifications, function (item, index, array){
-                return item.sender.uid === uid || 
-                        (item.sender.uid === _authUid && item.recipient.uid === uid)
-            })
-        , 'created_at')
+
+        function extractConversation (uid, _authUid){
+            return $filter('orderBy')(
+                $filter('filter')(notifications, function (item, index, array){
+                    return item.sender.uid === uid || 
+                            (item.sender.uid === _authUid && item.recipient.uid === uid)
+                })
+            , 'created_at')
+        }
+    }
+}])
+.service('olWriteMini', ['$q', 'Action', function($q, Action){
+
+    var statusElem, submitButton;
+    this.init = function (_statusElem, _submitButton){
+        statusElem = _statusElem
+        submitButton = _submitButton
+    }
+    this.submit = function (_provider, _action, _id){
+        var defer = $q.defer()
+
+        var status = statusElem.val().trim();
+
+        // UI
+        statusElem.prop('disabled', true)
+        submitButton.addClass('write__btn--send--sending')
+        // Fire
+        Action.update({
+            action: _action,
+            provider: _provider,
+            id: _id || 0
+        }, { params: {text: status} })
+        .$promise
+        .then(function (data){
+            statusElem.val('')
+
+            defer.resolve(data)
+        })
+        .catch(function (err){
+            submitButton.prop('disabled', false)
+            statusElem.addClassTemporarily('write__textarea--err', 500)
+
+            defer.reject(err)
+        })
+        .finally(function (){
+            statusElem.prop('disabled', false)
+            submitButton.removeClass('write__btn--send--sending')
+        })
+
+        return defer.promise;
+    }
+    this.input = function (){
+        var _status = statusElem.val(),
+            status = _status.trim().length > 0 ? _status : _status.trim();
+
+        // 超字提醒
+        var statusLength = status.length;
+        if (statusLength > 140 || statusLength === 0){
+            submitButton.prop('disabled', true)
+        } else {
+            submitButton.prop('disabled', false)
+        }
+        // 更新剩餘字數
+        submitButton
+        .attr('data-count', statusLength > 0 ? statusLength : '')
+        .addClassTemporarily('write__btn--send--typing', 700)
     }
 }])
 
