@@ -489,7 +489,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                 }
             })
             .on('$destroy', function (){
-                geoPickerBtn.off('click')
+                geoPickerBtn.off()
             })
         }
     }
@@ -623,7 +623,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                     scope.$apply()
                 })
                 .on('$destroy', function (){
-                    previewItem.off('click')
+                    previewItem.off()
                 })
             }
             // via https://github.com/ebidel/filer.js/blob/master/src/filer.js#L137
@@ -668,7 +668,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                 : sensitiveElem.addClass('tips--active--peace').data('sensitive', true)
             })
             .on('$destroy', function (){
-                sensitiveElem.off('click')
+                sensitiveElem.off()
             })
         }
     }
@@ -713,7 +713,7 @@ angular.module('Oneline.controlCenterDirectives', [])
                 document.querySelector('textarea').focus()
             })
             .on('$destroy', function (){
-                emotionsElem.off('click')
+                emotionsElem.off()
             })
         }
     }

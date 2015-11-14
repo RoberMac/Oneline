@@ -8,7 +8,7 @@ angular.module('Oneline.maskDirectives', [])
         restrict: 'A',
         link: function (scope, elem, attrs){
             elem
-            .on('click', function (){
+            .on('click touchstart', function (){
                 var _provider = attrs.showMenu;
 
                 scope.setControlCenter('fullmask')              
@@ -26,7 +26,7 @@ angular.module('Oneline.maskDirectives', [])
     return {
         restrict: 'A',
         link: function (scope, elem, attrs){
-            elem.on('click', function (){
+            elem.on('click touchstart', function (){
                 var _provider = attrs.userProfile;
 
                 $state.go('timeline.action', {
@@ -42,7 +42,7 @@ angular.module('Oneline.maskDirectives', [])
     return {
         restrict: 'A',
         link: function (scope, elem, attrs){
-            elem.on('click', function (){
+            elem.on('click touchstart', function (){
                 var followed_by = angular.element(document.querySelectorAll('.profile__count__column')[1]),
                     _info       = attrs.toggleFollowing.split(':'),
                     _provider   = _info[0],
@@ -146,7 +146,7 @@ angular.module('Oneline.maskDirectives', [])
             // 從本地獲取
             if (_notifications && _notifications.length > 0){
                 $timeout(function (){
-                    $scope.updateDirect(_notifications)
+                    updateDirect()
                     $scope.loadDirect()
                 }, 700)
             }
@@ -154,7 +154,7 @@ angular.module('Oneline.maskDirectives', [])
             else {
                 olNotification.load(true)
                 .then(function (data){
-                    $scope.updateDirect(data)
+                    updateDirect()
                 })
                 .catch(function (err){
                     $scope.loadState = 'loadFail'
@@ -168,7 +168,7 @@ angular.module('Oneline.maskDirectives', [])
 
                 olNotification.load(false)
                 .then(function (data){
-                    $scope.updateDirect(data)
+                    updateDirect()
                 })
                 .catch(function (err){
                     $scope.loadState = 'loadFail'
@@ -208,8 +208,8 @@ angular.module('Oneline.maskDirectives', [])
                 _currentSender = sender
             }
 
-            $scope.updateDirect = function(_notifications){
-                var cache = olNotification.extractDirect(_authUid, _notifications)
+            function updateDirect(){
+                var cache = olNotification.extractDirect(_authUid)
 
                 if (cache[0].length > 0 && Object.keys(cache[1]).length > 0){
                     _senderList = cache[0]
@@ -251,15 +251,8 @@ angular.module('Oneline.maskDirectives', [])
 
                 olWriteMini.submit('twitter', 'direct', elem.attr('write-direct'))
                 .then(function (data){
-                    // Store
-                    var _notifications = store.get('notification_d_' + _provider).notifications;
-                    _notifications = _notifications.concat(data.data)
-                    store.set('notification_d_' + _provider, {
-                        notifications: _notifications,
-                        max_id: data.max_id
-                    })
                     // Refresh
-                    scope.updateDirect(_notifications)
+                    scope.loadDirect()
                 })
             })
             .on('input', function (){

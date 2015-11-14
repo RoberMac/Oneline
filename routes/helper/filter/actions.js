@@ -157,7 +157,7 @@ var filter = {
         user: function (data){
             var userObj = {
                 bio: data.description || '',
-                location: location.data.location,
+                location: data.location,
                 website: data.url || '',
                 counts: {
                     follows: data.friends_count,

@@ -12,29 +12,6 @@ angular.module('Oneline.utilsDirectives', [])
         }
     };
 }])
-.directive("disableBack", function() {
-    return {
-        restrict: "A",
-        link: function(scope, elem, attrs) {
-            elem
-            .on('mousewheel', function(event) {
-                // via http://stackoverflow.com/a/27023848/3786947
-                var maxX = this.scrollWidth - this.offsetWidth;
-
-                if (this.scrollLeft + event.deltaX < 0 ||
-                    this.scrollLeft + event.deltaX > maxX) {
-
-                    event.preventDefault();
-
-                    this.scrollLeft = Math.max(0, Math.min(maxX, this.scrollLeft + event.deltaX));
-                }
-            })
-            .on('$destroy', function (){
-                elem.off()
-            })
-        }
-    };
-})
 .directive('loadMoreIcon', function (){
     return {
         restrict: 'E',
@@ -47,5 +24,56 @@ angular.module('Oneline.utilsDirectives', [])
                     <circle cx="157.5" cy="100.5" r="15"/>\
                 </g>\
             </svg>'
+    }
+})
+.directive('scrollTo', function (){
+    return {
+        restrict: 'A',
+        scope: {},
+        link: function (scope, elem, attrs){
+            var _direction = attrs.scrollTo.split(':')[0],
+                _target    = attrs.scrollTo.split(':')[1],
+                _C_ACTIVE = 'scrollTo--' + _direction + '--active',
+                _BOUND    = 70,
+                _POSITION = 0,
+                lastPosTop, isActive;
+
+            var target = angular.element(
+                document.querySelector('[js-scroll="' + _target + '"]')
+            );
+
+            // 顯示／隱藏按鈕
+            target
+            .on('scroll', function (){
+                var curTop = target.scrollTop();
+
+                if (curTop < _BOUND){
+                    hideScrollBtn()
+                }
+                else if (!isActive && curTop < lastPosTop){
+                    isActive = true
+                    elem.addClass(_C_ACTIVE)
+                    .delay(7000)
+                    .then(function (){
+                        hideScrollBtn()
+                    })
+                }
+                lastPosTop = curTop
+            })
+            // 滾動到頂部
+            elem
+            .on('click', function (){
+                target.scrollTop(_POSITION, 700)
+            })
+            .on('$destroy', function (){
+                elem.off()
+                target.off()
+            })
+
+            function hideScrollBtn(){
+                elem.removeClass(_C_ACTIVE)
+                isActive = false
+            }
+        }
     }
 })

@@ -97,11 +97,13 @@ angular.module('Oneline.mediaDirectives', [])
                 elem
                 .on('mousemove', function (e){
                     if (e.offsetX - elem[0].offsetWidth / 2 > 0){
-                        elem.removeClass('cursor--pre')
-                        elem.addClass('cursor--next')
+                        elem
+                        .removeClass('cursor--pre')
+                        .addClass('cursor--next')
                     } else {
-                        elem.removeClass('cursor--next')
-                        elem.addClass('cursor--pre')
+                        elem
+                        .removeClass('cursor--next')
+                        .addClass('cursor--pre')
                     }
                 })
                 // 上／下一幅

@@ -256,10 +256,12 @@
         }
     }
     &__live-preview {
-        position: absolute -40px * * calc(50% - 20px);
-        size: 40px;
+        position: absolute -30px * * calc(50% - 20px);
+        size: 40px 30px;
 
         svg {
+            stroke: var(--color-gray);
+            stroke-width: 7px;
             width: 40px;
         }
     }

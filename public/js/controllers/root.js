@@ -78,8 +78,8 @@ angular.module('Oneline.rootControllers', [])
         }
         // L -> R
         else {
-            currentState === 'timeline'
-                ? !!$scope.controlCenter
+            currentState !== 'settings'
+                ? $scope.controlCenter
                     ? $scope.setControlCenter('')
                     : $state.go('settings')
                 : null

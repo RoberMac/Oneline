@@ -84,17 +84,17 @@ angular.module('Oneline.maskServices', [])
 
         return defer.promise;
     }
-    this.extractDirect = function (_authUid, notifications){
+    this.extractDirect = function (_authUid){
         var senderList = []
         var conversations = {}
         var _sender_uid_list = [];
 
         // Extract
-        for (var i = 0, len = notifications.length; i < len; i++){
-            var sender = notifications[i].sender;
+        for (var i = 0, len = _notifications.length; i < len; i++){
+            var sender = _notifications[i].sender;
 
             if (sender.uid !== _authUid && _sender_uid_list.indexOf(sender.uid) < 0){
-                senderList.push(notifications[i].sender)
+                senderList.push(_notifications[i].sender)
 
                 _sender_uid_list.push(sender.uid)
             }
@@ -130,7 +130,7 @@ angular.module('Oneline.maskServices', [])
 
         function extractConversation (uid, _authUid){
             return $filter('orderBy')(
-                $filter('filter')(notifications, function (item, index, array){
+                $filter('filter')(_notifications, function (item, index, array){
                     return item.sender.uid === uid || 
                             (item.sender.uid === _authUid && item.recipient.uid === uid)
                 })
@@ -173,7 +173,9 @@ angular.module('Oneline.maskServices', [])
         })
         .finally(function (){
             statusElem.prop('disabled', false)
-            submitButton.removeClass('write__btn--send--sending')
+            submitButton
+            .removeClass('write__btn--send--sending')
+            .attr('data-count', '')
         })
 
         return defer.promise;

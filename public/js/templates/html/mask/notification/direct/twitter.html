@@ -14,7 +14,7 @@
 
 <div ng-if="notifications.length > 0" class="timeline profile mask__notification animate--faster animate--enter">
     <!-- 切換對話用戶 -->
-    <div ng-if="senderList.length > 0" class="direct__sender overflow--y animate--faster" disable-back>
+    <div ng-if="senderList.length > 0" class="direct__sender overflow--y animate--faster">
         <button ng-repeat="item in senderList" ng-click="showDirect(item)" class="animate--faster">
             <img ng-src="{{::item.avatar}}" alt="">
             <span class="direct__sender__name animate--faster" ng-bind="::item.name"></span>

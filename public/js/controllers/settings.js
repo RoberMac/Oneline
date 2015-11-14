@@ -10,14 +10,17 @@ angular.module('Oneline.settingsControllers', [])
      *     監聽新標籤頁的 localStorage 存儲
      *
      */
-    $window.addEventListener('storage', function (e){
+    var _window = angular.element($window)
+    _window
+    .on('storage', function (e){
         if (e.key !== 'addToken') return;
 
         olTokenHelper.addToken()
         $scope.updateProviderList()
     })
-
-
+    $scope.$on('$destroy', function (){
+        _window.off('storage')
+    })
     // 添加／刪除「社交網站」授權
     $scope.toggleAuth = function (provider){
         if ($scope.providerList.indexOf(provider) < 0){

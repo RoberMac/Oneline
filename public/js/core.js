@@ -9,6 +9,7 @@ angular.module('Oneline', [
     'angular-jwt',
     'linkify',
     'weibo-emotify',
+    'duScroll',
     // Templates
     'Oneline.templates',
     // Controllers
