@@ -1,3 +1,11 @@
+@keyframes onelineEnterAnimate {
+    0% {
+        transform: scaleX(.01);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}
 @keyframes loadAnimate--twitter {
     0, 33.3%, 100% {
         fill: var(--color-gray);

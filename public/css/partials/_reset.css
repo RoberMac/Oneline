@@ -76,7 +76,7 @@ input, button, select, textarea, .btn {
     text-transform: none;
     text-indent: 0px;
     text-shadow: none;
-    font: 11px;
+    font-size: 11px;
     text-rendering: auto;
     -webkit-writing-mode: horizontal-tb;
 }
@@ -129,6 +129,9 @@ img, video {
     }
     &--leave {
         animation: leaveAnimate 1.7s cubic-bezier(0.22, 0.61, 0.36, 1);        
+    }
+    &--cutscenes {
+        transform: scaleX(.01) !important;
     }
 }
 .overflow {

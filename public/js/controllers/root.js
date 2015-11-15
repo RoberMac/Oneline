@@ -105,14 +105,16 @@ angular.module('Oneline.rootControllers', [])
     })
     $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams){
         // * -> settings
-        if (toState.name === 'settings'){
-            if (!olTokenHelper.isValidToken()){
-                olTokenHelper.clearInvalidToken()
-            }
+        if (toState.name === 'settings' || toState.name === 'timeline'){
+            if (toState.name === 'settings'){
+                if (!olTokenHelper.isValidToken()){
+                    olTokenHelper.clearInvalidToken()
+                }
 
-            document.title = '｜'
-            timelineCache.removeAll()
-            $scope.updateProviderList()
+                document.title = '｜'
+                timelineCache.removeAll()
+                $scope.updateProviderList()
+            }
             $scope.setControlCenter('')
         }
         // timeline.action -> timeline

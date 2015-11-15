@@ -3,8 +3,12 @@
     padding: 70px 0 0;
     height: 100%;
     background-color: var(--color-black);
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) scaleX(1);
     z-index: 1;
+
+    &--enter {
+        animation: onelineEnterAnimate .7s ease-in-out;
+    }
 }
 
 .oneline, .controlCenter, .cancelMask {

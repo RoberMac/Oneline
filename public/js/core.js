@@ -52,15 +52,37 @@ angular.module('Oneline', [
 
     $urlRouterProvider.otherwise('/')
 
+
+    var cutscenes = ['$q', function ($q){
+        return $q(function (resolve, reject){
+            var cutscenesElem = angular.element(document.querySelectorAll('[js-cutscenes]'));
+
+            if (cutscenesElem.length > 0){
+                cutscenesElem.addClass('animate--cutscenes')
+                .delay(1000)
+                .then(function (){
+                    resolve()
+                })
+            } else {
+                resolve()
+            }
+        })
+    }];
     $stateProvider
         .state('settings', {
             url: '/settings',
             templateUrl: 'settings.html',
+            resolve: {
+                cutscenes: cutscenes
+            },
             controller: 'settingsCtrl'
         })
         .state('timeline', {
             url: "/",
             templateUrl: 'timeline.html',
+            resolve: {
+                cutscenes: cutscenes
+            },
             controller: 'timelineCtrl'
         })
         .state('timeline.action', {
@@ -69,6 +91,7 @@ angular.module('Oneline', [
         })
 
     weiboEmotifyProvider.setEmotionsURL('/public/dist/emotions_v1.min.json')
+
 }])
 .run(['$q', function ($q){
     /**

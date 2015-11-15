@@ -1,4 +1,4 @@
-<div class="oneline overflow--y animate--general">
+<div class="oneline oneline--enter overflow--y animate--general" js-cutscenes>
     <!-- Social -->
     <div class="social-wrapper animate--faster">
         <!-- Twitter -->
@@ -47,12 +47,12 @@
 </div>
 
 <!-- Mask & ControlCenter -->
-<div ng-if="controlCenter" class="cancelMask animate--general" ng-click="setControlCenter('')">
+<div ng-if="controlCenter" class="cancelMask animate--general" ng-click="setControlCenter('')" js-cutscenes>
     <div class="cancelMask__wrapper overflow--y">
         <div ng-click="$event.stopPropagation()"></div>
     </div>
 </div>
-<div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter vertically_center animate--general"></div>
+<div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter vertically_center animate--general" js-cutscenes></div>
 
 <!-- Menu: Right -->
 <div ng-if="providerList.length > 0" class="menu menu--right vertically_center animate--faster">

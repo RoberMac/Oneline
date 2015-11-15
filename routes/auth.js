@@ -32,7 +32,7 @@ router.get('/:provider/callback', function (req, res, next){
         'provider': req.user.provider,
         'userId'  : req.user.userId
     }, process.env.KEY, {
-        expiresIn: '7d'
+        expiresIn: req.user.provider === 'weibo' ? '7d' : '14d'
     })
 
     res.render('authCallback', {
@@ -117,7 +117,7 @@ router.post('/replicant/rachael', function (req, res, next){
             res.json({
                 statusCode: 200,
                 tokenList: JSON.parse(found.token || '[]'),
-                profileList: JSON.parse(found.profile),
+                profileList: JSON.parse(found.profile || '[]'),
                 msg: JSON.parse(found.msg || '[]')
             })
         } else {

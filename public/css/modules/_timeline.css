@@ -67,7 +67,7 @@
         cursor: text;
 
         img {
-            width: 1.4em;
+            width: 1em;
             margin: 0 .1em;
             vertical-align: text-bottom;
         }
@@ -498,7 +498,7 @@
     left: calc(50% - 24px);
     background-color: var(--color-gray);
     border-radius: 50%;
-    z-index: 10;
+    z-index: 3;
 
     &--top {
         top: -48px;

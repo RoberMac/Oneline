@@ -4,7 +4,7 @@
     </svg>
 </button>
 
-<div class="oneline oneline--timeline overflow--y animate--general" js-scroll="main_timeline">
+<div class="oneline oneline--timeline oneline--enter overflow--y animate--general" js-scroll="main_timeline" js-cutscenes>
 
     <div class="loadMore loadMore--initLoad loadMore--new">
         <button ng-click="loadMore(1)" class="loadMore__btn loadMore__btn--loading loadMore__btn--new loadMore__btn--count animate--faster" data-count type="button" js-load-timeline>
@@ -27,13 +27,13 @@
 </div>
 
 <!-- Mask & ControlCenter -->
-<div ng-if="controlCenter" class="cancelMask cancelMask--timeline animate--general" ng-click="setControlCenter('')">
+<div ng-if="controlCenter" class="cancelMask cancelMask--timeline animate--general" ng-click="setControlCenter('')" js-cutscenes>
     <div class="cancelMask__wrapper overflow--y">
         <div ng-click="$event.stopPropagation()"></div>
     </div>
 </div>
 <div ui-view class="animate--general"></div>
-<div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter controlCenter--timeline vertically_center animate--general"></div>
+<div ng-include=" 'controlCenter/wrapper.html' " class="controlCenter controlCenter--timeline vertically_center animate--general" js-cutscenes></div>
 
 <!-- Menu: Left -->
 <div class="menu menu--timeline menu--left menu--timeline--left vertically_center animate--faster">
