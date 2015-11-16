@@ -1,13 +1,14 @@
-var extend = require('extend'),
-    filterUtils = require('./utils');
+"use strict";
+const extend = require('extend');
+const filterUtils = require('./utils');
 
 
-var filter = {
+let filter = {
     twitter: {
-        retweet: function (data){
-            var cache = [];
+        retweet: (data) => {
+            let cache = [];
 
-            data.forEach(function (item){
+            data.forEach((item) => {
                 cache.push({
                     name: item.user.name,
                     avatar: item.user.profile_image_url_https,
@@ -18,10 +19,10 @@ var filter = {
 
             return cache;
         },
-        user: function (data){
-            var entities = data.entities;
+        user: (data) => {
+            let entities = data.entities;
 
-            var userObj = {
+            let userObj = {
                 bio: data.description || '',
                 location: data.location,
                 website: (data.url && entities.url.urls[0].expanded_url) || '',
@@ -37,7 +38,7 @@ var filter = {
             extend(userObj, filterUtils.twitter.user(data))
 
             if (entities.description && entities.description.urls){
-                entities.description.urls.forEach(function (item){
+                entities.description.urls.forEach((item) => {
                     extend(userObj, {
                         bio: userObj.bio.replace(item.url, item.expanded_url)
                     })
@@ -46,10 +47,10 @@ var filter = {
 
             return userObj;
         },
-        follow: function (data){
-            var cache = [];
+        follow: (data) => {
+            let cache = [];
 
-            data.forEach(function (item){
+            data.forEach((item) => {
                 cache.push({
                     name: item.name,
                     avatar: item.profile_image_url_https,
@@ -59,11 +60,11 @@ var filter = {
 
             return cache;
         },
-        direct: function (data){
-            var cache = [];
+        direct: (data) => {
+            let cache = [];
 
-            data.forEach(function (item){
-                var directObj = {
+            data.forEach((item) => {
+                let directObj = {
                     created_at: Date.parse(item.created_at),
                     id_str: item.id_str,
                     text: item.text,
@@ -90,7 +91,7 @@ var filter = {
                 cache.push(directObj)
             })
 
-            var returnObj = { data: cache },
+            let returnObj = { data: cache },
                 firstData = data[0],
                 lastData  = data[data.length - 1];
 
@@ -107,10 +108,10 @@ var filter = {
         }
     },
     instagram: {
-        like: function (data){
-            var cache = [];
+        like: (data) => {
+            let cache = [];
 
-            data.forEach(function (item){
+            data.forEach((item) => {
                 cache.push({
                     name: item.full_name,
                     avatar: item.profile_picture,
@@ -121,10 +122,10 @@ var filter = {
 
             return cache;
         },
-        reply: function (data){
-            var cache = [];
+        reply: (data) => {
+            let cache = [];
 
-            data.forEach(function (item){
+            data.forEach((item) => {
                 cache.push({
                     name: item.from.full_name,
                     avatar: item.from.profile_picture,
@@ -137,8 +138,8 @@ var filter = {
 
             return cache;
         },
-        user: function (data){
-            var userObj = {
+        user: (data) => {
+            let userObj = {
                 bio: data.bio || '',
                 website: data.website || '',
                 counts: {
@@ -154,8 +155,8 @@ var filter = {
         }
     },
     weibo: {
-        user: function (data){
-            var userObj = {
+        user: (data) => {
+            let userObj = {
                 bio: data.description || '',
                 location: data.location,
                 website: data.url || '',
@@ -171,10 +172,10 @@ var filter = {
 
             return userObj;
         },
-        reply: function (data){
-            var cache = [];
+        reply: (data) => {
+            let cache = [];
 
-            data.forEach(function (item){
+            data.forEach((item) => {
                 cache.push({
                     name: item.user.name,
                     avatar: item.user.profile_image_url,

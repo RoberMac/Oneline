@@ -1,23 +1,24 @@
+"use strict";
 /** 
  * 向前端發送數據前，過濾多餘信息
  *
  */
-var extend = require('extend'),
-    mid    = require('weibo-mid'),
-    filterUtils = require('./utils');
+const extend = require('extend');
+const mid    = require('weibo-mid');
+const filterUtils = require('./utils');
 
 
-var filter = {
-    twitter: function (data){
-        var cache = [],
+let filter = {
+    twitter: (data) => {
+        let cache = [],
             _now  = Date.now();
 
-        data.forEach(function (item){
-            var _created_at = Date.parse(item.created_at);
+        data.forEach((item) => {
+            let _created_at = Date.parse(item.created_at);
 
             if (_created_at > _now) return;
 
-            var tweetObj = {
+            let tweetObj = {
                 provider: 'twitter',
                 created_at: _created_at,
                 id_str: item.id_str,
@@ -43,7 +44,7 @@ var filter = {
                     favorite_count: item.retweeted_status.favorite_count
                 })
 
-                var r_extended_entities = item.retweeted_status.extended_entities;
+                let r_extended_entities = item.retweeted_status.extended_entities;
                 if (r_extended_entities && r_extended_entities.media){
                     extend(tweetObj, {
                         media: filterUtils.twitter.media(r_extended_entities.media),
@@ -63,7 +64,7 @@ var filter = {
                     }
                 })
 
-                var q_extended_entities = item.quoted_status.extended_entities;
+                let q_extended_entities = item.quoted_status.extended_entities;
                 if (q_extended_entities && q_extended_entities.media){
                     extend(tweetObj.quote, {
                         media: filterUtils.twitter.media(q_extended_entities.media),
@@ -79,7 +80,7 @@ var filter = {
             }
 
             // Media
-            var t_extended_entities = item.extended_entities;
+            let t_extended_entities = item.extended_entities;
             if (t_extended_entities && t_extended_entities.media){
                 extend(tweetObj, {
                     media: filterUtils.twitter.media(t_extended_entities.media),
@@ -100,7 +101,7 @@ var filter = {
             cache.push(tweetObj)
         })
 
-        var returnObj = { data: cache },
+        let returnObj = { data: cache },
             firstData = data[0],
             lastData  = data[data.length - 1];
 
@@ -115,16 +116,16 @@ var filter = {
 
         return returnObj;
     },
-    instagram: function (data){
-        var cache = [],
+    instagram: (data) => {
+        let cache = [],
             _now  = Date.now();
 
-        data.forEach(function (item){
-            var _created_at = Date.parse(new Date(item.created_time * 1000));
+        data.forEach((item) => {
+            let _created_at = Date.parse(new Date(item.created_time * 1000));
 
             if (_created_at > _now) return;
 
-            var igPost = {
+            let igPost = {
                 provider: 'instagram',
                 created_at: _created_at,
                 id_str: item.id,
@@ -169,7 +170,7 @@ var filter = {
         })
 
 
-        var returnObj = { data: cache },
+        let returnObj = { data: cache },
             firstData = data[0],
             lastData  = data[data.length - 1];
 
@@ -184,16 +185,16 @@ var filter = {
 
         return returnObj;
     },
-    weibo: function (data){
-        var cache = [],
+    weibo: (data) => {
+        let cache = [],
             _now  = Date.now();
 
-        data.forEach(function (item){
-            var _created_at = Date.parse(item.created_at);
+        data.forEach((item) => {
+            let _created_at = Date.parse(item.created_at);
 
             if (_created_at > _now) return;
 
-            var weiboObj = {
+            let weiboObj = {
                 provider: 'weibo',
                 created_at: _created_at,
                 id_str: item.idstr,
@@ -207,7 +208,7 @@ var filter = {
 
             // Retweet & Quote
             if (item.retweeted_status){
-                var retweetType = /^转发微博|Repost|轉發微博$/.test(item.text) ? 'retweet' : 'quote',
+                let retweetType = /^转发微博|Repost|轉發微博$/.test(item.text) ? 'retweet' : 'quote',
                     retweetItem = item.retweeted_status;
 
                 retweetType === 'retweet'
@@ -255,7 +256,7 @@ var filter = {
 
             // Location
             if (item.geo && item.geo.type === 'Point'){
-                var _place_name, _place_id;
+                let _place_name, _place_id;
 
                 if (item.annotations && item.annotations[0].place){
                     _place_name = item.annotations[0].place.title
@@ -274,7 +275,7 @@ var filter = {
             cache.push(weiboObj)
         })
 
-        var returnObj = { data: cache },
+        let returnObj = { data: cache },
             firstData = data[0],
             lastData  = data[data.length - 1];
 

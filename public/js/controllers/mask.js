@@ -73,8 +73,11 @@ angular.module('Oneline.maskControllers', [])
                 $scope.loadState = 'loadFail'
             })
         }
+        $scope.isAuthUser = function (provider, uid){
+            return store.get('profile_' + provider).uid === uid;
+        }
 
-        // Show Profile
+        // Show
         var _url = 'mask/' + (_action === 'user' ? 'user' : 'search') + '/' + _provider + '.html';
         olMask.append(_url, $scope)
 

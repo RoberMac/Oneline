@@ -1,4 +1,5 @@
-var extend = require('extend')
+"use strict";
+const extend = require('extend');
 
 /**
  * Trim User
@@ -42,27 +43,23 @@ function trimWeiboUser (user){
  * Filter Media
  *
  */
-function filterTweetMedia(items){
-    var cache = [];
+function filterTweetMedia (items){
+    let cache = [];
 
-    items.forEach(function (item){
-        var _sizes = item.sizes.medium;
+    items.forEach((item) => {
+        let _sizes = item.sizes.medium;
 
-        var mediaObj = {
+        let mediaObj = {
             type: item.type,
             image_url: item.media_url_https,
             ratio: (_sizes.h / _sizes.w).toFixed(5)
-        }
+        };
 
         // 'animated_gif' / 'video'
         if (item.type !== 'photo'){
-            var _video = item.video_info.variants
-            .filter(function (video){
-                return video.content_type === "video/mp4"
-            })
-            .sort(function (v1, v2){
-                return v1.bitrate - v2.bitrate
-            })[0];
+            let _video = item.video_info.letiants
+                            .filter((video) => video.content_type === "video/mp4")
+                            .sort((v1, v2) => v1.bitrate - v2.bitrate)[0];
 
             extend(mediaObj, {
                 video_url: _video.url
@@ -75,7 +72,7 @@ function filterTweetMedia(items){
     return cache
 }
 function filterInstagramImages (images){
-    var _low = images.low_resolution,
+    let _low = images.low_resolution,
         _standard = images.standard_resolution;
 
     return {
@@ -85,9 +82,9 @@ function filterInstagramImages (images){
     }
 }
 function filterWeiboMedia(items){
-    var cache = [];
+    let cache = [];
 
-    items.forEach(function (item){
+    items.forEach((item) => {
         // `pic_ids`
         if (item.length <= 32){
             item = {
@@ -95,10 +92,10 @@ function filterWeiboMedia(items){
             }
         }
 
-        var type = item.thumbnail_pic.indexOf('\.gif') > 0 ? 'gif' : 'photo',
+        let type = item.thumbnail_pic.indexOf('\.gif') > 0 ? 'gif' : 'photo',
             image_url = item.thumbnail_pic.replace('thumbnail', 'square');
 
-        var mediaObj = {
+        let mediaObj = {
             type: type,
             image_url: image_url
         }

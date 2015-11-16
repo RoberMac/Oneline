@@ -1,11 +1,12 @@
+"use strict";
 /* /auth */
-var passport = require('passport'),
-    jwt      = require('jsonwebtoken'),
-    router   = require('express').Router();
+const passport = require('passport');
+const jwt      = require('jsonwebtoken');
+const router   = require('express').Router();
 
 // Handing `provider` Params
-router.param('provider', function (req, res, next, provider){
-    var providerList = ['twitter', 'instagram', 'weibo'];
+router.param('provider', (req, res, next, provider) => {
+    let providerList = ['twitter', 'instagram', 'weibo'];
 
     if (providerList.indexOf(provider) >= 0){
         req.olProvider = provider
@@ -19,21 +20,21 @@ router.param('provider', function (req, res, next, provider){
  * Auth
  *
  */
-router.get('/:provider', function (req, res, next){
+router.get('/:provider', (req, res, next) => {
     passport.authenticate(req.olProvider, { session: false })(req, res, next)
 })
-router.get('/:provider/callback', function (req, res, next){
+router.get('/:provider/callback', (req, res, next) => {
     passport.authenticate(req.olProvider, {
         session: false
     })(req, res, next)
-}, function (req, res){
+}, (req, res) => {
 
-    var token = jwt.sign({
+    let token = jwt.sign({
         'provider': req.user.provider,
         'userId'  : req.user.userId
     }, process.env.KEY, {
         expiresIn: req.user.provider === 'weibo' ? '7d' : '14d'
-    })
+    });
 
     res.render('authCallback', {
         provider: req.olProvider,
@@ -53,17 +54,13 @@ router.get('/:provider/callback', function (req, res, next){
  * Revoke
  *
  */
-router.delete('/revoke/:provider', function (req, res, next){
-    var provider = req.olProvider,
-        id       = provider + req.olPassports[provider]
+router.delete('/revoke/:provider', (req, res, next) => {
+    let provider = req.olProvider,
+        id       = provider + req.olPassports[provider];
 
     q_userFindOneAndRemove({id: id})
-    .then(function (){
-        res.json({statusCode: 200})
-    })
-    .fail(function (err){
-        next(err)
-    })
+    .then(() => res.json({statusCode: 200}))
+    .fail((err) => next(err))
 })
 
 
@@ -71,10 +68,10 @@ router.delete('/revoke/:provider', function (req, res, next){
  * Replicant
  *
  */
-var crypto = require('crypto');
+let crypto = require('crypto');
 
-router.get('/replicant/deckard', function (req, res, next){
-    var passports = req.olPassports,
+router.get('/replicant/deckard', (req, res, next) => {
+    let passports = req.olPassports,
         code = crypto.createHash('md5')
                 .update(JSON.stringify(passports) + Date.now())
                 .digest('hex').slice(0, 7),
@@ -82,37 +79,35 @@ router.get('/replicant/deckard', function (req, res, next){
 
     // 保存於數據庫
     q_replicantFindOne({ id: code })
-    .then(function (found){
+    .then((found) => {
         if (found){
             found.id = code
             found.token = JSON.stringify(tokenList)
             found.token = req.query.profileList
             found.createdAt = new Date()
-            found.save(function (err){
+            found.save((err) => {
                 if (err) return next({ statusCode: 500 })
                 res.json({ statusCode: 200, code: code })
             })
         } else {
-            var replicant = new Replicant({
+            let replicant = new Replicant({
                 id       : code,
                 token    : JSON.stringify(tokenList),
                 profile  : req.query.profileList,
                 createdAt: new Date()
-            })
-            replicant.save(function (err){
+            });
+            replicant.save((err) => {
                 if (err) return next({ statusCode: 500 })
                 res.json({ statusCode: 200, code: code })
             })
         }
-    }, function (err){
-        next({ statusCode: 500 })
-    })
+    }, (err) => next({ statusCode: 500 }))
 })
-router.post('/replicant/rachael', function (req, res, next){
+router.post('/replicant/rachael', (req, res, next) => {
 
     // 保存於數據庫
     q_replicantFindOne({ id: req.body.code })
-    .then(function (found){
+    .then((found) => {
         if (found){
             res.json({
                 statusCode: 200,
@@ -123,9 +118,7 @@ router.post('/replicant/rachael', function (req, res, next){
         } else {
             next({ statusCode: 404 })
         }
-    }, function (err){
-        next({ statusCode: 500 })
-    })
+    }, (err) => next({ statusCode: 500 }))
 })
 
 module.exports = router

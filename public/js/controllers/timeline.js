@@ -149,6 +149,9 @@ angular.module('Oneline.timelineControllers', [])
                 olUI.setLoading('done', 1)
                 olUI.setPostsCount('newPosts', newPostsLength)
             })
+            .catch(function (err){
+                olTimelineHelper.handleError(err, 1)
+            })
             .finally(function (){
                 olUI.setLoading('done', 1)
             })

@@ -1,16 +1,17 @@
+"use strict";
 /* /timeline */
-var router = require('express').Router(),
-    filter = require('./helper/filter/timeline'),
-    feed   = require('./helper/timeline');
+const router = require('express').Router();
+const filter = require('./helper/filter/timeline');
+const feed   = require('./helper/timeline');
 
 
-router.get('/', function (req, res, next){
+router.get('/', (req, res, next) => {
     // Init
-    var olIdObj   = {};
+    let olIdObj = {};
 
     if (req.query.id){
-        req.query.id.split(',').forEach(function (id_str){
-            var key   = id_str.split('-')[0],
+        req.query.id.split(',').forEach((id_str) => {
+            let key   = id_str.split('-')[0],
                 value = id_str.split('-')[1];
 
             olIdObj[key] = value
@@ -23,45 +24,41 @@ router.get('/', function (req, res, next){
         q_userFindOne({id: 'instagram' + req.olPassports.instagram}),
         q_userFindOne({id: 'weibo' + req.olPassports.weibo})
     ])
-    .then(function (providerList){
-        var feedPromises = [],
-            _providerList = providerList.filter(function (provider){
-                return !!provider
-            })
+    .then((providerList) => {
+        let feedPromises = [],
+            _providerList = providerList.filter((provider) => !!provider);
 
         if (_providerList.length < Object.keys(req.olPassports).length){
             throw { statusCode: 401 }
         }
 
-        providerList.forEach(function (userInfo, index){
+        providerList.forEach((userInfo, index) => {
             if (!userInfo) return;
 
-            var min_id = olIdObj[userInfo['provider'] + '_minId'],
+            let min_id = olIdObj[userInfo['provider'] + '_minId'],
                 max_id = olIdObj[userInfo['provider'] + '_maxId'];
 
             if (Object.keys(olIdObj).length > 0 && !(min_id || max_id)) return;
 
-            var opts = {
+            let opts = {
                 token      : userInfo['token'],
                 tokenSecret: userInfo['tokenSecret'],
                 min_id     : min_id,
                 max_id     : max_id
-            }
+            };
 
             feedPromises[index] = feed[userInfo['provider']](opts)
         })
 
-        return Q.all(feedPromises)
+        return Q.all(feedPromises);
     })
     .then(handleData(res))
-    .fail(function (err){
-        next(err)
-    })
+    .fail((err) => next(err))
 })
 
-function handleData(res){
-    return function (dataList){
-        var providerList = ['twitter', 'instagram', 'weibo'],
+function handleData (res){
+    return (dataList) => {
+        let providerList = ['twitter', 'instagram', 'weibo'],
             combineData = {
                 data    : [],
                 min_id  : {},
@@ -70,9 +67,10 @@ function handleData(res){
                 max_date: {},
             };
 
-        dataList.forEach(function (dataItem, index){
-            var provider = providerList[index],
-                dataItem = provider === 'weibo' ? dataItem['statuses'] : dataItem[0];
+        dataList.forEach((dataItem, index) => {
+            let provider = providerList[index];
+
+            dataItem = provider === 'weibo' ? dataItem['statuses'] : dataItem[0];
 
             if (!dataItem) return;
 

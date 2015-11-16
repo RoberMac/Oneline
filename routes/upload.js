@@ -1,36 +1,35 @@
+"use strict";
 /* /upload */
-var fs      = require('fs'),
-    router  = require('express').Router(),
-    multer  = require('multer'),
-    upload  = require('./helper/upload');
+const fs      = require('fs');
+const router  = require('express').Router();
+const multer  = require('multer');
+const upload  = require('./helper/upload');
 
-var upload2Local = multer({
+let upload2Local = multer({
     storage: multer.diskStorage({
         destination: process.env.PWD + '/routes/tmp',
-        filename: function (req, file, cb) {
-            cb(null, file.fieldname + '-' + Date.now())
-        }
+        filename: (req, file, cb) => cb(null, file.fieldname + '-' + Date.now())
     })
 })
 
 // Handing `provider` Params
-router.param('provider', function (req, res, next, provider){
+router.param('provider', (req, res, next, provider) => {
 
     req.olProvider = provider
 
     next()
 })
 
-router.post('/:provider', function (req, res, next){
+router.post('/:provider', (req, res, next) => {
 
-    upload2Local.single('twitterMedia')(req, res, function (err){
+    upload2Local.single('twitterMedia')(req, res, (err) => {
         if (err){
             next(err)
         } else {
 
-            var provider = req.olProvider;
+            let provider = req.olProvider;
             q_userFindOne({ id: provider + req.olPassports[provider] })
-            .then(function (found){
+            .then((found) => {
 
                 return upload[provider]({
                     token      : found.token,
@@ -38,15 +37,9 @@ router.post('/:provider', function (req, res, next){
                     filePath   : req.file.path
                 })
             })
-            .then(function (data){
-                res.json(data)
-            })
-            .fail(function (err){
-                next(err)
-            })
-            .finally(function (){
-                fs.unlinkSync(req.file.path)
-            })
+            .then((data) => res.json(data))
+            .fail((err) => next(err))
+            .finally(() => fs.unlinkSync(req.file.path))
         }
     })
 

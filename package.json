@@ -1,11 +1,14 @@
 {
   "name": "Oneline",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "A Social Network Aggregator",
   "main": "app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/RoberMac/Oneline.git"
+  },
+  "engines": {
+    "node": ">= 4.0.0"
   },
   "author": {
     "name": "RoberTu",

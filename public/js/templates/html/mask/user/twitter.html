@@ -11,7 +11,7 @@
             </a>
         </div>
 
-        <button class="profile__following tips--deep" ng-class="::{'icon--twitter tips--active': mask.following}" type="button" toggle-following="twitter:{{mask.uid}}">
+        <button ng-if="!isAuthUser('twitter', mask.uid)" class="profile__following tips--deep" ng-class="::{'icon--twitter tips--active': mask.following}" type="button" toggle-following="twitter:{{mask.uid}}">
             <svg viewBox="0 0 60 60">
                 <use xlink:href="/public/img/icon-sprites.svg#following"></use>
             </svg>
