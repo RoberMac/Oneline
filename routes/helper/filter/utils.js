@@ -57,7 +57,7 @@ function filterTweetMedia (items){
 
         // 'animated_gif' / 'video'
         if (item.type !== 'photo'){
-            let _video = item.video_info.letiants
+            let _video = item.video_info.variants
                             .filter((video) => video.content_type === "video/mp4")
                             .sort((v1, v2) => v1.bitrate - v2.bitrate)[0];
 
