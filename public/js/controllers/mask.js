@@ -63,7 +63,7 @@ angular.module('Oneline.maskControllers', [])
 
             $scope.loadState = 'loading'
 
-            olMask.loadOldPosts(_loadAction, _provider, _id, _min_id)
+            olMask.loadOldPosts(_loadAction, _provider, __id, _min_id)
             .then(function (data){
                 $scope.mask.timeline = $scope.mask.timeline.concat(data)
 

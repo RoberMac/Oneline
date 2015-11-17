@@ -10,7 +10,7 @@ let upload2Local = multer({
         destination: process.env.PWD + '/routes/tmp',
         filename: (req, file, cb) => cb(null, file.fieldname + '-' + Date.now())
     })
-})
+});
 
 // Handing `provider` Params
 router.param('provider', (req, res, next, provider) => {
@@ -22,7 +22,7 @@ router.param('provider', (req, res, next, provider) => {
 
 router.post('/:provider', (req, res, next) => {
 
-    upload2Local.single('twitterMedia')(req, res, (err) => {
+    upload2Local.single('twitterMedia')(req, res, err => {
         if (err){
             next(err)
         } else {
@@ -37,8 +37,8 @@ router.post('/:provider', (req, res, next) => {
                     filePath   : req.file.path
                 })
             })
-            .then((data) => res.json(data))
-            .fail((err) => next(err))
+            .then(data => res.json(data))
+            .fail(err => next(err))
             .finally(() => fs.unlinkSync(req.file.path))
         }
     })

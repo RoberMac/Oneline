@@ -1,7 +1,8 @@
-var mongoose = require('mongoose'),
-    Schema   = mongoose.Schema;
+"use strict";
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema;
 
-var userSchema = new Schema({
+let userSchema = new Schema({
     // provider + userId
     id           : {
         type     : String,
@@ -38,7 +39,7 @@ var userSchema = new Schema({
     refreshToken : String
 })
 
-var replicantSchema = new Schema({
+let replicantSchema = new Schema({
     id           : {
         type     : String,
         unique   : true,

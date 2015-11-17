@@ -3,7 +3,7 @@
 const Q = require('q');
 const request = require('request');
 
-module.exports = (params) => {
+module.exports = params => {
     let deferred = Q.defer();
     let _method  = params.method;
     let _opts = { url: 'https://api.weibo.com/2/' + params.endpoint + '.json' };

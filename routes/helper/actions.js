@@ -1,5 +1,4 @@
 "use strict";
-const extend  = require('extend');
 const Twit    = require('twit');
 const Ig      = require('instagram-node').instagram();
 const Weibo   = require('./weibo');
@@ -10,15 +9,15 @@ const actionsFilter = require('./filter/actions');
 let Actions = {
     twitter: {
         user: {
-            _get: (opts) => {
+            _get (opts){
                 let user = isNaN(opts.id) ? { screen_name: opts.id } : { user_id: opts.id };
 
                 return {
                     triggerActionType: 'combination',
                     endpoint: 'users/show',
                     endpoint2: 'statuses/user_timeline',
-                    tOpts: extend(user, { include_entities: false }),
-                    tOpts2: extend(user, {
+                    tOpts: Object.assign(user, { include_entities: false }),
+                    tOpts2: Object.assign(user, {
                         count: 7,
                         trim_user: false,
                         exclude_replies: false,
@@ -28,14 +27,14 @@ let Actions = {
                     handleActionFunc: (data1, data2) => {
                         let data;
                         data = actionsFilter.twitter.user(data1[0]);
-                        extend(data, { timeline: timelineFilter.twitter(data2[0]).data })
+                        Object.assign(data, { timeline: timelineFilter.twitter(data2[0]).data })
                         return { data: data }
                     }
                 }
             }
         },
         direct: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'combination',
                     endpoint: 'direct_messages',
@@ -72,7 +71,7 @@ let Actions = {
                     }
                 }
             },
-            _post: (opts) => {
+            _post (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'direct_messages/new',
@@ -80,12 +79,12 @@ let Actions = {
                         screen_name: opts.id,
                         text: opts.params.text
                     },
-                    handleActionFunc: (data) => (actionsFilter.twitter.direct([data[0]]))
+                    handleActionFunc: data => (actionsFilter.twitter.direct([data[0]]))
                 }
             }
         },
         like: {
-            _put: (opts) => {
+            _put (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'favorites/create',
@@ -93,7 +92,7 @@ let Actions = {
                     handleActionFunc: () => ({ msg: 'ok' })
                 }
             },
-            _delete: (opts) => {
+            _delete (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'favorites/destroy',
@@ -103,23 +102,23 @@ let Actions = {
             }
         },
         retweet: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/retweets',
                     tOpts: { id: opts.id, count: 50, trim_user: false },
-                    handleActionFunc: (data) => ({ data: actionsFilter.twitter['retweet'](data[0])})
+                    handleActionFunc: data => ({ data: actionsFilter.twitter.retweet(data[0])})
                 }
             },
-            _post: (opts) => {
+            _post (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/retweet',
                     tOpts: { id: opts.id, trim_user: true },
-                    handleActionFunc: (data) => ({ id_str: data[0].id_str })
+                    handleActionFunc: data => ({ id_str: data[0].id_str })
                 }
             },
-            _delete: (opts) => {
+            _delete (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/destroy',
@@ -128,11 +127,66 @@ let Actions = {
                 }
             },
         },
-        reply: newStatuses('reply'),
-        quote: newStatuses('quote'),
-        tweet: newStatuses('tweet'),
+        reply: {
+            _post (opts){
+                let tOpts = {
+                    status: opts.params.status,
+                    media_ids: opts.params.media_ids,
+                    trim_user: true,
+                    possibly_sensitive: opts.params.sensitive,
+                    in_reply_to_status_id: opts.id,
+                    lat: opts.params.geo && opts.params.geo.lat,
+                    long: opts.params.geo && opts.params.geo.long
+                };
+
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/update',
+                    tOpts: tOpts,
+                    handleActionFunc: () => ({ msg: 'ok' })
+                }
+            }
+        },
+        quote: {
+            _post (opts){
+                let tOpts = {
+                    status: opts.params.status,
+                    media_ids: opts.params.media_ids,
+                    trim_user: true,
+                    possibly_sensitive: opts.params.sensitive,
+                    lat: opts.params.geo && opts.params.geo.lat,
+                    long: opts.params.geo && opts.params.geo.long
+                };
+
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/update',
+                    tOpts: tOpts,
+                    handleActionFunc: data => ({ id_str: data[0].id_str })
+                }
+            }
+        },
+        tweet: {
+            _post (opts){
+                let tOpts = {
+                    status: opts.params.status,
+                    media_ids: opts.params.media_ids,
+                    trim_user: true,
+                    possibly_sensitive: opts.params.sensitive,
+                    lat: opts.params.geo && opts.params.geo.lat,
+                    long: opts.params.geo && opts.params.geo.long
+                };
+
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/update',
+                    tOpts: tOpts,
+                    handleActionFunc: () => ({ msg: 'ok' })
+                }
+            }
+        },
         follow: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'friends/list',
@@ -142,10 +196,10 @@ let Actions = {
                         skip_status: true,
                         include_user_entities: false
                     },
-                    handleActionFunc: (data) => ({ data: actionsFilter.twitter['follow'](data.users)})
+                    handleActionFunc: data => ({ data: actionsFilter.twitter.follow(data.users)})
                 }
             },
-            _put: (opts) => {
+            _put (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'friendships/create',
@@ -153,7 +207,7 @@ let Actions = {
                     handleActionFunc: () => ({ msg: 'ok' })
                 }
             },
-            _delete: (opts) => {
+            _delete (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'friendships/destroy',
@@ -163,28 +217,28 @@ let Actions = {
             },
         },
         mentions: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/mentions_timeline',
-                    tOpts: extend({}, {
+                    tOpts: Object.assign({}, {
                         count: 200,
                         since_id: opts.query.min_id,
                         include_entities: false,
                         contributor_details: false
                     }),
-                    handleActionFunc: (data) => ({ data: timelineFilter.twitter(data[0]) })
+                    handleActionFunc: data => ({ data: timelineFilter.twitter(data[0]) })
                 }
             }
         },
         user_timeline: {
-            _get: (opts) => {
+            _get (opts){
                 let user = isNaN(opts.id) ? { screen_name: opts.id } : { user_id: opts.id };
 
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/user_timeline',
-                    tOpts: extend(user, {
+                    tOpts: Object.assign(user, {
                         max_id: opts.query && opts.query.max_id,
                         count: 20,
                         trim_user: false,
@@ -192,7 +246,7 @@ let Actions = {
                         contributor_details: false,
                         include_rts: true
                     }),
-                    handleActionFunc: (data) => {
+                    handleActionFunc: data => {
                         data[0].splice(0, 1)
                         return { data: timelineFilter.twitter(data[0]).data }
                     }
@@ -200,7 +254,7 @@ let Actions = {
             }
         },
         search: {
-            _get: (opts) => {
+            _get (opts){
                 let tOpts = {
                     access_token: opts.token,
                     q: opts.id,
@@ -209,14 +263,14 @@ let Actions = {
                 };
 
                 if (opts.query.max_id){
-                    extend(tOpts, { max_id: opts.query.max_id })
+                    Object.assign(tOpts, { max_id: opts.query.max_id })
                 }
 
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'search/tweets',
                     tOpts: tOpts,
-                    handleActionFunc: (data) => {
+                    handleActionFunc: data => {
                         if (opts.query.max_id){
                             data[0].statuses.splice(0, 1)
                         }
@@ -229,7 +283,7 @@ let Actions = {
     },
     instagram: {
         user: {
-            _get: (opts) => {
+            _get (opts){
                 let actionObj = {
                     triggerActionType: 'combination',
                     endpoint: 'user',
@@ -238,7 +292,7 @@ let Actions = {
                     handleActionFunc: (userData, timelineData) => {
                         let data = actionsFilter.instagram.user(userData[0]);
 
-                        extend(data, { timeline: timelineFilter.instagram(timelineData[0]).data })
+                        Object.assign(data, { timeline: timelineFilter.instagram(timelineData[0]).data })
 
                         return { data: data }
                     }
@@ -249,7 +303,7 @@ let Actions = {
                         triggerActionType: 'queue',
                         endpoint: 'user_search',
                         iOpts: { count: 1 },
-                        handleActionFunc: (data) => ({ uid: data[0][0].id }),
+                        handleActionFunc: data => ({ uid: data[0][0].id }),
                         actionObj: actionObj
                     }
                 } else {
@@ -258,34 +312,34 @@ let Actions = {
             }
         },
         like: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'likes',
-                    handleActionFunc: (data) => {
+                    handleActionFunc: data => {
                         return { data: actionsFilter.instagram['like'](data[0].slice(0, 100)) }
                     }
                 }
             }
         },
         reply: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'comments',
-                    handleActionFunc: (data) => {
+                    handleActionFunc: data => {
                         return { data: actionsFilter.instagram['reply'](data[0].slice(0, 100)) }
                     }
                 }
             }
         },
         user_timeline: {
-            _get: (opts) => {
+            _get (opts){
                 let actionObj = {
                     triggerActionType: 'basic',
                     endpoint: 'user_media_recent',
                     iOpts: { max_id: opts.query.max_id },
-                    handleActionFunc: (data) => ({ data: timelineFilter.instagram(data[0]).data })
+                    handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data })
                 }
 
                 if (isNaN(opts.id)){
@@ -293,7 +347,7 @@ let Actions = {
                         triggerActionType: 'queue',
                         endpoint: 'user_search',
                         iOpts: { count: 1 },
-                        handleActionFunc: (data) => ({ uid: data[0][0].id }),
+                        handleActionFunc: data => ({ uid: data[0][0].id }),
                         actionObj: actionObj
                     }
                 } else {
@@ -302,22 +356,22 @@ let Actions = {
             }
         },
         location: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'location_media_recent',
                     iOpts: { max_id: opts.query.max_id },
-                    handleActionFunc: (data) => ({ data: timelineFilter.instagram(data[0]).data })
+                    handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data })
                 }
             }
         },
         tags: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'tag_media_recent',
                     iOpts: { max_tag_id: opts.query.max_id && opts.query.max_id.split('_')[0] },
-                    handleActionFunc: (data) => {
+                    handleActionFunc: data => {
                         if (opts.query.max_id){
                             data[0].splice(0, 1)
                         }
@@ -330,7 +384,7 @@ let Actions = {
     },
     weibo: {
         user: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'combination',
                     endpoint: 'users/show',
@@ -344,81 +398,81 @@ let Actions = {
                     handleActionFunc: (data1, data2) => {
                         let data;
                         data = actionsFilter.weibo.user(data1);
-                        extend(data, { timeline: timelineFilter.weibo(data2.statuses).data })
+                        Object.assign(data, { timeline: timelineFilter.weibo(data2.statuses).data })
                         return { data: data }
                     }
                 }
             }
         },
         star: {
-            _put: (opts) => {
+            _put (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'favorites/create',
                     wOpts: { access_token: opts.token, id: opts.id },
-                    handleActionFunc: (data) => ({ id_str: data.idstr })
+                    handleActionFunc: data => ({ id_str: data.idstr })
                 }
             },
-            _delete: (opts) => {
+            _delete (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'favorites/destroy',
                     wOpts: { access_token: opts.token, id: opts.id },
-                    handleActionFunc: (data) => ({ id_str: data.idstr })
+                    handleActionFunc: data => ({ id_str: data.idstr })
                 }
             }
         },
         quote: {
-            _post: (opts) => {
+            _post (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/repost',
                     wOpts: { access_token: opts.token, id: opts.id, status: opts.params.status },
-                    handleActionFunc: (data) => ({ id_str: data.idstr })
+                    handleActionFunc: data => ({ id_str: data.idstr })
                 }
             }
         },
         retweet: {
-            _post: (opts) => {
+            _post (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/repost',
                     wOpts: { access_token: opts.token, id: opts.id, status: opts.params.status },
-                    handleActionFunc: (data) => ({ id_str: data.idstr })
+                    handleActionFunc: data => ({ id_str: data.idstr })
                 }
             },
-            _delete: (opts) => {
+            _delete (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/destroy',
                     wOpts: { access_token: opts.token, id: opts.id },
-                    handleActionFunc: (data) => ({ id_str: data.idstr })
+                    handleActionFunc: data => ({ id_str: data.idstr })
                 }
             }
         },
         reply: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'comments/show',
                     wOpts: { access_token: opts.token, id: opts.id },
-                    handleActionFunc: (data) => ({ data: actionsFilter.weibo.reply(data.comments) })
+                    handleActionFunc: data => ({ data: actionsFilter.weibo.reply(data.comments) })
                 }
             },
-            _post: (opts) => {
+            _post (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'comments/create',
                     wOpts: { access_token: opts.token, id: opts.id, comment: opts.params.status },
-                    handleActionFunc: (data) => ({ id_str: data.idstr })
+                    handleActionFunc: data => ({ id_str: data.idstr })
                 }
             }
         },
         tweet: {
-            _post: (opts) => {
+            _post (opts){
                 let wOpts = { access_token: opts.token, id: opts.id, status: opts.params.status };
 
-                extend(wOpts, {
+                Object.assign(wOpts, {
                     access_token: opts.token,
                     id: opts.id,
                     status: opts.params.status,
@@ -435,7 +489,7 @@ let Actions = {
             }
         },
         user_timeline: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/user_timeline',
@@ -445,7 +499,7 @@ let Actions = {
                         count: 20,
                         max_id: opts.query && opts.query.max_id
                     },
-                    handleActionFunc: (data) => {
+                    handleActionFunc: data => {
                         data.statuses.splice(0, 1)
 
                         return { data: timelineFilter.weibo(data.statuses).data }
@@ -454,7 +508,7 @@ let Actions = {
             }   
         },
         user_in_tweet: {
-            _get: (opts) => {
+            _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'place/statuses/show', // 😂
@@ -462,10 +516,10 @@ let Actions = {
                         access_token: opts.token,
                         id: opts.id
                     },
-                    handleActionFunc: (_data) => {
+                    handleActionFunc: _data => {
                         let data = actionsFilter.weibo.user(_data.user);
 
-                        extend(data, { timeline: timelineFilter.weibo([_data]).data })
+                        Object.assign(data, { timeline: timelineFilter.weibo([_data]).data })
 
                         return { data: data }
                     }
@@ -473,7 +527,7 @@ let Actions = {
             }  
         },
         location: {
-            _get: (opts) => {
+            _get (opts){
                 let wOpts = {
                     access_token: opts.token,
                     count: 20,
@@ -482,14 +536,14 @@ let Actions = {
                 }
 
                 if (opts.query.max_id){
-                    extend(wOpts, { endtime: opts.query.max_id.slice(0, -3) })
+                    Object.assign(wOpts, { endtime: opts.query.max_id.slice(0, -3) })
                 }
 
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'place/nearby_timeline',
                     wOpts: wOpts,
-                    handleActionFunc: (data) => {
+                    handleActionFunc: data => {
                         if (opts.query.max_id){
                             data.statuses.splice(0, 1)
                         }
@@ -501,42 +555,6 @@ let Actions = {
         }
     }
 }
-
-function newStatuses (action){
-    return {
-        _post: (opts) => {
-            let tOpts = {};
-            extend(tOpts, {
-                status: opts.params.status,
-                media_ids: opts.params.media_ids,
-                trim_user: true,
-                possibly_sensitive: opts.params.sensitive,
-                lat: opts.params.geo && opts.params.geo.lat,
-                long: opts.params.geo && opts.params.geo.long
-            })
-            if (action === 'reply' && opts.id){
-                extend(tOpts, {
-                    in_reply_to_status_id: opts.id
-                })
-            }
-
-            let handleActionFunc;
-            if (action === 'quote'){
-                handleActionFunc = (data) => ({ id_str: data[0].id_str })
-            } else {
-                handleActionFunc = () => ({ msg: 'ok' })
-            }
-
-            return {
-                triggerActionType: 'basic',
-                endpoint: 'statuses/update',
-                tOpts: tOpts,
-                handleActionFunc: handleActionFunc
-            }
-        }
-    }
-}
-
 
 
 module.exports = {
@@ -553,8 +571,8 @@ module.exports = {
         let q_twit  = Q.nbind(T[_method === '_get' ? 'get' : 'post'], T);
 
         let triggerAction = {
-            basic: (t) => q_twit(t.endpoint, t.tOpts).then(t.handleActionFunc),
-            combination: (t) => {
+            basic: t => q_twit(t.endpoint, t.tOpts).then(t.handleActionFunc),
+            combination: t => {
                 return Q.all([
                     q_twit(t.endpoint, t.tOpts),
                     q_twit(t.endpoint2, t.tOpts2)
@@ -579,7 +597,7 @@ module.exports = {
         let _method = '_' + opts.method;
 
         let triggerAction = {
-            basic: (i) => {
+            basic: i => {
                 return (i.iOpts
                             ? Q.nbind(Ig[i.endpoint], Ig)(opts.id, i.iOpts)
                         : Q.nbind(Ig[i.endpoint], Ig)(opts.id)
@@ -593,7 +611,7 @@ module.exports = {
                     }
                 });
             },
-            combination: (i) => {
+            combination: i => {
                 return Q.all([
                     i.iOpts 
                         ? Q.nbind(Ig[i.endpoint], Ig)(opts.id, i.iOpts)
@@ -611,9 +629,9 @@ module.exports = {
                     }
                 })
             },
-            queue: (i) => {
+            queue: i => {
                 return triggerAction.basic(i)
-                .then((data) => {
+                .then(data => {
                     opts.id = data.uid
                     i = i.actionObj
                     return triggerAction[i.triggerActionType](i);
@@ -636,7 +654,7 @@ module.exports = {
         let __method = opts.method === 'get' ? 'get' : 'post';
 
         let triggerAction = {
-            basic: (w) => {
+            basic: w => {
                 return Weibo({
                     method: __method,
                     endpoint: w.endpoint,
@@ -644,7 +662,7 @@ module.exports = {
                 })
                 .then(w.handleActionFunc)
             },
-            combination: (w) => {
+            combination: w => {
                 return Q.all([
                     Weibo({
                         method: __method,

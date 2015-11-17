@@ -1,27 +1,26 @@
 "use strict";
-const extend = require('extend');
 const filterUtils = require('./utils');
 
 
 let filter = {
     twitter: {
-        retweet: (data) => {
+        retweet (data){
             let cache = [];
 
-            data.forEach((item) => {
+            for (let item of data){
                 cache.push({
                     name: item.user.name,
                     avatar: item.user.profile_image_url_https,
                     screen_name: item.user.screen_name,
                     uid: item.user.id_str
                 })
-            })
+            }
 
             return cache;
         },
-        user: (data) => {
+        user (data){
             let entities = data.entities;
-
+            // User
             let userObj = {
                 bio: data.description || '',
                 location: data.location,
@@ -34,36 +33,35 @@ let filter = {
                 following: data.following,
                 protected: data.protected
             };
-
-            extend(userObj, filterUtils.twitter.user(data))
-
+            Object.assign(userObj, filterUtils.twitter.user(data))
+            // Expanded Url
             if (entities.description && entities.description.urls){
-                entities.description.urls.forEach((item) => {
-                    extend(userObj, {
+                for (let item of entities.description.urls){
+                    Object.assign(userObj, {
                         bio: userObj.bio.replace(item.url, item.expanded_url)
                     })
-                })
+                }
             }
 
             return userObj;
         },
-        follow: (data) => {
+        follow (data){
             let cache = [];
 
-            data.forEach((item) => {
+            for (let item of data){
                 cache.push({
                     name: item.name,
                     avatar: item.profile_image_url_https,
                     screen_name: item.screen_name
                 })
-            })
+            }
 
             return cache;
         },
-        direct: (data) => {
+        direct (data){
             let cache = [];
 
-            data.forEach((item) => {
+            for (let item of data){
                 let directObj = {
                     created_at: Date.parse(item.created_at),
                     id_str: item.id_str,
@@ -80,23 +78,23 @@ let filter = {
                         screen_name: item.recipient.screen_name,
                         avatar: item.recipient.profile_image_url_https
                     }
-                }
+                };
 
                 if (item.entities && item.entities.media){
-                    extend(directObj, {
+                    Object.assign(directObj, {
                         media: filterUtils.twitter.media(item.entities.media)
                     })
                 }
 
                 cache.push(directObj)
-            })
+            }
 
-            let returnObj = { data: cache },
-                firstData = data[0],
-                lastData  = data[data.length - 1];
+            let returnObj = { data: cache };
+            let firstData = data[0];
+            let lastData  = data[data.length - 1];
 
             if (lastData){
-                extend(returnObj, {
+                Object.assign(returnObj, {
                     min_id  : lastData.id_str,
                     min_date: Date.parse(lastData.created_at),
                     max_id  : firstData.id_str,
@@ -108,24 +106,24 @@ let filter = {
         }
     },
     instagram: {
-        like: (data) => {
+        like (data){
             let cache = [];
 
-            data.forEach((item) => {
+            for (let item of data){
                 cache.push({
                     name: item.full_name,
                     avatar: item.profile_picture,
                     screen_name: item.username,
                     uid: item.id
                 })
-            })
+            }
 
             return cache;
         },
-        reply: (data) => {
+        reply (data){
             let cache = [];
 
-            data.forEach((item) => {
+            for (let item of data){
                 cache.push({
                     name: item.from.full_name,
                     avatar: item.from.profile_picture,
@@ -134,11 +132,11 @@ let filter = {
                     text: item.text,
                     created_at: item.created_time * 1000
                 })
-            })
+            }
 
             return cache;
         },
-        user: (data) => {
+        user (data){
             let userObj = {
                 bio: data.bio || '',
                 website: data.website || '',
@@ -149,13 +147,13 @@ let filter = {
                 }
             };
 
-            extend(userObj, filterUtils.instagram.user(data))
+            Object.assign(userObj, filterUtils.instagram.user(data))
 
             return userObj;
         }
     },
     weibo: {
-        user: (data) => {
+        user (data){
             let userObj = {
                 bio: data.description || '',
                 location: data.location,
@@ -168,14 +166,14 @@ let filter = {
                 following: data.following
             };
 
-            extend(userObj, filterUtils.weibo.user(data))
+            Object.assign(userObj, filterUtils.weibo.user(data))
 
             return userObj;
         },
-        reply: (data) => {
+        reply (data){
             let cache = [];
 
-            data.forEach((item) => {
+            for (let item of data){
                 cache.push({
                     name: item.user.name,
                     avatar: item.user.profile_image_url,
@@ -184,7 +182,7 @@ let filter = {
                     text: item.text,
                     created_at: Date.parse(item.created_at)
                 })
-            })
+            }
 
             return cache;
         }

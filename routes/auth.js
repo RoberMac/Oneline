@@ -55,12 +55,12 @@ router.get('/:provider/callback', (req, res, next) => {
  *
  */
 router.delete('/revoke/:provider', (req, res, next) => {
-    let provider = req.olProvider,
-        id       = provider + req.olPassports[provider];
+    let provider = req.olProvider;
+    let id       = provider + req.olPassports[provider];
 
     q_userFindOneAndRemove({id: id})
     .then(() => res.json({statusCode: 200}))
-    .fail((err) => next(err))
+    .fail(err => next(err))
 })
 
 
@@ -71,21 +71,21 @@ router.delete('/revoke/:provider', (req, res, next) => {
 let crypto = require('crypto');
 
 router.get('/replicant/deckard', (req, res, next) => {
-    let passports = req.olPassports,
-        code = crypto.createHash('md5')
+    let passports = req.olPassports;
+    let code = crypto.createHash('md5')
                 .update(JSON.stringify(passports) + Date.now())
-                .digest('hex').slice(0, 7),
-        tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [];
+                .digest('hex').slice(0, 7);
+    let tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [];
 
     // 保存於數據庫
     q_replicantFindOne({ id: code })
-    .then((found) => {
+    .then(found => {
         if (found){
             found.id = code
             found.token = JSON.stringify(tokenList)
             found.token = req.query.profileList
             found.createdAt = new Date()
-            found.save((err) => {
+            found.save(err => {
                 if (err) return next({ statusCode: 500 })
                 res.json({ statusCode: 200, code: code })
             })
@@ -96,18 +96,18 @@ router.get('/replicant/deckard', (req, res, next) => {
                 profile  : req.query.profileList,
                 createdAt: new Date()
             });
-            replicant.save((err) => {
+            replicant.save(err => {
                 if (err) return next({ statusCode: 500 })
                 res.json({ statusCode: 200, code: code })
             })
         }
-    }, (err) => next({ statusCode: 500 }))
+    }, err => next({ statusCode: 500 }))
 })
 router.post('/replicant/rachael', (req, res, next) => {
 
     // 保存於數據庫
     q_replicantFindOne({ id: req.body.code })
-    .then((found) => {
+    .then(found => {
         if (found){
             res.json({
                 statusCode: 200,
@@ -118,7 +118,7 @@ router.post('/replicant/rachael', (req, res, next) => {
         } else {
             next({ statusCode: 404 })
         }
-    }, (err) => next({ statusCode: 500 }))
+    }, err => next({ statusCode: 500 }))
 })
 
 module.exports = router

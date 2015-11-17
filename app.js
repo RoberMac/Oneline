@@ -83,7 +83,7 @@ app
 
 
 // 保護 endpoints
-let jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 app.use([
     '/timeline',
     '/actions',
@@ -91,14 +91,14 @@ app.use([
     '/auth/replicant/deckard',
     '/upload'
 ], (req, res, next) => {
-    let tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [],
-        validPassports = {},
-        invalidToken = [];
+    let tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [];
+    let validPassports = {};
+    let invalidToken = [];
 
     // 提取有效 token 的 payload 到 req.olPassports
     tokenList.forEach((token, index) => {
         try {
-            let decoded = jwt.verify(token, process.env.KEY)
+            let decoded = jwt.verify(token, process.env.KEY);
             validPassports[decoded.provider] = decoded.userId
         } catch (e){
             try {

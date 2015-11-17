@@ -4,7 +4,7 @@ const Ig      = require('instagram-node').instagram();
 const Weibo   = require('./weibo');
 
 module.exports = {
-    twitter: (opts) => {
+    twitter: opts => {
         let T = new Twit({
             consumer_key       : process.env.TWITTER_KEY,
             consumer_secret    : process.env.TWITTER_SECRET,
@@ -29,7 +29,7 @@ module.exports = {
                 data[0].splice(0, 1)
             }
             return data;
-        }, (err) => {
+        }, err => {
             if (err.statusCode === 429){
                 return q_twit_get('application/rate_limit_status', { resources: ['statuses'] })
                 .then((data) => {
@@ -38,14 +38,14 @@ module.exports = {
                         message: 'Rate limit exceeded',
                         reset: data[0].resources.statuses['/statuses/home_timeline'].reset
                     }
-                }, (err) => {
+                }, err => {
                     throw err
                 })
             }
         })
 
     },
-    instagram: (opts) => {
+    instagram: opts => {
         Ig.use({ access_token : opts.token })
         let q_ig_timeline   = Q.nbind(Ig.user_self_feed, Ig);
 
@@ -61,7 +61,7 @@ module.exports = {
 
         return q_ig_timeline(iOpts)
     },
-    weibo: (opts) => {
+    weibo: opts => {
         let wOpts = {
             access_token: opts.token,
             count: opts.count || 100

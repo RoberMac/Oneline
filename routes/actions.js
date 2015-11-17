@@ -27,7 +27,7 @@ router.all('/:action/:provider/:id', (req, res, next) => {
     let provider = req.olProvider;
 
     q_userFindOne({ id: provider + req.olPassports[provider] })
-    .then((found) => {
+    .then(found => {
 
         return actions[provider](req.olAction, {
 
@@ -40,8 +40,8 @@ router.all('/:action/:provider/:id', (req, res, next) => {
 
         })
     })
-    .then((data) => res.json(data))
-    .fail((err) => next(err))
+    .then(data => res.json(data))
+    .fail(err => next(err))
 })
 
 module.exports = router

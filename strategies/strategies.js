@@ -4,7 +4,7 @@ const InstagramStrategy = require('passport-instagram').Strategy;
 const WeiboStrategy     = require('passport-weibo').Strategy;
 
 
-module.exports = (passport) => {
+module.exports = passport => {
 
 // Twitter
 passport.use(new TwitterStrategy({
@@ -35,11 +35,11 @@ function oauth1 (token, tokenSecret, profile, done){
     let id = profile.provider + profile.id;
 
     q_userFindOne({ id: id })
-    .then((found) => {
+    .then(found => {
         if (found){
             found.token = token
             found.tokenSecret = tokenSecret
-            found.save((err) => {
+            found.save(err => {
                 if (err) return done(err)
                 done(null, found)
             })
@@ -60,13 +60,13 @@ function oauth1 (token, tokenSecret, profile, done){
                 'avatar'     : avatar,
                 'token'      : token,
                 'tokenSecret': tokenSecret
-            })
-            user.save((err) => {
+            });
+            user.save(err => {
                 if (err) return done(err)
                 done(null, user)
             })
         }
-    }, (err) => done(err))
+    }, err => done(err))
 }
 
 function oauth2 (accessToken, refreshToken, profile, done){
@@ -74,11 +74,11 @@ function oauth2 (accessToken, refreshToken, profile, done){
     let id = profile.provider + profile.id;
 
     q_userFindOne({ id: id })
-    .then((found) => {
+    .then(found => {
         if (found){
             found.token = accessToken
             found.refreshToken = refreshToken
-            found.save((err) => {
+            found.save(err => {
                 if (err) return done(err)
                 done(null, found)
             })
@@ -102,11 +102,11 @@ function oauth2 (accessToken, refreshToken, profile, done){
                 'avatar'     : avatar,
                 'token'      : accessToken,
                 'refreshToken': refreshToken
-            })
-            user.save((err) => {
+            });
+            user.save(err => {
                 if (err) return done(err)
                 done(null, user)
             })
         }
-    }, (err) => done(err) )
+    }, err => done(err))
 }
