@@ -202,11 +202,6 @@ angular.module('Oneline.controlCenterDirectives', [])
                 submitButton = _button.eq(_button.length - 1),
                 statusElem   = elem.find('textarea');
 
-
-            setTimeout(function (){
-                initInput()
-            }, 700)
-
             var _mentionsList = store.get('mentions_' + _provider) || [],
                 _regex = {
                     twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
@@ -214,13 +209,22 @@ angular.module('Oneline.controlCenterDirectives', [])
                     weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
                 };
 
+            /**
+             * UI
+             *
+             */
             scope.isShowLivePreview = false
             scope.isLeftPopup = false
             scope.isShowMentions = false
             scope.mentionsList = _mentionsList
             scope.showLivePreview = showLivePreview
 
-
+            setTimeout(function (){
+                initInput()
+                if (_action === 'retweet'){
+                    scope.showLivePreview()
+                }
+            }, 700)
             /**
              * 監聽事件
              *
