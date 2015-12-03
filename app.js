@@ -66,7 +66,7 @@ app
     defaultSrc: ["'self'"],
     styleSrc: ["'self'", "'unsafe-inline'"],
     scriptSrc: ["'self'", "'unsafe-inline'"],
-    imgSrc: ["*"],
+    imgSrc: ["*", "data:"],
     mediaSrc: ["*"],
     connectSrc: ['*'],
     reportOnly: false,
