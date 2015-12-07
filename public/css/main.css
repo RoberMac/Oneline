@@ -1,8 +1,8 @@
-@import "vendor/reset_v2";
-@import "vendor/angular-csp";
+@import "vendor/reset_v2.css";
+@import "vendor/angular-csp.css";
 
-@import "partials/base";
-@import "partials/reset";
-@import "partials/animation";
+@import "partials/base.css";
+@import "partials/reset.css";
+@import "partials/animation.css";
 
-@import "modules/all";
+@import "modules/all.css";

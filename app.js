@@ -125,7 +125,7 @@ app
 .use('/actions', require('./routes/actions'))
 .use('/upload', require('./routes/upload'))
 .use('/public', express.static('public'))
-.all('/*', (req, res, next) => res.sendFile(__dirname + '/views/index.min.html'))
+.all('/*', (req, res, next) => res.sendFile(__dirname + '/index.html'))
 
 
 // Handing Error
