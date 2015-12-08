@@ -34,9 +34,6 @@
 }
 
 .replicant-icon {
-    position: absolute * * 4px 7px;
-    size: 14px 17px;
-
     &--deckard {
         display: inline-block;
 

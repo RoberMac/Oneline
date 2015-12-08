@@ -1,15 +1,12 @@
 import update from 'react-addons-update'
 
-import { TOGGLE_AUTH }  from '../actions/auth';
+import { FETCH_TIMELINE }  from '../actions/timeline';
 
-let initialState = {
-    providers: ['twitter', 'instagram', 'weibo'],
-    activeProviders: ['twitter', 'weibo']
-};
+let initialState = [];
 
 export default (state = initialState, action) => {
     switch (action.type){
-        case TOGGLE_AUTH:
+        case FETCH_TIMELINE:
             return update(state, {
                 // TODO
             })

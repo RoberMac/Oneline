@@ -1,10 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
-export default class Home extends React.Component {
-    render() {
-        return (
-            <Link to="/settings">Back to Settings</Link>
-        );
-    }
-}
+// Components
+import Timeline from './Timeline';
+import { LeftSidebar, RightSidebar } from './Sidebar';
+
+let _Home = () => (
+    <Timeline />
+);
+let _Sidebar = ({ activeProviders }) => (
+    <div>
+        <LeftSidebar  activeProviders={activeProviders}/>
+        <RightSidebar activeProviders={activeProviders} />
+    </div>
+);
+
+// Export
+export let Home = connect(
+    state => ({
+        providers: state.auth.providers,
+        activeProviders: state.auth.activeProviders,
+        timeline: state.timeline
+    })
+)(_Home)
+
+export let HomeSidebar = connect(
+    state => ({
+        activeProviders: state.auth.activeProviders
+    })
+)(_Sidebar)

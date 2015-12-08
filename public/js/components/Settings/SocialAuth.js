@@ -1,5 +1,8 @@
 import React from 'react';
 
+// Utils
+import { addToken } from '../../utils/tokenHelper';
+
 // Components
 import { Icon } from '../Utils/Icon';
 
@@ -20,21 +23,40 @@ let SocialAuthBtn = props => {
     );
 };
 
-
 export default class SocialAuth extends React.Component {
+    // 授權／吊銷授權
     toggleAuth (provider){
-        // TODO
-        console.log(provider)
+        if (this.props.activeProviders.indexOf(provider) < 0){
+            window.open('/auth/' + provider, '_blank')
+        } else {
+            // TODO
+            console.log(`try to revoke ${provider}`)
+        }
     }
-    render() {
+    handleStorageChange (e){
+        if (e.key !== 'addToken') return;
+
+        addToken()
+        // TODO: update activeProviders
+        // $scope.updateProviderList()
+    }
+    componentDidMount (){
+        window.addEventListener('storage', this.handleStorageChange)
+    }
+    componentWillUnmount (){
+        window.removeEventListener('storage', this.handleStorageChange)
+    }
+    render (){
+        const { providers, activeProviders } = this.props;
+
         return (
             <div className="social-wrapper animate--faster">
-                {this.props.providers.map(provider => (
+                {providers.map(provider => (
                     <SocialAuthBtn
                         key={provider}
                         provider={provider}
-                        isActive={false}
-                        toggleAuth={ provider => this.toggleAuth(provider) }
+                        isActive={activeProviders.indexOf(provider) >= 0}
+                        toggleAuth={this.toggleAuth.bind(this)}
                     />
                 ))}
             </div>
