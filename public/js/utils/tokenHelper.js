@@ -1,64 +1,61 @@
-import store from './store';
-import jwtHelper from './jwtHelper';
+import store from '../utils/store';
+import { decodeToken, isTokenExpired } from '../utils/jwtHelper';
 
+// Utils
 const _removeToken = (tokenList, provider) => {
-    return tokenList.filter(token => provider !== jwtHelper.decodeToken(token).provider)
+    return tokenList.filter(token => provider !== decodeToken(token).provider)
 };
 
-/* 添加 token */
+// Export
 export const addToken = () => {
-    let newToken  = localStorage.getItem('addToken');
-    let provider  = jwtHelper.decodeToken(newToken).provider;
+    let newToken  = store.get('addToken');
+    let provider  = decodeToken(newToken).provider;
     let tokenList = store.get('tokenList') || [];
 
-    // 刪除相同 provider 的 token
+    // Remove Dups Token
     tokenList = _removeToken(tokenList, provider)
-
+    // Add Token
     tokenList.push(newToken)
     store.set('tokenList', tokenList)
-
-    // 刪除 `addToken`
     store.remove('addToken')
-}
 
-// 替換整個 tokenList
-export const replaceTokenList = tokenList => {
-    store.set('tokenList', tokenList)
+    return {
+        activeProviders: getActiveProviders(),
+        tokenList
+    };
 }
-
-/* 刪除指定 provider 的 token */
 export const removeToken = provider => {
     let tokenList = store.get('tokenList') || [];
 
     tokenList = _removeToken(tokenList, provider)
 
     store.set('tokenList', tokenList)
-}
 
-/* 清空無效 token */
+    return {
+        activeProviders: getActiveProviders(),
+        tokenList
+    };
+}
 export const clearInvalidToken = () => {
     let tokenList = store.get('tokenList') || [];
 
     tokenList.forEach(token => {
-        const isTokenExpired = jwtHelper.isTokenExpired(token);
-        const provider = jwtHelper.decodeToken(token).provider;
+        const isTokenExpired = isTokenExpired(token);
+        const provider = decodeToken(token).provider;
 
         if (isTokenExpired){
             removeToken(provider)
         }
     })
 }
-
-/* 獲取 active providers 列表 */
-export const getActiveProviders = () => {
-    let tokenList = store.get('tokenList') || [];
-
-    return tokenList.map(token => jwtHelper.decodeToken(token).provider);
-}
-
-/* 驗證 token 是否有效 */
 export const isValidToken = () => {
     let tokenList = store.get('tokenList') || [];
 
-    return (tokenList.length > 0) && tokenList.every(token => !jwtHelper.isTokenExpired(token));
+    return (tokenList.length > 0) && tokenList.every(token => !isTokenExpired(token));
 }
+export const getActiveProviders = () => (
+    store.get('tokenList') || []).map(token => decodeToken(token).provider
+);
+
+
+

@@ -1,32 +1,38 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
-
+// Components
 import { Icon } from '../Utils/Icon';
 import { Empty } from '../Utils/Empty';
-import Replicant from './Replicant';
-
-
-export const LeftSidebar = ({ activeProviders }) => {
+const LeftSidebar = ({ activeProviders }) => {
+    const type = activeProviders.length <= 0 ? 'rachael' : 'deckard';
+    return (
+        <Link to={`/settings/replicant/${type}`}>
+            <span className="menu__button btn animate--faster">
+                <Icon viewBox="0 0 200 200" name={type} />
+            </span>
+        </Link>
+    );
+};
+const RightSidebar = ({ activeProviders }) => {
     return activeProviders.length <= 0
         ? <Empty />
     : (
-        <div className="menu menu--left vertically_center animate--faster">
-            <Replicant activeProviders={activeProviders}/>
-        </div>
+        <Link to="/">
+            <span className="menu__button btn animate--faster">
+                <Icon viewBox="0 0 200 200" name="ok" />
+            </span>
+        </Link>
     );
 }
 
-export const RightSidebar = ({ activeProviders }) => {
-    return activeProviders.length <= 0
-        ? <Empty />
-    : (
-        <div className="menu menu--right vertically_center animate--faster">
-            <Link to="/">
-                <span className="menu__button btn animate--faster">
-                    <Icon viewBox="0 0 200 200" name="ok" />
-                </span>
-            </Link>
-        </div>
-    );
-}
+
+// Export
+export const SettingsLeftSidebar = connect(
+    state => ({ activeProviders: state.auth.activeProviders })
+)(LeftSidebar)
+
+export const SettingsRightSidebar = connect(
+    state => ({ activeProviders: state.auth.activeProviders })
+)(RightSidebar)

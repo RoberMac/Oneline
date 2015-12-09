@@ -8,8 +8,10 @@ import { syncReduxAndRouter } from 'redux-simple-router';
 
 // Components
 import { App } from './components/App';
-import { Home, HomeSidebar } from './components/Home';
-import { Settings, SettingsSidebar } from './components/Settings';
+import Home from './components/Home';
+import Settings from './components/Settings';
+import { HomeLeftSidebar, HomeRightSidebar } from './components/Home/Sidebar';
+import { SettingsLeftSidebar, SettingsRightSidebar } from './components/Settings/Sidebar';
 import '../css/main.css';
 
 // Config
@@ -23,11 +25,36 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
             <Route path="/" component={App}>
-                <IndexRoute components={{ main: Home, sidebar: HomeSidebar }}/>
-                <Route path="settings" components={{ main: Settings, sidebar: SettingsSidebar }}/>
+
+                <IndexRoute
+                    components={{
+                        main: Home,
+                        leftSidebar: HomeLeftSidebar,
+                        rightSidebar: HomeRightSidebar
+                    }}
+                    onEnter={redirectIfNotAuth}
+                />
+                <Route
+                    path="settings"
+                    components={{
+                        main: Settings,
+                        leftSidebar: SettingsLeftSidebar,
+                        rightSidebar: SettingsRightSidebar
+                    }}
+                >
+                </Route>
+
                 <Redirect from="*" to="settings" />
+
             </Route>
         </Router>
     </Provider>,
     document.querySelector('.app')
 );
+
+import { isValidToken } from './utils/tokenHelper';
+function redirectIfNotAuth(nextState, replaceState){
+    if (!isValidToken()){
+        replaceState(null, '/settings')
+    }
+}

@@ -32,20 +32,3 @@
         filter: grayscale(0%);
     }
 }
-
-.replicant-icon {
-    &--deckard {
-        display: inline-block;
-
-        @media (--all-mobile-devices){
-            display: none;
-        }
-    }
-    &--rachael {
-        display: none;
-
-        @media (--all-mobile-devices){
-            display: inline-block;
-        }
-    }
-}

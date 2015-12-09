@@ -1,16 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-    <!-- Generator: Sketch 3.4.3 (16044) - http://www.bohemiancoding.com/sketch -->
-    <title>Oval 1 + Rachael Copy</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="Oval-1-+-Rachael-Copy" sketch:type="MSLayerGroup">
-            <circle id="Oval-1" fill="#F1F1F1" sketch:type="MSShapeGroup" cx="100" cy="100" r="100"></circle>
-            <g id="Rachael-Copy" transform="translate(61.000000, 49.000000)" sketch:type="MSShapeGroup">
-                <path d="M39.5,47.4 C52.5891486,47.4 63.2,36.7891486 63.2,23.7 C63.2,10.6108514 52.5891486,-3.55271368e-15 39.5,-3.55271368e-15 C26.4108514,-3.55271368e-15 15.8,10.6108514 15.8,23.7 C15.8,36.7891486 26.4108514,47.4 39.5,47.4 L39.5,47.4 Z M33.97273,56.5785124 C37.0253569,51.2912075 41.9757707,51.2931606 45.02727,56.5785124 L54.4975321,72.9814876 C57.550159,78.2687925 55.0732607,82.555 48.9702622,82.555 L30.0297378,82.555 C23.924484,82.555 21.4509686,78.2668394 24.5024679,72.9814876 L33.97273,56.5785124 L33.97273,56.5785124 Z" id="Oval-1" fill="#000000"></path>
-                <circle id="Oval-2" stroke="#000000" stroke-width="3" cx="39.5" cy="63.2" r="39.5"></circle>
-            </g>
-        </g>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" fill-rule="evenodd">
+    <circle fill="#F1F1F1" cx="100" cy="100" r="100"/>
+    <path d="M100.5 90c1.933 0 3.5-1.567 3.5-3.5s-1.567-3.5-3.5-3.5-3.5 1.567-3.5 3.5 1.567 3.5 3.5 3.5zm0 13.417c1.933 0 3.5-1.567 3.5-3.5s-1.567-3.5-3.5-3.5-3.5 1.567-3.5 3.5 1.567 3.5 3.5 3.5zm0 13.416c1.933 0 3.5-1.567 3.5-3.5s-1.567-3.5-3.5-3.5-3.5 1.567-3.5 3.5 1.567 3.5 3.5 3.5z" fill="#000"/>
+    <g transform="translate(84 133)">
+      <path d="M13.232 22.036c1.19-2.06 3.117-2.058 4.305 0l3.69 6.39c1.188 2.058.223 3.728-2.154 3.728h-7.377c-2.378 0-3.34-1.67-2.153-3.73l3.69-6.388z" fill="#E6162D"/>
+      <circle stroke="#2AA9E0" stroke-width="3" cx="15.385" cy="24.615" r="15.385"/>
+      <path d="M15.385 18.462c5.098 0 9.23-4.133 9.23-9.23 0-5.1-4.132-9.232-9.23-9.232-5.098 0-9.23 4.133-9.23 9.23 0 5.1 4.132 9.232 9.23 9.232z" fill="#3F5D87"/>
     </g>
+    <g transform="translate(84 26)">
+      <circle stroke="#000" stroke-width="3" cx="15.385" cy="24.615" r="15.385"/>
+      <path d="M15.385 18.462c5.098 0 9.23-4.133 9.23-9.23 0-5.1-4.132-9.232-9.23-9.232-5.098 0-9.23 4.133-9.23 9.23 0 5.1 4.132 9.232 9.23 9.232zM13.232 30.887c1.19 2.06 3.117 2.058 4.305 0l3.69-6.39c1.188-2.058.223-3.728-2.154-3.728h-7.377c-2.378 0-3.34 1.67-2.153 3.728l3.69 6.39z" fill="#000"/>
+    </g>
+  </g>
 </svg>

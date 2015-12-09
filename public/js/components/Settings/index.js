@@ -2,29 +2,69 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // Components
-import SocialAuth from './SocialAuth';
-import { LeftSidebar, RightSidebar } from './Sidebar';
+import { Icon } from '../Utils/Icon';
+import { addToken, removeToken } from '../../actions/auth';
 
-let _Settings = ({ providers, activeProviders }) => (
-    <SocialAuth providers={providers} activeProviders={activeProviders} />
-);
-let _Sidebar = ({ activeProviders }) => (
-    <div>
-        <LeftSidebar  activeProviders={activeProviders}/>
-        <RightSidebar activeProviders={activeProviders}/>
-    </div>
-);
+let SocialAuthBtn = ({ provider, isActive, toggleAuth }) => {
+    let activeClass = isActive ? ' social-icon--active tips--active' : '';
+
+    return (
+        <div className="social-list vertically_center">
+            <button
+                className={`social-icon animate--faster tips${activeClass}`}
+                type="button"
+                onClick={toggleAuth.bind(null, provider)}
+            >
+                <Icon viewBox="0 0 300 300" name={provider} />
+            </button>
+        </div>
+    );
+};
+class SocialAuth extends React.Component {
+    constructor (props){
+        super(props)
+        this.toggleAuth = this.toggleAuth.bind(this)
+        this.handleStorageChange = this.handleStorageChange.bind(this)
+    }
+    // 授權／吊銷授權
+    toggleAuth (provider){
+        if (this.props.activeProviders.indexOf(provider) < 0){
+            window.open('/auth/' + provider, '_blank')
+        } else {
+            this.props.removeToken(provider)
+        }
+    }
+    handleStorageChange (e){
+        if (e.key === 'addToken'){ this.props.addToken() };
+    }
+    componentDidMount (){
+        window.addEventListener('storage', this.handleStorageChange)
+    }
+    componentWillUnmount (){
+        window.removeEventListener('storage', this.handleStorageChange)
+    }
+    render (){
+        const { providers, activeProviders } = this.props;
+        return (
+            <div className="social-wrapper animate--faster">
+                {providers.map(provider => (
+                    <SocialAuthBtn
+                        key={provider}
+                        provider={provider}
+                        isActive={activeProviders.indexOf(provider) >= 0}
+                        toggleAuth={this.toggleAuth}
+                    />
+                ))}
+            </div>
+        );
+    }
+}
 
 // Export
-export let Settings = connect(
-    state => ({
-        providers: state.auth.providers,
-        activeProviders: state.auth.activeProviders
-    })
-)(_Settings)
-
-export let SettingsSidebar = connect(
-    state => ({
-        activeProviders: state.auth.activeProviders
-    })
-)(_Sidebar)
+export default connect(
+    state => {
+        const { providers, activeProviders } = state.auth;
+        return { providers, activeProviders }
+    },
+    { addToken, removeToken }
+)(SocialAuth)
