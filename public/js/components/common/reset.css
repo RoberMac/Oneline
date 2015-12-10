@@ -114,10 +114,10 @@ img, video {
         transition: all .3s ease-in-out;
     }
     &--general, &--faster {
-        &.ng-enter, &.ng-leave.ng-leave-active {
+        &.react-enter, &.react-leave.react-leave-active {
             opacity: 0;
         }
-        &.ng-leave, &.ng-enter.ng-enter-active {
+        &.react-leave, &.react-enter.react-enter-active {
             opacity: 1;
         }
     }

@@ -1,0 +1,59 @@
+@import "./base.css";
+
+.menu {
+    position: absolute * *;
+    size: 40% 100%;
+    text-align: center;
+
+    &--left {
+        left: 0%;
+
+        @media (--phone-portrait){
+            width: 25%;
+        }
+    }
+    &--right {
+        left: 60%;
+    }
+    &:hover &__button {
+        opacity: 1;
+    }
+
+    &__button {
+        size: 70px;
+        opacity: 0;
+        filter: grayscale(100%);
+
+        @media (--all-mobile-devices){
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        &:hover, &--active {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+        &--inactive {
+            display: none;
+        }
+    }
+
+    @media (--all-mobile-devices){
+        display: none;
+    }
+
+    &--timeline {
+        width: 33.3%;
+
+        &--left {
+            left: 0%;
+        }
+        &--right {
+            left: 66.7%;
+        }
+
+        @media (--all-mobile-devices){
+            display: none;
+        }
+    }
+}

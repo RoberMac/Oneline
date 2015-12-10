@@ -1,3 +1,5 @@
+@import "../common/base.css";
+
 .social-wrapper {
     position: absolute 15% * *;
     size: 100% 70%;

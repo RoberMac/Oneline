@@ -1,17 +1,24 @@
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
+
+import { addToken, removeToken } from '../../actions/auth';
+import './settings.css';
 
 // Components
 import { Icon } from '../Utils/Icon';
-import { addToken, removeToken } from '../../actions/auth';
-
 let SocialAuthBtn = ({ provider, isActive, toggleAuth }) => {
-    let activeClass = isActive ? ' social-icon--active tips--active' : '';
+    const soicalListClass = classNames('social-list', 'vertically_center');
+    const soicalBtnClass = classNames({
+        'social-icon animate--faster tips': true,
+        'social-icon--active tips--active': isActive  
+    });
 
     return (
-        <div className="social-list vertically_center">
+        <div className={soicalListClass}>
             <button
-                className={`social-icon animate--faster tips${activeClass}`}
+                className={soicalBtnClass}
                 type="button"
                 onClick={toggleAuth.bind(null, provider)}
             >
@@ -44,17 +51,28 @@ class SocialAuth extends React.Component {
         window.removeEventListener('storage', this.handleStorageChange)
     }
     render (){
-        const { providers, activeProviders } = this.props;
+        const { providers, activeProviders, children } = this.props;
+        const soicalWrapperClass = classNames('social-wrapper', 'animate--faster');
+
         return (
-            <div className="social-wrapper animate--faster">
-                {providers.map(provider => (
-                    <SocialAuthBtn
-                        key={provider}
-                        provider={provider}
-                        isActive={activeProviders.indexOf(provider) >= 0}
-                        toggleAuth={this.toggleAuth}
-                    />
-                ))}
+            <div>
+                <div className={soicalWrapperClass}>
+                    {providers.map(provider => (
+                        <SocialAuthBtn
+                            key={provider}
+                            provider={provider}
+                            isActive={activeProviders.indexOf(provider) >= 0}
+                            toggleAuth={this.toggleAuth}
+                        />
+                    ))}
+                </div>
+                <ReactCSSTransitionGroup
+                    transitionName="react"
+                    transitionEnterTimeout={700}
+                    transitionLeaveTimeout={700}
+                >
+                    {children}
+                </ReactCSSTransitionGroup>
             </div>
         );
     }

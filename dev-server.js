@@ -21,7 +21,7 @@ new WebpackDevServer(compiler, {
         path: /\/(auth|timeline|actions|upload)/,
         target: 'http://localhost:8080'
     }],
-    noInfo: true,
+    // noInfo: true,
     stats: { colors: true },
 }).listen(3000, 'localhost', (err, result) => {
     if (err) { console.log(err) }

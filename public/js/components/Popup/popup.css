@@ -1,0 +1,11 @@
+@import "../common/base.css";
+
+.popup {
+    position: absolute 0 * *;
+    size: 100%;
+    z-index: 4;
+    background-color: var(--color-black-alpha);
+    ::-webkit-scrollbar {
+        display: none; 
+    }
+}

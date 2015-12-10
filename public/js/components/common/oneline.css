@@ -1,0 +1,45 @@
+@import "./base.css";
+
+.oneline {
+    position: absolute 0 * * 40%;
+    padding: 70px 0 0;
+    size: 20% 100%;
+    background-color: var(--color-black);
+    transform: translate3d(0, 0, 0) scaleX(1);
+    z-index: 1;
+
+    @media (--phone-portrait){
+        left: 15%;
+        width: 70%;
+    }
+    @media (--tablet){
+        left: 25%;
+        width: 50%;
+    }
+    @media (--tablet-landscape){
+        left: 33.3%;
+        width: 33.3%;
+    }
+
+    &--enter {
+        animation: onelineEnterAnimate .7s ease-in-out;
+    }
+    &--timeline {
+        left: 33.3%;
+        width: 33.3%;
+        background-color: var(--color-gray);
+        @media (--phone-portrait){
+            left: 0%;
+            width: 100%;
+        }
+        @media (--tablet){
+            left: 15%;
+            width: 70%;
+        }
+        @media (--tablet-landscape){
+            left: 25%;
+            width: 50%;
+        }
+    }
+}
+

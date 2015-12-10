@@ -15,6 +15,8 @@ module.exports = {
             'history',
             'superagent',
             'redux-simple-router',
+            'redux-thunk',
+            'classnames',
         ]
     },
     output: {
@@ -50,7 +52,7 @@ module.exports = {
             }),
             require('css-mqpacker'),
             require('lost'),
-            require('cssnano'),
+            // require('cssnano'),
         ]
     }
 };

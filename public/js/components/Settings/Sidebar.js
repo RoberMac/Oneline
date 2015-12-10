@@ -1,27 +1,36 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 // Components
 import { Icon } from '../Utils/Icon';
 import { Empty } from '../Utils/Empty';
-const LeftSidebar = ({ activeProviders }) => {
+const sidebarBtnClass = classNames('menu__button', 'btn', 'animate--faster');
+
+const LeftSidebar = ({ activeProviders, location }) => {
+    const isPopup = !/settings$/.test(location.pathname);
     const type = activeProviders.length <= 0 ? 'rachael' : 'deckard';
-    return (
+
+    return isPopup
+        ? <Empty />
+    : (
         <Link to={`/settings/replicant/${type}`}>
-            <span className="menu__button btn animate--faster">
+            <span className={sidebarBtnClass}>
                 <Icon viewBox="0 0 200 200" name={type} />
             </span>
         </Link>
     );
 };
-const RightSidebar = ({ activeProviders }) => {
+const RightSidebar = ({ activeProviders, location }) => {
+    const isPopup = !/settings$/.test(location.pathname);
+
     return activeProviders.length <= 0
         ? <Empty />
     : (
-        <Link to="/">
-            <span className="menu__button btn animate--faster">
-                <Icon viewBox="0 0 200 200" name="ok" />
+        <Link to={isPopup ? '/settings' : '/'}>
+            <span className={sidebarBtnClass}>
+                <Icon viewBox="0 0 200 200" name={isPopup ? 'cancel' : 'ok'} />
             </span>
         </Link>
     );
