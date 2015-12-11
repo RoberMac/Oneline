@@ -25,12 +25,12 @@ const LeftSidebar = ({ activeProviders, location }) => {
 const RightSidebar = ({ activeProviders, location }) => {
     const isPopup = !/settings$/.test(location.pathname);
 
-    return activeProviders.length <= 0
+    return activeProviders.length <= 0 || isPopup
         ? <Empty />
     : (
-        <Link to={isPopup ? '/settings' : '/'}>
+        <Link to='/'>
             <span className={sidebarBtnClass}>
-                <Icon viewBox="0 0 200 200" name={isPopup ? 'cancel' : 'ok'} />
+                <Icon viewBox="0 0 200 200" name='ok' />
             </span>
         </Link>
     );

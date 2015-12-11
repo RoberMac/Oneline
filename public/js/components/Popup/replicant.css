@@ -1,0 +1,29 @@
+@import "../common/base.css";
+
+.replicant {
+    position: relative;
+    width: 20vw;
+    padding: 20px;
+    background: var(--color-gray);
+    font-size: 27px;
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+
+    &--deckard {
+        &::before {
+            content: attr(data-countdown);
+            position: absolute * 3px 3px *;
+            font-size: var(--font-size-small);
+            font-weight: 100;
+        }
+    }
+    &--rachael {
+        size: 80% 50px;
+        font-size: 27px 50px;
+        text-align: center;
+
+        &--errCode {
+            animation: errFormAnimate .5s ease-in-out;
+        }
+    }
+}

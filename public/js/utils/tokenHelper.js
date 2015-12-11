@@ -36,6 +36,14 @@ export const removeToken = provider => {
         tokenList
     };
 }
+export const replaceTokenList = tokenList => {
+    store.set('tokenList', tokenList)
+
+    return {
+        activeProviders: getActiveProviders(),
+        tokenList: store.get('tokenList') || []
+    };
+}
 export const clearInvalidToken = () => {
     let tokenList = store.get('tokenList') || [];
 

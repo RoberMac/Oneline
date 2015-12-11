@@ -1,4 +1,8 @@
-import { addToken as _addToken, removeToken as _removeToken } from '../utils/tokenHelper';
+import {
+    addToken as _addToken,
+    removeToken as _removeToken,
+    replaceTokenList as _replaceTokenList
+} from '../utils/tokenHelper';
 import { Auth } from '../utils/api';
 
 // Export
@@ -15,4 +19,11 @@ export const removeToken = (provider) => {
     const { activeProviders, tokenList } = _removeToken(provider);
 
     return { type: REMOVE_TOKEN, activeProviders, tokenList }
+}
+
+export const REPLACE_TOKEN_LIST = 'REPLACE_TOKEN_LIST'
+export const replaceTokenList = (_tokenList) => {
+    const { activeProviders, tokenList } = _replaceTokenList(_tokenList);
+
+    return { type: REPLACE_TOKEN_LIST, activeProviders, tokenList }
 }

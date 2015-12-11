@@ -17,6 +17,7 @@ module.exports = {
             'redux-simple-router',
             'redux-thunk',
             'classnames',
+            'es6-promise',
         ]
     },
     output: {

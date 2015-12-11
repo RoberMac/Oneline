@@ -5,7 +5,12 @@
     size: 100%;
     z-index: 4;
     background-color: var(--color-black-alpha);
+    cursor: zoom-out;
     ::-webkit-scrollbar {
         display: none; 
+    }
+
+    > div {
+        cursor: default;
     }
 }

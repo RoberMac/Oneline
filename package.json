@@ -34,6 +34,7 @@
     "cookie-parser": "^1.4.0",
     "cssnano": "^3.3.2",
     "dotenv": "^1.2.0",
+    "es6-promise": "^3.0.2",
     "express": "^4.13.3",
     "express-session": "^1.12.1",
     "helmet": "^0.15.0",
