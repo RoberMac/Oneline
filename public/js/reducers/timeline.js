@@ -1,25 +1,55 @@
 import update from 'react-addons-update'
 
-import { REQUEST_TIMELINE, RECEIVE_TIMELINE, ERROR_TIMELINE }  from '../actions/timeline';
+import { FETCH_START, RECEIVE_POSTS, FETCH_FAIL }  from '../actions/timeline';
 
 let initialState = {
-    isFetching: false,
-    isError: false,
-    items: []
+    newPosts: {
+        isFetching: false,
+        isFetchFail: false
+    },
+    oldPosts: {
+        isFetching: false,
+        isFetchFail: false
+    },
+    isInitLoad: true,
+    showingPosts: [],
+    allPosts: [],
+    maxId: {},
+    minId: {},
+    timePointer: Date.now(),
+    timeRange: 1800000,
 };
 
 export default (state = initialState, action) => {
     switch (action.type){
-        case REQUEST_TIMELINE:
+        case FETCH_START:
             return update(state, {
-                // TODO
+                [action.postsType]: {
+                    isFetching: { $set: true },
+                    isFetchFail: { $set: false }
+                }
             })
             break;
-        case RECEIVE_TIMELINE:
+        case RECEIVE_POSTS:
             // TODO
+            return update(state, {
+                [action.postsType]: {
+                    isFetching: { $set: true }
+                },
+                isInitLoad: { $set: false },
+                allPosts: { $push: action.posts },
+                maxId: { $set: action.maxId },
+                minId: { $set: action.minId },
+                timePointer: { $set: state.timePointer - state.timeRange }
+            })
             break;
-        case ERROR_TIMELINE:
-            // TODO
+        case FETCH_FAIL:
+            return update(state, {
+                [action.postsType]: {
+                    isFetching: { $set: false },
+                    isFetchFail: { $set: true }
+                }
+            })
             break;
         default: 
             return state;

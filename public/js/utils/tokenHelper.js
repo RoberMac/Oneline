@@ -44,17 +44,13 @@ export const replaceTokenList = tokenList => {
         tokenList: store.get('tokenList') || []
     };
 }
-export const clearInvalidToken = () => {
-    let tokenList = store.get('tokenList') || [];
+export const clearTokenList = () => {
+    store.set('tokenList', [])
 
-    tokenList.forEach(token => {
-        const isTokenExpired = isTokenExpired(token);
-        const provider = decodeToken(token).provider;
-
-        if (isTokenExpired){
-            removeToken(provider)
-        }
-    })
+    return {
+        activeProviders: [],
+        tokenList: []
+    }
 }
 export const isValidToken = () => {
     let tokenList = store.get('tokenList') || [];

@@ -54,9 +54,15 @@ const request = {
     ),
 };
 
-
+// Export
 export const Auth = {
     revoke: ({ provider }) => request.del({ url: `/auth/revoke/${provider}`}),
     deckard: ({ profileList }) => request.get({ url: '/auth/replicant/deckard', query: { profileList } }),
     rachael: ({ code }) => request.post({ url: '/auth/replicant/rachael', payload: { code } })
 }
+
+export const Timeline = {
+    get: ({ id }) => request.get({ url: '/timeline', query: { id } })
+}
+
+

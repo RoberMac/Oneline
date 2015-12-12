@@ -3,7 +3,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
-import { addToken, removeToken } from '../../actions/auth';
+import { addToken, removeToken, clearTokenIfTokenInvalid } from '../../actions/auth';
 import './settings.css';
 
 // Components
@@ -34,23 +34,26 @@ class SocialAuth extends React.Component {
         this.handleStorageChange = this.handleStorageChange.bind(this)
     }
     // 授權／吊銷授權
-    toggleAuth (provider){
+    toggleAuth(provider) {
         if (this.props.activeProviders.indexOf(provider) < 0){
             window.open('/auth/' + provider, '_blank')
         } else {
             this.props.removeToken(provider)
         }
     }
-    handleStorageChange (e){
+    handleStorageChange(e) {
         if (e.key === 'addToken'){ this.props.addToken() };
     }
-    componentDidMount (){
+    componentWillMount() {
+        this.props.clearTokenIfTokenInvalid()
+    }
+    componentDidMount() {
         window.addEventListener('storage', this.handleStorageChange)
     }
-    componentWillUnmount (){
+    componentWillUnmount() {
         window.removeEventListener('storage', this.handleStorageChange)
     }
-    render (){
+    render() {
         const { providers, activeProviders, children } = this.props;
         const soicalWrapperClass = classNames('social-wrapper', 'animate--faster');
 
@@ -84,5 +87,5 @@ export default connect(
         const { providers, activeProviders } = state.auth;
         return { providers, activeProviders }
     },
-    { addToken, removeToken }
+    { addToken, removeToken, clearTokenIfTokenInvalid }
 )(SocialAuth)
