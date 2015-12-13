@@ -1,0 +1,333 @@
+@import "../../common/base.css";
+
+.timeline {
+    position: relative;
+    margin: 36px 7px;
+    padding: 0 10px;
+    background-color: var(--color-white);
+    cursor: default;
+    border-radius: 3px;
+
+    &__profile {
+        position: relative -24px * *;
+        text-align: center;
+
+        &__avatar {
+            size: 48px;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 50%;
+        }
+        &__fullname {
+            margin-bottom: 17px;
+            font-weight: var(--font-weight-bold);
+        }
+    }
+    &__time {
+        position: absolute * 3px 3px *;
+        color: #89A;
+        font-size: 11px;
+        cursor: pointer;
+    }
+    &__location {
+        position: absolute 3px 3px * *;
+        height: 24px;
+
+        svg {
+            fill: var(--color-steel);
+            size: 20px;
+        }
+
+        &:hover {
+            .timeline__location__name {
+                display: inline-block;
+            }
+        }
+        &__name {
+            display: none;
+            position: absolute 0 24px * *;
+            width: 100px;
+            text-align: right;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 11px 24px;
+
+            @media (--all-mobile-devices){
+                display: inline-block;
+            }
+        }
+    }
+    &__content {
+        position: relative -24px * *;
+    }
+    &__text {
+        margin-top: 17px;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        line-height: 1.4;
+        cursor: text;
+
+        img {
+            width: 1em;
+            margin: 0 .1em;
+            vertical-align: text-bottom;
+        }
+    }
+    &__media {
+        position: relative;
+        width: 100%;
+        margin: 17px 0 0 0;
+        white-space: nowrap;
+        text-align: center;
+
+        &::-webkit-scrollbar { 
+            display: none; 
+        }
+
+        img, video {
+            max-width: 100%;
+            max-height: 100vh;
+            border-radius: 3px;
+        }
+        video {
+            cursor: pointer;
+        }
+        &--large {
+            position: relative;
+            margin: 3px 0;
+
+            > img, video {
+                position: absolute 0 * * 0;
+                size: 100% 100%;
+                max-height: none;
+            }
+        }
+        &--thumb {
+            img {
+                size: 80px;
+                margin-right: 7px;
+                cursor: zoom-in;
+                border-radius: 1px;
+
+                @media (--all-mobile-devices){
+                    size: calc(100% / 9 - 3px);
+                    margin-right: 3px;
+                }
+            }
+        }
+        &--small {
+            img {
+                size: calc(100% / 9 - 7px);
+                margin-right: 7px;
+                cursor: pointer;
+                border-radius: 50%;
+            }
+        }
+        &--gif {
+            cursor: inline('GIF.gif'), zoom-in !important;
+            cursor: -webkit-image-set(
+                inline('GIF@2x.gif') 2x
+            ), zoom-in !important;
+
+            @media (--all-mobile-devices){
+                border: 1px solid #D0104C;
+            }
+        }
+        &--inactive {
+            filter: grayscale(100%);
+            opacity: .7;
+        }
+        &--active {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+        &--hide {
+            display: none;
+        }
+        &--loading {
+            animation: imgLoadAnimate 1.7s infinite linear;
+        }
+        &__icon {
+            position: absolute;
+            size: 17px;
+            z-index: 3;
+
+            svg {
+                height: 17px;
+            }
+
+            &--origin {
+                top: 3px;
+                right: 3px;
+            }
+            &--users {
+                size: 14px;
+                bottom: -15px;
+                left: 0;
+
+                svg {
+                    height: 14px;
+                }
+            }
+        }
+        &__userTag {
+            position: absolute;
+            opacity: 0;
+            transform-origin: 14px -6px;
+
+            &--show {
+                opacity: 1;
+            }
+            &--popup {
+                animation: usersInPhotoAnimate .7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            }
+            &__pointer {
+                position: absolute -6px * * calc(50% - 7px);
+                border-color: transparent transparent var(--color-instagram) transparent;
+                border-style: solid;
+                border-width: 0 7px 14px 7px;
+            }
+            &__content {
+                img {
+                    display: inline-block;
+                    padding: 3px;
+                    size: 32px;
+                    max-height: 32px;
+                    max-width: 32px;
+                    color: var(--color-white);
+                    background: var(--color-instagram) !important;
+                    font-size: var(--font-size-small);
+                    border-radius: 50%;
+                }
+            }
+        }
+        &__playButton {
+            position: absolute 0 * * 0;
+            size: 50px;
+            cursor: pointer;
+            
+            &--playing {
+                opacity: 0;
+            }
+        }
+    }
+
+    &--quote {
+        top: -12px;
+        margin: 27px 7px 7px 7px;
+        background-color: var(--color-gray);
+        font-size: var(--font-size-small);
+
+        strong, p {
+            color: var(--color-black);
+        }
+        .timeline {
+            &__profile {
+                top: -20px;
+
+                &__avatar {
+                    size: 40px;
+                }
+                &__fullname {
+                    margin-bottom: 7px;
+                }
+            }
+            &__content {
+                top: -14px !important;
+            }
+            &__text {
+                margin-top: 0;
+            }
+            &__time {
+                font-size: 10px;
+            }    
+        }
+
+    }
+    &--retweet__profile__avatar {
+        position: absolute -12px * * calc(50% - 72px);
+
+        img {
+            size: 24px;
+        }
+        &::after {
+            content: '';
+            position: absolute 8px -18px * *;
+            size: 13px 8px;
+            background: inline('retweet_in_tweet.png') no-repeat;
+            background-size: 13px 8px;
+        }
+    }
+    
+    &--twitter {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(42, 169, 224, 0.7);
+        }
+        .timeline__profile__avatar {
+            border-color: var(--color-twitter);
+        }
+        .timeline__content {
+            a, a:visited {
+                color: var(--color-twitter);
+            }
+        }
+        img, video {
+            background: var(--color-white) inline('background--twitter.png') repeat;
+        }
+    }
+    &--instagram {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(63, 93, 135, 0.7);
+        }
+        .timeline__profile__avatar {
+            border-color: var(--color-instagram);
+        }
+        .timeline__content {
+            a, a:visited {
+                color: var(--color-instagram);
+            }
+        }
+        img, video {
+            background: var(--color-white) inline('background--instagram.png') repeat;
+        }
+    }
+    &--weibo {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(230, 22, 45, 0.7);
+        }
+        .timeline__profile__avatar {
+            border-color: var(--color-weibo);
+        }
+        .timeline__content {
+            a, a:visited {
+                color: var(--color-weibo);
+            }
+        }
+        img, video {
+            background: var(--color-white) inline('background--weibo.png') repeat;
+        }
+    }
+
+
+    &__action {
+        display: none;
+        position: absolute 7px 5px * *;
+        size: 20px 6px;
+        cursor: pointer;
+        z-index: 3;
+
+        @media (--all-mobile-devices){
+            display: block;
+        }
+    }
+
+    &:hover {
+        .timeline__action {
+            display: block;
+        }
+    }
+}

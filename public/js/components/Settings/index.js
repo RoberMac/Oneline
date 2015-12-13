@@ -7,7 +7,7 @@ import { addToken, removeToken, clearTokenIfTokenInvalid } from '../../actions/a
 import './settings.css';
 
 // Components
-import { Icon } from '../Utils/Icon';
+import Icon from '../Utils/Icon';
 let SocialAuthBtn = ({ provider, isActive, toggleAuth }) => {
     const soicalListClass = classNames('social-list', 'vertically_center');
     const soicalBtnClass = classNames({

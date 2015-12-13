@@ -2,9 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
-import Spin from '../Utils/Spin';
+import { fetchPosts } from '../../actions/timeline';
 
-export default class Home extends React.Component {
+// Component
+import Post from '../Utils/Post';
+import Spin from '../Utils/Spin';
+class Home extends React.Component {
     constructor (props){
         super(props)
         // TODO
@@ -13,16 +16,31 @@ export default class Home extends React.Component {
         // TODO: options: auth ?
     }
     componentDidMount() {
-        // TODO: start fetch
+        console.log('componentDidMount')
+        this.props.fetchPosts({
+            postsType: 'newPosts'
+        })
     }
     render() {
-        const { newPosts, oldPosts, showingPosts } = this.props;
-
+        const { newPosts, oldPosts, showingPosts, isInitLoad } = this.props;
+        console.log(showingPosts)
         return (
             <div>
-                <Spin type="newPosts" initLoad={true} loading={true}/>
-
-                <Spin type="oldPosts" initLoad={true} loading={false}/>
+                <Spin
+                    type="newPosts"
+                    initLoad={isInitLoad}
+                    loading={newPosts.isFetching}
+                    loadFail={newPosts.isFetchFail}
+                />
+                    {showingPosts.map(item => {
+                        return <Post key={item.id_str} item={item}/>;
+                    })}
+                <Spin
+                    type="oldPosts"
+                    initLoad={isInitLoad}
+                    loading={oldPosts.isFetching}
+                    loadFail={oldPosts.isFetchFail}
+                />
             </div>
         );
     }
@@ -30,9 +48,11 @@ export default class Home extends React.Component {
 
 // Export
 export default connect(
-    state => {
-        const { newPosts, oldPosts, showingPosts } = state.timeline;
-        return { newPosts, oldPosts, showingPosts };
-    },
-    {}
+    state => ({
+        newPosts: state.timeline.newPosts,
+        oldPosts: state.timeline.oldPosts,
+        showingPosts: state.timeline.showingPosts,
+        isInitLoad: state.timeline.isInitLoad
+    }),
+    { fetchPosts }
 )(Home)

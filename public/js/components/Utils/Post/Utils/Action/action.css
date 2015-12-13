@@ -1,0 +1,47 @@
+@import "../../../../common/base.css";
+
+.action {
+    position: relative;
+    padding-right: 3px;
+    height: 28px;
+
+    &__button {
+        display: inline-block;
+        height: 17px;
+        margin: 0 auto;
+        vertical-align: middle;
+        fill: var(--color-steel);
+
+        &--wait {
+            cursor: default;
+
+            animation: waitAnimate 1s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+    }
+    &__count {
+        display: inline-block;
+        height: 28px;
+        vertical-align: middle;
+
+        &::after {
+            content: attr(data-count);
+            font-size: 10px 28px;
+            color: #89A;
+        }
+    }
+}
+
+.timeline--quote {
+    .action {
+        &__button {
+            size: 15px 24px;
+
+            &--retweet {
+                width: 18px;
+            }
+        }
+        &__count {
+            font-size: 10px;
+        }
+    }
+}

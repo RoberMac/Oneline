@@ -5,11 +5,13 @@ import { FETCH_START, RECEIVE_POSTS, FETCH_FAIL }  from '../actions/timeline';
 let initialState = {
     newPosts: {
         isFetching: false,
-        isFetchFail: false
+        isFetchFail: false,
+        unreadCount: 0
     },
     oldPosts: {
         isFetching: false,
-        isFetchFail: false
+        isFetchFail: false,
+        unreadCount: 0
     },
     isInitLoad: true,
     showingPosts: [],
@@ -24,28 +26,26 @@ export default (state = initialState, action) => {
     switch (action.type){
         case FETCH_START:
             return update(state, {
-                [action.postsType]: {
+                [action.payload.postsType]: {
                     isFetching: { $set: true },
                     isFetchFail: { $set: false }
                 }
             })
             break;
         case RECEIVE_POSTS:
-            // TODO
             return update(state, {
-                [action.postsType]: {
-                    isFetching: { $set: true }
-                },
+                [action.payload.postsType]: { isFetching: { $set: false } },
                 isInitLoad: { $set: false },
-                allPosts: { $push: action.posts },
-                maxId: { $set: action.maxId },
-                minId: { $set: action.minId },
+                showingPosts: { $set: action.payload.showingPosts },
+                allPosts: { $push: action.payload.allPosts },
+                maxId: { $set: action.payload.maxId },
+                minId: { $set: action.payload.minId },
                 timePointer: { $set: state.timePointer - state.timeRange }
             })
             break;
         case FETCH_FAIL:
             return update(state, {
-                [action.postsType]: {
+                [action.payload.postsType]: {
                     isFetching: { $set: false },
                     isFetchFail: { $set: true }
                 }

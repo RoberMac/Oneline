@@ -1,6 +1,6 @@
 @import "../common/base.css";
 
-.loadMore {
+.spin {
     position: absolute * * * calc(50% - 35px);
     size: 70px;
     overflow: hidden;
@@ -9,7 +9,7 @@
         top: 0;
         z-index: 3;
 
-        .loadMore__btn {
+        .spin__btn {
             top: -17px;
 
             &:hover {
@@ -24,7 +24,7 @@
         bottom: auto;
         z-index: 2;
 
-        .loadMore__btn {
+        .spin__btn {
             bottom: -39px;
 
             &:hover {
@@ -39,10 +39,10 @@
     &--initLoad {
         position: absolute calc(50% - 35px) * * !important;
 
-        &.loadMore--new .loadMore__btn {
+        &.spin--new .spin__btn {
             top: 11px !important;
         }
-        &.loadMore--old .loadMore__btn {
+        &.spin--old .spin__btn {
             bottom: -11px !important;
         }
     }
@@ -71,10 +71,10 @@
             z-index: 4;
         }
         &--loading {
-            &[class~="loadMore__btn--new"] {
+            &[class~="spin__btn--new"] {
                 top: 7px !important;
             }
-            &[class~="loadMore__btn--old"] {
+            &[class~="spin__btn--old"] {
                 bottom: -15px !important;
             }
             cursor: default;

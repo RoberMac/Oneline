@@ -29,7 +29,7 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 include: path.resolve(__dirname, 'public/js'),
-                loaders: ['babel-loader?presets[]=es2015,presets[]=react']
+                loaders: ['babel-loader?presets[]=es2015,presets[]=react,presets[]=stage-2']
             },
             { test: /\.json$/, loader: "json-loader" },
             { test: /\.css$/,  loader: "style-loader!css-loader!postcss-loader" }

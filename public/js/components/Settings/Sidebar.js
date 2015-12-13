@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // Components
-import { Icon } from '../Utils/Icon';
-import { Empty } from '../Utils/Empty';
+import Icon from '../Utils/Icon';
+import Empty from '../Utils/Empty';
 const sidebarBtnClass = classNames('menu__button', 'btn', 'animate--faster');
 
 const LeftSidebar = ({ activeProviders, location }) => {

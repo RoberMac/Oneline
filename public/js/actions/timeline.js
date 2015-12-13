@@ -2,27 +2,34 @@ import { Timeline } from '../utils/api';
 
 
 export const FETCH_START = 'FETCH_START'
-const fetchStart = (postsType) => ({ type: FETCH_START, postsType });
+const fetchStart = (payload) => ({ type: FETCH_START, payload });
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
-const postsRecive = (posts) => ({ type: RECEIVE_POSTS, posts });
+const postsRecive = (payload) => ({ type: RECEIVE_POSTS, payload });
 
 export const FETCH_FAIL = 'FETCH_FAIL'
-const fetchFail = (postsType) => ({ type: RECEIVE_POSTS, postsType });
+const fetchFail = (payload) => ({ type: FETCH_FAIL, payload });
 
 
 export const fetchPosts = ({ postsType }) => {
     return (dispatch, getState) => {
-        dispatch(fetchStart(postsType))
+        dispatch(fetchStart({ postsType }))
 
         Timeline
-        .get()
+        .get({})
         .then(res => {
-            // posts, min_ids, max_ids
-            dispatch(postsRecive(postsType))
+            const { data, max_id, min_id } = res.body;
+            dispatch(postsRecive({
+                postsType,
+                showingPosts: data,
+                allPosts: data,
+                max_id,
+                min_id
+            }))
         })
         .catch(err => {
-            dispatch(fetchFail(postsType))
+            console.log('FETCH_FAIL', err)
+            dispatch(fetchFail({ postsType }))
         })
     };
 }
