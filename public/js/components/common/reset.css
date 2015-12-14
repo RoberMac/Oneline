@@ -201,6 +201,12 @@ img, video {
             inline('caret--next@2x.gif') 2x
         ), e-resize;
     }
+    &--zoomIn {
+        cursor: zoom-in;
+    }
+    &--zoomOut {
+        cursor: zoom-out;
+    }
 }
 .icon {
     &--twitter, &--retweet {

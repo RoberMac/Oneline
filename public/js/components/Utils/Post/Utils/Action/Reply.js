@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './action.css';
-
 import Icon from '../../../Icon';
 
 export default class Reply extends React.Component {

@@ -5,10 +5,7 @@ import Empty from '../../../Utils/Empty';
 import Avatar from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import Media from '../Utils/Media/Weibo';
-import Retweet from '../Utils/Action/Retweet';
-import Reply from '../Utils/Action/Reply';
-import Source from '../Utils/Action/Source';
-import Star from '../Utils/Action/Star';
+import { Retweet, Reply, Source, Star } from '../Utils/Action';
 
 export default props => (
     <div className="timeline timeline--weibo">

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './action.css';
-
 // Helper
 const selectSrc = {
     twitter: ({ screen_name, id_str }) => `//twitter.com/${screen_name}/status/${id_str}`,
