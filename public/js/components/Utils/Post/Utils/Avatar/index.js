@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router';
 
 // Helper
 const selectUserSrc = {
@@ -10,11 +9,11 @@ const selectUserSrc = {
 
 export default ({ avatar, screen_name, name, provider }) => {
     return (
-        <div className="timeline__profile">
+        <div className="post-profile">
             <a href={selectUserSrc[provider](screen_name)} target="_blank">
-                <img className="timeline__profile__avatar" src={avatar} />
+                <img className={`post-profile__avatar post-profile__avatar--${provider}`} src={avatar} />
             </a>
-            <div className="timeline__profile__fullname">
+            <div className="post-profile__fullname">
                 <a href={selectUserSrc[provider](screen_name)} target="_blank">
                     <strong>{name}</strong>
                 </a>

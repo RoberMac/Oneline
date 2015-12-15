@@ -1,6 +1,11 @@
 @import "../../common/base.css";
 
-.timeline {
+@import "./Utils/Avatar/avatar.css";
+@import "./Utils/Text/text.css";
+@import "./Utils/Media/media.css";
+@import "./Utils/Action/action.css";
+
+.post {
     position: relative;
     margin: 36px 7px;
     padding: 0 10px;
@@ -8,26 +13,10 @@
     cursor: default;
     border-radius: 3px;
 
-    &__profile {
-        position: relative -24px * *;
-        text-align: center;
-
-        &__avatar {
-            size: 48px;
-            border-width: 1px;
-            border-style: solid;
-            border-radius: 50%;
-        }
-        &__fullname {
-            margin-bottom: 17px;
-            font-weight: var(--font-weight-bold);
-        }
-    }
     &__time {
         position: absolute * 3px 3px *;
-        color: #89A;
+        color: #C1C9D2;
         font-size: 11px;
-        cursor: pointer;
     }
     &__location {
         position: absolute 3px 3px * *;
@@ -39,7 +28,7 @@
         }
 
         &:hover {
-            .timeline__location__name {
+            .post__location__name {
                 display: inline-block;
             }
         }
@@ -61,20 +50,6 @@
     &__content {
         position: relative -24px * *;
     }
-    &__text {
-        margin-top: 17px;
-        word-wrap: break-word;
-        white-space: pre-wrap;
-        line-height: 1.4;
-        cursor: text;
-
-        img {
-            width: 1em;
-            margin: 0 .1em;
-            vertical-align: text-bottom;
-        }
-    }
-
     &--quote {
         top: -12px;
         margin: 27px 7px 7px 7px;
@@ -84,7 +59,7 @@
         strong, p {
             color: var(--color-black);
         }
-        .timeline {
+        .post {
             &__profile {
                 top: -20px;
 
@@ -105,7 +80,6 @@
                 font-size: 10px;
             }    
         }
-
     }
     &--retweet__profile__avatar {
         position: absolute -12px * * calc(50% - 72px);
@@ -127,10 +101,7 @@
             color: var(--color-gray);
             background-color: rgba(42, 169, 224, 0.7);
         }
-        .timeline__profile__avatar {
-            border-color: var(--color-twitter);
-        }
-        .timeline__content {
+        .post__content {
             a, a:visited {
                 color: var(--color-twitter);
             }
@@ -144,10 +115,7 @@
             color: var(--color-gray);
             background-color: rgba(63, 93, 135, 0.7);
         }
-        .timeline__profile__avatar {
-            border-color: var(--color-instagram);
-        }
-        .timeline__content {
+        .post__content {
             a, a:visited {
                 color: var(--color-instagram);
             }
@@ -161,35 +129,13 @@
             color: var(--color-gray);
             background-color: rgba(230, 22, 45, 0.7);
         }
-        .timeline__profile__avatar {
-            border-color: var(--color-weibo);
-        }
-        .timeline__content {
+        .post__content {
             a, a:visited {
                 color: var(--color-weibo);
             }
         }
         img, video {
             background: var(--color-white) inline('background--weibo.png') repeat;
-        }
-    }
-
-
-    &__action {
-        display: none;
-        position: absolute 7px 5px * *;
-        size: 20px 6px;
-        cursor: pointer;
-        z-index: 3;
-
-        @media (--all-mobile-devices){
-            display: block;
-        }
-    }
-
-    &:hover {
-        .timeline__action {
-            display: block;
         }
     }
 }

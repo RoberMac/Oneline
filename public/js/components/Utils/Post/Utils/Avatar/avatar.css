@@ -1,0 +1,25 @@
+.post-profile {
+    position: relative -24px * *;
+    text-align: center;
+
+    &__avatar {
+        size: 48px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 50%;
+
+        &--twitter {
+            border-color: var(--color-twitter);
+        }
+        &--instagram {
+            border-color: var(--color-instagram);
+        }
+        &--weibo {
+            border-color: var(--color-weibo);
+        }
+    }
+    &__fullname {
+        margin-bottom: 17px;
+        font-weight: var(--font-weight-bold);
+    }
+}

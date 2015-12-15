@@ -3,3 +3,6 @@
 @import "../common/base.css";
 @import "../common/reset.css";
 @import "../common/animation.css";
+
+@import "../common/oneline.css";
+@import "../common/sidebar.css";

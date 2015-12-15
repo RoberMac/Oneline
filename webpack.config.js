@@ -18,6 +18,7 @@ module.exports = {
             'redux-thunk',
             'classnames',
             'es6-promise',
+            'react-timeago',            
         ]
     },
     output: {

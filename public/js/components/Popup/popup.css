@@ -1,5 +1,7 @@
 @import "../common/base.css";
 
+@import "./replicant.css";
+
 .popup {
     position: absolute 0 * *;
     size: 100%;

@@ -1,5 +1,3 @@
-import './action.css';
-
 import _Like from './Like';
 import _Reply from './Reply';
 import _Retweet from './Retweet';

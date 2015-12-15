@@ -2,8 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 
 import './app.css';
-import '../common/oneline.css';
-import '../common/sidebar.css';
 
 export default ({ location, main, leftSidebar, rightSidebar }) => {
     const isHome = !/^\/settings/.test(location.pathname);

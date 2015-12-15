@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import './media.css';
+import { handleImageError, fuckLongWeibo } from './helper.js';
 
 // Components
 import Icon from '../../../Icon';
@@ -15,23 +15,32 @@ class LargeImg extends React.Component {
     }
     handleCursorChange(e) {
         const elem = this.refs.largeImg;
+        const offsetX = e.offsetX;
+        const offsetWidth = elem.offsetWidth;
+        const preCursorBound = offsetWidth * 1 / 3;
+        const nextCursorBound = offsetWidth * 2 / 3;
 
-        if (e.offsetX - elem.offsetWidth / 2 > 0){
-            elem.classList.remove('cursor--pre')
+        if (offsetX < preCursorBound){
+            elem.classList.remove('cursor--next', 'cursor--zoomOut')
+            elem.classList.add('cursor--pre')
+        } else if (offsetX > nextCursorBound){
+            elem.classList.remove('cursor--pre', 'cursor--zoomOut')
             elem.classList.add('cursor--next')
         } else {
-            elem.classList.remove('cursor--next')
-            elem.classList.add('cursor--pre')
+            elem.classList.remove('cursor--pre', 'cursor--next')
+            elem.classList.add('cursor--zoomOut')
         }
     }
     handleClick() {
         const { index, max, zoomIn, zoomOut } = this.props;
         const elem = this.refs.largeImg;
-        const nextIndex = elem.className.search('cursor--next') >= 0 ? index + 1 : index - 1;
+        const nextIndex = elem.className.search('cursor--pre') >= 0 
+                            ? index - 1
+                        : elem.className.search('cursor--next') >= 0 
+                            ? index + 1
+                        : index;
 
-        if (nextIndex < 0 || nextIndex >= max) {
-            zoomOut()
-        };
+        if (nextIndex < 0 || nextIndex >= max) return;
 
         zoomIn(nextIndex)
     }
@@ -43,8 +52,6 @@ class LargeImg extends React.Component {
         } else {
             elem.classList.add('cursor--zoomOut')
         }
-
-        elem.addEventListener('click', this.handleClick)
     }
     componentWillUnmount() {
         const elem = this.refs.largeImg;
@@ -52,23 +59,28 @@ class LargeImg extends React.Component {
         if (this.props.max > 1){
             elem.removeEventListener('mousemove', this.handleCursorChange)
         }
-
-        elem.removeEventListener('click', this.handleClick)
     }
     render() {
-        const { src, index } = this.props;
+        const { src, index, max } = this.props;
         const middleSrc = src.replace(/square|small/, 'bmiddle');
         const largeSrc  = src.replace(/square|small/, 'large');
-
         const originIconClass = classNames(
             'post-media__icon',
             'post-media__icon--origin',
             'icon--weibo',
             'tips--deep'
         );
+
         return (
             <div className="post-media">
-                <img src={middleSrc} alt="weibo_large_photo" ref="largeImg"/>
+                <img
+                    src={middleSrc}
+                    alt="weibo_large_photo"
+                    onClick={this.handleClick}
+                    onLoad={fuckLongWeibo}
+                    onError={handleImageError}
+                    ref="largeImg"
+                />
                 <a className={originIconClass} href={largeSrc} target="_blank">
                     <Icon viewBox="0 0 100 100" name="eyeball" />
                 </a>

@@ -28,7 +28,7 @@ export const fetchPosts = ({ postsType }) => {
             }))
         })
         .catch(err => {
-            console.log('FETCH_FAIL', err)
+            console.error('FETCH_FAIL', err)
             dispatch(fetchFail({ postsType }))
         })
     };

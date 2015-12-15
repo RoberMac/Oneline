@@ -1,14 +1,12 @@
-@import "../../../../common/base.css";
-
-.action {
+.post-action {
     position: relative;
     padding-right: 3px;
+    margin-right: 5px;
     height: 28px;
 
     &__button {
         display: inline-block;
         height: 17px;
-        margin: 0 auto;
         vertical-align: middle;
         fill: var(--color-steel);
 
@@ -31,8 +29,8 @@
     }
 }
 
-.timeline--quote {
-    .action {
+.post--quote {
+    .post-action {
         &__button {
             size: 15px 24px;
 

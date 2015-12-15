@@ -1,16 +1,17 @@
 import React from 'react';
 
 // Components
-import Empty from '../../../Utils/Empty';
+import Empty from '../../Empty';
 import Avatar from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import Media from '../Utils/Media/Weibo';
+import TimeAgo from '../Utils/TimeAgo';
 import { Retweet, Reply, Source, Star } from '../Utils/Action';
 
 export default props => (
-    <div className="timeline timeline--weibo">
+    <div className="post post--weibo">
         <Avatar provider="weibo" {...props.retweet.user} />
-        <div className="timeline__content">
+        <div className="post__content">
             <Text provider="weibo" text={props.retweet.text} />
             {
                 props.media && props.type === 'tweet' && props.media.length > 0
@@ -20,18 +21,20 @@ export default props => (
         </div>
 
         <a
-            className="timeline--retweet__profile__avatar"
+            className="post--retweet__profile__avatar"
             href={`//weibo.com/n/${props.user.screen_name}`}
             target="_blank"
         >
-            <img className="timeline__profile__avatar" src={props.user.avatar} alt="avatar" />
+            <img className="post__profile__avatar" src={props.user.avatar} alt="avatar" />
         </a>
 
         <span className="cursor--pointer">
-            <Retweet />
+            <Retweet count={props.retweet_count} />
             <Reply />
             <Source provider="weibo" uid={props.user.uid} mid={props.mid} />
             <Star />
         </span>
+
+        <TimeAgo date={props.created_at} />
     </div>
 );

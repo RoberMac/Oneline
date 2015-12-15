@@ -1,16 +1,17 @@
 import React from 'react';
 
 // Components
-import Empty from '../../../Utils/Empty';
+import Empty from '../../Empty';
 import Avatar from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import Media from '../Utils/Media/Weibo';
+import TimeAgo from '../Utils/TimeAgo';
 import { Retweet, Reply, Source, Star } from '../Utils/Action';
 
 export default props => (
-    <div className="timeline timeline--weibo">
+    <div className="post post--weibo">
         <Avatar provider="weibo" {...props.user} />
-        <div className="timeline__content">
+        <div className="post__content">
             <Text provider="weibo" text={props.text} />
             {
                 props.media && props.type === 'tweet' && props.media.length > 0
@@ -19,10 +20,10 @@ export default props => (
             }
         </div>
 
-        <div className="timeline timeline--quote timeline--quote--weibo">
+        <div className="post post--quote post--quote--weibo">
             <Avatar provider="weibo" {...props.retweet.user} />
-            <div className="timeline__content">
-                <Text provider="weibo" text={props.retweet.text} />
+            <div className="post__content">
+                <Text text={props.retweet.text} provider="weibo" />
                 {
                     props.media && props.media.length > 0
                         ? <Media media={props.media} />
@@ -32,13 +33,17 @@ export default props => (
             <span className="cursor--pointer">
                 <Source provider="weibo" uid={props.retweet.user.uid} mid={props.retweet.mid} />
             </span>
+
+            <TimeAgo date={props.retweet.created_at} />
         </div>
 
         <span className="cursor--pointer">
-            <Retweet />
+            <Retweet count={props.retweet_count} />
             <Reply />
             <Source provider="weibo" uid={props.user.uid} mid={props.mid} />
             <Star />
         </span>
+
+        <TimeAgo date={props.created_at} />
     </div>
 );

@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import store from '../../utils/store';
 import { Auth } from '../../utils/api';
 import { replaceTokenList } from '../../actions/auth';
-import './replicant.css';
 
 // Components
 const replicantClass = 'replicant vertically_center';

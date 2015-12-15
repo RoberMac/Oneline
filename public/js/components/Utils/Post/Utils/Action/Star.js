@@ -12,9 +12,9 @@ export default class Star extends React.Component {
     }
     render() {
         return (
-            <button className="action tips--deep" type="button" onClick={this.star}>
-                <Icon className="action__button" viewBox="0 0 26 26" name="star" data-star />
-                <span className="action__count" />
+            <button className="post-action tips--deep" type="button" onClick={this.star}>
+                <Icon className="post-action__button" viewBox="0 0 26 26" name="star" data-star />
+                <span className="post-action__count" />
             </button>
         );
     }
