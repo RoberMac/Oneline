@@ -6,6 +6,7 @@ import { handleImageError, fuckLongWeibo } from './helper.js';
 // Components
 import Icon from '../../../Icon';
 import Empty from '../../../Empty';
+import ViewOriginal from './Utils/ViewOriginal';
 
 class LargeImg extends React.Component {
     constructor(props) {
@@ -64,12 +65,6 @@ class LargeImg extends React.Component {
         const { src, index, max } = this.props;
         const middleSrc = src.replace(/square|small/, 'bmiddle');
         const largeSrc  = src.replace(/square|small/, 'large');
-        const originIconClass = classNames(
-            'post-media__icon',
-            'post-media__icon--origin',
-            'icon--weibo',
-            'tips--deep'
-        );
 
         return (
             <div className="post-media">
@@ -81,9 +76,7 @@ class LargeImg extends React.Component {
                     onError={handleImageError}
                     ref="largeImg"
                 />
-                <a className={originIconClass} href={largeSrc} target="_blank">
-                    <Icon viewBox="0 0 100 100" name="eyeball" />
-                </a>
+                <ViewOriginal link={largeSrc} provider="weibo" />
             </div>
         );
     }

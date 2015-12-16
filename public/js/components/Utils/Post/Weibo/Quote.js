@@ -4,7 +4,7 @@ import React from 'react';
 import Empty from '../../Empty';
 import Avatar from '../Utils/Avatar';
 import Text from '../Utils/Text';
-import Media from '../Utils/Media/Weibo';
+import { WeiboMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
 import { Retweet, Reply, Source, Star } from '../Utils/Action';
 
@@ -12,10 +12,16 @@ export default props => (
     <div className="post post--weibo">
         <Avatar provider="weibo" {...props.user} />
         <div className="post__content">
-            <Text provider="weibo" text={props.text} />
+            <Text
+                text={props.text}
+                middlewares={[
+                    { middleware: 'linkify', opts: { provider: 'weibo' } },
+                    { middleware: 'weiboEmotify' }
+                ]}
+            />
             {
                 props.media && props.type === 'tweet' && props.media.length > 0
-                    ? <Media media={props.media} />
+                    ? <WeiboMedia media={props.media} />
                 : <Empty />
             }
         </div>
@@ -23,10 +29,16 @@ export default props => (
         <div className="post post--quote post--quote--weibo">
             <Avatar provider="weibo" {...props.retweet.user} />
             <div className="post__content">
-                <Text text={props.retweet.text} provider="weibo" />
+                <Text
+                    text={props.retweet.text}
+                    middlewares={[
+                        { middleware: 'linkify', opts: { provider: 'weibo' } },
+                        { middleware: 'weiboEmotify' }
+                    ]}
+                />
                 {
                     props.media && props.media.length > 0
-                        ? <Media media={props.media} />
+                        ? <WeiboMedia media={props.media} />
                     : <Empty />
                 }
             </div>

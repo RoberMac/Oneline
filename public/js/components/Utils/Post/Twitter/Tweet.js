@@ -4,33 +4,33 @@ import React from 'react';
 import Empty from '../../Empty';
 import Avatar from '../Utils/Avatar';
 import Text from '../Utils/Text';
-import { WeiboMedia } from '../Utils/Media';
+import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Retweet, Reply, Source, Star } from '../Utils/Action';
+import { Like, Retweet, Reply, Source } from '../Utils/Action';
 
 export default props => (
-    <div className="post post--weibo">
-        <Avatar provider="weibo" {...props.user} />
+    <div className="post post--twitter">
+        <Avatar provider="twitter" {...props.user} />
         <div className="post__content">
             <Text
                 text={props.text}
                 middlewares={[
-                    { middleware: 'linkify', opts: { provider: 'weibo' } },
-                    { middleware: 'weiboEmotify' }
+                    { middleware: 'trimMediaLink', opts: { link: props.mediaLink } },
+                    { middleware: 'linkify', opts: { provider: 'twitter' } }
                 ]}
             />
             {
-                props.media && props.type === 'tweet' && props.media.length > 0
-                    ? <WeiboMedia media={props.media} />
+                props.media && props.media.length > 0
+                    ? <TwitterMedia media={props.media} />
                 : <Empty />
             }
         </div>
 
         <span className="cursor--pointer">
+            <Like count={props.favorite_count}/>
             <Retweet count={props.retweet_count} />
             <Reply />
-            <Source provider="weibo" uid={props.user.uid} mid={props.mid} />
-            <Star />
+            <Source provider="twitter" screen_name={props.user.screen_name} id_str={props.id_str} />
         </span>
 
         <TimeAgo date={props.created_at} />

@@ -15,3 +15,43 @@ export const fuckLongWeibo = event => {
     }
 
 }
+
+export const lazySize = ratio => ({'paddingBottom': ratio * 100 + '%'});
+
+
+const ratio2deg = ratio => Math.atan(ratio) * 180 / Math.PI;
+export const calcDegree = (x, y, w, h) => {
+    let w_, h_, _deg;
+
+    if (x > 0.5){
+        w_ = (1 - x) * w
+        // 右下
+        if (y > 0.5){
+            h_ = (1 - y) * h
+            _deg = ratio2deg(h_ / w_) + 90
+        }
+        // 右上
+        else {
+            h_ = y * h
+            _deg = ratio2deg(w_ / h_)
+        }
+    }
+    else {
+        w_ = x * w
+        // 左下
+        if (y > 0.5){
+            h_ = (1 - y) * h
+            _deg = ratio2deg(w_ / h_) + 180
+        }
+        // 左上
+        else {
+            h_ = y * h
+            _deg = - ratio2deg(h_ / w_)
+        }
+    }
+    console.log(_deg)
+    return _deg;
+}
+
+
+

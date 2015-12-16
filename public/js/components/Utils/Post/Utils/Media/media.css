@@ -95,15 +95,8 @@
     }
     &__userTag {
         position: absolute;
-        opacity: 0;
         transform-origin: 14px -6px;
 
-        &--show {
-            opacity: 1;
-        }
-        &--popup {
-            animation: usersInPhotoAnimate .7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
         &__pointer {
             position: absolute -6px * * calc(50% - 7px);
             border-color: transparent transparent var(--color-instagram) transparent;

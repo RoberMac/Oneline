@@ -62,10 +62,11 @@ router.get('/', (req, res, next) => {
             max_date: {},
         };
 
+        dataList = [1,2,3]//remove
         dataList.forEach((dataItem, index) => {
             let provider = providerList[index];
 
-            dataItem = JSON.parse(require('fs').readFileSync(process.env.PWD + '/ignore/test/timeline/data-weibo.json')).statuses
+            dataItem = JSON.parse(require('fs').readFileSync(process.env.PWD + '/ignore/test/timeline/data.json'))[provider]
             // dataItem = provider === 'weibo' ? dataItem.statuses : dataItem[0];
 
             if (!dataItem) return;
