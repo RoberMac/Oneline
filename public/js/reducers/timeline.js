@@ -14,11 +14,21 @@ let initialState = {
         unreadCount: 0
     },
     isInitLoad: true,
-    showingPosts: [],
-    allPosts: [],
-    maxId: {},
-    minId: {},
-    timePointer: Date.now(),
+    showingPosts: {
+        posts: [],
+        maxId: {},
+        maxDate: {},
+        minId: {},
+        minDate: {}
+    },
+    allPosts: {
+        posts: [],
+        maxId: {},
+        maxDate: {},
+        minId: {},
+        minDate: {}
+    },
+    timePointer: Date.now(), // !
     timeRange: 1800000,
 };
 
@@ -37,9 +47,7 @@ export default (state = initialState, action) => {
                 [action.payload.postsType]: { isFetching: { $set: false } },
                 isInitLoad: { $set: false },
                 showingPosts: { $set: action.payload.showingPosts },
-                allPosts: { $push: action.payload.allPosts },
-                maxId: { $set: action.payload.maxId },
-                minId: { $set: action.payload.minId },
+                allPosts: { $set: action.payload.allPosts },
                 timePointer: { $set: state.timePointer - state.timeRange }
             })
             break;

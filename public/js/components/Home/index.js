@@ -10,20 +10,16 @@ import Spin from '../Utils/Spin';
 class Home extends React.Component {
     constructor (props){
         super(props)
-        // TODO
+        this.loadPosts = this.loadPosts.bind(this)
     }
-    componentWillMount() {
-        // TODO: options: auth ?
+    loadPosts(postsType) {
+        this.props.fetchPosts({ postsType })
     }
     componentDidMount() {
-        console.log('componentDidMount')
-        this.props.fetchPosts({
-            postsType: 'newPosts'
-        })
+        this.loadPosts('newPosts')
     }
     render() {
         const { newPosts, oldPosts, showingPosts, isInitLoad } = this.props;
-        console.log(showingPosts)
         return (
             <div>
                 <Spin
@@ -31,15 +27,19 @@ class Home extends React.Component {
                     initLoad={isInitLoad}
                     loading={newPosts.isFetching}
                     loadFail={newPosts.isFetchFail}
+                    onClick={this.loadPosts.bind(this, 'newPosts')}
                 />
-                    {showingPosts.map(item => {
-                        return <Post key={item.id_str} item={item}/>;
-                    })}
+                    {
+                        showingPosts.posts
+                        .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
+                        .map(item => <Post key={item.id_str} item={item}/>)
+                    }
                 <Spin
                     type="oldPosts"
                     initLoad={isInitLoad}
                     loading={oldPosts.isFetching}
                     loadFail={oldPosts.isFetchFail}
+                    onClick={this.loadPosts.bind(this, 'oldPosts')}
                 />
             </div>
         );

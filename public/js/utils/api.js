@@ -42,6 +42,16 @@ const request = {
             })
         })
     ),
+    put: ({ url }) => (
+        new Promise((resolve, reject) => {
+            superagent
+            .put(url)
+            .use(authorizeRequest)
+            .end((err, res) => {
+                err ? reject(err) : resolve(res)
+            })
+        })
+    ),
     del: ({ url }) => (
         new Promise((resolve, reject) => {
             superagent
@@ -65,4 +75,9 @@ export const Timeline = {
     get: ({ id }) => request.get({ url: '/timeline', query: { id } })
 }
 
-
+export const Action = {
+    create: ({ action, provider, id }) => request.put({ url: `/actions/${action}/${provider}/${id}` }),
+    destroy: ({ action, provider, id }) => request.del({ url: `/actions/${action}/${provider}/${id}` }),
+    update: ({ action, provider, id }) => request.post({ url: `/actions/${action}/${provider}/${id}` }),
+    get: ({ action, provider, id }) => request.get({ url: `/actions/${action}/${provider}/${id}` })
+}

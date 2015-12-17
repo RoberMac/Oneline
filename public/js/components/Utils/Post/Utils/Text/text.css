@@ -11,3 +11,9 @@
         vertical-align: text-bottom;
     }
 }
+
+.post--quote {
+    .post-text {
+        margin-top: 0;
+    }
+}

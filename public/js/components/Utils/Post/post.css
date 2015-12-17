@@ -60,42 +60,14 @@
             color: var(--color-black);
         }
         .post {
-            &__profile {
-                top: -20px;
-
-                &__avatar {
-                    size: 40px;
-                }
-                &__fullname {
-                    margin-bottom: 7px;
-                }
-            }
             &__content {
                 top: -14px !important;
-            }
-            &__text {
-                margin-top: 0;
             }
             &__time {
                 font-size: 10px;
             }    
         }
     }
-    &--retweet__profile__avatar {
-        position: absolute -12px * * calc(50% - 72px);
-
-        img {
-            size: 24px;
-        }
-        &::after {
-            content: '';
-            position: absolute 8px -18px * *;
-            size: 13px 8px;
-            background: inline('retweet_in_tweet.png') no-repeat;
-            background-size: 13px 8px;
-        }
-    }
-    
     &--twitter {
         ::selection {
             color: var(--color-gray);

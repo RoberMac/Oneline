@@ -2,7 +2,7 @@ import React from 'react';
 
 // Components
 import Empty from '../../Empty';
-import Avatar from '../Utils/Avatar';
+import { Avatar, RetweetAvatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { WeiboMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
@@ -26,13 +26,7 @@ export default props => (
             }
         </div>
 
-        <a
-            className="post--retweet__profile__avatar"
-            href={`//weibo.com/n/${props.user.screen_name}`}
-            target="_blank"
-        >
-            <img className="post__profile__avatar" src={props.user.avatar} alt="avatar" />
-        </a>
+        <RetweetAvatar provider="weibo" {...props.user}/>
 
         <span className="cursor--pointer">
             <Retweet count={props.retweet_count} />

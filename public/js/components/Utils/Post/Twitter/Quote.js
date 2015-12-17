@@ -2,7 +2,7 @@ import React from 'react';
 
 // Components
 import Empty from '../../Empty';
-import Avatar from '../Utils/Avatar';
+import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';

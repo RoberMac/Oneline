@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Components
-import Avatar from '../Utils/Avatar';
+import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { InstagramMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';

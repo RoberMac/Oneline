@@ -2,7 +2,7 @@ import React from 'react';
 
 // Components
 import Empty from '../../Empty';
-import Avatar from '../Utils/Avatar';
+import { Avatar, RetweetAvatar} from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
@@ -26,12 +26,7 @@ export default props => (
             }
         </div>
 
-        <a
-            className="post--retweet__profile__avatar"
-            href={`/twitter/user/${props.user.screen_name}`}
-        >
-            <img className="post__profile__avatar" src={props.user.avatar} alt="avatar" />
-        </a>
+        <RetweetAvatar provider="twitter" {...props.user} />
 
         <span className="cursor--pointer">
             <Like count={props.favorite_count}/>
