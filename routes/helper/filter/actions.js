@@ -95,10 +95,10 @@ let filter = {
 
             if (lastData){
                 Object.assign(returnObj, {
-                    min_id  : lastData.id_str,
-                    min_date: Date.parse(lastData.created_at),
-                    max_id  : firstData.id_str,
-                    max_date: Date.parse(firstData.created_at)
+                    minId  : lastData.id_str,
+                    minDate: Date.parse(lastData.created_at),
+                    maxId  : firstData.id_str,
+                    maxDate: Date.parse(firstData.created_at)
                 })
             }
 

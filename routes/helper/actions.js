@@ -41,12 +41,12 @@ let Actions = {
                     endpoint2: 'direct_messages/sent',
                     tOpts: {
                         count: 200,
-                        since_id: opts.query && opts.query.min_id,
+                        since_id: opts.query && opts.query.minId,
                         include_entities: true
                     },
                     tOpts2: {
                         count: 200,
-                        since_id: opts.query && opts.query.min_id,
+                        since_id: opts.query && opts.query.minId,
                         include_entities: true
                     },
                     handleActionFunc: (data1, data2) => {
@@ -57,14 +57,14 @@ let Actions = {
 
                         data = {
                             data    : data1.data.concat(data2.data),
-                            min_id  : (data1.min_date < data2.min_date
-                                            ? data1.min_id
-                                        : data2.min_id) || data1.min_id || data2.min_id,
-                            min_date: Math.min(data1.min_date, data2.min_date) || undefined,
-                            max_id  : (data1.max_date > data2.max_date 
-                                            ? data1.max_id
-                                        : data2.max_id) || data1.max_id || data2.max_id,
-                            max_date: Math.max(data1.max_date, data2.max_date) || undefined
+                            minId  : (data1.minDate < data2.minDate
+                                            ? data1.minId
+                                        : data2.minId) || data1.minId || data2.minId,
+                            minDate: Math.min(data1.minDate, data2.minDate) || undefined,
+                            maxId  : (data1.maxDate > data2.maxDate 
+                                            ? data1.maxId
+                                        : data2.maxId) || data1.maxId || data2.maxId,
+                            maxDate: Math.max(data1.maxDate, data2.maxDate) || undefined
                         }
 
                         return { data: data }
@@ -223,7 +223,7 @@ let Actions = {
                     endpoint: 'statuses/mentions_timeline',
                     tOpts: Object.assign({}, {
                         count: 200,
-                        since_id: opts.query.min_id,
+                        since_id: opts.query.minId,
                         include_entities: false,
                         contributor_details: false
                     }),
@@ -239,7 +239,7 @@ let Actions = {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/user_timeline',
                     tOpts: Object.assign(user, {
-                        max_id: opts.query && opts.query.max_id,
+                        maxId: opts.query && opts.query.maxId,
                         count: 20,
                         trim_user: false,
                         exclude_replies: false,
@@ -262,8 +262,8 @@ let Actions = {
                     include_entities: false
                 };
 
-                if (opts.query.max_id){
-                    Object.assign(tOpts, { max_id: opts.query.max_id })
+                if (opts.query.maxId){
+                    Object.assign(tOpts, { maxId: opts.query.maxId })
                 }
 
                 return {
@@ -271,7 +271,7 @@ let Actions = {
                     endpoint: 'search/tweets',
                     tOpts: tOpts,
                     handleActionFunc: data => {
-                        if (opts.query.max_id){
+                        if (opts.query.maxId){
                             data[0].statuses.splice(0, 1)
                         }
 
@@ -338,7 +338,7 @@ let Actions = {
                 let actionObj = {
                     triggerActionType: 'basic',
                     endpoint: 'user_media_recent',
-                    iOpts: { max_id: opts.query.max_id },
+                    iOpts: { maxId: opts.query.maxId },
                     handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data })
                 }
 
@@ -360,7 +360,7 @@ let Actions = {
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'location_media_recent',
-                    iOpts: { max_id: opts.query.max_id },
+                    iOpts: { maxId: opts.query.maxId },
                     handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data })
                 }
             }
@@ -370,9 +370,9 @@ let Actions = {
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'tag_media_recent',
-                    iOpts: { max_tag_id: opts.query.max_id && opts.query.max_id.split('_')[0] },
+                    iOpts: { max_tag_id: opts.query.maxId && opts.query.maxId.split('_')[0] },
                     handleActionFunc: data => {
-                        if (opts.query.max_id){
+                        if (opts.query.maxId){
                             data[0].splice(0, 1)
                         }
 
@@ -497,7 +497,7 @@ let Actions = {
                         access_token: opts.token,
                         uid: opts.id,
                         count: 20,
-                        max_id: opts.query && opts.query.max_id
+                        maxId: opts.query && opts.query.maxId
                     },
                     handleActionFunc: data => {
                         data.statuses.splice(0, 1)
@@ -535,8 +535,8 @@ let Actions = {
                     long: opts.id.split('_')[1]
                 }
 
-                if (opts.query.max_id){
-                    Object.assign(wOpts, { endtime: opts.query.max_id.slice(0, -3) })
+                if (opts.query.maxId){
+                    Object.assign(wOpts, { endtime: opts.query.maxId.slice(0, -3) })
                 }
 
                 return {
@@ -544,7 +544,7 @@ let Actions = {
                     endpoint: 'place/nearby_timeline',
                     wOpts: wOpts,
                     handleActionFunc: data => {
-                        if (opts.query.max_id){
+                        if (opts.query.maxId){
                             data.statuses.splice(0, 1)
                         }
 

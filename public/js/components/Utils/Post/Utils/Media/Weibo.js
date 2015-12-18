@@ -18,8 +18,8 @@ class LargeImg extends React.Component {
         const elem = this.refs.largeImg;
         const offsetX = e.offsetX;
         const offsetWidth = elem.offsetWidth;
-        const preCursorBound = offsetWidth * 1 / 3;
-        const nextCursorBound = offsetWidth * 2 / 3;
+        const preCursorBound = offsetWidth * 2 / 5;
+        const nextCursorBound = offsetWidth * 3 / 5;
 
         if (offsetX < preCursorBound){
             elem.classList.remove('cursor--next', 'cursor--zoomOut')

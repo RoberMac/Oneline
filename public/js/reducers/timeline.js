@@ -15,11 +15,7 @@ let initialState = {
     },
     isInitLoad: true,
     showingPosts: {
-        posts: [],
-        maxId: {},
-        maxDate: {},
-        minId: {},
-        minDate: {}
+        posts: []
     },
     allPosts: {
         posts: [],
@@ -48,7 +44,7 @@ export default (state = initialState, action) => {
                 isInitLoad: { $set: false },
                 showingPosts: { $set: action.payload.showingPosts },
                 allPosts: { $set: action.payload.allPosts },
-                timePointer: { $set: state.timePointer - state.timeRange }
+                timePointer: { $set: action.payload.timePointer }
             })
             break;
         case FETCH_FAIL:

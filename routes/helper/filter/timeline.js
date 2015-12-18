@@ -117,10 +117,10 @@ let filter = {
 
         if (lastData){
             Object.assign(returnObj, {
-                min_id  : lastData.id_str,
-                min_date: Date.parse(lastData.created_at),
-                max_id  : firstData.id_str,
-                max_date: Date.parse(firstData.created_at)
+                minId  : lastData.id_str,
+                minDate: Date.parse(lastData.created_at),
+                maxId  : firstData.id_str,
+                maxDate: Date.parse(firstData.created_at)
             })
         }
 
@@ -184,10 +184,10 @@ let filter = {
 
         if (lastData){
             Object.assign(returnObj, {
-                min_id  : lastData.id,
-                min_date: Date.parse(new Date(lastData.created_time * 1000)),
-                max_id  : firstData.id,
-                max_date: Date.parse(new Date(firstData.created_time * 1000))
+                minId  : lastData.id,
+                minDate: Date.parse(new Date(lastData.created_time * 1000)),
+                maxId  : firstData.id,
+                maxDate: Date.parse(new Date(firstData.created_time * 1000))
             })
         }
 
@@ -293,10 +293,10 @@ let filter = {
 
         if (lastData){
             Object.assign(returnObj, {
-                min_id  : lastData.idstr,
-                min_date: Date.parse(lastData.created_at),
-                max_id  : firstData.idstr,
-                max_date: Date.parse(firstData.created_at)
+                minId  : lastData.idstr,
+                minDate: Date.parse(lastData.created_at),
+                maxId  : firstData.idstr,
+                maxDate: Date.parse(firstData.created_at)
             })
         }
 
