@@ -5,26 +5,27 @@ import './spin.css';
 
 export default class Spin extends React.Component {
     render() {
-        const { type, initLoad, loading, loadFail, provider } = this.props;
+        const { type, initLoad, loading, loadFail, unreadCount, provider } = this.props;
+        const isNewPosts = type === 'newPosts';
         const wrapperClass = classNames({
             'spin': true,
             'spin--initLoad': initLoad,
-            'spin--new': type === 'newPosts',
-            'spin--old': type === 'oldPosts'
+            'spin--new': isNewPosts,
+            'spin--old': !isNewPosts
         });
         const btnClass = classNames({
             'spin__btn spin__btn--count animate--faster': true,
             [`${provider ? 'spin__btn--' + provider : ''}`]: true,
             'spin__btn--loading': loading,
             'spin__btn--loading--fail': loadFail,
-            'spin__btn--new': type === 'newPosts',
-            'spin__btn--old': type === 'oldPosts'
+            'spin__btn--new': isNewPosts,
+            'spin__btn--old': !isNewPosts
         })
         return (
             <div className={wrapperClass}>
                 <button
                     className={btnClass}
-                    data-count=""
+                    data-count={unreadCount <= 0 ? '' : unreadCount}
                     type="button"
                     onClick={this.props.onClick}
                 >

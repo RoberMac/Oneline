@@ -12,11 +12,20 @@ class Home extends React.Component {
         super(props)
         this.loadPosts = this.loadPosts.bind(this)
     }
-    loadPosts(postsType) {
-        this.props.fetchPosts({ postsType })
+    loadPosts({ postsType, isAutoFetch }) {
+        return this.props.fetchPosts({ postsType, isAutoFetch })
     }
     componentDidMount() {
-        this.loadPosts('newPosts')
+        this.loadPosts({ postsType: 'newPosts' })
+        .then(() => {
+            // Register Auto Fetch
+            this.autoFetchIntervalId = setInterval( () => {
+                this.loadPosts({ postsType: 'newPosts', isAutoFetch: true })
+            }, 1000 * 60 * 3)
+        })
+    }
+    componentWillUnmount() {
+        clearInterval(this.autoFetchIntervalId)
     }
     render() {
         const { newPosts, oldPosts, showingPosts, isInitLoad } = this.props;
@@ -27,10 +36,11 @@ class Home extends React.Component {
                     initLoad={isInitLoad}
                     loading={newPosts.isFetching}
                     loadFail={newPosts.isFetchFail}
-                    onClick={this.loadPosts.bind(this, 'newPosts')}
+                    unreadCount={newPosts.unreadCount}
+                    onClick={this.loadPosts.bind(this, { postsType:'newPosts' })}
                 />
                     {
-                        showingPosts.posts
+                        showingPosts
                         .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
                         .map(item => <Post key={item.id_str} item={item}/>)
                     }
@@ -39,7 +49,8 @@ class Home extends React.Component {
                     initLoad={isInitLoad}
                     loading={oldPosts.isFetching}
                     loadFail={oldPosts.isFetchFail}
-                    onClick={this.loadPosts.bind(this, 'oldPosts')}
+                    unreadCount={oldPosts.unreadCount}
+                    onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
                 />
             </div>
         );

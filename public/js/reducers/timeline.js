@@ -14,9 +14,7 @@ let initialState = {
         unreadCount: 0
     },
     isInitLoad: true,
-    showingPosts: {
-        posts: []
-    },
+    showingPosts: [],
     allPosts: {
         posts: [],
         maxId: {},
@@ -40,7 +38,10 @@ export default (state = initialState, action) => {
             break;
         case RECEIVE_POSTS:
             return update(state, {
-                [action.payload.postsType]: { isFetching: { $set: false } },
+                [action.payload.postsType]: {
+                    isFetching: { $set: false },
+                    unreadCount: { $set: action.payload.unreadCount }
+                },
                 isInitLoad: { $set: false },
                 showingPosts: { $set: action.payload.showingPosts },
                 allPosts: { $set: action.payload.allPosts },

@@ -4,40 +4,48 @@ import { Timeline } from '../utils/api';
 
 export const determineFetchFrom = ({
     postsType,
+    isAutoFetch,
+
     activeProviders,
+
     newPosts,
     allPosts,
     timePointer,
     timeRange
 }) => {
 
-    let fetchFrom, invalidProviders;
+    return new Promise((resolve, reject) => {
+        let fetchFrom, invalidProviders;
 
-    switch (postsType) {
-        case 'newPosts':
-            const hasNewPostsInLocal = newPosts.unreadCount > 0;
-            fetchFrom = hasNewPostsInLocal ? 'local' : 'remote';
-            invalidProviders = hasNewPostsInLocal ? [] : activeProviders;
-            break;
-        case 'oldPosts':
-            invalidProviders = activeProviders.filter(
-                provider => timePointer - allPosts.minDate[provider] < timeRange
-            );
-            fetchFrom = invalidProviders.length <= 0 ? 'local' : 'remote';
-            break;
-    }
+        switch (postsType) {
+            case 'newPosts':
+                const hasNewPostsInLocal = newPosts.unreadCount > 0;
+                const isFetchFromLocal = hasNewPostsInLocal && !isAutoFetch;
 
-    return { fetchFrom, invalidProviders };
+                fetchFrom = isFetchFromLocal ? 'local' : 'remote';
+                invalidProviders = isFetchFromLocal ? [] : activeProviders;
+                break;
+            case 'oldPosts':
+                invalidProviders = activeProviders.filter(
+                    provider => timePointer - allPosts.minDate[provider] < timeRange
+                );
+                fetchFrom = invalidProviders.length <= 0 ? 'local' : 'remote';
+                break;
+        }
+
+        resolve({ fetchFrom, invalidProviders });
+    })
 }
 
-export const fetchFromLocal = ({ postsType, allPosts, timePointer, timeRange }) => {
+export const fetchFromLocal = ({ postsType, showingPosts, allPosts, timePointer, timeRange }) => {
     return new Promise((resolve, reject) => {
-        const { newShowingPosts, newTimePointer } = postsType === 'newPosts'
+        const { newUnreadCount, newShowingPosts, newTimePointer } = postsType === 'newPosts'
             ? extractFreshPosts({ allPosts, timeRange })
-        : extractOldPosts({ allPosts, timePointer, timeRange });
+        : extractOldPosts({ showingPosts, allPosts, timePointer, timeRange });
 
         resolve({
             postsType,
+            unreadCount: newUnreadCount,
             showingPosts: newShowingPosts,
             allPosts,
             timePointer: newTimePointer
@@ -47,11 +55,16 @@ export const fetchFromLocal = ({ postsType, allPosts, timePointer, timeRange }) 
 
 export const fetchFromRemote = ({
     postsType,
+    isAutoFetch,
+
+    invalidProviders,
+
+    newPosts,
     isInitLoad,
+    showingPosts,
     allPosts,
     timePointer,
-    timeRange,
-    invalidProviders
+    timeRange
 }) => {
 
     return new Promise((resolve, reject) => {
@@ -60,6 +73,15 @@ export const fetchFromRemote = ({
         Timeline
         .get({ id: isInitLoad ? null : getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) })
         .then(res => {
+            // Reject for Wrong Response
+            if (!res.body.data) {
+                reject(new Error('[FetchFail]: WTF Responses?'))
+                return;
+            } else if (res.body.data && res.body.data.length <= 0 && isFetchNewPosts) {
+                reject(new Error('[FetchFail]: No More Posts'))
+                return;
+            }
+            // Init Response Data
             const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res.body : allPosts;
             const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res.body : allPosts;
             const newAllPosts = {
@@ -69,62 +91,68 @@ export const fetchFromRemote = ({
                 minId,
                 minDate
             };
-            const { newShowingPosts, newTimePointer } = isFetchNewPosts
-                ? extractFreshPosts({ allPosts: newAllPosts, timeRange })
-            : extractOldPosts({ allPosts: newAllPosts, timePointer, timeRange });
+            // Store and dispatch
+            if (isAutoFetch){
+                resolve({
+                    postsType,
+                    unreadCount: newPosts.unreadCount + res.body.data.length,
+                    showingPosts,
+                    allPosts: newAllPosts,
+                    timePointer
+                })
+            } else {
+                const { newUnreadCount, newShowingPosts, newTimePointer } = isFetchNewPosts
+                    ? extractFreshPosts({ allPosts: newAllPosts, timeRange })
+                : extractOldPosts({ showingPosts, allPosts: newAllPosts, timePointer, timeRange });
 
-            resolve({
-                postsType,
-                showingPosts: newShowingPosts,
-                allPosts: newAllPosts,
-                timePointer: newTimePointer
-            })
+                resolve({
+                    postsType,
+                    unreadCount: newUnreadCount,
+                    showingPosts: newShowingPosts,
+                    allPosts: newAllPosts,
+                    timePointer: newTimePointer
+                })
+            }
         })
         .catch(err => {
-            console.error('FETCH_FAIL', err)
             reject(err)
         })
     })
 }
 
-/**
- * Helepr
- *
- */
+
 // 提取最新 30 分鐘內的貼文
 function extractFreshPosts({ allPosts, timeRange }) {
     const NOW = Date.now();
 
-    // TODO: updateOldPostsCount
-
     return {
-        newShowingPosts: {
-            posts: allPosts.posts.filter(post => NOW - post.created_at < timeRange)
-        },
-        newTimePointer: NOW
+        newUnreadCount: 0,
+        newShowingPosts: allPosts.posts.filter(post => NOW - post.created_at < timeRange),
+        newTimePointer: NOW - timeRange,
     };
 }
 // 提取下一個（非空） 30 分鐘內的貼文
-function extractOldPosts({ allPosts, timePointer, timeRange }) {
+function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
     let isEmpty = true;
-    let newShowingsPosts = { posts: [] };
+    let newShowingPosts = [];
     let newTimePointer = timePointer;
 
     while (isEmpty){
-        newShowingsPosts.posts = allPosts.posts.filter(posts => {
-            var timeDiff = timePointer - posts.created_at;
+        newShowingPosts = allPosts.posts.filter(post => {
+            let timeDiff = newTimePointer - post.created_at;
 
             return 0 < timeDiff && timeDiff <= timeRange;;
         })
 
         newTimePointer -= timeRange
 
-        if (newShowingsPosts.posts.length > 0){
+        if (newShowingPosts.length > 0){
             isEmpty = false
         }
     }
 
-    // TODO: updateOldPostsCount
+    newShowingPosts = sortPosts(showingPosts.concat(newShowingPosts))
+    newTimePointer = newShowingPosts[newShowingPosts.length - 1].created_at
 
     return {
         newShowingPosts,
@@ -144,6 +172,6 @@ function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
 
     return queryIdStr;
 }
-// function sortPosts(posts) {
-//     return posts.sort((a, b) => a.created_at < b.created_at ? 1 : -1)
-// }
+function sortPosts(posts) {
+    return posts.sort((a, b) => a.created_at < b.created_at ? 1 : -1)
+}
