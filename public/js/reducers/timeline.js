@@ -1,32 +1,9 @@
 import update from 'react-addons-update'
 
-import { FETCH_START, RECEIVE_POSTS, FETCH_FAIL }  from '../actions/timeline';
+import { FETCH_START, RECEIVE_POSTS, FETCH_FAIL, INIT_STATE }  from '../actions/timeline';
+import { initTimelineState } from '../store/initState';
 
-let initialState = {
-    newPosts: {
-        isFetching: false,
-        isFetchFail: false,
-        unreadCount: 0
-    },
-    oldPosts: {
-        isFetching: false,
-        isFetchFail: false,
-        unreadCount: 0
-    },
-    isInitLoad: true,
-    showingPosts: [],
-    allPosts: {
-        posts: [],
-        maxId: {},
-        maxDate: {},
-        minId: {},
-        minDate: {}
-    },
-    timePointer: Date.now(), // !
-    timeRange: 1800000,
-};
-
-export default (state = initialState, action) => {
+export default (state, action) => {
     switch (action.type){
         case FETCH_START:
             return update(state, {
@@ -56,8 +33,9 @@ export default (state = initialState, action) => {
                 }
             })
             break;
-        default: 
-            return state;
+        case INIT_STATE:
+        default:
+            return initTimelineState();
             break;
     }
 }

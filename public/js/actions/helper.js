@@ -39,7 +39,8 @@ export const determineFetchFrom = ({
 
 export const fetchFromLocal = ({ postsType, showingPosts, allPosts, timePointer, timeRange }) => {
     return new Promise((resolve, reject) => {
-        const { newUnreadCount, newShowingPosts, newTimePointer } = postsType === 'newPosts'
+        const isFetchNewPosts = postsType === 'newPosts';
+        const { newUnreadCount, newShowingPosts, newTimePointer } = isFetchNewPosts
             ? extractFreshPosts({ allPosts, timeRange })
         : extractOldPosts({ showingPosts, allPosts, timePointer, timeRange });
 
@@ -50,6 +51,8 @@ export const fetchFromLocal = ({ postsType, showingPosts, allPosts, timePointer,
             allPosts,
             timePointer: newTimePointer
         })
+
+        isFetchNewPosts ? setTitleUnreadCount(newUnreadCount) : null
     })
 }
 
@@ -77,7 +80,7 @@ export const fetchFromRemote = ({
             if (!res.body.data) {
                 reject(new Error('[FetchFail]: WTF Responses?'))
                 return;
-            } else if (res.body.data && res.body.data.length <= 0 && isFetchNewPosts) {
+            } else if (res.body.data && res.body.data.length <= 0 && !isFetchNewPosts) {
                 reject(new Error('[FetchFail]: No More Posts'))
                 return;
             }
@@ -93,13 +96,16 @@ export const fetchFromRemote = ({
             };
             // Store and dispatch
             if (isAutoFetch){
+                const newUnreadCount = newPosts.unreadCount + res.body.data.length;
                 resolve({
                     postsType,
-                    unreadCount: newPosts.unreadCount + res.body.data.length,
+                    unreadCount: newUnreadCount,
                     showingPosts,
                     allPosts: newAllPosts,
                     timePointer
                 })
+
+                setTitleUnreadCount(newUnreadCount)
             } else {
                 const { newUnreadCount, newShowingPosts, newTimePointer } = isFetchNewPosts
                     ? extractFreshPosts({ allPosts: newAllPosts, timeRange })
@@ -112,6 +118,8 @@ export const fetchFromRemote = ({
                     allPosts: newAllPosts,
                     timePointer: newTimePointer
                 })
+
+                isFetchNewPosts ? setTitleUnreadCount(newUnreadCount) : null
             }
         })
         .catch(err => {
@@ -155,6 +163,7 @@ function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
     newTimePointer = newShowingPosts[newShowingPosts.length - 1].created_at
 
     return {
+        newUnreadCount: 0,
         newShowingPosts,
         newTimePointer
     };
@@ -174,4 +183,30 @@ function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
 }
 function sortPosts(posts) {
     return posts.sort((a, b) => a.created_at < b.created_at ? 1 : -1)
+}
+// 標題未讀數提醒
+function setTitleUnreadCount(count) {
+    const N_MAP = {
+        '0': '⁰',
+        '1': '¹',
+        '2': '²',
+        '3': '³',
+        '4': '⁴',
+        '5': '⁵',
+        '6': '⁶',
+        '7': '⁷',
+        '8': '⁸',
+        '9': '⁹'
+    };
+    let count_str = '';
+
+    if (count > 0 && count % 1 === 0){
+        let _count = (~~count).toString().split('');
+
+        _count.forEach(function (numStr){
+            count_str += N_MAP[numStr]
+        })
+    }
+
+    document.title = '｜'+ count_str;
 }

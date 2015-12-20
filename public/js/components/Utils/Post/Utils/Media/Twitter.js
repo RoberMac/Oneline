@@ -1,12 +1,9 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import classNames from 'classnames';
 
 import { handleImageError, lazySize } from './helper.js';
 
 // Components
-import Icon from '../../../Icon';
-import Empty from '../../../Empty';
 import ViewOriginal from './Utils/ViewOriginal';
 import Video from './Utils/Video';
 

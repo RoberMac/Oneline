@@ -1,4 +1,4 @@
-@import "../common/base.css";
+@import "../../common/base.css";
 
 .spin {
     position: absolute * * * calc(50% - 35px);

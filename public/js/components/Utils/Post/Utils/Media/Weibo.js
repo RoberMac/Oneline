@@ -5,7 +5,6 @@ import { handleImageError, fuckLongWeibo } from './helper.js';
 
 // Components
 import Icon from '../../../Icon';
-import Empty from '../../../Empty';
 import ViewOriginal from './Utils/ViewOriginal';
 
 class LargeImg extends React.Component {
@@ -134,7 +133,7 @@ export default class Media extends React.Component {
                         })}
                         </div>
                     )
-                : <Empty />
+                : null
                 }
 
                 { largeImgSrc 
@@ -147,7 +146,7 @@ export default class Media extends React.Component {
                                 zoomOut={this.zoomOut}
                             /> 
                         )
-                    : <Empty />
+                    : null
                 }
             </div>
         );

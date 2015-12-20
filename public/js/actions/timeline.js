@@ -7,6 +7,10 @@ const postsRecive = (payload) => ({ type: RECEIVE_POSTS, payload });
 export const FETCH_FAIL = 'FETCH_FAIL'
 const fetchFail = (payload) => ({ type: FETCH_FAIL, payload });
 
+export const INIT_STATE = 'INIT_STATE'
+export const initState = () => ({ type: INIT_STATE });
+
+
 /**
  * Fetch Posts
  *

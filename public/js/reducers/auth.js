@@ -1,16 +1,9 @@
 import update from 'react-addons-update'
 
 import { UPDATE_TOKEN }  from '../actions/auth';
-import { getActiveProviders } from '../utils/tokenHelper';
+import { initAuthState } from '../store/initState';
 
-let initialState = {
-    providers: ['twitter', 'instagram', 'weibo'],
-    activeProviders: getActiveProviders(),
-    tokenList: localStorage.getItem('tokenList')
-};
-
-
-export default (state = initialState, action) => {
+export default (state, action) => {
     switch (action.type){
         case UPDATE_TOKEN:
             return update(state, {
@@ -19,7 +12,7 @@ export default (state = initialState, action) => {
             })
             break;
         default: 
-            return state;
+            return initAuthState();
             break;
     }
 }

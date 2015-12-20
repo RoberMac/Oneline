@@ -1,7 +1,6 @@
 import React from 'react';
 
 // Components
-import Empty from '../../Empty';
 import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { WeiboMedia } from '../Utils/Media';
@@ -22,7 +21,7 @@ export default props => (
             {
                 props.media && props.type === 'tweet' && props.media.length > 0
                     ? <WeiboMedia media={props.media} />
-                : <Empty />
+                : null
             }
         </div>
 

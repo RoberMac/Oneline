@@ -7,7 +7,6 @@ import { handleImageError, lazySize, calcDegree } from './helper.js';
 
 // Components
 import Icon from '../../../Icon';
-import Empty from '../../../Empty';
 import ViewOriginal from './Utils/ViewOriginal';
 import Video from './Utils/Video';
 
@@ -63,7 +62,7 @@ class UsersInPhoto extends React.Component {
                 );
             })
         } else {
-            userTags = <Empty />
+            userTags = null
         }
 
         return (
@@ -102,7 +101,7 @@ class Image extends React.Component {
                 {
                     users_in_photo
                         ? <UsersInPhoto users_in_photo={users_in_photo} {...this.state}/>
-                    : <Empty />
+                    : null
                 }
             </div>
         );

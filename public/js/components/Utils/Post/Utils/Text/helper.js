@@ -2,9 +2,9 @@
 const _linkify = (text, provider) => {
     if (!text) return;
 
-    var _text = text.replace(/(?:https?\:\/\/)+(?![^\s]*?")([\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?/ig, function(url) {
-        var wrap = document.createElement('div');
-        var anch = document.createElement('a');
+    let _text = text.replace(/(?:https?\:\/\/)+(?![^\s]*?")([\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?/ig, function(url) {
+        let wrap = document.createElement('div');
+        let anch = document.createElement('a');
         anch.href = url;
         anch.target = "_blank";
         anch.innerHTML = url;
@@ -39,6 +39,42 @@ const _linkify = (text, provider) => {
 
     return _text;
 }
+// via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L57
+const _weiboEmotify = (text) => {
+    if (!text) return;
+    const emotionsData = JSON.parse(window.localStorage.getItem('weiboEmotions'));
+
+    let _text = text.replace(/\[[\u4e00-\u9fa5\w]+\]/g, str => {
+        /**
+         * Key Structure
+         *
+         * [key] -> key
+         *
+         */
+        let key = str.replace(/[\[\]]/g, '');
+        let _id = emotionsData[key];
+
+        if (!_id) return str;
+
+        /**
+         * URL Structure
+         *
+         * 1) Prefix (Static): http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/
+         * 2) ID
+         * 3) Type: '+' -> '_thumb' | '-' -> '_org' | '@' -> ''
+         * 4) Suffix: '?' -> '.png' | '.gif'
+         *
+         */
+        const PREFIX = 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/';
+        const ID     = _id.replace(/\-|\+|\@/g, '/').replace('?', '');
+        const TYPE   = _id.indexOf('-') > 0 ? '_org' : _id.indexOf('+') > 0 ? '_thumb' : '';
+        const SUFFIX = _id.indexOf('?') > 0 ? '.png' : '.gif';
+
+        return `<img text="${str}" alt="${str}" src="${PREFIX}${ID}${TYPE}${SUFFIX}">`;
+    });
+
+    return _text || '';
+}
 
 
 // Export
@@ -46,7 +82,7 @@ export const linkify = (text, { provider }) => {
     return _linkify(text, provider);
 }
 export const weiboEmotify = text => {
-    return text;
+    return _weiboEmotify(text)
 }
 export const trimSuffixLink = text => {
     const suffixLink = /(?:https?\:\/\/)+(?![^\s]*?")([\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?$/ig

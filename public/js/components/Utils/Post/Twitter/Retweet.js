@@ -1,7 +1,6 @@
 import React from 'react';
 
 // Components
-import Empty from '../../Empty';
 import { Avatar, RetweetAvatar} from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { TwitterMedia } from '../Utils/Media';
@@ -22,7 +21,7 @@ export default props => (
             {
                 props.media && props.media.length > 0
                     ? <TwitterMedia media={props.media} />
-                : <Empty />
+                : null
             }
         </div>
 

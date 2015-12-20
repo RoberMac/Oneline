@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 
-import { fetchPosts } from '../../actions/timeline';
+import { initState, fetchPosts } from '../../actions/timeline';
+import DependencyLoader from './loader';
 
 // Component
 import Post from '../Utils/Post';
@@ -10,13 +10,19 @@ import Spin from '../Utils/Spin';
 class Home extends React.Component {
     constructor (props){
         super(props)
+        this.state = { isDependenciesLoaded: false }
         this.loadPosts = this.loadPosts.bind(this)
     }
     loadPosts({ postsType, isAutoFetch }) {
         return this.props.fetchPosts({ postsType, isAutoFetch })
     }
-    componentDidMount() {
-        this.loadPosts({ postsType: 'newPosts' })
+    componentWillMount() {
+        const { activeProviders, isInitLoad } = this.props;
+        DependencyLoader(activeProviders)
+        .then(() => this.setState({ isDependenciesLoaded: true }))
+
+        this.props.initState()
+        isInitLoad && this.loadPosts({ postsType: 'newPosts' })
         .then(() => {
             // Register Auto Fetch
             this.autoFetchIntervalId = setInterval( () => {
@@ -29,27 +35,24 @@ class Home extends React.Component {
     }
     render() {
         const { newPosts, oldPosts, showingPosts, isInitLoad } = this.props;
+        const { isDependenciesLoaded } = this.state;
         return (
             <div>
                 <Spin
                     type="newPosts"
-                    initLoad={isInitLoad}
-                    loading={newPosts.isFetching}
-                    loadFail={newPosts.isFetchFail}
-                    unreadCount={newPosts.unreadCount}
-                    onClick={this.loadPosts.bind(this, { postsType:'newPosts' })}
+                    initLoad={isInitLoad && isDependenciesLoaded}
+                    {...newPosts}
+                    onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
                 />
                     {
-                        showingPosts
+                        isDependenciesLoaded && showingPosts
                         .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
                         .map(item => <Post key={item.id_str} item={item}/>)
                     }
                 <Spin
                     type="oldPosts"
-                    initLoad={isInitLoad}
-                    loading={oldPosts.isFetching}
-                    loadFail={oldPosts.isFetchFail}
-                    unreadCount={oldPosts.unreadCount}
+                    initLoad={isInitLoad && isDependenciesLoaded}
+                    {...oldPosts}
                     onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
                 />
             </div>
@@ -59,11 +62,17 @@ class Home extends React.Component {
 
 // Export
 export default connect(
-    state => ({
-        newPosts: state.timeline.newPosts,
-        oldPosts: state.timeline.oldPosts,
-        showingPosts: state.timeline.showingPosts,
-        isInitLoad: state.timeline.isInitLoad
-    }),
-    { fetchPosts }
+    state => {
+        const { activeProviders } = state.auth;
+        const { newPosts, oldPosts, isInitLoad, showingPosts } = state.timeline;
+        return {
+            activeProviders,
+
+            newPosts,
+            oldPosts,
+            isInitLoad,
+            showingPosts
+        }
+    },
+    { initState, fetchPosts }
 )(Home)

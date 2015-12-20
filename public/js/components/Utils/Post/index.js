@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 
 import './post.css';
 
@@ -28,7 +27,7 @@ const selectPost = {
 
 export default (props) => {
     const { provider, type } = props.item;
-    const Post = selectPost[provider][type];
+    const SelectedPost = selectPost[provider][type];
 
-    return <Post {...props.item}/>
+    return <SelectedPost {...props.item}/>
 }

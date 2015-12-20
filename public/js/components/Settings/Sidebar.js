@@ -5,7 +5,6 @@ import classNames from 'classnames';
 
 // Components
 import Icon from '../Utils/Icon';
-import Empty from '../Utils/Empty';
 const sidebarBtnClass = classNames('menu__button', 'btn', 'animate--faster');
 
 const LeftSidebar = ({ activeProviders, location }) => {
@@ -13,7 +12,7 @@ const LeftSidebar = ({ activeProviders, location }) => {
     const type = activeProviders.length <= 0 ? 'rachael' : 'deckard';
 
     return isPopup
-        ? <Empty />
+        ? null
     : (
         <Link to={`/settings/replicant/${type}`}>
             <span className={sidebarBtnClass}>
@@ -26,7 +25,7 @@ const RightSidebar = ({ activeProviders, location }) => {
     const isPopup = !/settings$/.test(location.pathname);
 
     return activeProviders.length <= 0 || isPopup
-        ? <Empty />
+        ? null
     : (
         <Link to='/'>
             <span className={sidebarBtnClass}>

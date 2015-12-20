@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import './app.css';
 
+import ScrollToTop from '../Utils/ScrollToTop';
 export default ({ location, main, leftSidebar, rightSidebar }) => {
     const isHome = !/^\/settings/.test(location.pathname);
     const mainClass = classNames({
@@ -20,6 +21,8 @@ export default ({ location, main, leftSidebar, rightSidebar }) => {
 
     return (
         <div>
+            { isHome ? <ScrollToTop target=".spin--new" container=".oneline" duration={700} /> : null }
+
             <div className={mainClass}>
                 {main}
             </div>
