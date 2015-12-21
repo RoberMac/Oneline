@@ -10,12 +10,9 @@ const filterUtils = require('./utils');
 let filter = {
     twitter: data => {
         let cache = [];
-        let _now  = Date.now();
 
         for (let item of data){
             let _created_at = Date.parse(item.created_at);
-
-            if (_created_at > _now) return;
 
             /**
              * Tweet / Reply
@@ -128,12 +125,9 @@ let filter = {
     },
     instagram: data => {
         let cache = [];
-        let _now  = Date.now();
 
         for (let item of data){
             let _created_at = Date.parse(new Date(item.created_time * 1000));
-
-            if (_created_at > _now) return;
 
             let igPost = {
                 provider: 'instagram',
@@ -195,12 +189,9 @@ let filter = {
     },
     weibo: data => {
         let cache = [];
-        let _now  = Date.now();
 
         for (let item of data){
             let _created_at = Date.parse(item.created_at);
-
-            if (_created_at > _now) return;
 
             /**
              * Tweet / Reply
