@@ -3,7 +3,10 @@ import update from 'react-addons-update'
 import { UPDATE_TOKEN }  from '../actions/auth';
 import { initAuthState } from '../store/initState';
 
-export default (state, action) => {
+const initState = initAuthState();
+
+export default (state = initState, action) => {
+    console.log()
     switch (action.type){
         case UPDATE_TOKEN:
             return update(state, {
@@ -11,8 +14,7 @@ export default (state, action) => {
                 tokenList: { $set: action.tokenList }
             })
             break;
-        default: 
-            return initAuthState();
-            break;
+        default:
+            return state;
     }
 }

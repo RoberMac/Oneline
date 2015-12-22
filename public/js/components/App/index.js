@@ -11,12 +11,12 @@ export default ({ location, main, leftSidebar, rightSidebar }) => {
         'oneline--timeline': isHome
     });
     const leftSidebarClass = classNames({
-        'menu menu--left vertically_center animate--faster': true,
-        'menu--timeline menu--timeline--left': isHome
+        'sidebar sidebar--left vertically_center animate--faster': true,
+        'sidebar--timeline sidebar--timeline--left': isHome
     });
     const rightSidebarClass = classNames({
-        'menu menu--right vertically_center animate--faster': true,
-        'menu--timeline menu--timeline--right': isHome 
+        'sidebar sidebar--right vertically_center animate--faster': true,
+        'sidebar--timeline sidebar--timeline--right': isHome 
     });
 
     return (

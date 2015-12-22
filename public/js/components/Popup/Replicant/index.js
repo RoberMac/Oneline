@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
-import store from '../../utils/store';
-import { Auth } from '../../utils/api';
-import { replaceTokenList } from '../../actions/auth';
+import store from '../../../utils/store';
+import { Auth } from '../../../utils/api';
+import { replaceTokenList } from '../../../actions/auth';
 
 // Components
 const replicantClass = 'replicant vertically_center';
@@ -107,7 +107,6 @@ class _Rachael extends React.Component {
 
         Auth.rachael({ code })
         .then(res => {
-            console.log(res.body)
             if (res.body.msg.length > 0){
                 res.body.msg.forEach(msg => alert(msg))
             } else {
@@ -123,7 +122,7 @@ class _Rachael extends React.Component {
 
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
             this.setStateTemporarily({ isErrorCode: true }, 500)
         })
     }

@@ -3,7 +3,10 @@ import update from 'react-addons-update'
 import { FETCH_START, RECEIVE_POSTS, FETCH_FAIL, INIT_STATE }  from '../actions/timeline';
 import { initTimelineState } from '../store/initState';
 
-export default (state, action) => {
+const initState = initTimelineState();
+
+export default (state = initState, action) => {
+    console.log(state,action)
     switch (action.type){
         case FETCH_START:
             return update(state, {
@@ -34,8 +37,9 @@ export default (state, action) => {
             })
             break;
         case INIT_STATE:
-        default:
-            return initTimelineState();
+            return initTimelineState();            
             break;
+        default:
+            return state;
     }
 }

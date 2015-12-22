@@ -5,11 +5,11 @@ import classNames from 'classnames';
 
 // Components
 import Icon from '../Utils/Icon';
-const menuBtnClass = classNames('menu__button', 'btn', 'animate--faster');
+const sidebarBtnClass = classNames('sidebar__button', 'btn', 'animate--faster');
 
 const ShowMenuBtn = ({ firstProvider }) => (
-    <Link to="/twitter/location/124153?x=asdsa">
-        <span className={`${menuBtnClass} icon--${firstProvider}`} type="button">
+    <Link to={`/home/${firstProvider}`}>
+        <span className={`${sidebarBtnClass} icon--${firstProvider}`} type="button">
             <svg viewBox="0 0 200 200">
                 <g fill-rule="evenodd">
                     <circle fill="#F1F1F1" cx="100" cy="100" r="100"/>
@@ -28,13 +28,13 @@ const ShowMenuBtn = ({ firstProvider }) => (
     </Link>
 );
 const HidePopupBtn= (hidePopup) => (
-    <button className={menuBtnClass} type="button" onClick="hidePopup">
+    <button className={sidebarBtnClass} type="button" onClick="hidePopup">
         <Icon viewBox="0 0 200 200" name="cancel" />
     </button>
 );
 const LeftSidebar = ({ activeProviders }) => (
     <Link to="/settings">
-        <span className={menuBtnClass}>
+        <span className={sidebarBtnClass}>
             <svg viewBox="0 0 200 200">
                 <g fill="none">
                     <circle fill="#F1F1F1" cx="100" cy="100" r="100"/>

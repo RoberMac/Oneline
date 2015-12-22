@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import Jump from '../../../libs/jump.js';
+
+import Jump from '../../../utils/jump.js';
 
 import './scroll.css';
 

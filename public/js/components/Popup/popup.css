@@ -1,6 +1,8 @@
 @import "../common/base.css";
 
-@import "./replicant.css";
+@import "./Replicant/replicant.css";
+@import "./Menu/menu.css";
+
 
 .popup {
     position: absolute 0 * *;

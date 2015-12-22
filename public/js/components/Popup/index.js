@@ -9,8 +9,8 @@ export default class Popup extends React.Component {
         this.handleKeyDown = this.handleKeyDown.bind(this)
     }
     hidePopup (){
-        const isSettings = /settings/.test(location.pathname);
-        this.props.history.push(isSettings ? '/settings' : '/')
+        const { history, location } = this.props;
+        history.push(/settings/.test(location.pathname) ? '/settings' : '/home')
     }
     stopPropagation (e){
         e.stopPropagation()
@@ -26,6 +26,7 @@ export default class Popup extends React.Component {
     }
     render() {
         const { children } = this.props;
+        const isSettings = /settings/.test(location.pathname);
 
         return (
             <div
@@ -33,7 +34,9 @@ export default class Popup extends React.Component {
                 onClick={this.hidePopup}
             >
                 <div onClick={this.stopPropagation}>
-                    {children}
+                    {
+                        children ? children : <p>NOTChild</p>
+                    }
                 </div>
             </div>
         );

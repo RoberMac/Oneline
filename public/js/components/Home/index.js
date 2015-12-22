@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 
 import { initState, fetchPosts } from '../../actions/timeline';
@@ -17,11 +18,13 @@ class Home extends React.Component {
         return this.props.fetchPosts({ postsType, isAutoFetch })
     }
     componentWillMount() {
-        const { activeProviders, isInitLoad } = this.props;
+        const { activeProviders, isInitLoad, initState } = this.props;
+
         DependencyLoader(activeProviders)
         .then(() => this.setState({ isDependenciesLoaded: true }))
 
-        this.props.initState()
+        initState(); //BUG
+
         isInitLoad && this.loadPosts({ postsType: 'newPosts' })
         .then(() => {
             // Register Auto Fetch
@@ -34,7 +37,7 @@ class Home extends React.Component {
         clearInterval(this.autoFetchIntervalId)
     }
     render() {
-        const { newPosts, oldPosts, showingPosts, isInitLoad } = this.props;
+        const { newPosts, oldPosts, showingPosts, isInitLoad, children } = this.props;
         const { isDependenciesLoaded } = this.state;
         return (
             <div>
@@ -44,17 +47,24 @@ class Home extends React.Component {
                     {...newPosts}
                     onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
                 />
-                    {
-                        isDependenciesLoaded && showingPosts
-                        .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
-                        .map(item => <Post key={item.id_str} item={item}/>)
-                    }
+                {
+                    isDependenciesLoaded && showingPosts
+                    .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
+                    .map(item => <Post key={item.id_str} item={item}/>)
+                }
                 <Spin
                     type="oldPosts"
                     initLoad={isInitLoad && isDependenciesLoaded}
                     {...oldPosts}
                     onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
                 />
+                <ReactCSSTransitionGroup
+                    transitionName="react"
+                    transitionEnterTimeout={700}
+                    transitionLeaveTimeout={700}
+                >
+                    {children}
+                </ReactCSSTransitionGroup>
             </div>
         );
     }

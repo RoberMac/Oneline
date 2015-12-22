@@ -1,0 +1,47 @@
+@import "../../common/base.css";
+
+.menu {
+    &--row {
+        position: absolute;
+        left: calc(50% - 35px);
+
+        &-1-1 {
+            top: calc(50% - 35px);
+        }
+        &-2 {
+            &-1 {
+                top: calc(33.3% - 35px);
+            }
+            &-2 {
+                top: calc(66.7% - 35px);
+            }
+        }
+        &-3 {
+            &-1 {
+                top: calc(25% - 35px);
+            }
+            &-2 {
+                top: calc(50% - 35px);
+            }
+            &-3 {
+                top: calc(75% - 35px);
+            }
+        }
+    }
+    &__btn {
+        size: 70px;
+
+        &--switch {
+            position: absolute;
+            top: calc(50% - 35px);
+
+            &--left {
+                left: 0;
+                transform: rotate(180deg);
+            }
+            &--right {
+                right: 0;
+            }
+        }
+    }
+}
