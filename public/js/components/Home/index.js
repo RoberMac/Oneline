@@ -1,13 +1,13 @@
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 
-import { initState, fetchPosts } from '../../actions/timeline';
+import { resetState, fetchPosts } from '../../actions/timeline';
 import DependencyLoader from './loader';
 
 // Component
 import Post from '../Utils/Post';
 import Spin from '../Utils/Spin';
+import Transition from '../Utils/Transition';
 class Home extends React.Component {
     constructor (props){
         super(props)
@@ -18,12 +18,13 @@ class Home extends React.Component {
         return this.props.fetchPosts({ postsType, isAutoFetch })
     }
     componentWillMount() {
-        const { activeProviders, isInitLoad, initState } = this.props;
+        const { activeProviders, isInitLoad, resetState } = this.props;
 
         DependencyLoader(activeProviders)
         .then(() => this.setState({ isDependenciesLoaded: true }))
 
-        initState(); //BUG
+        // Reset `timePointer`
+        resetState();
 
         isInitLoad && this.loadPosts({ postsType: 'newPosts' })
         .then(() => {
@@ -34,6 +35,9 @@ class Home extends React.Component {
         })
     }
     componentWillUnmount() {
+        // Reset `isInitLoad`
+        this.props.resetState();
+        // Unregister Auto Fetch
         clearInterval(this.autoFetchIntervalId)
     }
     render() {
@@ -58,13 +62,9 @@ class Home extends React.Component {
                     {...oldPosts}
                     onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
                 />
-                <ReactCSSTransitionGroup
-                    transitionName="react"
-                    transitionEnterTimeout={700}
-                    transitionLeaveTimeout={700}
-                >
+                <Transition>
                     {children}
-                </ReactCSSTransitionGroup>
+                </Transition>
             </div>
         );
     }
@@ -84,5 +84,5 @@ export default connect(
             showingPosts
         }
     },
-    { initState, fetchPosts }
+    { resetState, fetchPosts }
 )(Home)

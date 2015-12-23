@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
@@ -8,6 +7,7 @@ import './settings.css';
 
 // Components
 import Icon from '../Utils/Icon';
+import Transition from '../Utils/Transition';
 let SocialAuthBtn = ({ provider, isActive, toggleAuth }) => {
     const soicalListClass = classNames('social-list', 'vertically_center');
     const soicalBtnClass = classNames({
@@ -69,13 +69,9 @@ class SocialAuth extends React.Component {
                         />
                     ))}
                 </div>
-                <ReactCSSTransitionGroup
-                    transitionName="react"
-                    transitionEnterTimeout={700}
-                    transitionLeaveTimeout={700}
-                >
+                <Transition>
                     {children}
-                </ReactCSSTransitionGroup>
+                </Transition>
             </div>
         );
     }

@@ -34,9 +34,7 @@ export default class Popup extends React.Component {
                 onClick={this.hidePopup}
             >
                 <div onClick={this.stopPropagation}>
-                    {
-                        children ? children : <p>NOTChild</p>
-                    }
+                    {children}
                 </div>
             </div>
         );

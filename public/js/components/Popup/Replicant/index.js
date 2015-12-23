@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 
 import store from '../../../utils/store';
 import { Auth } from '../../../utils/api';
 import { replaceTokenList } from '../../../actions/auth';
 
 // Components
+import { addClassTemporarily } from '../../../utils/dom';
 const replicantClass = 'replicant vertically_center';
 
 class _Deckard extends React.Component {
@@ -84,17 +84,7 @@ class _Deckard extends React.Component {
 class _Rachael extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { isErrorCode: false }
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.setStateTemporarily = this.setStateTemporarily.bind(this)
-    }
-    setStateTemporarily(toState, timeout) {
-        const fromState = this.state;
-
-        this.setState(toState)
-        setTimeout(() => {
-            this.setState(fromState)
-        }, timeout)
     }
     handleSubmit(e) {
         e.preventDefault()
@@ -123,19 +113,15 @@ class _Rachael extends React.Component {
         })
         .catch(err => {
             console.error(err)
-            this.setStateTemporarily({ isErrorCode: true }, 500)
+            addClassTemporarily(this.refs.rachael, 'replicant--rachael--errCode', 500)
         })
     }
     render() {
-        const rachaelInputClass = classNames({
-            'replicant--rachael': true,
-            'replicant--rachael--errCode': this.state.isErrorCode
-        });
         return (
             <div className={replicantClass}>
                 <form onSubmit={this.handleSubmit}>
                     <input
-                        className={rachaelInputClass}
+                        className="replicant--rachael"
                         type="text"
                         placeholder="80af294"
                         maxLength="7"

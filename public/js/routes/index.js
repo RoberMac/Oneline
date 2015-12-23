@@ -26,9 +26,9 @@ const SettingsComponents = {
 };
 // Popup
 import Popup from '../components/Popup';
-import { Deckard, Rachael } from '../components/Popup/Replicant';
 import { SettingsMenu, HomeMenu } from '../components/Popup/Menu';
-
+import { Deckard, Rachael } from '../components/Popup/Replicant';
+import { Action } from '../components/Popup/Action';
 
 /**
  * Export
@@ -42,7 +42,7 @@ export default (
         <Route path="home" components={HomeComponents} onEnter={redirectIfNot.Auth}>
             <Route path=":provider" component={Popup} onEnter={redirectIfNot.VaildProvider}>
                 <IndexRoute component={HomeMenu} />
-                <Route path=":action(/:id)" component={Rachael} onEnter={redirectIfNot.VaildAction} />
+                <Route path=":action(/:id)" component={Action} onEnter={redirectIfNot.VaildAction} />
             </Route>
         </Route>
 

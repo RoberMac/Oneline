@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import { Link } from 'react-router';
 
 // Components
 import Icon from '../../Utils/Icon';
+import TransitionLink from '../../Utils/TransitionLink';
 const MenuRows = ({ metadata }) => (
     <div>
     {
@@ -17,11 +17,11 @@ const MenuRows = ({ metadata }) => (
                 [`icon--${provider}`]: provider
             });
             return (
-               <Link to={link} key={icon}>
+               <TransitionLink to={link} key={icon}>
                     <span className={btnClass} type="button">
                         <Icon viewBox="0 0 200 200" name={icon} />
                     </span>
-                </Link>
+                </TransitionLink>
             );
         })
     }
@@ -59,60 +59,61 @@ const MenuSwitch = ({ currentProvider, activeProviders }) => {
                     [`icon--${provider}`]: true
                 })
                 return (
-                    <button className={btnClass} key={direction} type="button">
-                        <Icon viewBox="0 0 77 77" name="2" />
-                    </button>
+                   <TransitionLink to={`/home/${provider}`} key={direction}>
+                        <span className={btnClass} type="button">
+                            <Icon viewBox="0 0 77 77" name="2" />
+                        </span>
+                    </TransitionLink>
                 );
             })
         }
         </div>
     );
 };
+const _SettingsMenu = ({ activeProviders }) => {
+    let metadata = [];
+    if (activeProviders.length > 0){
+        metadata.push({ link: '/settings/replicant/deckard', icon: 'deckard' })
+    }
+    metadata.push({ link: '/settings/replicant/rachael', icon: 'rachael' })
+
+    return <MenuRows metadata={metadata} />;
+}
+const _HomeMenu = ({ params, activeProviders }) => {
+    let metadata;
+    switch (params.provider){
+        case 'twitter':
+            metadata = [
+                { link: '/home/twitter/write/post', provider: 'twitter', icon: 'newTweet' },
+                { link: '/home/twitter/user', provider: 'twitter', icon: 'profile' },
+                { link: '/home/twitter/notification', provider: 'twitter', icon: 'notification' }
+            ]
+            break;
+        case 'instagram':
+            metadata = [
+                { link: '/home/instagram/user', provider: 'instagram', icon: 'profile' }
+            ]
+            break;
+        case 'weibo':
+            metadata = [
+                { link: '/home/weibo/write/post', provider: 'weibo', icon: 'newTweet' },
+                { link: '/home/weibo/user', provider: 'weibo', icon: 'profile' }
+            ]
+            break
+    }
+
+    return (
+        <div>
+            <MenuRows metadata={metadata} />
+            <MenuSwitch currentProvider={params.provider} activeProviders={activeProviders}/>
+        </div>
+    );
+}
 
 // Export
-export class SettingsMenu extends React.Component {
-    render() {
-        return (
-            <MenuRows metadata={[
-                { link: '/settings/replicant/deckard', icon: 'deckard' },
-                { link: '/settings/replicant/rachael', icon: 'rachael' }
-            ]} />
-        );
-    }
-}
-class _HomeMenu extends React.Component {
-    render() {
-        const { params, activeProviders } = this.props;
-        let metadata;
-        switch (params.provider){
-            case 'twitter':
-                metadata = [
-                    { link: '/home/twitter/newTweet', provider: 'twitter', icon: 'newTweet' },
-                    { link: '/home/twitter/user', provider: 'twitter', icon: 'profile' },
-                    { link: '/home/twitter/notification', provider: 'twitter', icon: 'notification' }
-                ]
-                break;
-            case 'instagram':
-                metadata = [
-                    { link: '/home/instagram/user', provider: 'instagram', icon: 'profile' }
-                ]
-                break;
-            case 'weibo':
-                metadata = [
-                    { link: '/home/weibo/newTweet', provider: 'weibo', icon: 'newTweet' },
-                    { link: '/home/weibo/user', provider: 'weibo', icon: 'profile' }
-                ]
-                break
-        }
-
-        return (
-            <div>
-                <MenuRows metadata={metadata} />
-                <MenuSwitch currentProvider={params.provider} activeProviders={activeProviders}/>
-            </div>
-        );
-    }
-}
+export const SettingsMenu = connect(
+    state => ({ activeProviders: state.auth.activeProviders })
+)(_SettingsMenu)
 export const HomeMenu = connect(
     state => ({ activeProviders: state.auth.activeProviders })
 )(_HomeMenu)
