@@ -21,10 +21,10 @@ export default (activeProviders) => {
 // via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L20
 function ensureWeiboEmotionsStored() {
     const ls = window.localStorage;
-    let emotionsData = JSON.parse(ls.getItem('weiboEmotions'));
+    window.emotionsData = JSON.parse(ls.getItem('weiboEmotions'));
 
     return new Promise((resolve, reject) => {
-        if (!emotionsData || emotionsData['_v'] !== '1.0'){
+        if (!window.emotionsData || window.emotionsData['_v'] !== '1.0'){
             superagent
             .get('/public/dist/emotions_v1.min.json')
             .set('Accept', 'application/json')
@@ -43,6 +43,7 @@ function ensureWeiboEmotionsStored() {
                     return;
                 }
 
+                window.emotionsData = data;
                 ls.setItem('weiboEmotions', JSON.stringify(data))
                 resolve()
             })

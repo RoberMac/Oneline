@@ -7,7 +7,7 @@ import Write from './Write';
 import Read from './Read';
 
 export const Action = ({ params }) => {
-    const action = params.action;
+    const { action, provider } = params;
     let SelectAction;
     switch (action){
         case 'user':
@@ -27,5 +27,5 @@ export const Action = ({ params }) => {
             break;
     }
 
-    return <SelectAction />;
+    return <SelectAction provider={provider}/>;
 }

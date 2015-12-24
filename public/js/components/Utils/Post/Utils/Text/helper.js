@@ -42,8 +42,6 @@ const _linkify = (text, provider) => {
 // via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L57
 const _weiboEmotify = (text) => {
     if (!text) return;
-    const emotionsData = JSON.parse(window.localStorage.getItem('weiboEmotions'));
-
     let _text = text.replace(/\[[\u4e00-\u9fa5\w]+\]/g, str => {
         /**
          * Key Structure

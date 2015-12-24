@@ -1,8 +1,9 @@
 .write {
-    &__form {
-        position: absolute 0 * * 0;
-        size: 100%;
-    }
+    position: absolute * * 0 0;
+    size: 100% 33.3%;
+    background-color: var(--color-gray);
+    z-index: 5;
+
     &__textarea {
         position: relative 17% * * 5%;
         size: 90% 60%;
@@ -144,7 +145,7 @@
 
         &--left {
             left: 5%;
-            border-radius: 0;
+            border-radius: 3px 0 0 3px;
         }
         &--right {
             left: 61.7%;

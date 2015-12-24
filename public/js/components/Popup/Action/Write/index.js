@@ -1,37 +1,102 @@
 import React from 'react';
 
-// Components
-import Icon from '../../../Utils/Icon';
-import GeoPicker from './GeoPicker';
-import MediaUpload from './MediaUpload';
-import ToggleSensitive from './ToggleSensitive';
-import WeiboEmotions from './WeiboEmotions';
+// Helper
+import { extractMentions, isLeftPopup } from './helper';
 
+// Components
+import { GeoPicker, MediaUpload, ToggleSensitive, ToggleWeiboEmotions, Submit } from './ToolBtns';
+import { Mentions, WeiboEmotions } from './ToolPopup';
+import Transition from '../../../Utils/Transition';
 
 // Export
-export default class index extends React.Component {
+export default class Write extends React.Component {
     constructor(props) {
         super(props)
-        this.handleChange = this.handleChange.bind(this);
+        this.state = {
+            status: '',
+            mentions: [],
+            geo: {},
+            media: [],
+            sensitive: false,
+            emotions: false,
+            toolPopupLeft: false
+        }
+        this.handleStateChange = this.handleStateChange.bind(this);
+        this.handleTextChange = this.handleTextChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
-    handleChange(type, payload) {
-        console.log(type, payload)
+    handleStateChange({ type, payload }) {
+        this.setState({ [type]: payload })
+    }
+    handleTextChange() {
+        const elem = this.refs.textarea;
+        let _status = elem.value;
+
+        const status = _status.trim().length > 0 ? _status : _status.trim();
+        const mentions = extractMentions({
+            status: status.slice(0, elem.selectionStart),
+            provider: this.props.provider
+        });
+        const toolPopupLeft = isLeftPopup();
+        this.setState({ status, mentions, toolPopupLeft })
+    }
+    handleSubmit() {
+        const { status, geo, media, sensitive } = this.state;
+        console.log('handleSubmit')
+    }
+    componentDidUpdate(prevProps, prevState) {
+        this.refs.textarea.focus()
     }
     render() {
-        return (
-            <form name="newTweetForm" className="write__form">
+        const { provider } = this.props;
+        const { status, mentions, emotions, toolPopupLeft } = this.state;
+        const isTwitter = provider === 'twitter';
+        const isWeibo   = provider === 'weibo';
 
-                <textarea className="write__textarea animate--general" type="text" name="tweet" autoComplete="off" spellCheck="false" required></textarea>
+        return (
+            <form className="write">
+
+                <textarea
+                    className="write__textarea animate--general"
+                    type="text"
+                    autoComplete="off"
+                    spellCheck="false"
+                    required
+                    onChange={this.handleTextChange}
+                    ref="textarea"
+                />
                 <div className="write__textarea write__textarea--mirror"><span></span></div>
 
                 <div className="write__toolBar">
-                    <GeoPicker onChange={this.handleChange}/>
-                    <button className="write__btn write__btn--send icon--weibo tips" type="submit" data-count disabled>
-                        <Icon viewBox="0 0 113 72" name="writing" />
-                    </button>
+                    <GeoPicker onChange={this.handleStateChange} />
+                    { isTwitter ? <MediaUpload onChange={this.handleStateChange} /> : null }
+                    { isTwitter ? <ToggleSensitive onChange={this.handleStateChange} /> : null }
+                    { isWeibo ? <ToggleWeiboEmotions onChange={this.handleStateChange} /> : null }
+                    <Submit provider={provider} status={status} onClick={this.handleSubmit} />
                 </div>
 
                 <div className="write__previews"></div>
+
+                <Transition>
+                { mentions.length > 0
+                    ? <Mentions
+                        mentions={mentions}
+                        provider={provider}
+                        toolPopupLeft={toolPopupLeft}
+                        onChange={this.handleTextChange}
+                    />
+                : null }
+                </Transition>
+
+                <Transition>
+                { emotions && isWeibo
+                        ? <WeiboEmotions
+                            emotions={emotions}
+                            toolPopupLeft={toolPopupLeft}
+                            onChange={this.handleTextChange}
+                        />
+                : null }
+                </Transition>
             </form>
         );
     }
