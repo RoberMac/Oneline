@@ -20,6 +20,7 @@ module.exports = {
             'es6-promise',
             'react-timeago',
             'react-visibility-sensor',
+            'object.assign',
         ]
     },
     output: {

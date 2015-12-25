@@ -7,7 +7,7 @@ import ScrollToTop from '../Utils/ScrollToTop';
 export default ({ location, main, leftSidebar, rightSidebar }) => {
     const isHome = !/^\/settings/.test(location.pathname);
     const mainClass = classNames({
-        'oneline oneline--enter overflow--y animate--general': true,
+        'oneline oneline--enter animate--general': true,
         'oneline--timeline': isHome
     });
     const leftSidebarClass = classNames({
@@ -21,7 +21,7 @@ export default ({ location, main, leftSidebar, rightSidebar }) => {
 
     return (
         <div>
-            { isHome ? <ScrollToTop target=".spin--new" container=".oneline" duration={700} /> : null }
+            { isHome ? <ScrollToTop target=".spin--new" container=".oneline__wrapper" duration={700} /> : null }
 
             <div className={mainClass}>
                 {main}

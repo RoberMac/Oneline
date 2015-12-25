@@ -1,4 +1,8 @@
+import { Promise } from 'es6-promise';
+import assign from 'object.assign';
+
 import store from '../../../../utils/store';
+import { Action } from '../../../../utils/api'
 
 export const extractMentions = ({ status, provider }) => {
     const mentionsList = store.get(`mentions_${provider}`) || [];
@@ -16,13 +20,15 @@ export const extractMentions = ({ status, provider }) => {
 
     let mentionUser = status.match(mentionRegex[provider]);
     if (mentionUser){
-        mentionUser = mentionUser[2].trim();
-        return mentionsList
-                .filter(provider === 'twitter'
-                    ? item => Object.keys(item).some(key => item[key].indexOf(mentionUser) >= 0)
-                    : item => item.indexOf(mentionUser) >= 0
-                )
-                .slice(0, 100);
+        mentionUser = mentionUser[2].trim().toLowerCase();
+        return (
+            mentionsList
+            .filter(provider === 'twitter'
+                ? item => Object.keys(item).some(key => item[key].toLowerCase().indexOf(mentionUser) >= 0)
+                : item => item.toLowerCase().indexOf(mentionUser) >= 0
+            )
+            .slice(0, 100)
+        );
     } else {
         return [];
     }
@@ -94,4 +100,61 @@ export const insertText = (text) => {
     }
 
     statusElem.setSelectionRange(_after, _after)
+}
+
+export const submitWrite = ({
+    action,
+    provider,
+    id,
+
+    status,
+    mentions,
+    geo,
+    media,
+    sensitive
+}) => {
+
+    const isTwitter = provider === 'twitter';
+    const isWeibo   = provider === 'weibo';
+    let params = {
+        status: status
+    };
+    // Init
+    if (isTwitter){
+        assign(params, { geo, sensitive, media_ids: media })
+
+        if (action === 'retweet' && status.length > 0){
+            params.status = `${status} https://twitter.com/${_info[2]}/status/${id}`
+        }
+    }
+    else if (isWeibo){
+        if (action === 'tweet'){
+            assign(params, { geo })
+        }
+    }
+
+    return new Promise((resolve, reject) => {
+        Action
+        .update({ action, provider, id }, { params: params })
+        .then(res => {
+
+            // TODO
+            // if (_action === 'retweet'){
+            //     olUI.setActionState('retweet', _id, 'active')
+            //     olUI.actionData('retweet', _id, data.id_str)
+
+            //     if (__action === 'quote' && isTwitter){
+            //         // 凍結
+            //         olUI.setActionState('retweet', _id, 'frozen')
+            //     } else {
+            //         var count = ~~olUI.actionData('retweet', _id, null, 'count') + 1;
+            //         olUI.actionData('retweet', _id, count, 'count')
+            //     }
+            // }
+            resolve()
+        })
+        .catch(err => {
+            reject(err)
+        })
+    })
 }

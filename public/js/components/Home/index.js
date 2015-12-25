@@ -45,23 +45,25 @@ class Home extends React.Component {
         const { isDependenciesLoaded } = this.state;
         return (
             <div>
-                <Spin
-                    type="newPosts"
-                    initLoad={isInitLoad && isDependenciesLoaded}
-                    {...newPosts}
-                    onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
-                />
-                {
-                    isDependenciesLoaded && showingPosts
-                    .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
-                    .map(item => <Post key={item.id_str} item={item}/>)
-                }
-                <Spin
-                    type="oldPosts"
-                    initLoad={isInitLoad && isDependenciesLoaded}
-                    {...oldPosts}
-                    onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
-                />
+                <div className="oneline__wrapper overflow--y">
+                    <Spin
+                        type="newPosts"
+                        initLoad={isInitLoad && isDependenciesLoaded}
+                        {...newPosts}
+                        onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
+                    />
+                    {
+                        isDependenciesLoaded && showingPosts
+                        .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
+                        .map(item => <Post key={item.id_str} item={item}/>)
+                    }
+                    <Spin
+                        type="oldPosts"
+                        initLoad={isInitLoad && isDependenciesLoaded}
+                        {...oldPosts}
+                        onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
+                    />
+                </div>
                 <Transition>
                     {children}
                 </Transition>

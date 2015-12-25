@@ -22,7 +22,7 @@ export default {
     },
     VaildAction: (nextState, replaceState) => {
         const action = nextState.params.action;
-        const validActions = ['user', 'tag', 'location', 'write', 'read'];
+        const validActions = ['user', 'tag', 'location', 'read', 'tweet', 'retweet', 'quote', 'reply'];
 
         if (validActions.indexOf(action) < 0){
             console.error(`Warning: "${action}" is't valid action`)

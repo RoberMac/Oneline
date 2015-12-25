@@ -18,7 +18,7 @@ const MenuRows = ({ metadata }) => (
             });
             return (
                <TransitionLink to={link} key={icon}>
-                    <span className={btnClass} type="button">
+                    <span className={btnClass}>
                         <Icon viewBox="0 0 200 200" name={icon} />
                     </span>
                 </TransitionLink>
@@ -60,7 +60,7 @@ const MenuSwitch = ({ currentProvider, activeProviders }) => {
                 })
                 return (
                    <TransitionLink to={`/home/${provider}`} key={direction}>
-                        <span className={btnClass} type="button">
+                        <span className={btnClass}>
                             <Icon viewBox="0 0 77 77" name="2" />
                         </span>
                     </TransitionLink>
@@ -84,7 +84,7 @@ const _HomeMenu = ({ params, activeProviders }) => {
     switch (params.provider){
         case 'twitter':
             metadata = [
-                { link: '/home/twitter/write/post', provider: 'twitter', icon: 'newTweet' },
+                { link: '/home/twitter/tweet', provider: 'twitter', icon: 'newTweet' },
                 { link: '/home/twitter/user', provider: 'twitter', icon: 'profile' },
                 { link: '/home/twitter/notification', provider: 'twitter', icon: 'notification' }
             ]
@@ -96,7 +96,7 @@ const _HomeMenu = ({ params, activeProviders }) => {
             break;
         case 'weibo':
             metadata = [
-                { link: '/home/weibo/write/post', provider: 'weibo', icon: 'newTweet' },
+                { link: '/home/weibo/tweet', provider: 'weibo', icon: 'newTweet' },
                 { link: '/home/weibo/user', provider: 'weibo', icon: 'profile' }
             ]
             break

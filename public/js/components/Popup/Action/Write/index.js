@@ -1,7 +1,9 @@
 import React from 'react';
 
 // Helper
-import { extractMentions, isLeftPopup } from './helper';
+import history from '../../../../utils/history'
+import { addClassTemporarily } from '../../../../utils/dom';
+import { extractMentions, isLeftPopup, submitWrite } from './helper';
 
 // Components
 import { GeoPicker, MediaUpload, ToggleSensitive, ToggleWeiboEmotions, Submit } from './ToolBtns';
@@ -19,7 +21,8 @@ export default class Write extends React.Component {
             media: [],
             sensitive: false,
             emotions: false,
-            toolPopupLeft: false
+            toolPopupLeft: false,
+            submitting: false
         }
         this.handleStateChange = this.handleStateChange.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
@@ -41,15 +44,25 @@ export default class Write extends React.Component {
         this.setState({ status, mentions, toolPopupLeft })
     }
     handleSubmit() {
-        const { status, geo, media, sensitive } = this.state;
-        console.log('handleSubmit')
+        this.setState({ submitting: true })
+        submitWrite({ ...this.state, ...this.props })
+        .then(() => {
+            //TODO: Clean Draft
+            history.push('/home')
+        })
+        .catch(err => {
+            addClassTemporarily(this.refs.textarea, 'write__textarea--err', 500)
+        })
+        .then(() => {
+            this.setState({ submitting: false })
+        })
     }
     componentDidUpdate(prevProps, prevState) {
         this.refs.textarea.focus()
     }
     render() {
-        const { provider } = this.props;
-        const { status, mentions, emotions, toolPopupLeft } = this.state;
+        const { action, provider, id } = this.props;
+        const { status, mentions, emotions, toolPopupLeft, submitting } = this.state;
         const isTwitter = provider === 'twitter';
         const isWeibo   = provider === 'weibo';
 
@@ -62,6 +75,7 @@ export default class Write extends React.Component {
                     autoComplete="off"
                     spellCheck="false"
                     required
+                    disabled={submitting}
                     onChange={this.handleTextChange}
                     ref="textarea"
                 />
@@ -72,7 +86,12 @@ export default class Write extends React.Component {
                     { isTwitter ? <MediaUpload onChange={this.handleStateChange} /> : null }
                     { isTwitter ? <ToggleSensitive onChange={this.handleStateChange} /> : null }
                     { isWeibo ? <ToggleWeiboEmotions onChange={this.handleStateChange} /> : null }
-                    <Submit provider={provider} status={status} onClick={this.handleSubmit} />
+                    <Submit
+                        provider={provider}
+                        status={status}
+                        submitting={submitting}
+                        onClick={this.handleSubmit}
+                    />
                 </div>
 
                 <div className="write__previews"></div>
@@ -90,11 +109,11 @@ export default class Write extends React.Component {
 
                 <Transition>
                 { emotions && isWeibo
-                        ? <WeiboEmotions
-                            emotions={emotions}
-                            toolPopupLeft={toolPopupLeft}
-                            onChange={this.handleTextChange}
-                        />
+                    ? <WeiboEmotions
+                        emotions={emotions}
+                        toolPopupLeft={toolPopupLeft}
+                        onChange={this.handleTextChange}
+                    />
                 : null }
                 </Transition>
             </form>

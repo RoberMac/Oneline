@@ -1,6 +1,8 @@
 import { Promise } from 'es6-promise';
 
 import { Timeline } from '../utils/api';
+import store from '../utils/store';
+import * as arrayUnique from '../utils/arrayUnique';
 
 export const determineFetchFrom = ({
     postsType,
@@ -76,11 +78,12 @@ export const fetchFromRemote = ({
         Timeline
         .get({ id: isInitLoad ? null : getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) })
         .then(res => {
+            const newRemotePosts = res.body.data;
             // Reject for Wrong Response
-            if (!res.body.data) {
+            if (!newRemotePosts) {
                 reject(new Error('[FetchFail]: WTF Responses?'))
                 return;
-            } else if (res.body.data && res.body.data.length <= 0 && !isFetchNewPosts) {
+            } else if (newRemotePosts && newRemotePosts.length <= 0) {
                 reject(new Error('[FetchFail]: No More Posts'))
                 return;
             }
@@ -88,7 +91,7 @@ export const fetchFromRemote = ({
             const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res.body : allPosts;
             const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res.body : allPosts;
             const newAllPosts = {
-                posts: allPosts.posts.concat(res.body.data),
+                posts: allPosts.posts.concat(newRemotePosts),
                 maxId,
                 maxDate,
                 minId,
@@ -96,7 +99,7 @@ export const fetchFromRemote = ({
             };
             // Store and dispatch
             if (isAutoFetch){
-                const newUnreadCount = newPosts.unreadCount + res.body.data.length;
+                const newUnreadCount = newPosts.unreadCount + newRemotePosts.length;
                 resolve({
                     postsType,
                     unreadCount: newUnreadCount,
@@ -121,6 +124,8 @@ export const fetchFromRemote = ({
 
                 isFetchNewPosts ? setTitleUnreadCount(newUnreadCount) : null
             }
+            // Always record mentions in posts
+            recordMentions({ providers: invalidProviders, posts: newRemotePosts })
         })
         .catch(err => {
             reject(err)
@@ -209,4 +214,87 @@ function setTitleUnreadCount(count) {
     }
 
     document.title = '｜'+ count_str;
+}
+// 紀錄時間線上出現的「提及」用戶
+function recordMentions({ providers, posts }) {
+    const MAX_COUNT_L1 = 2000;
+    const MAX_COUNT_L2 = 3000;
+    const mentionRegex = {
+        twitter: /(|\s)*@([\w]+)/g,
+        instagram: /(|\s)*@([\w\.]+)/g,
+        weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g
+    };
+    const PREFIX = {
+        twitter: '//twitter.com/',
+        instagram: '//instagram.com/',
+        weibo: '//weibo.com/n/'
+    };
+
+    // Init
+    let mentionsList = {};
+    providers.forEach(provider => {
+        mentionsList[provider] = store.get(`mentions_${provider}`) || []
+    });
+    // Extract
+    posts.forEach(({ provider, text, user }) => {
+        const isTwitter = provider === 'twitter';
+        const isWeibo   = provider === 'weibo';
+
+        if (provider === 'instagram') return;
+
+        // Extract from post's text
+        let textMentions  = text.match(mentionRegex[provider]); // TODO: Extract `quote` posts
+        if (textMentions){
+            // Trim
+            textMentions = textMentions.map(i => i.trim())
+
+            if (isTwitter) {
+                textMentions = textMentions.map( i => ({ 's': i }) )
+            };
+
+            // Limit max count (Level 1: remove twitter text mentions)
+            if (mentionsList[provider].length >= MAX_COUNT_L1){
+                let _len = textMentions.length;
+
+                if (isTwitter){
+                    mentionsList[provider] = mentionsList[provider].filter(item => {
+                        if (!item.hasOwnProperty('u') && _len > 0) {
+                            _len --
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    })
+                } else {
+                    mentionsList[provider].splice(0, _len) 
+                }
+            }
+
+            mentionsList[provider] = mentionsList[provider].concat(textMentions)
+        }
+        // Extract from post's author
+        let authorMention = user;
+        mentionsList[provider].push(
+            isTwitter
+                ? { 's': `@${authorMention.screen_name}`, 'u': authorMention.name }
+            : isWeibo
+                ? `@${authorMention.screen_name}`
+            : null
+        )
+    })
+
+    // Store
+    providers.forEach(provider => {
+        const isTwitter = provider === 'twitter';
+        const isWeibo   = provider === 'weibo';
+        // Remove Dups
+        mentionsList[provider] = arrayUnique[isTwitter ? 'object' : 'literal'](mentionsList[provider]);
+        // Limit max count (Level 2: remove old items)
+        if (mentionsList[provider].length >= MAX_COUNT_L2){
+            let _len = mentionsList[provider].length - MAX_COUNT_L2;
+            mentionsList[provider].splice(0, _len) 
+        }
+
+        store.set('mentions_' + provider, mentionsList[provider])
+    })
 }

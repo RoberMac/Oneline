@@ -95,9 +95,9 @@
             }
             &:disabled {
                 cursor: not-allowed;
+                filter: brightness(0);
 
                 svg {
-                    fill: var(--color-steel);
                     animation-play-state: paused;
                 }
                 &::before {

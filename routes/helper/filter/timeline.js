@@ -262,7 +262,10 @@ let filter = {
                         id_str: retweetItem.idstr,
                         mid: mid.encode(retweetItem.mid),
                         user: filterUtils.weibo.user(retweetItem.user),
-                        text: retweetItem.text
+                        text: retweetItem.text,
+                        retweet_count: retweetItem.reposts_count,
+                        comments_count: retweetItem.comments_count,
+                        favorite_count: retweetItem.attitudes_count
                     }
                 })
                 // Extend Media

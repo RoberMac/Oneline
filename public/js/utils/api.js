@@ -76,8 +76,17 @@ export const Timeline = {
 }
 
 export const Action = {
-    create: ({ action, provider, id }) => request.put({ url: `/actions/${action}/${provider}/${id}` }),
-    destroy: ({ action, provider, id }) => request.del({ url: `/actions/${action}/${provider}/${id}` }),
-    update: ({ action, provider, id }) => request.post({ url: `/actions/${action}/${provider}/${id}` }),
-    get: ({ action, provider, id }) => request.get({ url: `/actions/${action}/${provider}/${id}` })
+    create: ({ action, provider, id }) => request.put({
+        url: `/actions/${action}/${provider}/${id || 0}`
+    }),
+    destroy: ({ action, provider, id }) => request.del({
+        url: `/actions/${action}/${provider}/${id || 0}`
+    }),
+    update: ({ action, provider, id }, payload) => request.post({
+        url: `/actions/${action}/${provider}/${id || 0}`,
+        payload
+    }),
+    get: ({ action, provider, id }) => request.get({
+        url: `/actions/${action}/${provider}/${id || 0}`
+    })
 }

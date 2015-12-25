@@ -7,7 +7,7 @@ import Write from './Write';
 import Read from './Read';
 
 export const Action = ({ params }) => {
-    const { action, provider } = params;
+    const { provider, action, id } = params;
     let SelectAction;
     switch (action){
         case 'user':
@@ -19,7 +19,10 @@ export const Action = ({ params }) => {
         case 'tag':
             SelectAction = Tag;
             break;
-        case 'write':
+        case 'tweet':
+        case 'retweet':
+        case 'quote':
+        case 'reply':
             SelectAction = Write;
             break;
         case 'read':
@@ -27,5 +30,5 @@ export const Action = ({ params }) => {
             break;
     }
 
-    return <SelectAction provider={provider}/>;
+    return <SelectAction provider={provider} action={action} id={id} />;
 }

@@ -42,15 +42,18 @@ export default props => (
                 }
             </div>
             <span className="cursor--pointer">
+                <Retweet provider={props.provider} id={props.retweet.id_str} count={props.retweet.retweet_count} />
+                <Reply provider={props.provider} id={props.retweet.id_str} />
                 <Source provider="weibo" uid={props.retweet.user.uid} mid={props.retweet.mid} />
+                <Star />
             </span>
 
             <TimeAgo date={props.retweet.created_at} />
         </div>
 
         <span className="cursor--pointer">
-            <Retweet count={props.retweet_count} />
-            <Reply />
+            <Retweet provider={props.provider} id={props.id_str} count={props.retweet_count} />
+            <Reply provider={props.provider} id={props.id_str} />
             <Source provider="weibo" uid={props.user.uid} mid={props.mid} />
             <Star />
         </span>
