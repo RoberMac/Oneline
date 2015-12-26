@@ -84,7 +84,17 @@ export const fetchFromRemote = ({
                 reject(new Error('[FetchFail]: WTF Responses?'))
                 return;
             } else if (newRemotePosts && newRemotePosts.length <= 0) {
-                reject(new Error('[FetchFail]: No More Posts'))
+                if (!isFetchNewPosts){
+                    reject(new Error('[FetchFail]: No More Posts'))
+                } else {
+                    resolve({
+                        postsType,
+                        unreadCount: newPosts.unreadCount,
+                        showingPosts,
+                        allPosts,
+                        timePointer
+                    })
+                }
                 return;
             }
             // Init Response Data

@@ -23,7 +23,7 @@ export class Mentions extends React.Component {
         onChange()
     }
     render() {
-        const { mentions, toolPopupLeft } = this.props;
+        const { mentions, provider, toolPopupLeft } = this.props;
         const popupClass = classNames({
             'write__mentions write__popup overflow--y animate--faster': true,
             'write__popup--left': toolPopupLeft,
@@ -31,15 +31,26 @@ export class Mentions extends React.Component {
         });
         return (
             <div className={popupClass}>
-                {mentions.map(item => (
-                    <button
-                        key={item}
-                        onClick={this.insertMention.bind(null, item)}
-                        type="button"
-                    >
-                        {item}
-                    </button>
-                ))}
+                { provider === 'twitter'
+                    ? mentions.map(item => (
+                        <button
+                            key={item}
+                            onClick={this.insertMention.bind(null, item)}
+                            type="button"
+                        >
+                            {item}
+                        </button>
+                    ))
+                    : mentions.map(item => (
+                        <button
+                            key={item.s}
+                            onClick={this.insertEmotions.bind(null, item.s)}
+                            type="button"
+                        >
+                            {item.u || item.s}
+                        </button>
+                    ))
+                }
             </div>
         );
     }

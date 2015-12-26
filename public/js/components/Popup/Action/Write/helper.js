@@ -11,12 +11,6 @@ export const extractMentions = ({ status, provider }) => {
         instagram: /(|\s)*@([\w\.]*)$/,
         weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
     };
-    const filterTwitterUser = (item) => {
-        return Object.keys(item).some(key => item[key].indexOf(mentionUser) >= 0)
-    };
-    const filterWeiboUser = (item) => {
-
-    };
 
     let mentionUser = status.match(mentionRegex[provider]);
     if (mentionUser){
@@ -157,4 +151,47 @@ export const submitWrite = ({
             reject(err)
         })
     })
+}
+
+export const draft = {
+    get: ({ action, provider }) => {
+        store.get(`${action}_${provider}`)
+    },
+    set: ({ action, provider, status }) => {
+        if (action !== 'tweet') return;
+
+        store.set(`${action}_${provider}`, status)
+    }
+}
+
+export const initStatus = ({ action, provider, id, post }) => {
+    const statusElem = document.querySelector('textarea');
+
+    switch (action){
+        case 'tweet':
+            statusElem.value = draft.get({ action, provider });
+            break;
+        case 'reply':
+            if (provider === 'twitter' && post){
+                statusElem.value = (
+                    []
+                    .push(
+                        post.type !== 'retweet'
+                            ? post.retweet.user.screen_name
+                        : post.user.screen_name
+                    ) // Post Author
+                    .concat(post.text.match(/(|\s)*@([\w]+)/g) || []) // Extract from post's text
+                    .map(v => v.trim()) // Trim
+                    .filter((v, i, a) => a.indexOf(v) == i) // Remove Dups
+                    .join(' ') // Concat
+                ) + ' ';
+            }
+            break;
+        case 'retweet':
+            if (provider === 'weibo' && post && post.type !== 'tweet' && id === post.id_str){
+                statusElem.value = `//@${post.user.screen_name}: ${post.text}`;
+                statusElem.setSelectionRange(0, 0)
+            }
+            break;
+    }
 }

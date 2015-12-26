@@ -28,8 +28,8 @@ export default props => (
         <RetweetAvatar provider="weibo" {...props.user}/>
 
         <span className="cursor--pointer">
-            <Retweet provider={props.provider} id={props.id_str} count={props.retweet_count} />
-            <Reply provider={props.provider} id={props.id_str} />
+            <Retweet provider={props.provider} id={props.id_str} count={props.retweet_count} post={props} />
+            <Reply provider={props.provider} id={props.id_str} post={props} />
             <Source provider="weibo" uid={props.user.uid} mid={props.mid} />
             <Star />
         </span>

@@ -3,7 +3,7 @@ import React from 'react';
 // Helper
 import history from '../../../../utils/history'
 import { addClassTemporarily } from '../../../../utils/dom';
-import { extractMentions, isLeftPopup, submitWrite } from './helper';
+import { extractMentions, isLeftPopup, submitWrite, draft, initStatus } from './helper';
 
 // Components
 import { GeoPicker, MediaUpload, ToggleSensitive, ToggleWeiboEmotions, Submit } from './ToolBtns';
@@ -32,9 +32,11 @@ export default class Write extends React.Component {
         this.setState({ [type]: payload })
     }
     handleTextChange() {
+        const { action, provider, id } = this.props;
         const elem = this.refs.textarea;
         let _status = elem.value;
 
+        // Update State
         const status = _status.trim().length > 0 ? _status : _status.trim();
         const mentions = extractMentions({
             status: status.slice(0, elem.selectionStart),
@@ -42,6 +44,15 @@ export default class Write extends React.Component {
         });
         const toolPopupLeft = isLeftPopup();
         this.setState({ status, mentions, toolPopupLeft })
+
+        // Retweet <==> Quote
+        if (action === 'retweet' && status){
+            history.replace(`/home/${provider}/quote/${id}`)
+        } else if (action === 'quote' && status === '') {
+            history.replace(`/home/${provider}/retweet/${id}`)
+        }
+
+        this.refs.textarea.focus()
     }
     handleSubmit() {
         this.setState({ submitting: true })
@@ -57,8 +68,17 @@ export default class Write extends React.Component {
             this.setState({ submitting: false })
         })
     }
-    componentDidUpdate(prevProps, prevState) {
-        this.refs.textarea.focus()
+    componentDidMount() {
+        setTimeout(() => {
+            initStatus({ ...this.props })
+            this.handleTextChange()
+        }, 700)
+    }
+    componentWillUnmount() {
+        const { action, provider } = this.props;
+        const { status } = this.state;
+        // Save Draft
+        draft.set({ action, provider, status })
     }
     render() {
         const { action, provider, id } = this.props;
@@ -74,7 +94,7 @@ export default class Write extends React.Component {
                     type="text"
                     autoComplete="off"
                     spellCheck="false"
-                    required
+                    required={action !== 'retweet'}
                     disabled={submitting}
                     onChange={this.handleTextChange}
                     ref="textarea"
@@ -87,6 +107,7 @@ export default class Write extends React.Component {
                     { isTwitter ? <ToggleSensitive onChange={this.handleStateChange} /> : null }
                     { isWeibo ? <ToggleWeiboEmotions onChange={this.handleStateChange} /> : null }
                     <Submit
+                        action={action}
                         provider={provider}
                         status={status}
                         submitting={submitting}

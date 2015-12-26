@@ -6,8 +6,9 @@ import Tag from './Tag';
 import Write from './Write';
 import Read from './Read';
 
-export const Action = ({ params }) => {
-    const { provider, action, id } = params;
+export const Action = (props) => {
+    const { provider, action, id } = props.params;
+
     let SelectAction;
     switch (action){
         case 'user':
@@ -30,5 +31,5 @@ export const Action = ({ params }) => {
             break;
     }
 
-    return <SelectAction provider={provider} action={action} id={id} />;
+    return <SelectAction provider={provider} action={action} id={id} post={props.location.state} />;
 }

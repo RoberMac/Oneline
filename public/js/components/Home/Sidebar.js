@@ -27,12 +27,7 @@ const ShowMenuBtn = ({ firstProvider }) => (
         </span>
     </Link>
 );
-const HidePopupBtn= (hidePopup) => (
-    <button className={sidebarBtnClass} type="button" onClick="hidePopup">
-        <Icon viewBox="0 0 200 200" name="cancel" />
-    </button>
-);
-const LeftSidebar = ({ activeProviders }) => (
+const BackToSettingsBtn = ({ activeProviders }) => (
     <Link to="/settings">
         <span className={sidebarBtnClass}>
             <svg viewBox="0 0 200 200">
@@ -55,14 +50,20 @@ const LeftSidebar = ({ activeProviders }) => (
         </span>
     </Link>
 );
+const LeftSidebar = ({ activeProviders }) => {
+    const isPopup = !/home$/.test(location.pathname);
+
+    return isPopup ? <span /> : <BackToSettingsBtn activeProviders={activeProviders} />;
+};
 const RightSidebar = ({ activeProviders }) => {
+    const isPopup = !/home$/.test(location.pathname);
     let firstProvider = activeProviders.indexOf('twitter') >= 0
                             ? 'twitter'
                         : activeProviders.indexOf('weibo') >= 0
                             ? 'weibo'
                         : 'instagram';
 
-    return <ShowMenuBtn firstProvider={firstProvider}/>;
+    return isPopup ? <span /> : <ShowMenuBtn firstProvider={firstProvider}/>;
 }
 
 

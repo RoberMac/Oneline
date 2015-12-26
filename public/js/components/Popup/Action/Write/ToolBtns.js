@@ -157,7 +157,7 @@ export class Submit extends React.Component {
         addClassTemporarily(this.refs.btn, 'write__btn--send--typing', 700)
     }
     render() {
-        const { provider, status, submitting, onClick } = this.props;
+        const { action, provider, status, submitting, onClick } = this.props;
         const { count, isOverLimitCount } = getCountInfo({ provider, status });
         const btnClass = classNames({
             'write__btn write__btn--send icon--weibo tips': true,
@@ -168,7 +168,7 @@ export class Submit extends React.Component {
                 className={btnClass}
                 type="button"
                 data-count={count === 0 ? '' : count}
-                disabled={count === 0 || isOverLimitCount}
+                disabled={isOverLimitCount || count === 0 && action !== 'retweet'}
                 onClick={onClick}
                 ref="btn"
             >
