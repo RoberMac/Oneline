@@ -35,11 +35,11 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
                 case 'remote':
                     dispatch(fetchStart({ postsType }))
 
-                    fetchFromRemote({ postsType, isAutoFetch, invalidProviders, ...timeline })
+                    return fetchFromRemote({ postsType, isAutoFetch, invalidProviders, ...timeline })
                     .then( newState => dispatch(postsRecive(newState)) )
                     .catch(err => {
-                        console.error(err)
                         dispatch(fetchFail({ postsType }))
+                        throw err
                     })
                     break;
             }

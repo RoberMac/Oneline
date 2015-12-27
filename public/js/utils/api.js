@@ -90,3 +90,6 @@ export const Action = {
         url: `/actions/${action}/${provider}/${id || 0}`
     })
 }
+export const Media = {
+    upload: ({ provider }, payload) => request.post({ url: `/upload/${provider}`, payload })
+}

@@ -3,6 +3,7 @@
     size: 100% 33.3%;
     background-color: var(--color-gray);
     z-index: 5;
+    overflow: hidden;
 
     &__textarea {
         position: relative 17% * * 5%;
@@ -68,7 +69,7 @@
             cursor: pointer;
 
             svg {
-                size: 18px;
+                size: 19px;
                 vertical-align: middle;
             }
         }
@@ -116,7 +117,7 @@
             }
         }
     }
-    &__previews {
+    &__mediaPreview {
         position: absolute * * 0 calc(50% - 54px - 9px);
         transform: translateY(7px);
 

@@ -18,47 +18,47 @@ export default props => (
                     { middleware: 'weiboEmotify' }
                 ]}
             />
-            {
-                props.media && props.type === 'tweet' && props.media.length > 0
-                    ? <WeiboMedia media={props.media} />
-                : null
-            }
         </div>
 
         <div className="post post--quote post--quote--weibo">
-            <Avatar provider="weibo" {...props.retweet.user} />
+            <Avatar provider="weibo" {...props.quote.user} />
             <div className="post__content">
                 <Text
-                    text={props.retweet.text}
+                    text={props.quote.text}
                     middlewares={[
                         { middleware: 'linkify', opts: { provider: 'weibo' } },
                         { middleware: 'weiboEmotify' }
                     ]}
                 />
                 {
-                    props.media && props.media.length > 0
-                        ? <WeiboMedia media={props.media} />
+                    props.quote.media && props.quote.media.length > 0
+                        ? <WeiboMedia media={props.quote.media} />
                     : null
                 }
             </div>
             <span className="cursor--pointer">
                 <Retweet
-                    provider={props.provider}
-                    id={props.retweet.id_str}
-                    count={props.retweet.retweet_count}
-                    post={props}
+                    provider="weibo"
+                    id={props.quote.id_str}
+                    count={props.quote.retweet_count}
+                    post={props.quote}
                 />
-                <Reply provider={props.provider} id={props.retweet.id_str} post={props} />
-                <Source provider="weibo" uid={props.retweet.user.uid} mid={props.retweet.mid} />
+                <Reply
+                    provider="weibo"
+                    id={props.quote.id_str}
+                    count={props.quote.comments_count}
+                    post={props.quote}
+                />
+                <Source provider="weibo" uid={props.quote.user.uid} mid={props.quote.mid} />
                 <Star />
             </span>
 
-            <TimeAgo date={props.retweet.created_at} />
+            <TimeAgo date={props.quote.created_at} />
         </div>
 
         <span className="cursor--pointer">
-            <Retweet provider={props.provider} id={props.id_str} count={props.retweet_count} post={props} />
-            <Reply provider={props.provider} id={props.id_str} post={props} />
+            <Retweet provider="weibo" id={props.id_str} count={props.quote_count} post={props} />
+            <Reply provider="weibo" id={props.id_str} count={props.comments_count} post={props} />
             <Source provider="weibo" uid={props.user.uid} mid={props.mid} />
             <Star />
         </span>

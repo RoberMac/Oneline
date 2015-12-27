@@ -19,8 +19,8 @@ export default props => (
                 ]}
             />
             {
-                props.media && props.type === 'tweet' && props.media.length > 0
-                    ? <WeiboMedia media={props.media} />
+                props.retweet.media && props.retweet.media.length > 0
+                    ? <WeiboMedia media={props.retweet.media} />
                 : null
             }
         </div>
@@ -28,9 +28,19 @@ export default props => (
         <RetweetAvatar provider="weibo" {...props.user}/>
 
         <span className="cursor--pointer">
-            <Retweet provider={props.provider} id={props.id_str} count={props.retweet_count} post={props} />
-            <Reply provider={props.provider} id={props.id_str} post={props} />
-            <Source provider="weibo" uid={props.user.uid} mid={props.mid} />
+            <Retweet
+                provider="weibo"
+                id={props.retweet.id_str}
+                count={props.retweet.retweet_count}
+                post={props.retweet}
+            />
+            <Reply
+                provider="weibo"
+                id={props.retweet.id_str}
+                count={props.retweet.comments_count}
+                post={props.retweet}
+            />
+            <Source provider="weibo" uid={props.retweet.user.uid} mid={props.retweet.mid} />
             <Star />
         </span>
 

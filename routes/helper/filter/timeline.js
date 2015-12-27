@@ -12,8 +12,6 @@ let filter = {
         let cache = [];
 
         for (let item of data){
-            let _created_at = Date.parse(item.created_at);
-
             /**
              * Tweet / Reply
              *
@@ -21,7 +19,7 @@ let filter = {
             let tweetObj = {
                 type: 'tweet',
                 provider: 'twitter',
-                created_at: _created_at,
+                created_at: Date.parse(item.created_at),
                 id_str: item.id_str,
                 user: filterUtils.twitter.user(item.user),
                 text: item.text,
@@ -49,61 +47,34 @@ let filter = {
             }
 
             /**
-             * Retweet
+             * Retweet / Quote
              *
              */
-            if (item.retweeted_status){
-                let retweetItem = item.retweeted_status;
+            if (item.retweeted_status || item.quoted_status){
+                let r_type = item.retweeted_status ? 'retweet' : 'quote';
+                let r_item = item.retweeted_status || item.quoted_status;
 
-                // Extend Common Data
-                let type = 'retweet';
-                let r_id_str = item.id_str;
-                let id_str = retweetItem.id_str;
-                let text = retweetItem.text;
-                let retweet = {
-                    created_at: Date.parse(retweetItem.created_at),
-                    user: filterUtils.twitter.user(retweetItem.user)
+                let r_obj = {
+                    created_at: Date.parse(r_item.created_at),
+                    id_str: r_item.id_str,
+                    user: filterUtils.twitter.user(r_item.user),
+                    text: r_item.text,
+                    retweet_count: r_item.retweet_count,
+                    favorite_count: r_item.favorite_count,
+                    retweeted: r_item.retweeted,
+                    favorited: r_item.favorited
                 };
-                let favorite_count = retweetItem.favorite_count;
-
-                Object.assign(tweetObj, { type, r_id_str, id_str, text, retweet, favorite_count })
-
-                // Extend Media
-                let r_extended_entities = retweetItem.extended_entities;
+                // Media
+                let r_extended_entities = r_item.extended_entities;
                 if (r_extended_entities && r_extended_entities.media){
                     let media = filterUtils.twitter.media(r_extended_entities.media);
                     let mediaLink = r_extended_entities.media[0].url;
 
-                    Object.assign(tweetObj, { media, mediaLink })
+                    Object.assign(r_obj, { media, mediaLink })
                 }
+
+                Object.assign(tweetObj, { type: r_type, [r_type]: r_obj })
             } 
-            /**
-             * Quote
-             *
-             */
-            else if (item.quoted_status){
-                let quoteItem = item.quoted_status;
-
-                // Extend Common Data
-                let type = 'quote';
-                let quote = {
-                    created_at: Date.parse(quoteItem.created_at),
-                    id_str: quoteItem.id_str,
-                    text: quoteItem.text,
-                    user: filterUtils.twitter.user(quoteItem.user)
-                };
-
-                Object.assign(tweetObj, { type, quote })
-
-                // Extend Media
-                let q_extended_entities = quoteItem.extended_entities;
-                if (q_extended_entities && q_extended_entities.media){
-                    let media = filterUtils.twitter.media(q_extended_entities.media);
-                    let mediaLink = q_extended_entities.media[0].url;
-
-                    Object.assign(tweetObj.quote, { media, mediaLink })
-                }
-            }
 
             cache.push(tweetObj);
         }
@@ -127,11 +98,9 @@ let filter = {
         let cache = [];
 
         for (let item of data){
-            let _created_at = Date.parse(new Date(item.created_time * 1000));
-
             let igPost = {
                 provider: 'instagram',
-                created_at: _created_at,
+                created_at: Date.parse(new Date(item.created_time * 1000)),
                 id_str: item.id,
                 type: 'post',
                 user: filterUtils.instagram.user(item.user),
@@ -191,8 +160,6 @@ let filter = {
         let cache = [];
 
         for (let item of data){
-            let _created_at = Date.parse(item.created_at);
-
             /**
              * Tweet / Reply
              *
@@ -200,7 +167,7 @@ let filter = {
             let weiboObj = {
                 type: 'tweet',
                 provider: 'weibo',
-                created_at: _created_at,
+                created_at: Date.parse(item.created_at),
                 id_str: item.idstr,
                 mid: mid.encode(item.mid),
                 user: filterUtils.weibo.user(item.user),
@@ -239,43 +206,29 @@ let filter = {
              *
              */
             if (item.retweeted_status){
-                let retweetType = /^转发微博|Repost|轉發微博$/.test(item.text) ? 'retweet' : 'quote';
-                let retweetItem = item.retweeted_status;
+                let r_type = /^转发微博|Repost|轉發微博$/.test(item.text) ? 'retweet' : 'quote';
+                let r_item = item.retweeted_status;
 
-                // Reset Tweet
-                if (retweetType === 'retweet'){
-                    let r_id_str = item.idstr;
-                    let id_str = retweetItem.idstr;
-                    let retweet_count = retweetItem.reposts_count;
-                    let comments_count = retweetItem.comments_count;
-                    let favorite_count = retweetItem.attitudes_count;
-
-                    Object.assign(weiboObj, {
-                        r_id_str, id_str, retweet_count, comments_count, favorite_count
-                    })
-                }
-                // Extend Common Data
-                Object.assign(weiboObj, {
-                    type: retweetType,
-                    retweet: {
-                        created_at: Date.parse(retweetItem.created_at),
-                        id_str: retweetItem.idstr,
-                        mid: mid.encode(retweetItem.mid),
-                        user: filterUtils.weibo.user(retweetItem.user),
-                        text: retweetItem.text,
-                        retweet_count: retweetItem.reposts_count,
-                        comments_count: retweetItem.comments_count,
-                        favorite_count: retweetItem.attitudes_count
-                    }
-                })
-                // Extend Media
-                let pic_urls = retweetItem.pic_urls;
-                let pic_ids  = retweetItem.pic_ids;
+                let r_obj = {
+                    created_at: Date.parse(r_item.created_at),
+                    id_str: r_item.idstr,
+                    mid: mid.encode(r_item.mid),
+                    user: filterUtils.weibo.user(r_item.user),
+                    text: r_item.text,
+                    retweet_count: r_item.reposts_count,
+                    comments_count: r_item.comments_count,
+                    favorite_count: r_item.attitudes_count
+                };
+                // Media
+                let pic_urls = r_item.pic_urls;
+                let pic_ids  = r_item.pic_ids;
                 if (pic_urls && pic_urls.length > 0 || pic_ids && pic_urls.length > 0){
-                    Object.assign(weiboObj, {
+                    Object.assign(r_obj, {
                         media: filterUtils.weibo.media(pic_urls || pic_ids)
                     })
                 }
+
+                Object.assign(weiboObj, { type: r_type, [r_type]: r_obj })
             }
 
             cache.push(weiboObj)

@@ -18,6 +18,7 @@
     }
     &__count {
         display: inline-block;
+        margin-left: 1px;
         height: 28px;
         vertical-align: middle;
 
@@ -41,7 +42,7 @@
         &__count {
             &::after {
                 content: attr(data-count);
-                font-size: 9px;
+                font-size: 8px;
                 color: var(--color-steel);
             }
         }

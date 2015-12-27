@@ -33,6 +33,9 @@ class Home extends React.Component {
                 this.loadPosts({ postsType: 'newPosts', isAutoFetch: true })
             }, 1000 * 60 * 3)
         })
+        .catch(err => {
+            console.error(err)
+        })
     }
     componentWillUnmount() {
         // Reset `isInitLoad`

@@ -43,6 +43,14 @@ export default props => (
                 }
             </div>
             <span className="cursor--pointer">
+                <Like count={props.quote.favorite_count}/>
+                <Retweet
+                    provider="twitter"
+                    id={props.quote.id_str}
+                    count={props.quote.retweet_count}
+                    post={props.quote}
+                />
+                <Reply provider="twitter" id={props.quote.id_str} post={props.quote} />
                 <Source
                     provider="twitter"
                     screen_name={props.quote.user.screen_name}
@@ -53,8 +61,8 @@ export default props => (
 
         <span className="cursor--pointer">
             <Like count={props.favorite_count}/>
-            <Retweet count={props.retweet_count} />
-            <Reply />
+            <Retweet provider="twitter" id={props.id_str} count={props.retweet_count} post={props} />
+            <Reply provider="twitter" id={props.id_str} post={props} />
             <Source provider="twitter" screen_name={props.user.screen_name} id_str={props.id_str} />
         </span>
 

@@ -7,7 +7,7 @@ import { extractMentions, isLeftPopup, submitWrite, draft, initStatus } from './
 
 // Components
 import { GeoPicker, MediaUpload, ToggleSensitive, ToggleWeiboEmotions, Submit } from './ToolBtns';
-import { Mentions, WeiboEmotions } from './ToolPopup';
+import { MediaPreview, Mentions, WeiboEmotions } from './ToolPopup';
 import Transition from '../../../Utils/Transition';
 
 // Export
@@ -18,7 +18,10 @@ export default class Write extends React.Component {
             status: '',
             mentions: [],
             geo: {},
-            media: [],
+            media: {
+                urls: [],
+                ids: []
+            },
             sensitive: false,
             emotions: false,
             toolPopupLeft: false,
@@ -32,7 +35,7 @@ export default class Write extends React.Component {
         this.setState({ [type]: payload })
     }
     handleTextChange() {
-        const { action, provider, id } = this.props;
+        const { action, provider, id, post } = this.props;
         const elem = this.refs.textarea;
         let _status = elem.value;
 
@@ -47,19 +50,21 @@ export default class Write extends React.Component {
 
         // Retweet <==> Quote
         if (action === 'retweet' && status){
-            history.replace(`/home/${provider}/quote/${id}`)
+            history.replaceState(post, `/home/${provider}/quote/${id}`)
         } else if (action === 'quote' && status === '') {
-            history.replace(`/home/${provider}/retweet/${id}`)
+            history.replaceState(post, `/home/${provider}/retweet/${id}`)
         }
 
         this.refs.textarea.focus()
     }
     handleSubmit() {
+        const { action, provider } = this.props;
+
         this.setState({ submitting: true })
         submitWrite({ ...this.state, ...this.props })
         .then(() => {
-            //TODO: Clean Draft
             history.push('/home')
+            setTimeout(() => { draft.remove({ action, provider }) }, 700)
         })
         .catch(err => {
             addClassTemporarily(this.refs.textarea, 'write__textarea--err', 500)
@@ -78,11 +83,11 @@ export default class Write extends React.Component {
         const { action, provider } = this.props;
         const { status } = this.state;
         // Save Draft
-        draft.set({ action, provider, status })
+        status ? draft.set({ action, provider, status }) : null
     }
     render() {
         const { action, provider, id } = this.props;
-        const { status, mentions, emotions, toolPopupLeft, submitting } = this.state;
+        const { status, media, mentions, emotions, toolPopupLeft, submitting } = this.state;
         const isTwitter = provider === 'twitter';
         const isWeibo   = provider === 'weibo';
 
@@ -102,9 +107,16 @@ export default class Write extends React.Component {
                 <div className="write__textarea write__textarea--mirror"><span></span></div>
 
                 <div className="write__toolBar">
-                    <GeoPicker onChange={this.handleStateChange} />
-                    { isTwitter ? <MediaUpload onChange={this.handleStateChange} /> : null }
                     { isTwitter ? <ToggleSensitive onChange={this.handleStateChange} /> : null }
+                    <GeoPicker onChange={this.handleStateChange} />
+                    { isTwitter && media.ids.length < 4
+                        ? <MediaUpload
+                            provider={provider}
+                            media={media}
+                            onChange={this.handleStateChange}
+                        />
+                        : null
+                    }
                     { isWeibo ? <ToggleWeiboEmotions onChange={this.handleStateChange} /> : null }
                     <Submit
                         action={action}
@@ -115,7 +127,9 @@ export default class Write extends React.Component {
                     />
                 </div>
 
-                <div className="write__previews"></div>
+                { media.urls.length > 0
+                        ? <MediaPreview media={media} onChange={this.handleStateChange} />
+                : null }
 
                 <Transition>
                 { mentions.length > 0

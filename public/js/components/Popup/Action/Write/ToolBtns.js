@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 // Helper
 import { addClassTemporarily } from '../../../../utils/dom';
-import { getCountInfo } from './helper';
+import { getCountInfo, uploadMedia, addImagePreview } from './helper';
 
 // Components
 import Icon from '../../../Utils/Icon';
@@ -52,42 +52,72 @@ export class GeoPicker extends React.Component {
         });
 
         return (
-            <button className={btnClass} type="button" onClick={this.handleClick} ref="btn">
+            <button className={btnClass} type="button" onClick={this.handleClick}>
                 <Icon viewBox="0 0 200 200" name="geoPicker" />
             </button>
         );
     }
 }
-GeoPicker.propTypes = {
-    onChange: React.PropTypes.func.isRequired
-}
 
 export class MediaUpload extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { inprocess: false, selected: false }
-        this.handleClick = this.handleClick.bind(this)
+        this.state = { inprocess: false }
+        this.handleChange = this.handleChange.bind(this)
     }
-    handleClick() {
+    handleChange() {
+        let { provider, media, onChange } = this.props;
+        const uploadElem = this.refs.btn;
+        const file = uploadElem.files[0];
 
+        // Preview
+        addImagePreview({ file })
+        .then(previewURL => {
+            media.urls.push(previewURL)
+            this.setState({ inprocess: true })
+        })
+        .then(() => {
+            // Upload
+            uploadMedia({ provider, file })
+            .then(id => {
+                media.ids.push(id)
+                onChange({ type: 'media', payload: media })
+                this.setState({ inprocess: false })
+            })
+        })
+
+        // Reset
+        uploadElem.value = '';
     }
     render() {
-        const { inprocess, selected } = this.state;
+        const { inprocess } = this.state;
+        const btnStyle = inprocess ? { 'pointerEvents': 'none' } : null;
         const btnClass = classNames({
-            'write__btn write__btn--left tips--deep--peace': true,
-            'tips--active--peace': selected,
+            'write__btn write__btn--media tips--deep--peace': true,
             'tips--inprocess': inprocess
         });
 
         return (
-            <button className={btnClass} type="button" onClick={this.handleClick} ref="btn">
-                <Icon viewBox="0 0 200 200" name="camera" />
-            </button>
+            <span>
+                <label
+                    style={btnStyle}
+                    className={btnClass}
+                    htmlFor="uploadMedia"
+                    role="button"
+                >
+                    <Icon viewBox="0 0 200 200" name="camera" />
+                </label>
+                <input
+                    style={{ display: 'none' }}
+                    id="uploadMedia"
+                    type="file"
+                    accept="image/gif,image/jpeg,image/jpg,image/png"
+                    onChange={this.handleChange}
+                    ref="btn"
+                />
+            </span>
         );
     }
-}
-MediaUpload.propTypes = {
-    onChange: React.PropTypes.func.isRequired
 }
 
 export class ToggleSensitive extends React.Component {
@@ -111,14 +141,11 @@ export class ToggleSensitive extends React.Component {
         });
 
         return (
-            <button className={btnClass} type="button" onClick={this.handleClick} ref="btn">
+            <button className={btnClass} type="button" onClick={this.handleClick}>
                 <Icon viewBox="0 0 200 200" name="sensitive" />
             </button>
         );
     }
-}
-ToggleSensitive.propTypes = {
-    onChange: React.PropTypes.func.isRequired
 }
 
 export class ToggleWeiboEmotions extends React.Component {
@@ -142,14 +169,11 @@ export class ToggleWeiboEmotions extends React.Component {
         });
 
         return (
-            <button className={btnClass} type="button" onClick={this.handleClick} ref="btn">
+            <button className={btnClass} type="button" onClick={this.handleClick}>
                 <Icon viewBox="0 0 200 200" name="emotions" />
             </button>
         );
     }
-}
-ToggleWeiboEmotions.propTypes = {
-    onChange: React.PropTypes.func.isRequired
 }
 
 export class Submit extends React.Component {
@@ -160,7 +184,8 @@ export class Submit extends React.Component {
         const { action, provider, status, submitting, onClick } = this.props;
         const { count, isOverLimitCount } = getCountInfo({ provider, status });
         const btnClass = classNames({
-            'write__btn write__btn--send icon--weibo tips': true,
+            'write__btn write__btn--send tips': true,
+            [`icon--${provider}`]: true,
             'write__btn--send--sending': submitting
         })
         return (

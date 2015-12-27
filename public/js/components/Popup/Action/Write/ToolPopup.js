@@ -4,6 +4,43 @@ import classNames from 'classnames';
 import { removeText, insertText } from './helper';
 import { weiboEmotify } from '../../../Utils/Post/Utils/Text/helper';
 
+export class MediaPreview extends React.Component {
+    constructor(props) {
+        super(props)
+        this.removeMedia = this.removeMedia.bind(this)
+    }
+    removeMedia(url) {
+        const { media, onChange } = this.props;
+        const index = media.urls.indexOf(url);
+
+        onChange({
+            type: 'media',
+            payload: {
+                urls: [...media.urls.slice(0, index), ...media.urls.slice(index + 1)],
+                ids: [...media.ids.slice(0, index), ...media.ids.slice(index + 1)]
+            }
+        })
+    }
+    render() {
+        const { media } = this.props;
+        return (
+            <div className="write__mediaPreview">
+            {
+                media.urls.map(url => (
+                    <span
+                        className="write__mediaPreview__item animate--faster"
+                        key={url}
+                        onClick={this.removeMedia.bind(null, url)}
+                    >
+                        <img src={url} />
+                    </span>
+                ))
+            }
+            </div>
+        );
+    }
+}
+
 export class Mentions extends React.Component {
     constructor(props) {
         super(props)
@@ -31,7 +68,7 @@ export class Mentions extends React.Component {
         });
         return (
             <div className={popupClass}>
-                { provider === 'twitter'
+                { provider === 'weibo'
                     ? mentions.map(item => (
                         <button
                             key={item}
@@ -44,7 +81,7 @@ export class Mentions extends React.Component {
                     : mentions.map(item => (
                         <button
                             key={item.s}
-                            onClick={this.insertEmotions.bind(null, item.s)}
+                            onClick={this.insertMention.bind(null, item.s)}
                             type="button"
                         >
                             {item.u || item.s}

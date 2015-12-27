@@ -12,6 +12,8 @@ export default (activeProviders) => {
             .catch(err => {
                 console.err(err)
             })
+        } else {
+            resolve()
         }
     })
 }

@@ -12,15 +12,15 @@ export default props => (
         <Avatar provider="twitter" {...props.retweet.user} />
         <div className="post__content">
             <Text
-                text={props.text}
+                text={props.retweet.text}
                 middlewares={[
-                    { middleware: 'trimMediaLink', opts: { link: props.mediaLink } },
+                    { middleware: 'trimMediaLink', opts: { link: props.retweet.mediaLink } },
                     { middleware: 'linkify', opts: { provider: 'twitter' } }
                 ]}
             />
             {
-                props.media && props.media.length > 0
-                    ? <TwitterMedia media={props.media} />
+                props.retweet.media && props.retweet.media.length > 0
+                    ? <TwitterMedia media={props.retweet.media} />
                 : null
             }
         </div>
@@ -28,10 +28,19 @@ export default props => (
         <RetweetAvatar provider="twitter" {...props.user} />
 
         <span className="cursor--pointer">
-            <Like count={props.favorite_count}/>
-            <Retweet count={props.retweet_count} />
-            <Reply />
-            <Source provider="twitter" screen_name={props.user.screen_name} id_str={props.id_str} />
+            <Like count={props.retweet.favorite_count}/>
+            <Retweet
+                provider="twitter"
+                id={props.retweet.id_str}
+                count={props.retweet.retweet_count}
+                post={props.retweet}
+            />
+            <Reply provider="twitter" id={props.retweet.id_str} post={props.retweet} />
+            <Source
+                provider="twitter"
+                screen_name={props.retweet.user.screen_name}
+                id_str={props.retweet.id_str}
+            />
         </span>
 
         <TimeAgo date={props.created_at} />

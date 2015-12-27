@@ -22,10 +22,16 @@ export default {
     },
     VaildAction: (nextState, replaceState) => {
         const action = nextState.params.action;
-        const validActions = ['user', 'tag', 'location', 'read', 'tweet', 'retweet', 'quote', 'reply'];
 
+        const validActions = ['user', 'tag', 'location', 'read', 'tweet', 'retweet', 'quote', 'reply'];
         if (validActions.indexOf(action) < 0){
             console.error(`Warning: "${action}" is't valid action`)
+            replaceState(null, '/home')
+        }
+
+        const stateRequiredAction = ['retweet', 'quote', 'reply'];
+        if (stateRequiredAction.indexOf(action) >= 0 && !nextState.location.state){
+            console.error(`Warning: "state" is missing`)
             replaceState(null, '/home')
         }
     }
