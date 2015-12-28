@@ -9,16 +9,11 @@ export class MediaPreview extends React.Component {
         super(props)
         this.removeMedia = this.removeMedia.bind(this)
     }
-    removeMedia(url) {
+    removeMedia(index) {
         const { media, onChange } = this.props;
-        const index = media.urls.indexOf(url);
 
         onChange({
-            type: 'media',
-            payload: {
-                urls: [...media.urls.slice(0, index), ...media.urls.slice(index + 1)],
-                ids: [...media.ids.slice(0, index), ...media.ids.slice(index + 1)]
-            }
+            media: [...media.slice(0, index), ...media.slice(index + 1)]
         })
     }
     render() {
@@ -26,11 +21,11 @@ export class MediaPreview extends React.Component {
         return (
             <div className="write__mediaPreview">
             {
-                media.urls.map(url => (
+                media.map(({ url }, index) => (
                     <span
                         className="write__mediaPreview__item animate--faster"
                         key={url}
-                        onClick={this.removeMedia.bind(null, url)}
+                        onClick={this.removeMedia.bind(null, index)}
                     >
                         <img src={url} />
                     </span>

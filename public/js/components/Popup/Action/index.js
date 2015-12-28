@@ -31,5 +31,13 @@ export const Action = (props) => {
             break;
     }
 
-    return <SelectAction provider={provider} action={action} id={id} post={props.location.state} />;
+    return (
+        <SelectAction
+            provider={provider}
+            action={action}
+            id={id}
+            history={props.history}
+            post={props.location.state}
+        />
+    );
 }

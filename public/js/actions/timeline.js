@@ -25,7 +25,7 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
 
         return determineFetchFrom({ postsType, isAutoFetch, ...auth, ...timeline })
         .then(({ fetchFrom, invalidProviders }) => {
-            console.info(`[${postsType}] fetchFrom: ${fetchFrom}`)
+            __DEV__ && console.info(`[${postsType}: fetchFrom] ${fetchFrom}`)
             switch (fetchFrom) {
                 case 'local':
                     fetchFromLocal({ postsType, ...timeline })

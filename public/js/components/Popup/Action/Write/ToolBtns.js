@@ -22,7 +22,7 @@ export class GeoPicker extends React.Component {
 
         if (selected) {
             this.setState({ inprocess: false, selected: false })
-            onChange({ type: 'geo', payload: {} })
+            onChange({ geo: {} })
         } else {
             this.setState({ inprocess: true })
 
@@ -31,8 +31,7 @@ export class GeoPicker extends React.Component {
 
                 const { latitude, longitude } = pos.coords;
                 onChange({
-                    type: 'geo',
-                    payload: {
+                    geo: {
                         lat: latitude,
                         long: longitude
                     }
@@ -66,22 +65,28 @@ export class MediaUpload extends React.Component {
         this.handleChange = this.handleChange.bind(this)
     }
     handleChange() {
-        let { provider, media, onChange } = this.props;
+        const { provider, media, onChange } = this.props;
         const uploadElem = this.refs.btn;
         const file = uploadElem.files[0];
 
         // Preview
+        let newMediaItem = {};
         addImagePreview({ file })
-        .then(previewURL => {
-            media.urls.push(previewURL)
+        .then(({ previewURL, ratio }) => {
+            newMediaItem.url = previewURL;
+            newMediaItem.ratio = ratio;
             this.setState({ inprocess: true })
         })
         .then(() => {
             // Upload
             uploadMedia({ provider, file })
             .then(id => {
-                media.ids.push(id)
-                onChange({ type: 'media', payload: media })
+                newMediaItem.id = id;
+                onChange({ media: media.concat([newMediaItem]) })
+                this.setState({ inprocess: false })
+            })
+            .catch(err => {
+                addClassTemporarily(this.refs.label, 'tips--error', 500)
                 this.setState({ inprocess: false })
             })
         })
@@ -90,11 +95,13 @@ export class MediaUpload extends React.Component {
         uploadElem.value = '';
     }
     render() {
+        const { media } = this.props;
         const { inprocess } = this.state;
-        const btnStyle = inprocess ? { 'pointerEvents': 'none' } : null;
+        const btnStyle = inprocess || media.length >= 4 ? { 'pointerEvents': 'none' } : null;
         const btnClass = classNames({
             'write__btn write__btn--media tips--deep--peace': true,
-            'tips--inprocess': inprocess
+            'tips--inprocess': inprocess,
+            'tips--frozen': media.length >= 4
         });
 
         return (
@@ -104,6 +111,7 @@ export class MediaUpload extends React.Component {
                     className={btnClass}
                     htmlFor="uploadMedia"
                     role="button"
+                    ref="label"
                 >
                     <Icon viewBox="0 0 200 200" name="camera" />
                 </label>
@@ -131,7 +139,7 @@ export class ToggleSensitive extends React.Component {
         const { onChange } = this.props;
 
         this.setState({ selected: !selected })
-        onChange({ type: 'sensitive', payload: !selected })
+        onChange({ sensitive: !selected })
     }
     render() {
         const { selected } = this.state;
@@ -159,7 +167,7 @@ export class ToggleWeiboEmotions extends React.Component {
         const { onChange } = this.props;
 
         this.setState({ selected: !selected })
-        onChange({ type: 'emotions', payload: !selected })
+        onChange({ emotions: !selected })
     }
     render() {
         const { selected } = this.state;

@@ -18,7 +18,7 @@ class Home extends React.Component {
         return this.props.fetchPosts({ postsType, isAutoFetch })
     }
     componentWillMount() {
-        const { activeProviders, isInitLoad, resetState } = this.props;
+        const { activeProviders, isInitLoad, resetState, history } = this.props;
 
         DependencyLoader(activeProviders)
         .then(() => this.setState({ isDependenciesLoaded: true }))
@@ -34,7 +34,9 @@ class Home extends React.Component {
             }, 1000 * 60 * 3)
         })
         .catch(err => {
-            console.error(err)
+            // if (err.status === 401){
+            //     history.push('/settings')
+            // }
         })
     }
     componentWillUnmount() {

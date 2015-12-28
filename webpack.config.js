@@ -21,6 +21,7 @@ module.exports = {
             'react-timeago',
             'react-visibility-sensor',
             'object.assign',
+            'debounce',
         ]
     },
     output: {
@@ -42,6 +43,9 @@ module.exports = {
         extensions: ['', '.js', '.json', '.coffee'] 
     },
     plugins: [
+        new webpack.DefinePlugin({
+            __DEV__: process.env.NODE_ENV === 'development' || false
+        }),
         new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js'),
         new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } })
     ],

@@ -1,10 +1,11 @@
 .write {
-    position: absolute * * 0 0;
-    size: 100% 33.3%;
-    background-color: var(--color-gray);
-    z-index: 5;
-    overflow: hidden;
-
+    &__form {
+        position: absolute * * 0 0;
+        size: 100% 33.3%;
+        background-color: var(--color-gray);
+        z-index: 5;
+        overflow: hidden;
+    }
     &__textarea {
         position: relative 17% * * 5%;
         size: 90% 60%;
@@ -201,14 +202,9 @@
             }
         }
     }
-    &__live-preview {
-        position: absolute -30px * * calc(50% - 20px);
-        size: 40px 30px;
-
-        svg {
-            stroke: var(--color-gray);
-            stroke-width: 7px;
-            width: 40px;
-        }
+    &__livePreview {
+        position: absolute 0 * * 0;
+        width: 100%;
+        max-height: 66.7%;
     }
 }

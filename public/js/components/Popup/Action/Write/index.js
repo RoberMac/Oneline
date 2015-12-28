@@ -1,11 +1,17 @@
 import React from 'react';
+import debounce from 'debounce';
+import assign from 'object.assign';
 
 // Helper
-import history from '../../../../utils/history'
 import { addClassTemporarily } from '../../../../utils/dom';
-import { extractMentions, isLeftPopup, submitWrite, draft, initStatus } from './helper';
+import {
+    extractMentions, isLeftPopup,
+    submitWrite, draft,
+    initWrite, initStatus, initLivePreview
+} from './helper';
 
 // Components
+import Post from '../../../Utils/Post';
 import { GeoPicker, MediaUpload, ToggleSensitive, ToggleWeiboEmotions, Submit } from './ToolBtns';
 import { MediaPreview, Mentions, WeiboEmotions } from './ToolPopup';
 import Transition from '../../../Utils/Transition';
@@ -13,17 +19,25 @@ import Transition from '../../../Utils/Transition';
 // Export
 export default class Write extends React.Component {
     constructor(props) {
+        initWrite()
+        const { action, provider, post } = props;
+
         super(props)
         this.state = {
             status: '',
             mentions: [],
             geo: {},
-            media: {
-                urls: [],
-                ids: []
-            },
+            media: [],
             sensitive: false,
             emotions: false,
+            livePreviewPost: initLivePreview({
+                type: action,
+                provider,
+                status: '',
+                media: [],
+                post,
+                livePreviewPost: {}
+            }),
             toolPopupLeft: false,
             submitting: false
         }
@@ -31,34 +45,61 @@ export default class Write extends React.Component {
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    handleStateChange({ type, payload }) {
-        this.setState({ [type]: payload })
+    handleStateChange(state) {
+        if (Object.keys(state).indexOf('media') >= 0) {
+            const { action, provider, post } = this.props;
+            const { status, livePreviewPost } = this.state;
+            assign(state, {
+                livePreviewPost: initLivePreview({
+                    type: action,
+                    provider,
+                    status,
+                    media: state.media,
+                    livePreviewPost,
+                    post
+                })
+            })
+        }
+        this.setState(state)
     }
     handleTextChange() {
-        const { action, provider, id, post } = this.props;
+        const { action, provider, id, history, post } = this.props;
         const elem = this.refs.textarea;
-        let _status = elem.value;
+        const _status = elem.value;
 
         // Update State
-        const status = _status.trim().length > 0 ? _status : _status.trim();
-        const mentions = extractMentions({
+        let status = _status.trim().length > 0 ? _status : _status.trim();
+        let mentions = extractMentions({
             status: status.slice(0, elem.selectionStart),
             provider: this.props.provider
         });
-        const toolPopupLeft = isLeftPopup();
-        this.setState({ status, mentions, toolPopupLeft })
+        let toolPopupLeft = isLeftPopup();
 
         // Retweet <==> Quote
+        let newAction = action;
         if (action === 'retweet' && status){
+            newAction = 'quote';
             history.replaceState(post, `/home/${provider}/quote/${id}`)
         } else if (action === 'quote' && status === '') {
+            newAction = 'retweet';
             history.replaceState(post, `/home/${provider}/retweet/${id}`)
         }
 
+        // Update Live Preview
+        let livePreviewPost = initLivePreview({
+            type: newAction,
+            provider,
+            status,
+            media: this.state.media,
+            livePreviewPost: this.state.livePreviewPost,
+            post
+        })
+
+        this.setState({ status, mentions, livePreviewPost, toolPopupLeft })
         this.refs.textarea.focus()
     }
     handleSubmit() {
-        const { action, provider } = this.props;
+        const { action, provider, history } = this.props;
 
         this.setState({ submitting: true })
         submitWrite({ ...this.state, ...this.props })
@@ -83,75 +124,87 @@ export default class Write extends React.Component {
         const { action, provider } = this.props;
         const { status } = this.state;
         // Save Draft
-        status ? draft.set({ action, provider, status }) : null
+        status && draft.set({ action, provider, status })
     }
     render() {
         const { action, provider, id } = this.props;
-        const { status, media, mentions, emotions, toolPopupLeft, submitting } = this.state;
+        const {
+            status, media, mentions,
+            emotions, livePreviewPost,
+            toolPopupLeft, submitting
+        } = this.state;
         const isTwitter = provider === 'twitter';
         const isWeibo   = provider === 'weibo';
 
         return (
-            <form className="write">
+            <div className="write">
+                { action !== 'reply'
+                    ? <div className="write__livePreview overflow--y">
+                        <Post item={livePreviewPost}/>
+                    </div>
+                    : null
+                }
+                <form className="write__form">
 
-                <textarea
-                    className="write__textarea animate--general"
-                    type="text"
-                    autoComplete="off"
-                    spellCheck="false"
-                    required={action !== 'retweet'}
-                    disabled={submitting}
-                    onChange={this.handleTextChange}
-                    ref="textarea"
-                />
-                <div className="write__textarea write__textarea--mirror"><span></span></div>
+                    <textarea
+                        className="write__textarea animate--general"
+                        type="text"
+                        autoComplete="off"
+                        spellCheck="false"
+                        required={action !== 'retweet'}
+                        disabled={submitting}
+                        onChange={debounce(this.handleTextChange, 250)}
+                        ref="textarea"
+                    />
+                    <div className="write__textarea write__textarea--mirror"><span></span></div>
 
-                <div className="write__toolBar">
-                    { isTwitter ? <ToggleSensitive onChange={this.handleStateChange} /> : null }
-                    <GeoPicker onChange={this.handleStateChange} />
-                    { isTwitter && media.ids.length < 4
-                        ? <MediaUpload
+                    <div className="write__toolBar">
+                        { isTwitter ? <ToggleSensitive onChange={this.handleStateChange} /> : null }
+                        <GeoPicker onChange={this.handleStateChange} />
+                        { isTwitter
+                            ? <MediaUpload
+                                provider={provider}
+                                media={media}
+                                onChange={this.handleStateChange}
+                            />
+                            : null
+                        }
+                        { isWeibo ? <ToggleWeiboEmotions onChange={this.handleStateChange} /> : null }
+                        <Submit
+                            action={action}
                             provider={provider}
-                            media={media}
-                            onChange={this.handleStateChange}
+                            status={status}
+                            submitting={submitting}
+                            onClick={this.handleSubmit}
                         />
-                        : null
-                    }
-                    { isWeibo ? <ToggleWeiboEmotions onChange={this.handleStateChange} /> : null }
-                    <Submit
-                        action={action}
-                        provider={provider}
-                        status={status}
-                        submitting={submitting}
-                        onClick={this.handleSubmit}
-                    />
-                </div>
+                    </div>
 
-                { media.urls.length > 0
-                        ? <MediaPreview media={media} onChange={this.handleStateChange} />
-                : null }
+                    { media.length > 0
+                            ? <MediaPreview media={media} onChange={this.handleStateChange} />
+                    : null }
 
-                <Transition>
-                { mentions.length > 0
-                    ? <Mentions
-                        mentions={mentions}
-                        provider={provider}
-                        toolPopupLeft={toolPopupLeft}
-                        onChange={this.handleTextChange}
-                    />
-                : null }
-                </Transition>
+                    <Transition>
+                    { mentions.length > 0
+                        ? <Mentions
+                            mentions={mentions}
+                            provider={provider}
+                            toolPopupLeft={toolPopupLeft}
+                            onChange={this.handleTextChange}
+                        />
+                    : null }
+                    </Transition>
 
-                <Transition>
-                { emotions && isWeibo
-                    ? <WeiboEmotions
-                        emotions={emotions}
-                        toolPopupLeft={toolPopupLeft}
-                        onChange={this.handleTextChange}
-                    />
-                : null }
-                </Transition>
-            </form>
+                    <Transition>
+                    { emotions && isWeibo
+                        ? <WeiboEmotions
+                            emotions={emotions}
+                            toolPopupLeft={toolPopupLeft}
+                            onChange={this.handleTextChange}
+                        />
+                    : null }
+                    </Transition>
+                </form>
+            </div>
         );
     }
 }

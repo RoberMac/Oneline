@@ -11,7 +11,7 @@ export default class Like extends React.Component {
         // TODO
     }
     render() {
-        const { count } = this.props;
+        const { id, count } = this.props;
         // const { count, id } = this.props;
 
         return (
@@ -19,6 +19,7 @@ export default class Like extends React.Component {
                 className="post-action tips--deep"
                 type="button"
                 onClick={this.toggleLike}
+                style={ id ? null : { 'pointerEvents': 'none' } }
             >
                 <Icon className="post-action__button" viewBox="0 0 26 26" name="favorite" data-like />
                 <span

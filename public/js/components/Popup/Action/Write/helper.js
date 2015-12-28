@@ -4,19 +4,33 @@ import assign from 'object.assign';
 import store from '../../../../utils/store';
 import { Action, Media } from '../../../../utils/api'
 
-export const extractMentions = ({ status, provider }) => {
-    const mentionsList = store.get(`mentions_${provider}`) || [];
-    const mentionRegex = {
-        twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
-        instagram: /(|\s)*@([\w\.]*)$/,
-        weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
-    };
+/**
+ * Init Write
+ *
+ */
+let mentionRegex = {};
+let mentionsList = {};
+let userProfile = {};
+export const initWrite = () => {
+    mentionRegex.twitter = /(|\s)*@([\u4e00-\u9fa5\w-]*)$/; // 可匹配中文
+    mentionRegex.weibo = /(|\s)*@([\u4e00-\u9fa5\w-]*)$/;
 
+    mentionsList.twitter = store.get('mentions_twitter') || [];
+    mentionsList.weibo = store.get('mentions_weibo') || [];
+    
+    userProfile.twitter = store.get('profile_twitter');
+    userProfile.weibo = store.get('profile_weibo');
+}
+/**
+ * Mention
+ *
+ */
+export const extractMentions = ({ status, provider }) => {
     let mentionUser = status.match(mentionRegex[provider]);
     if (mentionUser){
         mentionUser = mentionUser[2].trim().toLowerCase();
         return (
-            mentionsList
+            mentionsList[provider]
             .filter(provider === 'twitter'
                 ? item => Object.keys(item).some(key => item[key].toLowerCase().indexOf(mentionUser) >= 0)
                 : item => item.toLowerCase().indexOf(mentionUser) >= 0
@@ -119,7 +133,8 @@ export const submitWrite = ({
     };
     // Init
     if (isTwitter){
-        assign(params, { geo, sensitive, media_ids: media.ids.length > 0 ? media.ids : undefined })
+        const media_ids = media.length > 0 ? media.map(({ id }) => id) : undefined;
+        assign(params, { geo, sensitive, media_ids })
 
         if (action === 'quote'){
             params.status = `${status} https://twitter.com/${post.user.screen_name}/status/${id}`
@@ -217,12 +232,16 @@ export const uploadMedia = ({ provider, file }) => {
 }
 export const addImagePreview = ({ file }) => {
     return new Promise((resolve, reject) => {
-        let reader = new FileReader();
-        // let image  = new Image();
+        const reader = new FileReader();
+        const image  = new Image();
 
-        reader.onload = function (e) {
+        reader.onload = (e) => {
             const previewURL = URL.createObjectURL(dataURLtoBlob(e.target.result));
-            resolve(previewURL)
+            image.src = previewURL
+            image.onload = () => {
+                const ratio = (image.height / image.width).toFixed(5);
+                resolve({ previewURL, ratio })
+            };
         }
 
         reader.readAsDataURL(file)
@@ -252,3 +271,39 @@ function dataURLtoBlob(dataURL) {
 
     return new Blob([uInt8Array], {type: contentType});
 }
+/**
+ * Live Preview
+ *
+ */
+export const initLivePreview = ({ type, provider, status, media, livePreviewPost, post }) => {
+    if (type === 'reply') return {};
+
+    const { created_at, user } = livePreviewPost;
+    let newLivePreviewPost = {};
+
+    // Common
+    assign(newLivePreviewPost, {
+        provider,
+        type,
+        created_at: created_at || Date.now(),
+        text: status,
+        user: user || userProfile[provider],
+        media: initLivePreviewMedia({ media, provider })
+    });
+    // Retweet / Quote
+    switch (type){
+        case 'retweet':
+        case 'quote':
+            assign(newLivePreviewPost, {
+                [type]: post
+            });
+            break;
+    }
+
+    return newLivePreviewPost;
+}
+function initLivePreviewMedia ({ media, provider }) {
+    return media.map(({ url, ratio }) => ({ type: 'photo', image_url: url, ratio }));
+    // TODO: Support Weibo
+}
+
