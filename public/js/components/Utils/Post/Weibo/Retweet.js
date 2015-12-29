@@ -5,7 +5,7 @@ import { Avatar, RetweetAvatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { WeiboMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Retweet, Reply, Source, Star } from '../Utils/Action';
+import { Like, Retweet, Reply, Source, Star } from '../Utils/Action';
 
 export default props => (
     <div className="post post--weibo">
@@ -37,11 +37,12 @@ export default props => (
             <Reply
                 provider="weibo"
                 id={props.retweet.id_str}
-                count={props.retweet.comments_count}
+                count={props.retweet.reply_count}
                 post={props.retweet}
             />
             <Source provider="weibo" uid={props.retweet.user.uid} mid={props.retweet.mid} />
-            <Star />
+            <Star provider="weibo" id={props.retweet.id_str} stared={props.retweet.stared} />
+            <Like count={props.retweet.favorite_count} liked={props.retweet.liked} />
         </span>
 
         <TimeAgo date={props.created_at} />

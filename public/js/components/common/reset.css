@@ -171,11 +171,11 @@ img, video {
         }
     }
     &--frozen {
-        opacity: .1!important;
+        opacity: .3!important;
         cursor: default;
 
         &:hover {
-            opacity: .1!important;
+            opacity: .3!important;
         }
     }
     &--inprocess {

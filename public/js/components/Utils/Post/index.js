@@ -25,9 +25,9 @@ const selectPost = {
 };
 
 
-export default (props) => {
-    const { provider, type } = props.item;
+export default ({ item }) => {
+    const { provider, type } = item;
     const SelectedPost = selectPost[provider][type];
 
-    return <SelectedPost {...props.item}/>
+    return <SelectedPost {...item} />
 }

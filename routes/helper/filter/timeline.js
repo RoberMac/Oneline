@@ -24,9 +24,9 @@ let filter = {
                 user: filterUtils.twitter.user(item.user),
                 text: item.text,
                 retweet_count: item.retweet_count,
-                favorite_count: item.favorite_count,
+                like_count: item.favorite_count,
                 retweeted: item.retweeted,
-                favorited: item.favorited
+                liked: item.favorited
             };
             // Media
             let t_extended_entities = item.extended_entities;
@@ -60,9 +60,9 @@ let filter = {
                     user: filterUtils.twitter.user(r_item.user),
                     text: r_item.text,
                     retweet_count: r_item.retweet_count,
-                    favorite_count: r_item.favorite_count,
+                    like_count: r_item.favorite_count,
                     retweeted: r_item.retweeted,
-                    favorited: r_item.favorited
+                    liked: r_item.favorited
                 };
                 // Media
                 let r_extended_entities = r_item.extended_entities;
@@ -106,8 +106,8 @@ let filter = {
                 user: filterUtils.instagram.user(item.user),
                 text: item.caption && item.caption.text,
                 images: filterUtils.instagram.media(item.images),
-                favorite_count: item.likes.count,
-                favorited: item.user_has_liked,
+                like_count: item.likes.count,
+                liked: item.user_has_liked,
                 reply_count: item.comments.count,
                 link: item.link
             };
@@ -173,8 +173,9 @@ let filter = {
                 user: filterUtils.weibo.user(item.user),
                 text: item.text,
                 retweet_count: item.reposts_count,
-                comments_count: item.comments_count,
-                favorite_count: item.attitudes_count
+                reply_count: item.comments_count,
+                like_count: item.attitudes_count,
+                liked: item.favorited
             };
             // Media
             let pic_urls = item.pic_urls;
@@ -216,8 +217,9 @@ let filter = {
                     user: filterUtils.weibo.user(r_item.user),
                     text: r_item.text,
                     retweet_count: r_item.reposts_count,
-                    comments_count: r_item.comments_count,
-                    favorite_count: r_item.attitudes_count
+                    reply_count: r_item.comments_count,
+                    like_count: r_item.attitudes_count,
+                    liked: r_item.favorited
                 };
                 // Media
                 let pic_urls = r_item.pic_urls;

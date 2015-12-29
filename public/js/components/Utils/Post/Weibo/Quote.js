@@ -5,7 +5,7 @@ import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { WeiboMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Retweet, Reply, Source, Star } from '../Utils/Action';
+import { Like, Retweet, Reply, Source, Star } from '../Utils/Action';
 
 export default props => (
     <div className="post post--weibo">
@@ -46,11 +46,12 @@ export default props => (
                 <Reply
                     provider="weibo"
                     id={props.quote.id_str}
-                    count={props.quote.comments_count}
+                    count={props.quote.reply_count}
                     post={props.quote}
                 />
                 <Source provider="weibo" uid={props.quote.user.uid} mid={props.quote.mid} />
-                <Star />
+                <Star provider="weibo" id={props.quote.id_str} stared={props.quote.stared} />
+                <Like count={props.quote.favorite_count} liked={props.quote.liked} />
             </span>
 
             <TimeAgo date={props.quote.created_at} />
@@ -58,9 +59,10 @@ export default props => (
 
         <span className="cursor--pointer">
             <Retweet provider="weibo" id={props.id_str} count={props.quote_count} post={props} />
-            <Reply provider="weibo" id={props.id_str} count={props.comments_count} post={props} />
+            <Reply provider="weibo" id={props.id_str} count={props.reply_count} post={props} />
             <Source provider="weibo" uid={props.user.uid} mid={props.mid} />
-            <Star />
+            <Star provider="weibo" id={props.id_str} stared={props.stared} />
+            <Like count={props.favorite_count} liked={props.liked} />
         </span>
 
         <TimeAgo date={props.created_at} />

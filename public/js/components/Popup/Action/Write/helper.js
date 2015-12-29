@@ -2,7 +2,7 @@ import { Promise } from 'es6-promise';
 import assign from 'object.assign';
 
 import store from '../../../../utils/store';
-import { Action, Media } from '../../../../utils/api'
+import { Action, Media } from '../../../../utils/api';
 
 /**
  * Init Write
@@ -149,26 +149,8 @@ export const submitWrite = ({
     return new Promise((resolve, reject) => {
         Action
         .update({ action, provider, id }, { params: params })
-        .then(res => {
-
-            // TODO
-            // if (_action === 'retweet'){
-            //     olUI.setActionState('retweet', _id, 'active')
-            //     olUI.actionData('retweet', _id, data.id_str)
-
-            //     if (__action === 'quote' && isTwitter){
-            //         // 凍結
-            //         olUI.setActionState('retweet', _id, 'frozen')
-            //     } else {
-            //         var count = ~~olUI.actionData('retweet', _id, null, 'count') + 1;
-            //         olUI.actionData('retweet', _id, count, 'count')
-            //     }
-            // }
-            resolve()
-        })
-        .catch(err => {
-            reject(err)
-        })
+        .then(res => resolve())
+        .catch(err => reject(err))
     })
 }
 export const draft = {
@@ -216,12 +198,9 @@ export const uploadMedia = ({ provider, file }) => {
         let fd = new FormData();
         fd.append('twitterMedia', file)
 
-        //TODO: 轉推」／「引用」切換時，清空之前上傳過的圖片數據
-
         Media.upload({ provider }, fd)
         .then(res => {
             const id = res.body.media_id;
-
             resolve(id)
         })
         .catch(err => {

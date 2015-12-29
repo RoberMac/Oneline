@@ -7,7 +7,7 @@ import { getCountInfo, uploadMedia, addImagePreview } from './helper';
 
 // Components
 import Icon from '../../../Utils/Icon';
-
+const disableBtnStyle = { 'pointerEvents': 'none', 'opacity': '.1' };
 export class GeoPicker extends React.Component {
     constructor(props) {
         super(props)
@@ -43,7 +43,9 @@ export class GeoPicker extends React.Component {
         }
     }
     render() {
+        const { action } = this.props;
         const { inprocess, selected } = this.state;
+        const btnStyle = inprocess || action === 'retweet' ? disableBtnStyle : null;
         const btnClass = classNames({
             'write__btn write__btn--left tips--deep--peace': true,
             'tips--active--peace': selected,
@@ -51,7 +53,7 @@ export class GeoPicker extends React.Component {
         });
 
         return (
-            <button className={btnClass} type="button" onClick={this.handleClick}>
+            <button className={btnClass} style={btnStyle} type="button" onClick={this.handleClick}>
                 <Icon viewBox="0 0 200 200" name="geoPicker" />
             </button>
         );
@@ -95,13 +97,12 @@ export class MediaUpload extends React.Component {
         uploadElem.value = '';
     }
     render() {
-        const { media } = this.props;
+        const { media, action } = this.props;
         const { inprocess } = this.state;
-        const btnStyle = inprocess || media.length >= 4 ? { 'pointerEvents': 'none' } : null;
+        const btnStyle = inprocess || media.length >= 4 || action === 'retweet' ? disableBtnStyle : null;
         const btnClass = classNames({
             'write__btn write__btn--media tips--deep--peace': true,
-            'tips--inprocess': inprocess,
-            'tips--frozen': media.length >= 4
+            'tips--inprocess': inprocess
         });
 
         return (
@@ -142,14 +143,16 @@ export class ToggleSensitive extends React.Component {
         onChange({ sensitive: !selected })
     }
     render() {
+        const { action } = this.props;
         const { selected } = this.state;
+        const btnStyle = action === 'retweet' ? disableBtnStyle : null;
         const btnClass = classNames({
             'write__btn write__btn--left tips--deep--peace': true,
             'tips--active--peace': selected
         });
 
         return (
-            <button className={btnClass} type="button" onClick={this.handleClick}>
+            <button className={btnClass} style={btnStyle} type="button" onClick={this.handleClick}>
                 <Icon viewBox="0 0 200 200" name="sensitive" />
             </button>
         );
@@ -195,7 +198,7 @@ export class Submit extends React.Component {
             'write__btn write__btn--send tips': true,
             [`icon--${provider}`]: true,
             'write__btn--send--sending': submitting
-        })
+        });
         return (
             <button
                 className={btnClass}

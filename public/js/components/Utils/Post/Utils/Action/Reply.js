@@ -7,7 +7,7 @@ export default ({ provider, id, count, post }) => (
     <Link
         to={`/home/${provider}/reply/${id}`}
         state={post}
-        style={ id ? null : { 'pointerEvents': 'none' } }
+        style={ id ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
     >
         <span className="post-action btn tips--deep">
             <Icon className="post-action__button" viewBox="0 0 26 26" name="reply" />

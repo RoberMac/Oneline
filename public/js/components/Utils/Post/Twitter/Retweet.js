@@ -28,18 +28,24 @@ export default props => (
         <RetweetAvatar provider="twitter" {...props.user} />
 
         <span className="cursor--pointer">
-            <Like count={props.retweet.favorite_count}/>
+            <Like
+                provider="twitter"
+                id={props.retweet.id_str}
+                count={props.retweet.like_count}
+                liked={props.retweet.liked}
+            />
             <Retweet
                 provider="twitter"
                 id={props.retweet.id_str}
                 count={props.retweet.retweet_count}
+                retweeted={props.retweet.retweeted}
                 post={props.retweet}
             />
             <Reply provider="twitter" id={props.retweet.id_str} post={props.retweet} />
             <Source
                 provider="twitter"
                 screen_name={props.retweet.user.screen_name}
-                id_str={props.retweet.id_str}
+                id={props.retweet.id_str}
             />
         </span>
 

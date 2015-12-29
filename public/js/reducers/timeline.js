@@ -1,11 +1,12 @@
-import update from 'react-addons-update'
+import update from 'react-addons-update';
 
-import { FETCH_START, RECEIVE_POSTS, FETCH_FAIL, RESET_STATE }  from '../actions/timeline';
+import { FETCH_START, RECEIVE_POSTS, FETCH_FAIL, UPDATE_POST, RESET_STATE }  from '../actions/timeline';
 import { initTimelineState } from '../store/initState';
 
 const initState = initTimelineState();
 
 export default (state = initState, action) => {
+    __DEV__ && console.log(`[Redux: ${action.type}]`);
     switch (action.type){
         case FETCH_START:
             return update(state, {
@@ -33,6 +34,12 @@ export default (state = initState, action) => {
                     isFetching: { $set: false },
                     isFetchFail: { $set: true }
                 }
+            })
+            break;
+        case UPDATE_POST:
+            return update(state, {
+                showingPosts: { $set: action.payload.showingPosts },
+                allPosts: { $set: action.payload.allPosts }
             })
             break;
         case RESET_STATE:

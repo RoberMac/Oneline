@@ -67,35 +67,43 @@ export default class Write extends React.Component {
         const elem = this.refs.textarea;
         const _status = elem.value;
 
-        // Update State
-        let status = _status.trim().length > 0 ? _status : _status.trim();
-        let mentions = extractMentions({
-            status: status.slice(0, elem.selectionStart),
+        let newStatus = _status.trim().length > 0 ? _status : _status.trim();
+        let newMentions = extractMentions({
+            status: newStatus.slice(0, elem.selectionStart),
             provider: this.props.provider
         });
-        let toolPopupLeft = isLeftPopup();
+        let newAction = action;
+        let newMedia = this.state.media;
+        let newToolPopupLeft = isLeftPopup();
 
         // Retweet <==> Quote
-        let newAction = action;
-        if (action === 'retweet' && status){
+        if (action === 'retweet' && newStatus){
             newAction = 'quote';
+            newMedia = [];
             history.replaceState(post, `/home/${provider}/quote/${id}`)
-        } else if (action === 'quote' && status === '') {
+        } else if (action === 'quote' && newStatus === '') {
             newAction = 'retweet';
+            newMedia = [];
             history.replaceState(post, `/home/${provider}/retweet/${id}`)
         }
 
         // Update Live Preview
-        let livePreviewPost = initLivePreview({
+        let newLivePreviewPost = initLivePreview({
             type: newAction,
             provider,
-            status,
-            media: this.state.media,
+            status: newStatus,
+            media: newMedia,
             livePreviewPost: this.state.livePreviewPost,
             post
         })
 
-        this.setState({ status, mentions, livePreviewPost, toolPopupLeft })
+        this.setState({
+            status: newStatus,
+            mentions: newMentions,
+            media: newMedia,
+            livePreviewPost: newLivePreviewPost,
+            toolPopupLeft: newToolPopupLeft
+        })
         this.refs.textarea.focus()
     }
     handleSubmit() {
@@ -159,12 +167,16 @@ export default class Write extends React.Component {
                     <div className="write__textarea write__textarea--mirror"><span></span></div>
 
                     <div className="write__toolBar">
-                        { isTwitter ? <ToggleSensitive onChange={this.handleStateChange} /> : null }
-                        <GeoPicker onChange={this.handleStateChange} />
+                        { isTwitter
+                            ? <ToggleSensitive action={action} onChange={this.handleStateChange} />
+                            : null
+                        }
+                        <GeoPicker action={action} onChange={this.handleStateChange} />
                         { isTwitter
                             ? <MediaUpload
                                 provider={provider}
                                 media={media}
+                                action={action}
                                 onChange={this.handleStateChange}
                             />
                             : null

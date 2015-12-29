@@ -48,7 +48,7 @@
         }
     }
     &__content {
-        position: relative -24px * *;
+        position: relative -17px * *;
     }
     &--quote {
         top: -12px;
@@ -61,7 +61,7 @@
         }
         .post {
             &__content {
-                top: -14px !important;
+                top: -10px !important;
             }
             &__time {
                 font-size: 10px;

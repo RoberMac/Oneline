@@ -26,10 +26,21 @@ export default props => (
         </div>
 
         <span className="cursor--pointer">
-            <Like count={props.favorite_count}/>
-            <Retweet provider="twitter" id={props.id_str} count={props.retweet_count} post={props} />
+            <Like
+                provider="twitter"
+                id={props.id_str}
+                count={props.like_count}
+                liked={props.liked}
+            />
+            <Retweet
+                provider="twitter"
+                id={props.id_str}
+                count={props.retweet_count}
+                retweeted={props.retweeted}
+                post={props}
+            />
             <Reply provider="twitter" id={props.id_str} post={props} />
-            <Source provider="twitter" screen_name={props.user.screen_name} id_str={props.id_str} />
+            <Source provider="twitter" screen_name={props.user.screen_name} id={props.id_str} />
         </span>
 
         <TimeAgo date={props.created_at} />
