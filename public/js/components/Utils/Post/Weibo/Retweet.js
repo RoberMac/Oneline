@@ -18,9 +18,8 @@ export default props => (
                     { middleware: 'weiboEmotify' }
                 ]}
             />
-            {
-                props.retweet.media && props.retweet.media.length > 0
-                    ? <WeiboMedia media={props.retweet.media} />
+            {props.retweet.media && props.retweet.media.length > 0
+                ? <WeiboMedia media={props.retweet.media} />
                 : null
             }
         </div>
@@ -28,21 +27,14 @@ export default props => (
         <RetweetAvatar provider="weibo" {...props.user}/>
 
         <span className="cursor--pointer">
-            <Retweet
-                provider="weibo"
-                id={props.retweet.id_str}
-                count={props.retweet.retweet_count}
-                post={props.retweet}
-            />
-            <Reply
-                provider="weibo"
-                id={props.retweet.id_str}
-                count={props.retweet.reply_count}
-                post={props.retweet}
-            />
+            <Retweet provider="weibo" post={props.retweet} />
+            <Reply provider="weibo" post={props.retweet} />
             <Source provider="weibo" uid={props.retweet.user.uid} mid={props.retweet.mid} />
             <Star provider="weibo" id={props.retweet.id_str} stared={props.retweet.stared} />
-            <Like count={props.retweet.favorite_count} liked={props.retweet.liked} />
+            {props.retweet.like_count
+                ? <Like count={props.retweet.like_count} liked={props.liked} />
+                : null
+            }
         </span>
 
         <TimeAgo date={props.created_at} />

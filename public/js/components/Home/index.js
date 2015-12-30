@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { replaceTokenList } from '../../actions/auth';
 import { resetState, fetchPosts } from '../../actions/timeline';
 import DependencyLoader from './loader';
 
@@ -18,7 +19,7 @@ class Home extends React.Component {
         return this.props.fetchPosts({ postsType, isAutoFetch })
     }
     componentWillMount() {
-        const { activeProviders, isInitLoad, resetState, history } = this.props;
+        const { activeProviders, isInitLoad, resetState, replaceTokenList, history } = this.props;
 
         DependencyLoader(activeProviders)
         .then(() => this.setState({ isDependenciesLoaded: true }))
@@ -34,14 +35,17 @@ class Home extends React.Component {
             }, 1000 * 60 * 3)
         })
         .catch(err => {
-            // if (err.status === 401){
-            //     history.push('/settings')
-            // }
+            __DEV__ && console.error(err)
+            if (err.status === 401){
+                replaceTokenList([])
+                history.push('/settings')
+            }
         })
     }
     componentWillUnmount() {
         // Reset `isInitLoad`
         this.props.resetState();
+        document.title = '｜';
         // Unregister Auto Fetch
         clearInterval(this.autoFetchIntervalId)
     }
@@ -93,5 +97,5 @@ export default connect(
             showingPosts
         }
     },
-    { resetState, fetchPosts }
+    { resetState, fetchPosts, replaceTokenList }
 )(Home)

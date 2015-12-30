@@ -1,13 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 
 import { updatePost } from '../../../../../actions/timeline';
+import reduxStore from '../../../../../store';
 import { Action } from '../../../../../utils/api';
 import { addClassTemporarily } from '../../../../../utils/dom';
 
 import Icon from '../../../Icon';
-class Like extends React.Component {
+export default class Like extends React.Component {
     constructor(props) {
         super(props)
         this.state = { inprocess: false }
@@ -15,7 +15,7 @@ class Like extends React.Component {
     }
     toggleLike() {
         const { inprocess } = this.state;
-        const { provider, id, count, liked, updatePost } = this.props;
+        const { provider, id, count, liked } = this.props;
 
         if (inprocess) return;
         this.setState({ inprocess: true })
@@ -25,15 +25,19 @@ class Like extends React.Component {
             provider,
             id
         })
-        .then(() => updatePost({
-            id,
-            payload: {
+        .then(() => {
+            reduxStore.dispatch(updatePost({
+                id_str: id,
                 liked: !liked,
                 like_count: count + (liked ? -1 : 1)
-            }
-        }))
-        .catch(err => addClassTemporarily(this.refs.btn, 'tips--error', 500))
-        .then(() => this.setState({ inprocess: false }))
+            }))
+            this.setState({ inprocess: false })
+        })
+        .catch(err => {
+            __DEV__ && console.error(err)
+            addClassTemporarily(this.refs.btn, 'tips--error', 500)
+            this.setState({ inprocess: false })
+        })
     }
     render() {
         const { inprocess } = this.state;
@@ -59,6 +63,3 @@ class Like extends React.Component {
         );
     }
 }
-
-// Export
-export default connect(null, { updatePost })(Like)

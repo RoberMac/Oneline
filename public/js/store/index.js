@@ -7,7 +7,7 @@ const createStoreWithMiddleware = applyMiddleware(
     thunkMiddleware
 )(createStore);
 
-export default function configureStore (initialState){
+const configureStore = (initialState) => {
     const store = createStoreWithMiddleware(rootReducer, initialState)
 
     if (module.hot) {
@@ -19,4 +19,6 @@ export default function configureStore (initialState){
     }
 
     return store;
-}
+};
+
+export default configureStore()

@@ -11,23 +11,23 @@ const disableBtnStyle = { 'pointerEvents': 'none', 'opacity': '.1' };
 export class GeoPicker extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { inprocess: false, selected: false }
+        this.state = { inprocess: false }
         this.handleClick = this.handleClick.bind(this)
     }
     handleClick() {
-        const { inprocess, selected } = this.state;
-        const { onChange } = this.props;
+        const { inprocess } = this.state;
+        const { onChange, selected } = this.props;
 
         if (inprocess) return;
 
         if (selected) {
-            this.setState({ inprocess: false, selected: false })
+            this.setState({ inprocess: false })
             onChange({ geo: {} })
         } else {
             this.setState({ inprocess: true })
 
             window.navigator.geolocation.getCurrentPosition(pos => {
-                this.setState({ inprocess: false, selected: true })
+                this.setState({ inprocess: false })
 
                 const { latitude, longitude } = pos.coords;
                 onChange({
@@ -37,14 +37,14 @@ export class GeoPicker extends React.Component {
                     }
                 })
             }, err => {
-                this.setState({ inprocess: false, selected: false })
+                this.setState({ inprocess: false })
                 addClassTemporarily(this.refs.btn, 'tips--error', 500)
             }, { maximumAge: 60000, timeout: 7000 })
         }
     }
     render() {
-        const { action } = this.props;
-        const { inprocess, selected } = this.state;
+        const { action, selected } = this.props;
+        const { inprocess } = this.state;
         const btnStyle = inprocess || action === 'retweet' ? disableBtnStyle : null;
         const btnClass = classNames({
             'write__btn write__btn--left tips--deep--peace': true,

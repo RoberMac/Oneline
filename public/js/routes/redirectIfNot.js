@@ -16,7 +16,7 @@ export default {
         const vaildProviders = ['twitter', 'instagram', 'weibo'];
 
         if (vaildProviders.indexOf(provider) < 0){
-            console.error(`Warning: "${provider}" is't valid provider`)
+            __DEV__ && console.error(`Warning: "${provider}" is't valid provider`)
             replaceState(null, '/home')
         }
     },
@@ -25,13 +25,13 @@ export default {
 
         const validActions = ['user', 'tag', 'location', 'read', 'tweet', 'retweet', 'quote', 'reply'];
         if (validActions.indexOf(action) < 0){
-            console.error(`Warning: "${action}" is't valid action`)
+            __DEV__ && console.error(`Warning: "${action}" is't valid action`)
             replaceState(null, '/home')
         }
 
         const stateRequiredAction = ['retweet', 'quote', 'reply'];
         if (stateRequiredAction.indexOf(action) >= 0 && !nextState.location.state){
-            console.error(`Warning: "state" is missing`)
+            __DEV__ && console.error(`Warning: "state" is missing`)
             replaceState(null, '/home')
         }
     }

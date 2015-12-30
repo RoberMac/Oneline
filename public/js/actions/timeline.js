@@ -51,13 +51,15 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
 }
 
 /**
- * Update (Single) Post
+ * Manipulate (Single) Post
  *
  */
 import update from 'react-addons-update';
 
 export const UPDATE_POST = 'UPDATE_POST';
-export const updatePost = ({ id, payload }) => {
+export const updatePost = (newPost) => {
+    const id = newPost.id_str;
+
     return (dispatch, getState) => {
         __DEV__ && console.time(`[updatePost: ${id}]`)
 
@@ -85,15 +87,43 @@ export const updatePost = ({ id, payload }) => {
 
         return (
             id === postId
-                ? update(item, initUpdateCommands(payload))
+                ? update(item, initUpdateCommands(newPost))
             : id === nestPostId
                 ? update(item, {
-                    [nestPostType]: initUpdateCommands(payload)
+                    [nestPostType]: initUpdateCommands(newPost)
                 })
             : item
         );
     }
 }
+export const deletePost = ({ id }) => {
+    return (dispatch, getState) => {
+        __DEV__ && console.time(`[deletePost: ${id}]`)
+
+        const { showingPosts, allPosts } = getState().timeline;
+        const newShowingPosts = showingPosts.filter(deletePostIfFound);
+        const newAllPosts = allPosts.posts.filter(deletePostIfFound);
+
+        dispatch({
+            type: UPDATE_POST,
+            payload: {
+                showingPosts: newShowingPosts,
+                allPosts: update(allPosts, {
+                    posts: { $set: newAllPosts }
+                })
+            }
+        })
+
+        __DEV__ && console.timeEnd(`[deletePost: ${id}]`)
+    };
+
+    function deletePostIfFound(item) {
+        const postId = item.id_str;
+
+        return postId !== id;
+    }
+}
+
 function initUpdateCommands (obj){
     let cmds = {};
 

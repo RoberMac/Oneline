@@ -227,6 +227,8 @@ function setTitleUnreadCount(count) {
 }
 // 紀錄時間線上出現的「提及」用戶
 function recordMentions({ providers, posts }) {
+    __DEV__ && console.time('[recordMentions]')
+
     const MAX_COUNT_L1 = 2000;
     const MAX_COUNT_L2 = 3000;
     const mentionRegex = {
@@ -306,5 +308,8 @@ function recordMentions({ providers, posts }) {
         }
 
         store.set('mentions_' + provider, mentionsList[provider])
+        window[`mentions_${provider}`] = mentionsList[provider]
     })
+
+    __DEV__ && console.timeEnd('[recordMentions]')
 }

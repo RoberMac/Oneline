@@ -209,7 +209,8 @@ img, video {
     }
 }
 .icon {
-    &--twitter, &--retweet {
+    &--twitter,
+    &--retweet {
         color: var(--color-twitter);
 
         svg {
@@ -223,7 +224,9 @@ img, video {
             fill: var(--color-instagram) !important;
         }
     }
-    &--weibo, &--like {
+    &--weibo,
+    &--like,
+    &--trash {
         color: var(--color-weibo);
 
         svg {

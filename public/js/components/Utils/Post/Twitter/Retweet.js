@@ -5,7 +5,7 @@ import { Avatar, RetweetAvatar} from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Retweet, Reply, Source } from '../Utils/Action';
+import { Like, Retweet, Reply, Source, Trash } from '../Utils/Action';
 
 export default props => (
     <div className="post post--twitter">
@@ -18,9 +18,8 @@ export default props => (
                     { middleware: 'linkify', opts: { provider: 'twitter' } }
                 ]}
             />
-            {
-                props.retweet.media && props.retweet.media.length > 0
-                    ? <TwitterMedia media={props.retweet.media} />
+            {props.retweet.media && props.retweet.media.length > 0
+                ? <TwitterMedia media={props.retweet.media} />
                 : null
             }
         </div>
@@ -34,14 +33,8 @@ export default props => (
                 count={props.retweet.like_count}
                 liked={props.retweet.liked}
             />
-            <Retweet
-                provider="twitter"
-                id={props.retweet.id_str}
-                count={props.retweet.retweet_count}
-                retweeted={props.retweet.retweeted}
-                post={props.retweet}
-            />
-            <Reply provider="twitter" id={props.retweet.id_str} post={props.retweet} />
+            <Retweet provider="twitter" post={props.retweet} />
+            <Reply provider="twitter" post={props.retweet} />
             <Source
                 provider="twitter"
                 screen_name={props.retweet.user.screen_name}

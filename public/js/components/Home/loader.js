@@ -1,23 +1,29 @@
 import superagent from 'superagent';
 import { Promise } from 'es6-promise';
 
+import store from '../../utils/store';
+
 export default (activeProviders) => {
     return new Promise((resolve, reject) => {
+        ensureUserProfileLoaded(activeProviders)
 
         if (activeProviders.indexOf('weibo') >= 0){
             ensureWeiboEmotionsStored()
             .then(() => {
                 resolve()
             })
-            .catch(err => {
-                console.err(err)
-            })
+            .catch(err => __DEV__ && console.error(err))
         } else {
             resolve()
         }
     })
 }
 
+function ensureUserProfileLoaded(activeProviders) {
+    activeProviders.forEach(provider => {
+        window[`profile_${provider}`] = store.get(`profile_${provider}`)
+    })
+}
 
 // Ensure weibo emotions data are stored in `localStorage`
 // via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L20

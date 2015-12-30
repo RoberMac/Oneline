@@ -5,7 +5,7 @@ import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Retweet, Reply, Source } from '../Utils/Action';
+import { Like, Retweet, Reply, Source, Trash } from '../Utils/Action';
 
 export default props => (
     <div className="post post--twitter">
@@ -19,9 +19,8 @@ export default props => (
                     { middleware: 'linkify', opts: { provider: 'twitter' } }
                 ]}
             />
-            {
-                props.media && props.media.length > 0
-                    ? <TwitterMedia media={props.media} />
+            {props.media && props.media.length > 0
+                ? <TwitterMedia media={props.media} />
                 : null
             }
         </div>
@@ -36,9 +35,8 @@ export default props => (
                         { middleware: 'linkify', opts: { provider: 'twitter' } }
                     ]}
                 />
-                {
-                    props.quote.media && props.quote.media.length > 0
-                        ? <TwitterMedia media={props.quote.media} />
+                {props.quote.media && props.quote.media.length > 0
+                    ? <TwitterMedia media={props.quote.media} />
                     : null
                 }
             </div>
@@ -49,14 +47,8 @@ export default props => (
                     count={props.quote.like_count}
                     liked={props.quote.liked}
                 />
-                <Retweet
-                    provider="twitter"
-                    id={props.quote.id_str}
-                    count={props.quote.retweet_count}
-                    retweeted={props.quote.retweeted}
-                    post={props.quote}
-                />
-                <Reply provider="twitter" id={props.quote.id_str} post={props.quote} />
+                <Retweet provider="twitter" post={props.quote} />
+                <Reply provider="twitter" post={props.quote} />
                 <Source
                     provider="twitter"
                     screen_name={props.quote.user.screen_name}
@@ -66,16 +58,14 @@ export default props => (
         </div>
 
         <span className="cursor--pointer">
-            <Like provider="twitter" count={props.like_count} liked={props.liked} />
-            <Retweet
-                provider="twitter"
-                id={props.id_str}
-                count={props.retweet_count}
-                retweeted={props.retweeted}
-                post={props}
-            />
-            <Reply provider="twitter" id={props.id_str} post={props} />
+            <Like provider="twitter" id={props.id_str} count={props.like_count} liked={props.liked} />
+            <Retweet provider="twitter" post={props} />
+            <Reply provider="twitter" post={props} />
             <Source provider="twitter" screen_name={props.user.screen_name} id={props.id_str} />
+            {props.user.screen_name === window.profile_twitter.screen_name
+                ? <Trash provider="twitter" id={props.id_str} />
+                : null
+            }
         </span>
 
         <TimeAgo date={props.created_at} />

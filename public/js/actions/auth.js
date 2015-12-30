@@ -25,7 +25,7 @@ export const replaceTokenList = (_tokenList) => {
     const { activeProviders, tokenList } = _replaceTokenList(_tokenList);
     return { type: UPDATE_TOKEN, activeProviders, tokenList }
 }
-export const clearTokenIfTokenInvalid = () => {
+export const clearTokenIfTokenExpired = () => {
     return (dispatch, getState) => {
         if (!_isValidToken()){
             const { activeProviders, tokenList } = _clearTokenList();

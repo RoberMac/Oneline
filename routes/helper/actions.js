@@ -117,15 +117,7 @@ let Actions = {
                     tOpts: { id: opts.id, trim_user: true },
                     handleActionFunc: data => ({ id_str: data[0].id_str })
                 }
-            },
-            _delete (opts){
-                return {
-                    triggerActionType: 'basic',
-                    endpoint: 'statuses/destroy',
-                    tOpts: { id: opts.id, trim_user: true },
-                    handleActionFunc: () => ({ msg: 'ok' })
-                }
-            },
+            }
         },
         reply: {
             _post (opts){
@@ -181,6 +173,14 @@ let Actions = {
                     triggerActionType: 'basic',
                     endpoint: 'statuses/update',
                     tOpts: tOpts,
+                    handleActionFunc: () => ({ msg: 'ok' })
+                }
+            },
+            _delete (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/destroy',
+                    tOpts: { id: opts.id, trim_user: true },
                     handleActionFunc: () => ({ msg: 'ok' })
                 }
             }
@@ -440,14 +440,6 @@ let Actions = {
                     wOpts: { access_token: opts.token, id: opts.id, status: opts.params.status },
                     handleActionFunc: data => ({ id_str: data.idstr })
                 }
-            },
-            _delete (opts){
-                return {
-                    triggerActionType: 'basic',
-                    endpoint: 'statuses/destroy',
-                    wOpts: { access_token: opts.token, id: opts.id },
-                    handleActionFunc: data => ({ id_str: data.idstr })
-                }
             }
         },
         reply: {
@@ -485,6 +477,14 @@ let Actions = {
                     endpoint: 'statuses/update',
                     wOpts: wOpts,
                     handleActionFunc: () => ({ msg: 'ok' })
+                }
+            },
+            _delete (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/destroy',
+                    wOpts: { access_token: opts.token, id: opts.id },
+                    handleActionFunc: data => ({ id_str: data.idstr })
                 }
             }
         },

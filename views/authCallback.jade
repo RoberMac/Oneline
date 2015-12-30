@@ -31,7 +31,8 @@ html
         link(ref='shortcut icon', href='public/img/favicon.ico')
         link(ref='apple-touch-icon', sizes='192x192', href='public/img/favicon.png')
         title ｜ #{provider.substr(0, 1).toUpperCase() + provider.substr(1)}
-        link(rel='stylesheet', href='/public/dist/oneline.min.css')
+        style
+            include authCallback.css
     body
         div(
             class='oneline overflow--y'
@@ -40,25 +41,24 @@ html
             data-token=token
         )
             div.social-list.social-list--one.vertically_center
-                div
-                    if provider === 'twitter'
-                        svg(
-                            class='social-icon animate--general'
-                            viewBox='0 0 300 300'
-                        )
-                            use(xlink:href="/public/img/icon-sprites.svg#twitter")
-                    else if provider === 'instagram'
-                        svg(
-                            class='social-icon animate--general'
-                            viewBox='0 0 775 300'
-                        )
-                            use(xlink:href="/public/img/icon-sprites.svg#instagram")
-                    else if provider === 'weibo'
-                        svg(
-                            class='social-icon animate--general'
-                            viewBox='0 0 300 300'
-                        )
-                            use(xlink:href="/public/img/icon-sprites.svg#weibo")
+                if provider === 'twitter'
+                    svg(
+                        class='social-icon animate--general'
+                        viewBox='0 0 300 300'
+                    )
+                        use(xlink:href="/public/img/icon-sprites.svg#twitter")
+                else if provider === 'instagram'
+                    svg(
+                        class='social-icon animate--general'
+                        viewBox='0 0 775 300'
+                    )
+                        use(xlink:href="/public/img/icon-sprites.svg#instagram")
+                else if provider === 'weibo'
+                    svg(
+                        class='social-icon animate--general'
+                        viewBox='0 0 300 300'
+                    )
+                        use(xlink:href="/public/img/icon-sprites.svg#weibo")
         script(type='text/javascript').
             (function (){
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
-import { addToken, removeToken, clearTokenIfTokenInvalid } from '../../actions/auth';
+import { addToken, removeToken, clearTokenIfTokenExpired } from '../../actions/auth';
 import './settings.css';
 
 // Components
@@ -45,7 +45,7 @@ class SocialAuth extends React.Component {
         if (e.key === 'addToken'){ this.props.addToken() };
     }
     componentWillMount() {
-        this.props.clearTokenIfTokenInvalid()
+        this.props.clearTokenIfTokenExpired()
     }
     componentDidMount() {
         window.addEventListener('storage', this.handleStorageChange)
@@ -83,5 +83,5 @@ export default connect(
         const { providers, activeProviders } = state.auth;
         return { providers, activeProviders }
     },
-    { addToken, removeToken, clearTokenIfTokenInvalid }
+    { addToken, removeToken, clearTokenIfTokenExpired }
 )(SocialAuth)

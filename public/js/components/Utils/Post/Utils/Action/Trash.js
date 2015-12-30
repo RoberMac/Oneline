@@ -1,37 +1,28 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { updatePost } from '../../../../../actions/timeline';
+import { deletePost } from '../../../../../actions/timeline';
 import reduxStore from '../../../../../store';
 import { Action } from '../../../../../utils/api';
 import { addClassTemporarily } from '../../../../../utils/dom';
 
 import Icon from '../../../Icon';
-export default class Star extends React.Component {
+export default class Trash extends React.Component {
     constructor(props) {
         super(props)
         this.state = { inprocess: false }
-        this.toggleStar = this.toggleStar.bind(this)
+        this.deletePost = this.deletePost.bind(this)
     }
-    toggleStar() {
+    deletePost() {
         const { inprocess } = this.state;
-        const { provider, id, stared } = this.props;
+        const { provider, id } = this.props;
 
         if (inprocess) return;
         this.setState({ inprocess: true })
 
-        Action[stared ? 'destroy' : 'create']({
-            action: 'star',
-            provider,
-            id
-        })
-        .then(() => {
-            reduxStore.dispatch(updatePost({
-                id_str: id,
-                stared: !stared
-            }))
-            this.setState({ inprocess: false })
-        })
+        Action
+        .destroy({ action: 'tweet', provider, id })
+        .then(() => reduxStore.dispatch(deletePost({ id })))
         .catch(err => {
             __DEV__ && console.error(err)
             addClassTemporarily(this.refs.btn, 'tips--error', 500)
@@ -40,24 +31,20 @@ export default class Star extends React.Component {
     }
     render() {
         const { inprocess } = this.state;
-        const { id, stared } = this.props;
-        const btnClass = classNames({
-            'post-action tips--deep': true,
-            'icon--star tips--active': stared
-        });
+        const { id } = this.props;
         const iconClass = classNames({
             'post-action__button': true,
             'post-action__button--inprocess': inprocess
         });
         return (
             <button
-                className={btnClass}
+                className="post-action tips--deep"
                 type="button"
-                onClick={this.toggleStar}
+                onClick={this.deletePost}
                 style={ id ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
                 ref="btn"
             >
-                <Icon className={iconClass} viewBox="0 0 26 26" name="star" />
+                <Icon className={iconClass} viewBox="0 0 26 26" name="trash" />
                 <span className="post-action__count" />
             </button>
         );

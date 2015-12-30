@@ -2,35 +2,24 @@ import { Promise } from 'es6-promise';
 import assign from 'object.assign';
 
 import store from '../../../../utils/store';
+import { updatePost } from '../../../../actions/timeline';
+import reduxStore from '../../../../store';
 import { Action, Media } from '../../../../utils/api';
 
-/**
- * Init Write
- *
- */
-let mentionRegex = {};
-let mentionsList = {};
-let userProfile = {};
-export const initWrite = () => {
-    mentionRegex.twitter = /(|\s)*@([\u4e00-\u9fa5\w-]*)$/; // 可匹配中文
-    mentionRegex.weibo = /(|\s)*@([\u4e00-\u9fa5\w-]*)$/;
-
-    mentionsList.twitter = store.get('mentions_twitter') || [];
-    mentionsList.weibo = store.get('mentions_weibo') || [];
-    
-    userProfile.twitter = store.get('profile_twitter');
-    userProfile.weibo = store.get('profile_weibo');
-}
 /**
  * Mention
  *
  */
 export const extractMentions = ({ status, provider }) => {
+    const mentionRegex = {
+        twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
+        weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
+    };
     let mentionUser = status.match(mentionRegex[provider]);
     if (mentionUser){
         mentionUser = mentionUser[2].trim().toLowerCase();
         return (
-            mentionsList[provider]
+            window[`mentions_${provider}`]
             .filter(provider === 'twitter'
                 ? item => Object.keys(item).some(key => item[key].toLowerCase().indexOf(mentionUser) >= 0)
                 : item => item.toLowerCase().indexOf(mentionUser) >= 0
@@ -148,8 +137,18 @@ export const submitWrite = ({
 
     return new Promise((resolve, reject) => {
         Action
-        .update({ action, provider, id }, { params: params })
-        .then(res => resolve())
+        .update({ action, provider, id }, { params })
+        .then(res => {
+            if (action === 'retweet' || action === 'quote') {
+                reduxStore.dispatch(updatePost({
+                    id_str: id,
+                    retweeted: true,
+                    retweet_count: post.retweet_count + 1,
+                    retweeted_id_str: res.body.id_str
+                }))
+            }
+            resolve()
+        })
         .catch(err => reject(err))
     })
 }
@@ -266,7 +265,7 @@ export const initLivePreview = ({ type, provider, status, media, livePreviewPost
         type,
         created_at: created_at || Date.now(),
         text: status,
-        user: user || userProfile[provider],
+        user: user || window[`profile_${provider}`],
         media: initLivePreviewMedia({ media, provider })
     });
     // Retweet / Quote

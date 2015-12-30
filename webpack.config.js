@@ -14,7 +14,7 @@ module.exports = {
             'react-router',
             'history',
             'superagent',
-            'redux-simple-router',
+            // 'redux-simple-router',
             'redux-thunk',
             'classnames',
             'es6-promise',

@@ -7,7 +7,7 @@ import { addClassTemporarily } from '../../../../utils/dom';
 import {
     extractMentions, isLeftPopup,
     submitWrite, draft,
-    initWrite, initStatus, initLivePreview
+    initStatus, initLivePreview
 } from './helper';
 
 // Components
@@ -19,7 +19,6 @@ import Transition from '../../../Utils/Transition';
 // Export
 export default class Write extends React.Component {
     constructor(props) {
-        initWrite()
         const { action, provider, post } = props;
 
         super(props)
@@ -73,16 +72,19 @@ export default class Write extends React.Component {
             provider: this.props.provider
         });
         let newAction = action;
+        let newGeo = this.state.geo;
         let newMedia = this.state.media;
         let newToolPopupLeft = isLeftPopup();
 
         // Retweet <==> Quote
         if (action === 'retweet' && newStatus){
             newAction = 'quote';
+            newGeo = {};
             newMedia = [];
             history.replaceState(post, `/home/${provider}/quote/${id}`)
         } else if (action === 'quote' && newStatus === '') {
             newAction = 'retweet';
+            newGeo = {};
             newMedia = [];
             history.replaceState(post, `/home/${provider}/retweet/${id}`)
         }
@@ -100,6 +102,7 @@ export default class Write extends React.Component {
         this.setState({
             status: newStatus,
             mentions: newMentions,
+            geo: newGeo,
             media: newMedia,
             livePreviewPost: newLivePreviewPost,
             toolPopupLeft: newToolPopupLeft
@@ -116,6 +119,7 @@ export default class Write extends React.Component {
             setTimeout(() => { draft.remove({ action, provider }) }, 700)
         })
         .catch(err => {
+            __DEV__ && console.error(err)
             addClassTemporarily(this.refs.textarea, 'write__textarea--err', 500)
         })
         .then(() => {
@@ -137,7 +141,7 @@ export default class Write extends React.Component {
     render() {
         const { action, provider, id } = this.props;
         const {
-            status, media, mentions,
+            status, geo, media, mentions,
             emotions, livePreviewPost,
             toolPopupLeft, submitting
         } = this.state;
@@ -171,7 +175,11 @@ export default class Write extends React.Component {
                             ? <ToggleSensitive action={action} onChange={this.handleStateChange} />
                             : null
                         }
-                        <GeoPicker action={action} onChange={this.handleStateChange} />
+                        <GeoPicker
+                            action={action}
+                            selected={Object.keys(geo).length > 0}
+                            onChange={this.handleStateChange}
+                        />
                         { isTwitter
                             ? <MediaUpload
                                 provider={provider}

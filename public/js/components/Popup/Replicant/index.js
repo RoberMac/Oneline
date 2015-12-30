@@ -112,7 +112,7 @@ class _Rachael extends React.Component {
 
         })
         .catch(err => {
-            console.error(err)
+            __DEV__ && console.error(err)
             addClassTemporarily(this.refs.rachael, 'replicant--rachael--errCode', 500)
         })
     }
