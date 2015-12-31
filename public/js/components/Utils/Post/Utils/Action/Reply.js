@@ -3,8 +3,8 @@ import { Link } from 'react-router';
 
 import Icon from '../../../Icon';
 
-export default ({ post }) => {
-    const { provider, id_str, reply_count } = post;
+export default ({ provider, post }) => {
+    const { id_str, reply_count } = post;
     return (
         <Link to={`/home/${provider}/reply/${id_str}`} state={post}>
             <span

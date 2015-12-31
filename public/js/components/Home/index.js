@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+// Helpers
+
 import { replaceTokenList } from '../../actions/auth';
 import { resetState, fetchPosts } from '../../actions/timeline';
 import DependencyLoader from './loader';
 
-// Component
+// Components
 import Post from '../Utils/Post';
 import Spin from '../Utils/Spin';
 import Transition from '../Utils/Transition';
@@ -35,7 +37,6 @@ class Home extends React.Component {
             }, 1000 * 60 * 3)
         })
         .catch(err => {
-            __DEV__ && console.error(err)
             if (err.status === 401){
                 replaceTokenList([])
                 history.push('/settings')

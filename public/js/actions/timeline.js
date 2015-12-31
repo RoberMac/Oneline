@@ -33,7 +33,10 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
                 case 'local':
                     fetchFromLocal({ postsType, ...timeline })
                     .then( newState => dispatch(postsRecive(newState)) )
-                    .catch(err => console.error(err) )
+                    .catch(err => {
+                        __DEV__ && console.error(err)
+                        throw err
+                    })
                     break;
                 case 'remote':
                     dispatch(fetchStart({ postsType }))
@@ -41,6 +44,7 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
                     return fetchFromRemote({ postsType, isAutoFetch, invalidProviders, ...timeline })
                     .then( newState => dispatch(postsRecive(newState)) )
                     .catch(err => {
+                        __DEV__ && console.error(err)
                         dispatch(fetchFail({ postsType }))
                         throw err
                     })

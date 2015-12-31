@@ -22,6 +22,7 @@ module.exports = {
             'react-visibility-sensor',
             'object.assign',
             'debounce',
+            // 'react-motion',
         ]
     },
     output: {

@@ -117,10 +117,8 @@ export const submitWrite = ({
 
     const isTwitter = provider === 'twitter';
     const isWeibo   = provider === 'weibo';
-    let params = {
-        status: status
-    };
     // Init
+    let params = { status };
     if (isTwitter){
         const media_ids = media.length > 0 ? media.map(({ id }) => id) : undefined;
         assign(params, { geo, sensitive, media_ids })
@@ -134,7 +132,7 @@ export const submitWrite = ({
             assign(params, { geo })
         }
     }
-
+    // Fire
     return new Promise((resolve, reject) => {
         Action
         .update({ action, provider, id }, { params })

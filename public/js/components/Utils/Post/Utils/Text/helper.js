@@ -17,13 +17,13 @@ const _linkify = (text, provider) => {
 
     // Twitter
     if (provider === 'twitter'){
-        _text = _text.replace(/(|\s)*@([\w]+)/g, '$1<a href="https://twitter.com/$2" target="_blank">@$2</a>');
-        _text = _text.replace(/(^|\s)*[#＃]([^#＃\s!@$%^&*()+\-=\[\]{};':"\\|,.<>\/?\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u300c\u300d\u300e\u300f\u2018\u2019\u201c\u201D\uff08\uff09\u3014\u3015\u3010\u3011\u2014\u2026\u2013\uff0e\u300a\u300B\u3008\u3009]+)/g, '$1<a href="https://twitter.com/search?q=%23$2" target="_blank">#$2</a>');
+        _text = _text.replace(/(|\s)*@([\w]+)/g, '$1<a href="/home/twitter/user/$2">@$2</a>');
+        _text = _text.replace(/(^|\s)*[#＃]([^#＃\s!@$%^&*()+\-=\[\]{};':"\\|,.<>\/?\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u300c\u300d\u300e\u300f\u2018\u2019\u201c\u201D\uff08\uff09\u3014\u3015\u3010\u3011\u2014\u2026\u2013\uff0e\u300a\u300B\u3008\u3009]+)/g, '$1<a href="/home/twitter/tag/$2">#$2</a>');
     }
     // Instagram
     if (provider === 'instagram'){
-        _text = _text.replace(/(|\s)*@([\w\.]+)/g, '$1<a href="https://instagram.com/$2" target="_blank">@$2</a>');
-        _text = _text.replace(/(^|\s)*[#＃]([^#＃\s!@$%^&*()+\-=\[\]{};':"\\|,.<>\/?\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u300c\u300d\u300e\u300f\u2018\u2019\u201c\u201D\uff08\uff09\u3014\u3015\u3010\u3011\u2014\u2026\u2013\uff0e\u300a\u300B\u3008\u3009]+)/g, '$1<a href="https://instagram.com/explore/tags/$2" target="_blank">#$2</a>');
+        _text = _text.replace(/(|\s)*@([\w\.]+)/g, '$1<a href="/home/instagram/user/$2">@$2</a>');
+        _text = _text.replace(/(^|\s)*[#＃]([^#＃\s!@$%^&*()+\-=\[\]{};':"\\|,.<>\/?\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u300c\u300d\u300e\u300f\u2018\u2019\u201c\u201D\uff08\uff09\u3014\u3015\u3010\u3011\u2014\u2026\u2013\uff0e\u300a\u300B\u3008\u3009]+)/g, '$1<a href="/home/instagram/tag/$2">#$2</a>');
     }
     // Weibo
     if (provider === 'weibo'){
