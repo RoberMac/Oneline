@@ -8,8 +8,8 @@ import TimeAgo from '../Utils/TimeAgo';
 import { Like, Retweet, Reply, Source, Star } from '../Utils/Action';
 
 export default props => (
-    <div className="post post--weibo">
-        <Avatar provider="weibo" {...props.retweet.user} />
+    <div>
+        {!props.isAvatarLess ? <Avatar provider="weibo" {...props.retweet.user} /> : null}
         <div className="post__content">
             <Text
                 text={props.retweet.text}

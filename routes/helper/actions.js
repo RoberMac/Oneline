@@ -11,24 +11,34 @@ let Actions = {
         user: {
             _get (opts){
                 let user = isNaN(opts.id) ? { screen_name: opts.id } : { user_id: opts.id };
-
-                return {
-                    triggerActionType: 'combination',
-                    endpoint: 'users/show',
-                    endpoint2: 'statuses/user_timeline',
-                    tOpts: Object.assign(user, { include_entities: false }),
-                    tOpts2: Object.assign(user, {
-                        count: 7,
-                        trim_user: false,
-                        exclude_replies: false,
-                        contributor_details: false,
-                        include_rts: true
-                    }),
-                    handleActionFunc: (data1, data2) => {
-                        let data;
-                        data = actionsFilter.twitter.user(data1[0]);
-                        Object.assign(data, { timeline: timelineFilter.twitter(data2[0]).data })
-                        return { data: data }
+                let commonOpts = {
+                    trim_user: false,
+                    exclude_replies: false,
+                    contributor_details: false,
+                    include_rts: true
+                };
+                if (opts.query && opts.query.maxId){
+                    return {
+                        triggerActionType: 'basic',
+                        endpoint: 'statuses/user_timeline',
+                        tOpts: Object.assign(user, { maxId: opts.query.maxId, count: 20 }, commonOpts),
+                        handleActionFunc: data => {
+                            data[0].splice(0, 1)
+                            return { data: timelineFilter.twitter(data[0]).data }
+                        }
+                    }
+                } else {
+                    return {
+                        triggerActionType: 'combination',
+                        endpoint: 'users/show',
+                        endpoint2: 'statuses/user_timeline',
+                        tOpts: Object.assign(user, { include_entities: false }),
+                        tOpts2: Object.assign(user, { count: 7 }, commonOpts),
+                        handleActionFunc: (data1, data2) => {
+                            const user = actionsFilter.twitter.user(data1[0]);
+                            const data = timelineFilter.twitter(data2[0]).data;
+                            return { user, data }
+                        }
                     }
                 }
             }
@@ -231,28 +241,6 @@ let Actions = {
                 }
             }
         },
-        user_timeline: {
-            _get (opts){
-                let user = isNaN(opts.id) ? { screen_name: opts.id } : { user_id: opts.id };
-
-                return {
-                    triggerActionType: 'basic',
-                    endpoint: 'statuses/user_timeline',
-                    tOpts: Object.assign(user, {
-                        maxId: opts.query && opts.query.maxId,
-                        count: 20,
-                        trim_user: false,
-                        exclude_replies: false,
-                        contributor_details: false,
-                        include_rts: true
-                    }),
-                    handleActionFunc: data => {
-                        data[0].splice(0, 1)
-                        return { data: timelineFilter.twitter(data[0]).data }
-                    }
-                }
-            }
-        },
         search: {
             _get (opts){
                 let tOpts = {
@@ -284,19 +272,27 @@ let Actions = {
     instagram: {
         user: {
             _get (opts){
-                let actionObj = {
-                    triggerActionType: 'combination',
-                    endpoint: 'user',
-                    endpoint2: 'user_media_recent',
-                    iOpts2: { count: 7 },
-                    handleActionFunc: (userData, timelineData) => {
-                        let data = actionsFilter.instagram.user(userData[0]);
-
-                        Object.assign(data, { timeline: timelineFilter.instagram(timelineData[0]).data })
-
-                        return { data: data }
-                    }
-                };
+                let actionObj;
+                if (opts.query && opts.query.maxId) {
+                    actionObj = {
+                        triggerActionType: 'basic',
+                        endpoint: 'user_media_recent',
+                        iOpts: { max_id: opts.query.maxId },
+                        handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data })
+                    };
+                } else {
+                    actionObj = {
+                        triggerActionType: 'combination',
+                        endpoint: 'user',
+                        endpoint2: 'user_media_recent',
+                        iOpts2: { count: 7 },
+                        handleActionFunc: (userData, timelineData) => {
+                            const user = actionsFilter.instagram.user(userData[0]);
+                            const data = timelineFilter.instagram(timelineData[0]).data;
+                            return { user, data }
+                        }
+                    };
+                }
 
                 if (isNaN(opts.id)){
                     return {
@@ -304,7 +300,7 @@ let Actions = {
                         endpoint: 'user_search',
                         iOpts: { count: 1 },
                         handleActionFunc: data => ({ uid: data[0][0].id }),
-                        actionObj: actionObj
+                        actionObj
                     }
                 } else {
                     return actionObj;
@@ -333,34 +329,12 @@ let Actions = {
                 }
             }
         },
-        user_timeline: {
-            _get (opts){
-                let actionObj = {
-                    triggerActionType: 'basic',
-                    endpoint: 'user_media_recent',
-                    iOpts: { maxId: opts.query.maxId },
-                    handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data })
-                }
-
-                if (isNaN(opts.id)){
-                    return {
-                        triggerActionType: 'queue',
-                        endpoint: 'user_search',
-                        iOpts: { count: 1 },
-                        handleActionFunc: data => ({ uid: data[0][0].id }),
-                        actionObj: actionObj
-                    }
-                } else {
-                    return actionObj;
-                }
-            }
-        },
-        location: {
+        locations: {
             _get (opts){
                 return {
                     triggerActionType: 'basic',
                     endpoint: 'location_media_recent',
-                    iOpts: { maxId: opts.query.maxId },
+                    iOpts: { max_id: opts.query.maxId },
                     handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data })
                 }
             }
@@ -385,21 +359,37 @@ let Actions = {
     weibo: {
         user: {
             _get (opts){
-                return {
-                    triggerActionType: 'combination',
-                    endpoint: 'users/show',
-                    endpoint2: 'statuses/user_timeline',
-                    wOpts: { access_token: opts.token, uid: opts.id },
-                    wOpts2: {
-                        access_token: opts.token,
-                        uid: opts.id,
-                        count: 7
-                    },
-                    handleActionFunc: (data1, data2) => {
-                        let data;
-                        data = actionsFilter.weibo.user(data1);
-                        Object.assign(data, { timeline: timelineFilter.weibo(data2.statuses).data })
-                        return { data: data }
+                if (opts.query && opts.query.maxId){
+                    return {
+                        triggerActionType: 'basic',
+                        endpoint: 'statuses/user_timeline',
+                        wOpts: {
+                            access_token: opts.token,
+                            uid: opts.id,
+                            count: 20,
+                            maxId: opts.query && opts.query.maxId
+                        },
+                        handleActionFunc: data => {
+                            data.statuses.splice(0, 1)
+                            return { data: timelineFilter.weibo(data.statuses).data }
+                        }
+                    }
+                } else {
+                    return {
+                        triggerActionType: 'combination',
+                        endpoint: 'users/show',
+                        endpoint2: 'statuses/user_timeline',
+                        wOpts: { access_token: opts.token, uid: opts.id },
+                        wOpts2: {
+                            access_token: opts.token,
+                            uid: opts.id,
+                            count: 7
+                        },
+                        handleActionFunc: (data1, data2) => {
+                            const user = actionsFilter.weibo.user(data1);
+                            const data = timelineFilter.weibo(data2.statuses).data;
+                            return { user, data }
+                        }
                     }
                 }
             }
@@ -488,25 +478,6 @@ let Actions = {
                 }
             }
         },
-        user_timeline: {
-            _get (opts){
-                return {
-                    triggerActionType: 'basic',
-                    endpoint: 'statuses/user_timeline',
-                    wOpts: {
-                        access_token: opts.token,
-                        uid: opts.id,
-                        count: 20,
-                        maxId: opts.query && opts.query.maxId
-                    },
-                    handleActionFunc: data => {
-                        data.statuses.splice(0, 1)
-
-                        return { data: timelineFilter.weibo(data.statuses).data }
-                    }
-                }
-            }   
-        },
         user_in_tweet: {
             _get (opts){
                 return {
@@ -526,7 +497,7 @@ let Actions = {
                 }
             }  
         },
-        location: {
+        locations: {
             _get (opts){
                 let wOpts = {
                     access_token: opts.token,

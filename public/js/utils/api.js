@@ -86,8 +86,9 @@ export const Action = {
         url: `/actions/${action}/${provider}/${id || 0}`,
         payload
     }),
-    get: ({ action, provider, id }) => request.get({
-        url: `/actions/${action}/${provider}/${id || 0}`
+    get: ({ action, provider, id }, query) => request.get({
+        url: `/actions/${action}/${provider}/${id || 0}`,
+        query
     })
 }
 export const Media = {

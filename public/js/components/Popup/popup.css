@@ -6,7 +6,7 @@
 
 
 .popup {
-    position: absolute 0 * *;
+    position: absolute 0 * * 0;
     size: 100%;
     z-index: 4;
     background-color: var(--color-black-alpha);
@@ -15,7 +15,9 @@
         display: none; 
     }
 
-    > div {
-        cursor: default;
+    &__wrapper {
+        position: relative;
+        size: 100%;
+        overflow-x: hidden;
     }
 }

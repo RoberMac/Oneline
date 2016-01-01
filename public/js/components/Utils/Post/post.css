@@ -111,3 +111,40 @@
         }
     }
 }
+
+.userPost {
+    padding: 10px 10px 0px 10px;
+    margin: 17px;
+    background-color: var(--color-gray);
+
+    .post__content {
+        top: -10px;
+    }
+    .post--quote {
+        background-color: var(--color-gray-drak);
+    }
+    .actions__count::after {
+        color: var(--color-steel);
+    }
+
+    &--gutter {
+        margin: 36px 17px 17px;
+        padding: 0 10px;
+        background-color: var(--color-gray);
+    }
+
+    &--location {
+        .post__location {
+            transform: translateY(-10px);
+        }
+    }
+}
+
+.popupPost {
+    margin: 36px 17px 17px;
+    background-color: var(--color-gray);
+
+    .post--quote {
+        background-color: var(--color-gray-drak);
+    }
+}

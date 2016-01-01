@@ -23,7 +23,7 @@ export default {
     VaildAction: (nextState, replaceState) => {
         const action = nextState.params.action;
 
-        const validActions = ['user', 'tag', 'location', 'read', 'tweet', 'retweet', 'quote', 'reply'];
+        const validActions = ['user', 'tags', 'locations', 'read', 'tweet', 'retweet', 'quote', 'reply'];
         if (validActions.indexOf(action) < 0){
             __DEV__ && console.error(`Warning: "${action}" is't valid action`)
             replaceState(null, '/home')

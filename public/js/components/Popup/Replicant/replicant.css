@@ -1,8 +1,8 @@
 @import "../../common/base.css";
 
 .replicant {
-    position: relative;
-    width: 20vw;
+    position: relative 40vh * *;
+    size: 100% 20vh;
     padding: 20px;
     background: var(--color-gray);
     font-size: 27px;

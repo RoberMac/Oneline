@@ -57,10 +57,6 @@
         border-radius: 50%;
         background-color: var(--color-white);
 
-        svg {
-            position: absolute 0 * * 0;
-        }
-
         &--count::before {
             content: attr(data-count);
             position: absolute 0 * * 0;

@@ -26,15 +26,12 @@ export default class Popup extends React.Component {
     }
     render() {
         const { children } = this.props;
-        const isSettings = /settings/.test(location.pathname);
-
         return (
-            <div
-                className="popup animate--general overflow--y vertically_center"
-                onClick={this.hidePopup}
-            >
-                <div onClick={this.stopPropagation}>
-                    {children}
+            <div className="popup animate--general overflow--y">
+                <div className="popup__wrapper" onClick={this.hidePopup}>
+                    <div onClick={this.stopPropagation}>
+                        {children}
+                    </div>
                 </div>
             </div>
         );

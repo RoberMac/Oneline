@@ -8,8 +8,8 @@ import TimeAgo from '../Utils/TimeAgo';
 import { Like, Reply, Source } from '../Utils/Action';
 
 export default props => (
-    <div className="post post--instagram">
-        <Avatar provider="instagram" {...props.user} />
+    <div>
+        {!props.isAvatarLess ? <Avatar provider="instagram" {...props.user} /> : null}
         <div className="post__content">
             <InstagramMedia
                 images={props.images}

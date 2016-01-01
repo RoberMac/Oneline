@@ -4,13 +4,13 @@ import Write from './Write';
 import Read from './Read';
 
 export const Action = props => {
-    const { provider, action, id } = props.params;
+    const { action } = props.params;
 
     let SelectAction;
     switch (action){
         case 'user':
-        case 'location':
-        case 'tag':
+        case 'locations':
+        case 'tags':
             SelectAction = Read;
             break;
         case 'tweet':
@@ -23,11 +23,9 @@ export const Action = props => {
 
     return (
         <SelectAction
-            provider={provider}
-            action={action}
-            id={id}
             history={props.history}
             post={props.location.state}
+            {...props.params}
         />
     );
 }

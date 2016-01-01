@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class index extends React.Component {
+export default class Locations extends React.Component {
     render() {
         return (
             <div>asdsdsadasds</div>
