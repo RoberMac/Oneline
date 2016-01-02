@@ -5,7 +5,7 @@ import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { InstagramMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Reply, Source } from '../Utils/Action';
+import { Like, Reply, Source, Location } from '../Utils/Action';
 
 export default props => (
     <div>
@@ -28,6 +28,7 @@ export default props => (
             <Like provider="instagram" count={props.like_count} />
             <Reply provider="instagram" post={props} />
             <Source provider="instagram" link={props.link} />
+            {props.location ? <Location provider="instagram" {...props.location} /> : null}
         </span>
 
         <TimeAgo date={props.created_at} />

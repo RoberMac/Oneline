@@ -5,7 +5,7 @@ import { Avatar, RetweetAvatar} from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Retweet, Reply, Source, Trash } from '../Utils/Action';
+import { Like, Retweet, Reply, Source, Trash, Location } from '../Utils/Action';
 
 export default props => (
     <div>
@@ -40,6 +40,7 @@ export default props => (
                 screen_name={props.retweet.user.screen_name}
                 id={props.retweet.id_str}
             />
+            {props.retweet.location ? <Location provider="twitter" {...props.retweet.location} /> : null}
         </span>
 
         <TimeAgo date={props.created_at} />

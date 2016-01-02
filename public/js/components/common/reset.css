@@ -98,6 +98,7 @@ img, video {
     border: none;
     outline: none;
 }
+
 .vertically_center {
     display: flex;
     justify-content: center;
@@ -113,12 +114,20 @@ img, video {
     &--faster {
         transition: all .3s ease-in-out;
     }
-    &--general, &--faster {
-        &.react-enter, &.react-leave.react-leave-active {
-            opacity: 0;
+    &--transition {
+        &-enter {
+            opacity: 0.01;
+            transition: all .7s ease-in-out;
         }
-        &.react-leave, &.react-enter.react-enter-active {
+        &-enter&-enter-active {
             opacity: 1;
+        }
+        &-leave {
+            opacity: 1;
+            transition: all .7s ease-in-out;
+        }
+        &-leave&-leave-active {
+            opacity: 0;
         }
     }
     &--enter {

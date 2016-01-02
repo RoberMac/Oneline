@@ -5,6 +5,33 @@ const Weibo   = require('./weibo');
 const timelineFilter = require('./filter/timeline');
 const actionsFilter = require('./filter/actions');
 
+const twitterSearch = {
+    _get (opts){
+        let tOpts = {
+            access_token: opts.token,
+            q: opts.id,
+            count: 20,
+            include_entities: false
+        };
+
+        if (opts.query.maxId){
+            Object.assign(tOpts, { max_id: opts.query.maxId })
+        }
+
+        return {
+            triggerActionType: 'basic',
+            endpoint: 'search/tweets',
+            tOpts: tOpts,
+            handleActionFunc: data => {
+                if (opts.query.maxId){
+                    data[0].statuses.splice(0, 1)
+                }
+
+                return { data: timelineFilter.twitter(data[0].statuses).data }
+            }
+        }
+    }
+};
 
 let Actions = {
     twitter: {
@@ -21,7 +48,7 @@ let Actions = {
                     return {
                         triggerActionType: 'basic',
                         endpoint: 'statuses/user_timeline',
-                        tOpts: Object.assign(user, { maxId: opts.query.maxId, count: 20 }, commonOpts),
+                        tOpts: Object.assign(user, { max_id: opts.query.maxId, count: 20 }, commonOpts),
                         handleActionFunc: data => {
                             data[0].splice(0, 1)
                             return { data: timelineFilter.twitter(data[0]).data }
@@ -241,33 +268,8 @@ let Actions = {
                 }
             }
         },
-        search: {
-            _get (opts){
-                let tOpts = {
-                    access_token: opts.token,
-                    q: opts.id,
-                    count: 20,
-                    include_entities: false
-                };
-
-                if (opts.query.maxId){
-                    Object.assign(tOpts, { maxId: opts.query.maxId })
-                }
-
-                return {
-                    triggerActionType: 'basic',
-                    endpoint: 'search/tweets',
-                    tOpts: tOpts,
-                    handleActionFunc: data => {
-                        if (opts.query.maxId){
-                            data[0].statuses.splice(0, 1)
-                        }
-
-                        return { data: timelineFilter.twitter(data[0].statuses).data }
-                    }
-                }
-            } 
-        }
+        locations: twitterSearch,
+        tags: twitterSearch
     },
     instagram: {
         user: {

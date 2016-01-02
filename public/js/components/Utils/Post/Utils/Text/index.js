@@ -13,7 +13,7 @@ export default ({ text, middlewares, className }) => {
 
     return (
         <p
-            className={`post-text ${className}`}
+            className={`post-text ${className || ''}`}
             dangerouslySetInnerHTML={{ __html: _text }}
             onClick={CaptureClicks}
         />

@@ -72,6 +72,15 @@ let filter = {
 
                     Object.assign(r_obj, { media, mediaLink })
                 }
+                // Location
+                if (r_item.place){
+                    Object.assign(r_obj, {
+                        location: {
+                            id: r_item.place.id,
+                            name: r_item.place.name
+                        }
+                    })
+                }
 
                 Object.assign(tweetObj, { type: r_type, [r_type]: r_obj })
             } 
@@ -196,10 +205,10 @@ let filter = {
                 }
 
                 let name = _place_name;
-                let id = _place_id;
-                let q = item.geo.coordinates[0] + '_' + item.geo.coordinates[1];
+                let place_id = _place_id;
+                let id = item.geo.coordinates[0] + '_' + item.geo.coordinates[1];
 
-                Object.assign(weiboObj, { location: { name, id, q } })
+                Object.assign(weiboObj, { location: { name, place_id, id } })
             }
 
             /**
@@ -228,6 +237,22 @@ let filter = {
                     Object.assign(r_obj, {
                         media: filterUtils.weibo.media(pic_urls || pic_ids)
                     })
+                }
+                // Location
+                if (r_item.geo && r_item.geo.type === 'Point'){
+                    let _place_name, _place_id;
+                    let annotations = r_item.annotations;
+
+                    if (annotations && annotations[0].place){
+                        _place_name = annotations[0].place.title
+                        _place_id = annotations[0].place.poiid
+                    }
+
+                    let name = _place_name;
+                    let place_id = _place_id;
+                    let id = r_item.geo.coordinates[0] + '_' + r_item.geo.coordinates[1];
+
+                    Object.assign(r_obj, { location: { name, place_id, id } })
                 }
 
                 Object.assign(weiboObj, { type: r_type, [r_type]: r_obj })

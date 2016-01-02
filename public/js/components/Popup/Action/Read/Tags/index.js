@@ -23,7 +23,7 @@ export default class Tags extends React.Component {
                     </a>
                 </div>
                 {showingPosts.map(item=> (
-                    <Post className="popupPost" key={item.r_id_str || item.id_str} item={item} />
+                    <Post className="popupPost" key={item.id_str} item={item} />
                 ))}
             </div>
         );

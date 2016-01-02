@@ -5,7 +5,7 @@ import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { WeiboMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Retweet, Reply, Source, Star, Trash } from '../Utils/Action';
+import { Like, Retweet, Reply, Source, Star, Trash, Location } from '../Utils/Action';
 
 export default props => (
     <div>
@@ -34,6 +34,7 @@ export default props => (
                 ? <Trash provider="weibo" id={props.id_str} />
                 : null
             }
+            {props.location ? <Location provider="weibo" {...props.location} /> : null}
         </span>
 
         <TimeAgo date={props.created_at} />

@@ -25,11 +25,9 @@ const selectPost = {
 };
 
 
-export default ({ className, item }) => {
+export default ({ className, item, isAvatarLess }) => {
     const { provider, type } = item;
     const SelectedPost = selectPost[provider][type];
-    const isAvatarLess = className === 'userPost';
-
     return (
         <div className={`post post--${provider} ${className}`}>
             <SelectedPost {...item} isAvatarLess={isAvatarLess} />

@@ -5,7 +5,7 @@ import { Avatar, RetweetAvatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { WeiboMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Retweet, Reply, Source, Star } from '../Utils/Action';
+import { Like, Retweet, Reply, Source, Star, Location } from '../Utils/Action';
 
 export default props => (
     <div>
@@ -35,6 +35,7 @@ export default props => (
                 ? <Like count={props.retweet.like_count} liked={props.liked} />
                 : null
             }
+            {props.retweet.location ? <Location provider="weibo" {...props.retweet.location} /> : null}
         </span>
 
         <TimeAgo date={props.created_at} />

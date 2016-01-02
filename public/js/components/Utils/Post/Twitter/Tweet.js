@@ -5,7 +5,7 @@ import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
 import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Retweet, Reply, Source, Trash } from '../Utils/Action';
+import { Like, Retweet, Reply, Source, Trash, Location } from '../Utils/Action';
 
 export default props => (
     <div>
@@ -38,6 +38,7 @@ export default props => (
                 ? <Trash provider="twitter" id={props.id_str} />
                 : null
             }
+            {props.location ? <Location provider="twitter" {...props.location} /> : null}
         </span>
 
         <TimeAgo date={props.created_at} />

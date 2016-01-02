@@ -66,7 +66,7 @@ class Home extends React.Component {
                         isDependenciesLoaded && showingPosts
                         .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
                         .map(item => (
-                            <Post key={item.r_id_str || item.id_str} item={item} />
+                            <Post key={item.id_str} item={item} />
                         ))
                     }
                     <Spin

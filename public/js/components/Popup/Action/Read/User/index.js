@@ -10,7 +10,12 @@ export default class User extends React.Component {
             <div>
                 <Profile provider={provider} user={user} />
                 {showingPosts.map(item=> (
-                    <Post className="userPost" key={item.r_id_str || item.id_str} item={item} />
+                    <Post
+                        className={`userPost ${item.type === 'retweet' ? 'userPost--gutter' : ''}`}
+                        key={item.id_str}
+                        item={item}
+                        isAvatarLess={item.type !== 'retweet'}
+                    />
                 ))}
             </div>
         );

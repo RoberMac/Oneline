@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './popup.css';
+import Transition from '../Utils/Transition';
 
 export default class Popup extends React.Component {
     constructor (props){
@@ -24,13 +25,17 @@ export default class Popup extends React.Component {
     componentWillUnmount (){
         window.removeEventListener('keydown', this.handleKeyDown)
     }
+    componentWillReceiveProps(nextProps) {
+        this.forceUpdate()
+    }
     render() {
-        const { children } = this.props;
         return (
-            <div className="popup animate--general overflow--y">
+            <div className="popup overflow--y">
                 <div className="popup__wrapper" onClick={this.hidePopup}>
                     <div onClick={this.stopPropagation}>
-                        {children}
+                        <Transition>
+                            {React.cloneElement(this.props.children, { key: this.props.location.pathname })}
+                        </Transition>
                     </div>
                 </div>
             </div>

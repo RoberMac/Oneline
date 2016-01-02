@@ -120,6 +120,9 @@
     .post__content {
         top: -10px;
     }
+    .post__location {
+        transform: translateY(-10px);
+    }
     .post--quote {
         background-color: var(--color-gray-drak);
     }
@@ -131,11 +134,9 @@
         margin: 36px 17px 17px;
         padding: 0 10px;
         background-color: var(--color-gray);
-    }
 
-    &--location {
-        .post__location {
-            transform: translateY(-10px);
+        .post__content {
+            top: -17px;
         }
     }
 }

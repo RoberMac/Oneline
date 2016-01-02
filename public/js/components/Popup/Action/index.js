@@ -26,6 +26,7 @@ export const Action = props => {
             history={props.history}
             post={props.location.state}
             {...props.params}
+            {...props.location.query}
         />
     );
 }

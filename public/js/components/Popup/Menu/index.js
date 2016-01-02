@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
+import { Link } from 'react-router';
 
 // Components
 import Icon from '../../Utils/Icon';
-import TransitionLink from '../../Utils/TransitionLink';
 const MenuRows = ({ metadata }) => (
     <div>
     {
@@ -17,11 +17,11 @@ const MenuRows = ({ metadata }) => (
                 [`icon--${provider}`]: provider
             });
             return (
-               <TransitionLink to={link} key={icon}>
+               <Link to={link} key={icon}>
                     <span className={btnClass}>
                         <Icon viewBox="0 0 200 200" name={icon} />
                     </span>
-                </TransitionLink>
+                </Link>
             );
         })
     }
@@ -59,11 +59,11 @@ const MenuSwitch = ({ currentProvider, activeProviders }) => {
                     [`icon--${provider}`]: true
                 })
                 return (
-                   <TransitionLink to={`/home/${provider}`} key={direction}>
+                   <Link to={`/home/${provider}`} key={direction}>
                         <span className={btnClass}>
                             <Icon viewBox="0 0 77 77" name="2" />
                         </span>
-                    </TransitionLink>
+                    </Link>
                 );
             })
         }

@@ -2,6 +2,27 @@ import React from 'react';
 
 // Helpers
 import { Action } from '../../../../utils/api';
+const initId = ({ provider, action, id }) => {
+    switch (provider){
+        case 'twitter':
+            switch (action){
+                case 'user':
+                    return id;
+                    break;
+                case 'locations':
+                    return window.encodeURIComponent(`place:${id}`);
+                    break;
+                case 'tags':
+                    return window.encodeURIComponent(`#${id}`);
+                    break;
+            }
+            break;
+        case 'instagram':
+        case 'weibo':
+            return id;
+            break;
+    }
+};
 
 // Components
 import Spin from '../../../Utils/Spin';
@@ -35,30 +56,37 @@ export default class Read extends React.Component {
             isFetchFail: false,
             isInitLoad: true,
             isLocked: false,
-            minId: ''
+            minId: '',
+            minDate: 0
         }
         this.loadPosts = this.loadPosts.bind(this);
     }
     loadPosts() {
         const { provider, action, id } = this.props;
-        const { showingPosts, isFetching, minId } = this.state;
+        const { showingPosts, isFetching, minId, minDate } = this.state;
 
         if (isFetching) return;
         this.setState({ isFetching: true, isFetchFail: false })
 
         Action
-        .get({ provider, action, id }, minId ? { maxId: minId } : undefined)
+        .get({
+            provider,
+            action,
+            id: initId({ provider, action, id })
+        }, minId ? { maxId: provider !== 'weibo' ? minId : minDate } : undefined)
         .then(res => {
             let { data, user } = res.body;
 
             data = data.sort((a, b) => a.created_at < b.created_at ? 1 : -1);
+            const lastPost = data[data.length - 1] && data[data.length - 1];
 
             this.setState({
                 showingPosts: showingPosts.concat(data),
                 user: user || this.state.user,
                 isFetching: false,
                 isInitLoad: false,
-                minId: data[data.length - 1] && data[data.length - 1].id_str
+                minId: lastPost.id_str,
+                minDate: lastPost.created_at
             })
         })
         .catch(err => {
