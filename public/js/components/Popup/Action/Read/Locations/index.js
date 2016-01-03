@@ -16,12 +16,16 @@ const selectLocationHref = {
 
 export default class Locations extends React.Component {
     render() {
-        const { provider, name, showingPosts } = this.props;
+        const { provider, id, showingPosts } = this.props;
+        const { name, place_id } = this.props.location.query;
 
         return (
             <div>
                 <div className={`banner banner--${provider}`}>
-                    <a href={selectLocationHref[provider]({...this.props})} target="_blank">
+                    <a
+                        href={selectLocationHref[provider]({ id, place_id })}
+                        target="_blank"
+                    >
                         <span className={`banner__title btn icon--${provider} tips--deep`}>
                             <Icon viewBox="0 0 60 60" name="location" />
                             <span>{name || ''}</span>

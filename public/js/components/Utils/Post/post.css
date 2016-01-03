@@ -17,6 +17,7 @@
         position: absolute * 3px 3px *;
         color: #C1C9D2;
         font-size: 11px;
+        cursor: pointer;
     }
     &__location {
         position: absolute 3px 3px * *;

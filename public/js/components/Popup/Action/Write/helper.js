@@ -102,19 +102,10 @@ export const insertText = (text) => {
 
     statusElem.setSelectionRange(_after, _after)
 }
-export const submitWrite = ({
-    action,
-    provider,
-    id,
-    post,
-
-    status,
-    mentions,
-    geo,
-    media,
-    sensitive
-}) => {
-
+export const submitWrite = (props) => {
+    const { action, provider, id } = props;
+    const { status, mentions, geo, media, sensitive } = props;
+    const post = props.location.state;
     const isTwitter = provider === 'twitter';
     const isWeibo   = provider === 'weibo';
     // Init
@@ -159,7 +150,8 @@ export const draft = {
     },
     remove: ({ action, provider }) => store.remove(`${action}_${provider}`)
 }
-export const initStatus = ({ action, provider, id, post }) => {
+export const initStatus = ({ action, provider, id, location }) => {
+    const post = location.state;
     const statusElem = document.querySelector('textarea');
 
     switch (action){

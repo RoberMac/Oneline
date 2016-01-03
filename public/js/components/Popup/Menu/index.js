@@ -7,24 +7,22 @@ import { Link } from 'react-router';
 import Icon from '../../Utils/Icon';
 const MenuRows = ({ metadata }) => (
     <div>
-    {
-        metadata.map((item, index) => {
-            const { link, provider, icon } = item;
-            const rowNum = metadata.length;
-            const btnClass = classNames({
-                'menu--row menu__btn btn tips animate--faster': true,
-                [`menu--row-${rowNum}-${index + 1}`]: true,
-                [`icon--${provider}`]: provider
-            });
-            return (
-               <Link to={link} key={icon}>
-                    <span className={btnClass}>
-                        <Icon viewBox="0 0 200 200" name={icon} />
-                    </span>
-                </Link>
-            );
-        })
-    }
+    {metadata.map((item, index) => {
+        const { link, provider, icon } = item;
+        const rowNum = metadata.length;
+        const btnClass = classNames({
+            'menu--row menu__btn btn tips animate--faster': true,
+            [`menu--row-${rowNum}-${index + 1}`]: true,
+            [`icon--${provider}`]: provider
+        });
+        return (
+           <Link to={link} key={icon}>
+                <span className={btnClass}>
+                    <Icon viewBox="0 0 200 200" name={icon} />
+                </span>
+            </Link>
+        );
+    })}
     </div>
 );
 const MenuSwitch = ({ currentProvider, activeProviders }) => {
@@ -50,23 +48,21 @@ const MenuSwitch = ({ currentProvider, activeProviders }) => {
 
     return (
         <div>
-        {
-            metadata.map(item => {
-                const { provider, direction } = item;
-                const btnClass = classNames({
-                    'menu__btn menu__btn--switch tips--deep--peace': true,
-                    [`menu__btn--switch--${direction}`]: true,
-                    [`icon--${provider}`]: true
-                })
-                return (
-                   <Link to={`/home/${provider}`} key={direction}>
-                        <span className={btnClass}>
-                            <Icon viewBox="0 0 77 77" name="2" />
-                        </span>
-                    </Link>
-                );
+        {metadata.map(item => {
+            const { provider, direction } = item;
+            const btnClass = classNames({
+                'menu__btn menu__btn--switch tips--deep--peace': true,
+                [`menu__btn--switch--${direction}`]: true,
+                [`icon--${provider}`]: true
             })
-        }
+            return (
+               <Link to={`/home/${provider}`} key={direction}>
+                    <span className={btnClass}>
+                        <Icon viewBox="0 0 77 77" name="2" />
+                    </span>
+                </Link>
+            );
+        })}
         </div>
     );
 };
@@ -80,24 +76,27 @@ const _SettingsMenu = ({ activeProviders }) => {
     return <MenuRows metadata={metadata} />;
 }
 const _HomeMenu = ({ params, activeProviders }) => {
+    const provider = params.provider;
+    const uid = window[`profile_${provider}`].uid;
+
     let metadata;
-    switch (params.provider){
+    switch (provider){
         case 'twitter':
             metadata = [
                 { link: '/home/twitter/tweet', provider: 'twitter', icon: 'newTweet' },
-                { link: '/home/twitter/user', provider: 'twitter', icon: 'profile' },
+                { link: `/home/twitter/user/${uid}`, provider: 'twitter', icon: 'profile' },
                 { link: '/home/twitter/notification', provider: 'twitter', icon: 'notification' }
             ]
             break;
         case 'instagram':
             metadata = [
-                { link: '/home/instagram/user', provider: 'instagram', icon: 'profile' }
+                { link: `/home/instagram/user/${uid}`, provider: 'instagram', icon: 'profile' }
             ]
             break;
         case 'weibo':
             metadata = [
                 { link: '/home/weibo/tweet', provider: 'weibo', icon: 'newTweet' },
-                { link: '/home/weibo/user', provider: 'weibo', icon: 'profile' }
+                { link: `/home/weibo/user/${uid}`, provider: 'weibo', icon: 'profile' }
             ]
             break
     }
@@ -105,7 +104,7 @@ const _HomeMenu = ({ params, activeProviders }) => {
     return (
         <div>
             <MenuRows metadata={metadata} />
-            <MenuSwitch currentProvider={params.provider} activeProviders={activeProviders}/>
+            <MenuSwitch currentProvider={provider} activeProviders={activeProviders}/>
         </div>
     );
 }

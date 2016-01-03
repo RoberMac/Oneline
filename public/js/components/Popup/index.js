@@ -25,17 +25,19 @@ export default class Popup extends React.Component {
     componentWillUnmount (){
         window.removeEventListener('keydown', this.handleKeyDown)
     }
-    componentWillReceiveProps(nextProps) {
-        this.forceUpdate()
-    }
     render() {
+        const children = this.props.children;
+        const pathname = this.props.location.pathname;
         return (
             <div className="popup overflow--y">
                 <div className="popup__wrapper" onClick={this.hidePopup}>
                     <div onClick={this.stopPropagation}>
-                        <Transition>
-                            {React.cloneElement(this.props.children, { key: this.props.location.pathname })}
-                        </Transition>
+                        {/(retweet|quote)/.test(pathname)
+                            ? children
+                            : <Transition>
+                                {React.cloneElement(children, { key: pathname })}
+                            </Transition>
+                        }
                     </div>
                 </div>
             </div>

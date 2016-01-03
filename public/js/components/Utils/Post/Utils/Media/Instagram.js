@@ -1,12 +1,11 @@
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import classNames from 'classnames';
 
 import { handleImageError, lazySize, calcDegree } from './helper.js';
-//todo: ol-lazy-image users_in_photo
 
 // Components
 import Icon from '../../../Icon';
+import Transition from '../../../Transition';
 import ViewOriginal from './Utils/ViewOriginal';
 import Video from './Utils/Video';
 
@@ -71,13 +70,9 @@ class UsersInPhoto extends React.Component {
                     <Icon viewBox="0 0 102 118" name="users_in_photo" />
                 </button>
 
-                <ReactCSSTransitionGroup
-                    transitionName="react"
-                    transitionEnterTimeout={700}
-                    transitionLeaveTimeout={700}
-                >
+                <Transition>
                     {userTags}
-                </ReactCSSTransitionGroup>
+                </Transition>
             </div>
         );
     }

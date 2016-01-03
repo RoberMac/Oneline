@@ -1,4 +1,5 @@
 import { Promise } from 'es6-promise';
+import assign from 'object.assign';
 
 import { Timeline } from '../utils/api';
 import store from '../utils/store';
@@ -102,10 +103,10 @@ export const fetchFromRemote = ({
             const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res.body : allPosts;
             const newAllPosts = {
                 posts: allPosts.posts.concat(newRemotePosts),
-                maxId,
-                maxDate,
-                minId,
-                minDate
+                maxId: assign(allPosts.maxId, maxId),
+                maxDate: assign(allPosts.maxDate, maxDate),
+                minId: assign(allPosts.minId, minId),
+                minDate: assign(allPosts.minDate, minDate)
             };
             // Store and dispatch
             if (isAutoFetch){

@@ -49,7 +49,6 @@ export const calcDegree = (x, y, w, h) => {
             _deg = - ratio2deg(h_ / w_)
         }
     }
-    console.log(_deg)
     return _deg;
 }
 

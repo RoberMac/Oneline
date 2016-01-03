@@ -19,8 +19,6 @@ import Transition from '../../../Utils/Transition';
 // Export
 export default class Write extends React.Component {
     constructor(props) {
-        const { action, provider, post } = props;
-
         super(props)
         this.state = {
             status: '',
@@ -30,11 +28,11 @@ export default class Write extends React.Component {
             sensitive: false,
             emotions: false,
             livePreviewPost: initLivePreview({
-                type: action,
-                provider,
+                type: props.action,
+                provider: props.provider,
                 status: '',
                 media: [],
-                post,
+                post: props.location.state,
                 livePreviewPost: {}
             }),
             toolPopupLeft: false,
@@ -46,7 +44,7 @@ export default class Write extends React.Component {
     }
     handleStateChange(state) {
         if (Object.keys(state).indexOf('media') >= 0) {
-            const { action, provider, post } = this.props;
+            const { action, provider } = this.props;
             const { status, livePreviewPost } = this.state;
             assign(state, {
                 livePreviewPost: initLivePreview({
@@ -55,40 +53,34 @@ export default class Write extends React.Component {
                     status,
                     media: state.media,
                     livePreviewPost,
-                    post
+                    post: this.props.location.state
                 })
             })
         }
         this.setState(state)
     }
     handleTextChange() {
-        const { action, provider, id, history, post } = this.props;
-        const elem = this.refs.textarea;
-        const _status = elem.value;
+        const { action, provider, id } = this.props;
+        const textareaElem = this.refs.textarea;
+        const _status = textareaElem.value;
 
+        // Init New State
         let newStatus = _status.trim().length > 0 ? _status : _status.trim();
-        let newMentions = extractMentions({
-            status: newStatus.slice(0, elem.selectionStart),
-            provider: this.props.provider
-        });
         let newAction = action;
         let newGeo = this.state.geo;
         let newMedia = this.state.media;
-        let newToolPopupLeft = isLeftPopup();
-
         // Retweet <==> Quote
-        if (action === 'retweet' && newStatus){
-            newAction = 'quote';
+        if (action === 'retweet' && newStatus || action === 'quote' && newStatus === ''){
+            let { history, location } = this.props;
+            newAction = action === 'retweet' ? 'quote' : 'retweet';
             newGeo = {};
             newMedia = [];
-            history.replaceState(post, `/home/${provider}/quote/${id}`)
-        } else if (action === 'quote' && newStatus === '') {
-            newAction = 'retweet';
-            newGeo = {};
-            newMedia = [];
-            history.replaceState(post, `/home/${provider}/retweet/${id}`)
+            history.replace({
+                pathname: `/home/${provider}/${newAction}/${id}`,
+                search: location.search,
+                state: location.state
+            })
         }
-
         // Update Live Preview
         let newLivePreviewPost = initLivePreview({
             type: newAction,
@@ -96,18 +88,21 @@ export default class Write extends React.Component {
             status: newStatus,
             media: newMedia,
             livePreviewPost: this.state.livePreviewPost,
-            post
+            post: this.props.location.state
         })
-
+        // Update State
         this.setState({
             status: newStatus,
-            mentions: newMentions,
+            mentions: extractMentions({
+                status: newStatus.slice(0, textareaElem.selectionStart),
+                provider
+            }),
             geo: newGeo,
             media: newMedia,
             livePreviewPost: newLivePreviewPost,
-            toolPopupLeft: newToolPopupLeft
+            toolPopupLeft: isLeftPopup()
         })
-        this.refs.textarea.focus()
+        textareaElem.focus()
     }
     handleSubmit() {
         const { action, provider, history } = this.props;

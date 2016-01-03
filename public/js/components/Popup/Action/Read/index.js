@@ -49,7 +49,7 @@ const Locked = ({ provider }) => (
 export default class Read extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
+        this.state = props.location.state || {
             showingPosts: [],
             user: {},
             isFetching: false,
@@ -75,18 +75,25 @@ export default class Read extends React.Component {
             id: initId({ provider, action, id })
         }, minId ? { maxId: provider !== 'weibo' ? minId : minDate } : undefined)
         .then(res => {
-            let { data, user } = res.body;
-
-            data = data.sort((a, b) => a.created_at < b.created_at ? 1 : -1);
+            // Update State
+            const user = res.body.user;
+            const data = res.body.data.sort((a, b) => a.created_at < b.created_at ? 1 : -1);
             const lastPost = data[data.length - 1] && data[data.length - 1];
-
-            this.setState({
+            const newState = {
                 showingPosts: showingPosts.concat(data),
                 user: user || this.state.user,
                 isFetching: false,
                 isInitLoad: false,
-                minId: lastPost.id_str,
-                minDate: lastPost.created_at
+                minId: lastPost && lastPost.id_str,
+                minDate: lastPost && lastPost.created_at
+            };
+            this.setState(newState)
+            // Store State in History State
+            const { history, location } = this.props;
+            history.replace({
+                pathname: location.pathname,
+                search: location.search,
+                state: newState
             })
         })
         .catch(err => {
@@ -95,7 +102,9 @@ export default class Read extends React.Component {
         })
     }
     componentDidMount() {
-        this.loadPosts()
+        if (this.state.isInitLoad) {
+            this.loadPosts()
+        }
     }
     render() {
         const { provider, action } = this.props;

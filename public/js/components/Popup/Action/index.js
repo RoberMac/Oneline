@@ -24,9 +24,8 @@ export const Action = props => {
     return (
         <SelectAction
             history={props.history}
-            post={props.location.state}
-            {...props.params}
-            {...props.location.query}
+            location={props.location}
+            {...props.params} // provider, action, id
         />
     );
 }
