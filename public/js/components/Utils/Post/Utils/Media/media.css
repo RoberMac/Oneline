@@ -117,7 +117,7 @@
             }
         }
     }
-    &__playButton {
+    &__playBtn {
         position: absolute 0 * * 0;
         size: 50px;
         cursor: pointer;

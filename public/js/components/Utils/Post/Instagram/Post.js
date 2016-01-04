@@ -25,9 +25,9 @@ export default props => (
         </div>
 
         <span className="cursor--pointer">
-            <Like provider="instagram" count={props.like_count} />
-            <Reply provider="instagram" post={props} />
             <Source provider="instagram" link={props.link} />
+            <Like provider="instagram" count={props.like_count} />
+            <Reply provider="instagram" post={{ reply_count: props.reply_count }} />
             {props.location ? <Location provider="instagram" {...props.location} /> : null}
         </span>
 

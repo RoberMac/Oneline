@@ -13,7 +13,7 @@ const LeftSidebar = ({ activeProviders, location }) => {
     return isPopup
         ? <span />
     : (
-        <Link to="/settings/replicant/">
+        <Link to="/settings/replicant">
             <span className={sidebarBtnClass}>
                 <Icon viewBox="0 0 200 200" name='replicant' />
             </span>

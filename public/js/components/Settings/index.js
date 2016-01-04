@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
+import Swipeable from 'react-swipeable';
 
 import { addToken, removeToken, clearTokenIfTokenExpired } from '../../actions/auth';
 import './settings.css';
@@ -32,6 +33,8 @@ class SocialAuth extends React.Component {
         super(props)
         this.toggleAuth = this.toggleAuth.bind(this)
         this.handleStorageChange = this.handleStorageChange.bind(this)
+        this.handleSwipedLeft = this.handleSwipedLeft.bind(this)
+        this.handleSwipedRight = this.handleSwipedRight.bind(this)
     }
     // 授權／吊銷授權
     toggleAuth(provider) {
@@ -43,6 +46,12 @@ class SocialAuth extends React.Component {
     }
     handleStorageChange(e) {
         if (e.key === 'addToken'){ this.props.addToken() };
+    }
+    handleSwipedLeft() {
+        this.props.history.push('/home')
+    }
+    handleSwipedRight() {
+        this.props.history.push('/settings/replicant')
     }
     componentWillMount() {
         this.props.clearTokenIfTokenExpired()
@@ -58,7 +67,7 @@ class SocialAuth extends React.Component {
         const soicalWrapperClass = classNames('social-wrapper', 'animate--faster');
 
         return (
-            <div>
+            <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
                 <div className={soicalWrapperClass}>
                     {providers.map(provider => (
                         <SocialAuthBtn
@@ -72,7 +81,7 @@ class SocialAuth extends React.Component {
                 <Transition>
                     {children}
                 </Transition>
-            </div>
+            </Swipeable>
         );
     }
 }

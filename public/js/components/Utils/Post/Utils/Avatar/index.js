@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-// Helper
+// Helpers
 // via https://github.com/KyleAMathews/isRetina
 const isRetina = (
     window.devicePixelRatio > 1.25
@@ -17,8 +17,12 @@ const converToHDAvatar = {
     twitter  : avatar => isRetina ? avatar.replace('normal', 'bigger') : avatar,
     instagram: avatar => avatar,
     weibo    : avatar => isRetina ? avatar.replace('/50/', '/180/') : avatar
-}
-
+};
+const selectHref = {
+    twitter  : screen_name => `//twitter.com/${screen_name}`,
+    instagram: screen_name => `//instagram.com/${screen_name}`,
+    weibo    : screen_name => `//weibo.com/n/${screen_name}`
+};
 
 // Components
 const UserLink = ({ provider, screen_name, children }) => (
@@ -35,9 +39,9 @@ export const Avatar = ({ avatar, screen_name, name, provider }) => (
             />
         </UserLink>
         <div className="post-profile__fullname">
-            <UserLink provider={provider} screen_name={screen_name}>
-                <strong>{name}</strong>
-            </UserLink>
+            <a href={selectHref[provider](screen_name)} target="_blank">
+                <strong>{name || screen_name}</strong>
+            </a>
         </div>
     </div>
 );

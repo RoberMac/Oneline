@@ -50,7 +50,7 @@ class UsersInPhoto extends React.Component {
                         ref={user.user.username}
                         key={user.user.username}
                         className='post-media__userTag animate--faster'
-                        href={`/instagram/user/${user.user.username}`}
+                        href={`/home/instagram/user/${user.user.username}`}
                         style={userTagStyle}
                     >
                         <div className="post-media__userTag__pointer"></div>

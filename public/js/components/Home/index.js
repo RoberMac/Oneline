@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Swipeable from 'react-swipeable';
 
 // Helpers
-
 import { replaceTokenList } from '../../actions/auth';
 import { resetState, fetchPosts } from '../../actions/timeline';
 import DependencyLoader from './loader';
@@ -16,12 +16,36 @@ class Home extends React.Component {
         super(props)
         this.state = { isDependenciesLoaded: false }
         this.loadPosts = this.loadPosts.bind(this)
+        this.handleSwipedLeft = this.handleSwipedLeft.bind(this)
+        this.handleSwipedRight = this.handleSwipedRight.bind(this)
     }
     loadPosts({ postsType, isAutoFetch }) {
-        return this.props.fetchPosts({ postsType, isAutoFetch })
+        const { fetchPosts, replaceTokenList, history } = this.props;
+        return fetchPosts({ postsType, isAutoFetch })
+        .catch(err => {
+            if (err.status === 401){
+                replaceTokenList([])
+                history.push('/settings')
+            }
+        })
+    }
+    handleSwipedLeft() {
+        const { activeProviders } = this.props;
+        let firstProvider = (
+            activeProviders.indexOf('twitter') >= 0
+                ? 'twitter'
+            : activeProviders.indexOf('weibo') >= 0
+                ? 'weibo'
+            : 'instagram'
+        );
+
+        this.props.history.push(`/home/${firstProvider}`)
+    }
+    handleSwipedRight() {
+        this.props.history.push('/settings')
     }
     componentWillMount() {
-        const { activeProviders, isInitLoad, resetState, replaceTokenList, history } = this.props;
+        const { activeProviders, isInitLoad, resetState } = this.props;
 
         DependencyLoader(activeProviders)
         .then(() => this.setState({ isDependenciesLoaded: true }))
@@ -36,12 +60,6 @@ class Home extends React.Component {
                 this.loadPosts({ postsType: 'newPosts', isAutoFetch: true })
             }, 1000 * 60 * 3)
         })
-        .catch(err => {
-            if (err.status === 401){
-                replaceTokenList([])
-                history.push('/settings')
-            }
-        })
     }
     componentWillUnmount() {
         // Reset `isInitLoad`
@@ -54,7 +72,7 @@ class Home extends React.Component {
         const { newPosts, oldPosts, showingPosts, isInitLoad, children } = this.props;
         const { isDependenciesLoaded } = this.state;
         return (
-            <div>
+            <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
                 <div className="oneline__wrapper overflow--y">
                     <Spin
                         type="newPosts"
@@ -79,7 +97,7 @@ class Home extends React.Component {
                 <Transition>
                     {children}
                 </Transition>
-            </div>
+            </Swipeable>
         );
     }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import Swipeable from 'react-swipeable';
 
 import './popup.css';
 import Transition from '../Utils/Transition';
@@ -8,6 +9,8 @@ export default class Popup extends React.Component {
         super(props)
         this.hidePopup = this.hidePopup.bind(this)
         this.handleKeyDown = this.handleKeyDown.bind(this)
+        this.handleSwipedLeft = this.handleSwipedLeft.bind(this)
+        this.handleSwipedRight = this.handleSwipedRight.bind(this)
     }
     hidePopup (){
         const { history, location } = this.props;
@@ -19,6 +22,14 @@ export default class Popup extends React.Component {
     handleKeyDown (e){
         if (e.keyCode === 27){ this.hidePopup() }
     }
+    handleSwipedLeft(e) {
+        e.stopPropagation()
+        this.props.history.go()
+    }
+    handleSwipedRight(e) {
+        e.stopPropagation()
+        this.props.history.goBack()
+    }
     componentDidMount (){
         window.addEventListener('keydown', this.handleKeyDown)
     }
@@ -29,18 +40,20 @@ export default class Popup extends React.Component {
         const children = this.props.children;
         const pathname = this.props.location.pathname;
         return (
-            <div className="popup overflow--y">
-                <div className="popup__wrapper" onClick={this.hidePopup}>
-                    <div onClick={this.stopPropagation}>
-                        {/(retweet|quote)/.test(pathname)
-                            ? children
-                            : <Transition>
-                                {React.cloneElement(children, { key: pathname })}
-                            </Transition>
-                        }
+            <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
+                <div className="popup overflow--y">
+                    <div className="popup__wrapper" onClick={this.hidePopup}>
+                        <div onClick={this.stopPropagation}>
+                            {/(retweet|quote)/.test(pathname)
+                                ? children
+                                : <Transition>
+                                    {React.cloneElement(children, { key: pathname })}
+                                </Transition>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Swipeable>
         );
     }
 }

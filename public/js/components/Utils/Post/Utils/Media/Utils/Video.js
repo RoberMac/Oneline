@@ -9,7 +9,7 @@ export default class Video extends React.Component {
     constructor(props) {
         super(props)
         this.setPlayState = this.setPlayState.bind(this)
-        this.handleClick = this.handleClick.bind(this)
+        this.togglePlay = this.togglePlay.bind(this)
         this.handleVisibilityChange = this.handleVisibilityChange.bind(this)
     }
     setPlayState(isPlay) {
@@ -18,24 +18,26 @@ export default class Video extends React.Component {
 
         if (isPlay){
             videoElem.play()
-            playBtn.classList.add('post-media__playButton--playing')
+            playBtn.classList.add('post-media__playBtn--playing')
         } else {
             videoElem.pause()
-            playBtn.classList.remove('post-media__playButton--playing')
+            playBtn.classList.remove('post-media__playBtn--playing')
         }
     }
-    handleClick() {
+    togglePlay() {
         const isPlaying = !this.refs.video.paused;
         this.setPlayState(!isPlaying)
     }
     handleVisibilityChange(isVisible) {
-        this.setPlayState(isVisible)
+        if (!isVisible) {
+            this.setPlayState(false)
+        };
     }
     render() {
         const { src, poster, ratio } = this.props;
         return (
             <VisibilitySensor onChange={this.handleVisibilityChange}>
-                <div className="post-media--large" style={lazySize(ratio)} onClick={this.handleClick}>
+                <div className="post-media--large" style={lazySize(ratio)} onClick={this.togglePlay}>
                     <video
                         src={src}
                         poster={poster}
@@ -45,10 +47,10 @@ export default class Video extends React.Component {
                         ref="video"
                     />
                     <Icon
-                        className='post-media__playButton animate--faster'
+                        className='post-media__playBtn animate--faster'
                         viewBox="0 0 100 100"
                         name="play"
-                     />
+                    />
                 </div>
             </VisibilitySensor>
         );

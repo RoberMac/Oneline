@@ -85,7 +85,7 @@ const _HomeMenu = ({ params, activeProviders }) => {
             metadata = [
                 { link: '/home/twitter/tweet', provider: 'twitter', icon: 'newTweet' },
                 { link: `/home/twitter/user/${uid}`, provider: 'twitter', icon: 'profile' },
-                { link: '/home/twitter/notification', provider: 'twitter', icon: 'notification' }
+                // { link: '/home/twitter/notification', provider: 'twitter', icon: 'notification' }
             ]
             break;
         case 'instagram':
