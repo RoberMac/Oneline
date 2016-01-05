@@ -1,46 +1,30 @@
 import React from 'react';
 
 // Components
-import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
-import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Retweet, Reply, Source, Trash, Location } from '../Utils/Action';
+import { Avatar } from '../Utils/Avatar';
+import { TwitterMedia } from '../Utils/Media';
+import { TwitterAction } from '../Utils/Action';
 
-export default props => (
+export default ({ post, opts }) => (
     <div>
-        {!props.isAvatarLess ? <Avatar provider="twitter" {...props.user} /> : null}
+        {!opts.isAvatarLess ? <Avatar provider="twitter" {...post.user} /> : null}
         <div className="post__content">
             <Text
-                text={props.text}
+                text={post.text}
                 middlewares={[
-                    { middleware: 'trimMediaLink', opts: { link: props.mediaLink } },
+                    { middleware: 'trimMediaLink', opts: { link: post.mediaLink } },
                     { middleware: 'linkify', opts: { provider: 'twitter' } }
                 ]}
             />
-            {props.media && props.media.length > 0
-                ? <TwitterMedia media={props.media} />
+            {post.media && post.media.length > 0
+                ? <TwitterMedia media={post.media} />
                 : null
             }
         </div>
 
-        <span className="cursor--pointer">
-            <Like
-                provider="twitter"
-                id={props.id_str}
-                count={props.like_count}
-                liked={props.liked}
-            />
-            <Retweet provider="twitter" post={props} />
-            <Reply provider="twitter" post={props} />
-            <Source provider="twitter" screen_name={props.user.screen_name} id={props.id_str} />
-            {props.user.screen_name === window.profile_twitter.screen_name
-                ? <Trash provider="twitter" id={props.id_str} />
-                : null
-            }
-            {props.location ? <Location provider="twitter" {...props.location} /> : null}
-        </span>
-
-        <TimeAgo date={props.created_at} />
+        <TwitterAction post={post} opts={opts} />
+        <TimeAgo date={post.created_at} />
     </div>
 );

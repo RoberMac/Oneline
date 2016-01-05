@@ -139,14 +139,6 @@ let Actions = {
             }
         },
         retweet: {
-            _get (opts){
-                return {
-                    triggerActionType: 'basic',
-                    endpoint: 'statuses/retweets',
-                    tOpts: { id: opts.id, count: 50, trim_user: false },
-                    handleActionFunc: data => ({ data: actionsFilter.twitter.retweet(data[0])})
-                }
-            },
             _post (opts){
                 return {
                     triggerActionType: 'basic',
@@ -269,7 +261,17 @@ let Actions = {
             }
         },
         locations: twitterSearch,
-        tags: twitterSearch
+        tags: twitterSearch,
+        detail: {
+            _get (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'statuses/retweets',
+                    tOpts: { id: opts.id, count: 50, trim_user: false },
+                    handleActionFunc: data => ({ retweet: actionsFilter.twitter.retweet(data[0])})
+                }
+            }
+        }
     },
     instagram: {
         user: {
@@ -309,28 +311,6 @@ let Actions = {
                 }
             }
         },
-        like: {
-            _get (opts){
-                return {
-                    triggerActionType: 'basic',
-                    endpoint: 'likes',
-                    handleActionFunc: data => {
-                        return { data: actionsFilter.instagram['like'](data[0].slice(0, 100)) }
-                    }
-                }
-            }
-        },
-        reply: {
-            _get (opts){
-                return {
-                    triggerActionType: 'basic',
-                    endpoint: 'comments',
-                    handleActionFunc: data => {
-                        return { data: actionsFilter.instagram['reply'](data[0].slice(0, 100)) }
-                    }
-                }
-            }
-        },
         locations: {
             _get (opts){
                 return {
@@ -353,6 +333,20 @@ let Actions = {
                         }
 
                         return { data: timelineFilter.instagram(data[0]).data }
+                    }
+                }
+            }
+        },
+        detail: {
+            _get (opts){
+                return {
+                    triggerActionType: 'combination',
+                    endpoint: 'likes',
+                    endpoint2: 'comments',
+                    handleActionFunc: (likeData, replyData) => {
+                        const like = actionsFilter.instagram['like'](likeData[0].slice(0, 100));
+                        const reply = actionsFilter.instagram['reply'](replyData[0].slice(0, 100));
+                        return { like, reply }
                     }
                 }
             }
@@ -435,14 +429,6 @@ let Actions = {
             }
         },
         reply: {
-            _get (opts){
-                return {
-                    triggerActionType: 'basic',
-                    endpoint: 'comments/show',
-                    wOpts: { access_token: opts.token, id: opts.id },
-                    handleActionFunc: data => ({ data: actionsFilter.weibo.reply(data.comments) })
-                }
-            },
             _post (opts){
                 return {
                     triggerActionType: 'basic',
@@ -525,6 +511,16 @@ let Actions = {
                     }
                 }
             } 
+        },
+        detail: {
+            _get (opts){
+                return {
+                    triggerActionType: 'basic',
+                    endpoint: 'comments/show',
+                    wOpts: { access_token: opts.token, id: opts.id },
+                    handleActionFunc: data => ({ reply: actionsFilter.weibo.reply(data.comments) })
+                }
+            }
         }
     }
 }

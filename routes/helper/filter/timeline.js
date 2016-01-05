@@ -55,6 +55,8 @@ let filter = {
                 let r_item = item.retweeted_status || item.quoted_status;
 
                 let r_obj = {
+                    type: 'tweet',
+                    provider: 'twitter',
                     created_at: Date.parse(r_item.created_at),
                     id_str: r_item.id_str,
                     user: filterUtils.twitter.user(r_item.user),
@@ -220,6 +222,8 @@ let filter = {
                 let r_item = item.retweeted_status;
 
                 let r_obj = {
+                    type: 'tweet',
+                    provider: 'weibo',
                     created_at: Date.parse(r_item.created_at),
                     id_str: r_item.idstr,
                     mid: mid.encode(r_item.mid),

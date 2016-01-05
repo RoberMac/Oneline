@@ -2,6 +2,7 @@ import React from 'react';
 
 import Write from './Write';
 import Read from './Read';
+import Detail from './Detail';
 
 export const Action = props => {
     const { action } = props.params;
@@ -18,6 +19,9 @@ export const Action = props => {
         case 'quote':
         case 'reply':
             SelectAction = Write;
+            break;
+        case 'detail':
+            SelectAction = Detail;
             break;
     }
 

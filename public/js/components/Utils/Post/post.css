@@ -18,6 +18,7 @@
         color: #C1C9D2;
         font-size: 11px;
         cursor: pointer;
+        user-select: none;
     }
     &__location {
         position: absolute 3px 3px * *;

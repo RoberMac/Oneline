@@ -7,42 +7,26 @@ import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
 import { Like, Retweet, Reply, Source, Trash, Location } from '../Utils/Action';
 
-export default props => (
+export default ({ post, opts }) => (
     <div>
-        {!props.isAvatarLess ? <Avatar provider="twitter" {...props.retweet.user} /> : null}
+        {!opts.isAvatarLess ? <Avatar provider="twitter" {...post.retweet.user} /> : null}
         <div className="post__content">
             <Text
-                text={props.retweet.text}
+                text={post.retweet.text}
                 middlewares={[
-                    { middleware: 'trimMediaLink', opts: { link: props.retweet.mediaLink } },
+                    { middleware: 'trimMediaLink', opts: { link: post.retweet.mediaLink } },
                     { middleware: 'linkify', opts: { provider: 'twitter' } }
                 ]}
             />
-            {props.retweet.media && props.retweet.media.length > 0
-                ? <TwitterMedia media={props.retweet.media} />
+            {post.retweet.media && post.retweet.media.length > 0
+                ? <TwitterMedia media={post.retweet.media} />
                 : null
             }
         </div>
 
-        <RetweetAvatar provider="twitter" {...props.user} />
+        <RetweetAvatar provider="twitter" {...post.user} />
 
-        <span className="cursor--pointer">
-            <Like
-                provider="twitter"
-                id={props.retweet.id_str}
-                count={props.retweet.like_count}
-                liked={props.retweet.liked}
-            />
-            <Retweet provider="twitter" post={props.retweet} />
-            <Reply provider="twitter" post={props.retweet} />
-            <Source
-                provider="twitter"
-                screen_name={props.retweet.user.screen_name}
-                id={props.retweet.id_str}
-            />
-            {props.retweet.location ? <Location provider="twitter" {...props.retweet.location} /> : null}
-        </span>
-
-        <TimeAgo date={props.created_at} />
+        <TwitterAction post={post.retweet} opts={opts} />
+        <TimeAgo date={post.created_at} />
     </div>
 );

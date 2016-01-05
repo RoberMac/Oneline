@@ -56,6 +56,7 @@ class Home extends React.Component {
         isInitLoad && this.loadPosts({ postsType: 'newPosts' })
         .then(() => {
             // Register Auto Fetch
+            __DEV__ && console.log('[Auto Fetch]: Registered')
             this.autoFetchIntervalId = setInterval( () => {
                 this.loadPosts({ postsType: 'newPosts', isAutoFetch: true })
             }, 1000 * 60 * 3)
@@ -66,6 +67,7 @@ class Home extends React.Component {
         this.props.resetState();
         document.title = '｜';
         // Unregister Auto Fetch
+        __DEV__ && console.log('[Auto Fetch]: Unregistered')
         clearInterval(this.autoFetchIntervalId)
     }
     render() {

@@ -40,17 +40,19 @@ export default class Popup extends React.Component {
         const children = this.props.children;
         const pathname = this.props.location.pathname;
         return (
-            <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
-                <div className="popup overflow--y">
-                    <div className="popup__wrapper" onClick={this.hidePopup}>
-                        <div onClick={this.stopPropagation}>
-                            {/(retweet|quote)/.test(pathname)
-                                ? children
-                                : <Transition>
-                                    {React.cloneElement(children, { key: pathname })}
-                                </Transition>
-                            }
-                        </div>
+            <Swipeable
+                className="popup overflow--y"
+                onSwipedLeft={this.handleSwipedLeft}
+                onSwipedRight={this.handleSwipedRight}
+            >
+                <div className="popup__wrapper" onClick={this.hidePopup}>
+                    <div onClick={this.stopPropagation}>
+                        {/(retweet|quote)/.test(pathname)
+                            ? children
+                            : <Transition>
+                                {React.cloneElement(children, { key: pathname })}
+                            </Transition>
+                        }
                     </div>
                 </div>
             </Swipeable>

@@ -1,13 +1,13 @@
 import React from 'react';
 
 // Components
-import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
-import { InstagramMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Reply, Source, Location } from '../Utils/Action';
+import { Avatar } from '../Utils/Avatar';
+import { InstagramMedia } from '../Utils/Media';
+import { InstagramAction } from '../Utils/Action';
 
-export default props => (
+export default ({ post, opts }) => (
     <div>
         {!props.isAvatarLess ? <Avatar provider="instagram" {...props.user} /> : null}
         <div className="post__content">
@@ -16,21 +16,10 @@ export default props => (
                 videos={props.videos}
                 users_in_photo={props.users_in_photo}
             />
-            <Text
-                text={props.text}
-                middlewares={[
-                    { middleware: 'linkify', opts: { provider: 'instagram' } }
-                ]}
-            />
+            <Text provider="instagram" text={post.text} />
         </div>
 
-        <span className="cursor--pointer">
-            <Source provider="instagram" link={props.link} />
-            <Like provider="instagram" count={props.like_count} />
-            <Reply provider="instagram" post={{ reply_count: props.reply_count }} />
-            {props.location ? <Location provider="instagram" {...props.location} /> : null}
-        </span>
-
+        <InstagramAction post={post} opts={opts} />
         <TimeAgo date={props.created_at} />
     </div>
 );

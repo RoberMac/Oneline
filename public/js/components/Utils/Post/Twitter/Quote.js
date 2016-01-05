@@ -7,69 +7,45 @@ import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
 import { Like, Retweet, Reply, Source, Trash, Location } from '../Utils/Action';
 
-export default props => (
+export default ({ post, opts }) => (
     <div>
-        {!props.isAvatarLess ? <Avatar provider="twitter" {...props.user} /> : null}
+        {!opts.isAvatarLess ? <Avatar provider="twitter" {...post.user} /> : null}
         <div className="post__content">
             <Text
-                text={props.text}
+                text={post.text}
                 middlewares={[
                     { middleware: 'trimSuffixLink' },
-                    { middleware: 'trimMediaLink', opts: { link: props.mediaLink } },
+                    { middleware: 'trimMediaLink', opts: { link: post.mediaLink } },
                     { middleware: 'linkify', opts: { provider: 'twitter' } }
                 ]}
             />
-            {props.media && props.media.length > 0
-                ? <TwitterMedia media={props.media} />
+            {post.media && post.media.length > 0
+                ? <TwitterMedia media={post.media} />
                 : null
             }
         </div>
 
         <div className="post post--quote post--quote--twitter">
-            <Avatar provider="twitter" {...props.quote.user} />
+            <Avatar provider="twitter" {...post.quote.user} />
             <div className="post__content">
                 <Text
-                    text={props.quote.text}
+                    text={post.quote.text}
                     middlewares={[
-                        { middleware: 'trimMediaLink', opts: { link: props.quote.mediaLink } },
+                        { middleware: 'trimMediaLink', opts: { link: post.quote.mediaLink } },
                         { middleware: 'linkify', opts: { provider: 'twitter' } }
                     ]}
                 />
-                {props.quote.media && props.quote.media.length > 0
-                    ? <TwitterMedia media={props.quote.media} />
+                {post.quote.media && post.quote.media.length > 0
+                    ? <TwitterMedia media={post.quote.media} />
                     : null
                 }
             </div>
-            <span className="cursor--pointer">
-                <Like
-                    provider="twitter"
-                    id={props.quote.id_str}
-                    count={props.quote.like_count}
-                    liked={props.quote.liked}
-                />
-                <Retweet provider="twitter" post={props.quote} />
-                <Reply provider="twitter" post={props.quote} />
-                <Source
-                    provider="twitter"
-                    screen_name={props.quote.user.screen_name}
-                    id={props.quote.id_str}
-                />
-                {props.quote.location ? <Location provider="twitter" {...props.quote.location} /> : null}
-            </span>
+
+            <TwitterAction post={post.quote} opts={opts} />
+            <TimeAgo date={post.quote.created_at} />
         </div>
 
-        <span className="cursor--pointer">
-            <Like provider="twitter" id={props.id_str} count={props.like_count} liked={props.liked} />
-            <Retweet provider="twitter" post={props} />
-            <Reply provider="twitter" post={props} />
-            <Source provider="twitter" screen_name={props.user.screen_name} id={props.id_str} />
-            {props.user.screen_name === window.profile_twitter.screen_name
-                ? <Trash provider="twitter" id={props.id_str} />
-                : null
-            }
-            {props.location ? <Location provider="twitter" {...props.location} /> : null}
-        </span>
-
-        <TimeAgo date={props.created_at} />
+        <TwitterAction post={post} opts={opts} />
+        <TimeAgo date={post.created_at} />
     </div>
 );

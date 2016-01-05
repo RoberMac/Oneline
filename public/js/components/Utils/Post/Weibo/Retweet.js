@@ -1,43 +1,28 @@
 import React from 'react';
 
 // Components
-import { Avatar, RetweetAvatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
-import { WeiboMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Retweet, Reply, Source, Star, Location } from '../Utils/Action';
+import { Avatar, RetweetAvatar } from '../Utils/Avatar';
+import { WeiboMedia } from '../Utils/Media';
+import { WeiboAction } from '../Utils/Action';
 
-export default props => (
+export default ({ post, opts }) => (
     <div>
-        {!props.isAvatarLess ? <Avatar provider="weibo" {...props.retweet.user} /> : null}
+        {!opts.isAvatarLess ? <Avatar provider="weibo" {...post.retweet.user} /> : null}
         <div className="post__content">
-            <Text
-                text={props.retweet.text}
-                middlewares={[
-                    { middleware: 'linkify', opts: { provider: 'weibo' } },
-                    { middleware: 'weiboEmotify' }
-                ]}
-            />
-            {props.retweet.media && props.retweet.media.length > 0
-                ? <WeiboMedia media={props.retweet.media} />
+            <Text provider="weibo" text={post.retweet.text} />
+
+            {post.retweet.media && post.retweet.media.length > 0
+                ? <WeiboMedia media={post.retweet.media} />
                 : null
             }
         </div>
 
-        <RetweetAvatar provider="weibo" {...props.user}/>
+        <RetweetAvatar provider="weibo" {...post.user}/>
 
-        <span className="cursor--pointer">
-            <Retweet provider="weibo" post={props.retweet} />
-            <Reply provider="weibo" post={props.retweet} />
-            <Source provider="weibo" uid={props.retweet.user.uid} mid={props.retweet.mid} />
-            <Star provider="weibo" id={props.retweet.id_str} stared={props.retweet.stared} />
-            {props.retweet.like_count
-                ? <Like count={props.retweet.like_count} liked={props.liked} />
-                : null
-            }
-            {props.retweet.location ? <Location provider="weibo" {...props.retweet.location} /> : null}
-        </span>
+        <WeiboAction post={post.retweet} opts={opts} />
 
-        <TimeAgo date={props.created_at} />
+        <TimeAgo date={post.created_at} />
     </div>
 );
