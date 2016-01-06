@@ -1,8 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { deletePost } from '../../../../../actions/timeline';
 import reduxStore from '../../../../../store';
+import history from '../../../../../utils/history';
+import { deletePost } from '../../../../../actions/timeline';
 import { Action } from '../../../../../utils/api';
 import { addClassTemporarily } from '../../../../../utils/dom';
 
@@ -22,7 +23,10 @@ export default class Trash extends React.Component {
 
         Action
         .destroy({ action: 'tweet', provider, id })
-        .then(() => reduxStore.dispatch(deletePost({ id })))
+        .then(() => {
+            reduxStore.dispatch(deletePost({ id }))
+            history.push('/home')
+        })
         .catch(err => {
             __DEV__ && console.error(err)
             addClassTemporarily(this.refs.btn, 'tips--error', 500)

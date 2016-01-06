@@ -4,62 +4,72 @@
     max-height: 100%;
     cursor: default;
 
-    .post {
+    &__post {
+        z-index: 2;
         box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
     }
 
     &__wrapper {
         position: relative -39px * * *;
         margin: 0 17px;
-        padding: 0 10px 7px;
+        padding: 7px 0px 0px;
         font-size: var(--font-size-base) var(--line-height-base);
         background-color: #FFF;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         border-bottom-left-radius: 3px;
         border-bottom-right-radius: 3px;
-        z-index: -1;
+        z-index: 1;
     }
 
-    &__list-cell {
+    &__column {
         position: relative;
-        border-bottom: 1px solid var(--color-gray-drak);
-        lost-utility: clearfix;
+        border-bottom: 1px solid var(--color-gray);
 
-        &:first-child {
-            padding-top: 17px;
+        &:last-child {
+            border-bottom: 0px;
         }
 
         &__avatar {
-            padding: 7px;
-            lost-column: 1/7 0;
+            size: 27px;
+            margin: 7px;
+        }
+        &__content {
+            width: calc(100% - 27px);
+            font-size: var(--font-size-small);
         }
         &__text {
-            padding: 7px 0;
-            font-size: var(--font-size-small);
-            lost-column: 6/7 0;
-
-            img {
-                width: 1em;
-                margin: 0 .1em;
-            }
+            margin: 0;
         }
         &__time {
-            position: absolute * 1px 1px *;
+            position: absolute * 3px 1px *;
             font-size: var(--font-size-xx-small);
-            color: #89A;
-            cursor: pointer;
         }
     }
-    &__avatar-row {
-        position: relative;
-        lost-waffle: 1/10;
+    &__row {
+        margin: 0 3px;
+        padding: 3px;
+        white-space: nowrap;
 
-        @media (--phone){
-            lost-waffle: 1/5;
+        &__icon {
+            display: block;
+            height: 17px;
+
+            svg {
+                width: 27px;
+                height: 17px;
+            }
         }
-        @media (--tablet){
-            lost-waffle: 1/7;
+        &__count {
+            font-size: var(--font-size-xx-small);
+        }
+        &__cell {
+            display: inline-block;
+            position: relative;
+            margin: 3px;
+            size: 27px;
+            vertical-align: middle;
+            text-align: center;
         }
     }
     &__avatar {

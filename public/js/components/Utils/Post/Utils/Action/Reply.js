@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import numAbbr from '../../../../../utils/numAbbr';
+
 import Icon from '../../../Icon';
 
 export default ({ provider, post }) => {
@@ -9,10 +11,10 @@ export default ({ provider, post }) => {
         <Link to={`/home/${provider}/reply/${id_str}`} state={post}>
             <span
                 className="post-action btn tips--deep"
-                style={ id_str ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
+                style={ id_str ? null : { 'pointerEvents': 'none' } }
             >
                 <Icon className="post-action__button" viewBox="0 0 26 26" name="reply" />
-                <span className="post-action__count" data-count={reply_count > 0 ? reply_count : ''} />
+                <span className="post-action__count" data-count={reply_count > 0 ? numAbbr(reply_count) : ''} />
             </span>
         </Link>
     );

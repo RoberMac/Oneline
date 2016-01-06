@@ -1,8 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { updatePost } from '../../../../../actions/timeline';
 import reduxStore from '../../../../../store';
+import numAbbr from '../../../../../utils/numAbbr';
+import { updatePost } from '../../../../../actions/timeline';
 import { Action } from '../../../../../utils/api';
 import { addClassTemporarily } from '../../../../../utils/dom';
 
@@ -55,10 +56,10 @@ export default class Like extends React.Component {
                 className={btnClass}
                 type="button"
                 onClick={this.toggleLike}
-                style={ id ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
+                style={ id ? null : { 'pointerEvents': 'none' } }
             >
-                <Icon className={iconClass} viewBox="0 0 26 26" name="favorite" />
-                <span className="post-action__count" data-count={count > 0 ? count : ''} />
+                <Icon className={iconClass} viewBox="0 0 26 26" name="like" />
+                <span className="post-action__count" data-count={count > 0 ? numAbbr(count) : ''} />
             </button>
         );
     }

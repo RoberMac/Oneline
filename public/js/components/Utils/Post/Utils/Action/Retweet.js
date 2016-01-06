@@ -3,8 +3,9 @@ import { Link } from 'react-router';
 import classNames from 'classnames';
 
 // Helpers
-import { updatePost } from '../../../../../actions/timeline';
+import numAbbr from '../../../../../utils/numAbbr';
 import reduxStore from '../../../../../store';
+import { updatePost } from '../../../../../actions/timeline';
 import { Action } from '../../../../../utils/api';
 
 // Components
@@ -18,7 +19,7 @@ const RetweetBtn = ({ provider, post }) => {
                 style={ id_str ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
             >
                 <Icon className="post-action__button" viewBox="0 0 34 26" name="retweet" />
-                <span className="post-action__count" data-count={retweet_count > 0 ? retweet_count : ''} />
+                <span className="post-action__count" data-count={retweet_count > 0 ? numAbbr(retweet_count) : ''} />
             </span>
         </Link>
     );

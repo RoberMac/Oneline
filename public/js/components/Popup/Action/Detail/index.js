@@ -6,9 +6,8 @@ import { Action } from '../../../../utils/api';
 // Components
 import Spin from '../../../Utils/Spin';
 import Post from '../../../Utils/Post';
-import LikedList from './LikedList';
-import ReplyList from './ReplyList';
-import RetweetedList from './RetweetedList';
+import DetailColumn from './DetailColumn';
+import DetailRow from './DetailRow';
 
 // Export
 export default class Detail extends React.Component {
@@ -85,18 +84,28 @@ export default class Detail extends React.Component {
                     onClick={this.loadPosts}
                 />
             : <div className="detail overflow--y animate--enter">
-                <Post item={post} isDetailPost={true} />
-                <div className="detail__wrapper">
+                <Post className="detail__post"item={post} isDetailPost={true} />
+                <div className={`detail__wrapper provider--${provider}`}>
                     {provider === 'instagram'
-                        ? <LikedList provider={provider} likedList={likedList} />
+                        ? <DetailRow
+                            type="like"
+                            provider={provider}
+                            list={likedList}
+                            count={post.like_count}
+                        />
                         : null
                     }
                     {provider !== 'twitter'
-                        ? <ReplyList provider={provider} replyList={replyList} />
+                        ? <DetailColumn provider={provider} list={replyList} count={post.reply_count} />
                         : null
                     }
                     {provider === 'twitter'
-                        ? <RetweetedList provider={provider} retweetedList={retweetedList} /> 
+                        ? <DetailRow
+                            type="retweet"
+                            provider={provider}
+                            list={retweetedList}
+                            count={post.retweet_count}
+                        /> 
                         : null
                     }
                 </div>

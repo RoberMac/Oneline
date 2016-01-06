@@ -1,11 +1,11 @@
 import React from 'react';
 
 // Components
-import { Avatar } from '../Utils/Avatar';
 import Text from '../Utils/Text';
-import { TwitterMedia } from '../Utils/Media';
 import TimeAgo from '../Utils/TimeAgo';
-import { Like, Retweet, Reply, Source, Trash, Location } from '../Utils/Action';
+import { Avatar } from '../Utils/Avatar';
+import { TwitterMedia } from '../Utils/Media';
+import { TwitterAction } from '../Utils/Action';
 
 export default ({ post, opts }) => (
     <div>

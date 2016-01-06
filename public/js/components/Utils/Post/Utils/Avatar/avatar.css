@@ -22,19 +22,14 @@
                 background-size: 13px 8px;
             }
         }
-        &--twitter {
-            border-color: var(--color-twitter);
-        }
-        &--instagram {
-            border-color: var(--color-instagram);
-        }
-        &--weibo {
-            border-color: var(--color-weibo);
-        }
     }
     &__fullname {
         margin-bottom: 17px;
         font-weight: var(--font-weight-bold);
+
+        a, a:visited {
+            color: #000;
+        }
     }
 }
 
@@ -48,5 +43,16 @@
         &__fullname {
             margin-bottom: 7px;
         }
+    }
+}
+.provider {
+    &--twitter .post-profile {
+        border-color: var(--color-twitter);
+    }
+    &--instagram .post-profile {
+        border-color: var(--color-instagram);
+    }
+    &--weibo .post-profile {
+        border-color: var(--color-weibo);
     }
 }

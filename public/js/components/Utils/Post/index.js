@@ -29,7 +29,7 @@ export default ({ className, item, ...opts }) => {
     const { provider, type } = item;
     const SelectedPost = selectPost[provider][type];
     return (
-        <div className={`post post--${provider} ${className || ''}`}>
+        <div className={`post provider--${provider} ${className || ''}`}>
             <SelectedPost post={item} opts={opts} />
         </div>
     );

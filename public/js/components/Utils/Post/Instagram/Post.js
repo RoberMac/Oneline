@@ -9,17 +9,17 @@ import { InstagramAction } from '../Utils/Action';
 
 export default ({ post, opts }) => (
     <div>
-        {!props.isAvatarLess ? <Avatar provider="instagram" {...props.user} /> : null}
+        {!opts.isAvatarLess ? <Avatar provider="instagram" {...post.user} /> : null}
         <div className="post__content">
             <InstagramMedia
-                images={props.images}
-                videos={props.videos}
-                users_in_photo={props.users_in_photo}
+                images={post.images}
+                videos={post.videos}
+                users_in_photo={post.users_in_photo}
             />
             <Text provider="instagram" text={post.text} />
         </div>
 
         <InstagramAction post={post} opts={opts} />
-        <TimeAgo date={props.created_at} />
+        <TimeAgo date={post.created_at} />
     </div>
 );

@@ -27,7 +27,7 @@ export const Avatar = ({ avatar, screen_name, name, provider }) => (
     <div className="post-profile">
         <UserLink provider={provider} screen_name={screen_name}>
             <img
-                className={`post-profile__avatar post-profile__avatar--${provider}`}
+                className='post-profile__avatar'
                 src={converToHDAvatar[provider](avatar)}
             />
         </UserLink>
