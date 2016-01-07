@@ -1,29 +1,28 @@
 import React from 'react';
 
-import numAbbr from '../../../../utils/numAbbr';
-
-import Icon from '../../../Utils/Icon';
 import UserLink from '../../../Utils/UserLink';
+import Text from '../../../Utils/Post/Utils/Text';
+import TimeAgo from '../../../Utils/Post/Utils/TimeAgo';
 
-export default ({ type, provider, list, count }) => (
-    <div className="detail__row overflow--x">
-        <span className={`detail__row__cell icon--${type}`}>
-            <div className="detail__row__icon">
-                <Icon viewBox="0 0 26 26" name={type} />
-            </div>
-            <div className="detail__row__count">
-                <span>{numAbbr(count)}</span>
-            </div>
-        </span>
-        {list.map((item, index) => (
+export default ({ provider, list }) => (
+    <div>
+    {list.map((item, index) => (
+        <li key={index} className={`detail__row vertically_center ${index === 0 ? 'detail__row--reply' : ''}`}>
             <UserLink
-                key={index}
                 provider={provider}
                 screen_name={item.screen_name}
-                className="detail__row__cell detail__avatar"
+                className="detail__row__avatar detail__avatar"
             >
                 <img src={item.avatar} />
             </UserLink>
-        ))}
+            <div className="detail__row__content">
+                <Text
+                    className="detail__row__text"
+                    provider={provider} text={item.text}
+                />
+                <TimeAgo className="detail__row__time" date={item.created_at} />
+            </div>
+        </li>
+    ))}
     </div>
 );

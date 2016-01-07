@@ -6,16 +6,16 @@ import { Action } from '../../../../utils/api';
 // Components
 import Spin from '../../../Utils/Spin';
 import Post from '../../../Utils/Post';
-import DetailColumn from './DetailColumn';
-import DetailRow from './DetailRow';
+import DetailContainer from './DetailContainer';
 
 // Export
 export default class Detail extends React.Component {
     constructor(props) {
         const historyState = props.location.state;
+        const restoreState = historyState && historyState.likedList ? historyState : null;
 
         super(props)
-        this.state = historyState.likedList && props.location.state || {
+        this.state = restoreState || {
             post: historyState,
             likedList: [],
             replyList: [],
@@ -36,14 +36,15 @@ export default class Detail extends React.Component {
         .get({ action, provider, id })
         .then(res => {
             // Update State
-            const likedList = res.body.like;
-            const replyList = res.body.reply;
-            const retweetedList = res.body.retweet;
+            const post = res.body.post || location.state;
+            const likedList = res.body.like || [];
+            const replyList = res.body.reply || [];
+            const retweetedList = res.body.retweet || [];
             const newState = {
-                post: location.state,
-                likedList: likedList || [],
-                replyList: replyList || [],
-                retweetedList: retweetedList || [],
+                post,
+                likedList,
+                replyList,
+                retweetedList,
                 isFetching: false,
                 isFetchFail: false,
                 isInitLoad: false
@@ -69,10 +70,7 @@ export default class Detail extends React.Component {
     }
     render() {
         const { provider } = this.props;
-        const {
-            post, likedList, replyList, retweetedList, isInitLoad, isFetching, isFetchFail
-        } = this.state;
-
+        const { post, isInitLoad, isFetching, isFetchFail } = this.state;
         return (
             isInitLoad
                 ? <Spin
@@ -84,31 +82,8 @@ export default class Detail extends React.Component {
                     onClick={this.loadPosts}
                 />
             : <div className="detail overflow--y animate--enter">
-                <Post className="detail__post"item={post} isDetailPost={true} />
-                <div className={`detail__wrapper provider--${provider}`}>
-                    {provider === 'instagram'
-                        ? <DetailRow
-                            type="like"
-                            provider={provider}
-                            list={likedList}
-                            count={post.like_count}
-                        />
-                        : null
-                    }
-                    {provider !== 'twitter'
-                        ? <DetailColumn provider={provider} list={replyList} count={post.reply_count} />
-                        : null
-                    }
-                    {provider === 'twitter'
-                        ? <DetailRow
-                            type="retweet"
-                            provider={provider}
-                            list={retweetedList}
-                            count={post.retweet_count}
-                        /> 
-                        : null
-                    }
-                </div>
+                <Post className="detail__post" item={post} isDetailPost={true} />
+                <DetailContainer provider={provider} {...this.state} />
             </div>
         );
     }

@@ -9,7 +9,7 @@
         box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
     }
 
-    &__wrapper {
+    &__container {
         position: relative -39px * * *;
         margin: 0 17px;
         padding: 7px 0px 0px;
@@ -22,12 +22,12 @@
         z-index: 1;
     }
 
-    &__column {
+    &__row {
         position: relative;
-        border-bottom: 1px solid var(--color-gray);
+        border-top: 1px solid #F1F1F1;
 
-        &:last-child {
-            border-bottom: 0px;
+        &--reply {
+            border-top: 1px dashed #63DA38;
         }
 
         &__avatar {
@@ -35,6 +35,7 @@
             margin: 7px;
         }
         &__content {
+            margin: 7px;
             width: calc(100% - 27px);
             font-size: var(--font-size-small);
         }
@@ -46,28 +47,56 @@
             font-size: var(--font-size-xx-small);
         }
     }
-    &__row {
-        margin: 0 3px;
-        padding: 3px;
-        white-space: nowrap;
+    &__column {
+        overflow: hidden;
 
-        &__icon {
-            display: block;
-            height: 17px;
-
-            svg {
-                width: 27px;
-                height: 17px;
+        > div {
+            padding: 7px;
+            white-space: nowrap;
+        }
+        &--empty {
+            > div {
+                text-align: center;
             }
         }
-        &__count {
-            font-size: var(--font-size-xx-small);
+        &--like {
+            border-top: 1px dashed #E9574F;
+        }
+        &--retweet {
+            border-top: 1px dashed #1BADF8;
+        }
+
+        &__icon {
+            position: relative;
+            text-align: center;
+            height: 30px;
+
+            &::before {
+                content: attr(data-text);
+                position: absolute * * 0 0;
+                width: 100%;
+                font-size: var(--font-size-xx-small);
+                line-height: 13px;
+            }
+            svg {
+                width: 30px;
+                height: 17px;
+            }
+            &--2 {
+                lost-column: 1/2;
+            }
+            &--3 {
+                lost-column: 1/3;
+            }
+            &--4 {
+                lost-column: 1/4;
+            }
         }
         &__cell {
             display: inline-block;
             position: relative;
             margin: 3px;
-            size: 27px;
+            size: 30px;
             vertical-align: middle;
             text-align: center;
         }

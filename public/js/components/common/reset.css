@@ -201,43 +201,53 @@ img, video {
     }
 }
 .icon {
-    &--twitter,
-    &--retweet {
+    &--twitter{
         color: var(--color-twitter);
-
         svg {
             fill: var(--color-twitter) !important;
         }
     }
     &--instagram {
         color: var(--color-instagram);
-
         svg {
             fill: var(--color-instagram) !important;
         }
     }
-    &--weibo,
-    &--like,
-    &--trash {
+    &--weibo {
         color: var(--color-weibo);
-
         svg {
             fill: var(--color-weibo) !important;
         }
     }
-    &--reply {
+    &--like {
+        color: #E9574F;
         svg {
-            fill: #3caf36;
+            fill: #E9574F;
+        }
+    }
+    &--retweet {
+        color: #1BADF8;
+        svg {
+            fill: #1BADF8;
+        }
+    }
+    &--reply {
+        color: #63DA38;
+        svg {
+            fill: #63DA38;
         }
     }
     &--star {
+        color: #FFE33B;
         svg {
             fill: #FFE33B;
         }
     }
-    &--inactive {
+    &--inactive,
+    &--calendar {
+        color: #C1C9D2;
         svg {
-            fill: var(--color-gray-drak);
+            fill: #C1C9D2;
         }
     }
 }

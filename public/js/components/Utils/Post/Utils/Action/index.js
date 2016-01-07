@@ -24,7 +24,7 @@ export const TwitterAction = ({ post, opts }) => {
             <Like provider="twitter" id={post.id_str} count={post.like_count} liked={post.liked} />
             <Retweet provider="twitter" post={post} />
             <Reply provider="twitter" post={post} />
-            <Detail provider="twitter" post={post} />
+            <Detail provider="twitter" id={post.id_str} />
             {post.location ? <Location provider="twitter" {...post.location} /> : null}
         </span>
     );
@@ -42,7 +42,7 @@ export const InstagramAction = ({ post, opts }) => {
             <Like provider="instagram" count={post.like_count} />
             <Reply provider="instagram" post={{ reply_count: post.reply_count }} />
             <Source provider="instagram" link={post.link} />
-            <Detail provider="instagram" post={post} />
+            <Detail provider="instagram" id={post.id_str} />
             {post.location ? <Location provider="instagram" {...post.location} /> : null}
         </span>
     );
@@ -53,9 +53,7 @@ export const WeiboAction = ({ post, opts }) => {
     const isAuthUser = opts.isDetailPost && post.user.screen_name === window.profile_weibo.screen_name;
     const Actions = opts.isDetailPost ? (
         <span className="cursor--pointer">
-            {post.like_count ? <Like count={post.like_count} liked={post.liked} /> : null}
             <Source provider="weibo" uid={post.user.uid} mid={post.mid} />
-            <Detail provider="weibo" post={post} />
             {post.location ? <Location provider="weibo" {...post.location} /> : null}
             {isAuthUser ? <Trash provider="weibo" id={post.id_str} /> : null}
         </span>

@@ -33,7 +33,7 @@ export default {
             replaceState(null, '/home')
         }
 
-        const stateRequiredAction = ['retweet', 'quote', 'reply', 'detail'];
+        const stateRequiredAction = ['retweet', 'quote', 'reply'];
         if (stateRequiredAction.indexOf(action) >= 0 && !nextState.location.state){
             __DEV__ && console.error(`Warning: "state" is missing`)
             replaceState(null, '/home')

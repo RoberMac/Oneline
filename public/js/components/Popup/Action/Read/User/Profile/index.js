@@ -55,7 +55,7 @@ export default class Profile extends React.Component {
     render() {
         const { provider, user } = this.props;
         return (
-            <div className={`profile--${provider}`}>
+            <div className={`profile--${provider} provider--${provider}`}>
                 <Avatar provider={provider} {...user} />
                 <Counts provider={provider} counts={user.counts} />
                 <Bio provider={provider} bio={user.bio} />
