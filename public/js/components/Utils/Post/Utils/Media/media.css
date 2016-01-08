@@ -127,3 +127,13 @@
         }
     }
 }
+@keyframes imgLoadAnimate {
+    0%, 100% {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+    50% {
+        filter: grayscale(100%);
+        opacity: .3;
+    }
+}

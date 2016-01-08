@@ -55,7 +55,7 @@
     }
     &--quote {
         top: -12px;
-        margin: 27px 7px 7px 7px;
+        margin: 27px 0 7px;
         background-color: var(--color-gray);
         font-size: var(--font-size-small);
 

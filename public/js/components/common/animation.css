@@ -1,51 +1,44 @@
-@keyframes onelineEnterAnimate {
-    0% {
-        transform: scaleX(.01);
+.animate {
+    &--general {
+        transition: all .7s ease-in-out;
     }
-    100% {
-        transform: scaleX(1);
+    &--faster {
+        transition: all .3s ease-in-out;
     }
-}
-@keyframes loadAnimate--twitter {
-    0, 33.3%, 100% {
-        fill: var(--color-gray);
+    &--transition {
+        &-enter {
+            opacity: 0;
+            transition: all .7s ease-in-out;
+        }
+        &-enter&-enter-active {
+            opacity: 1;
+        }
+        &-leave {
+            opacity: 1;
+            transition: all .7s ease-in-out;
+        }
+        &-leave&-leave-active {
+            opacity: 0;
+        }
     }
-    16.6% {
-        fill: var(--color-twitter);
+    &--enter {
+        animation: enterAnimate .7s cubic-bezier(0.22, 0.61, 0.36, 1);
     }
-}
-@keyframes loadAnimate--instagram {
-    0, 33.3%, 66.7%, 100% {
-        fill: var(--color-gray);
+    &--like {
+        cursor: default;
+        animation: likeAnimate 1s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
     }
-    50% {
-        fill: var(--color-instagram);
+    &--retweet {
+        cursor: default;
+        animation: retweetAnimate 1s infinite ease-in-out;        
     }
-}
-@keyframes loadAnimate--weibo {
-    0, 66.7%, 100% {
-        fill: var(--color-gray);
+    &--star {
+        cursor: default;
+        animation: starAnimate 1s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);        
     }
-    83.3% {
-        fill: var(--color-weibo);
-    }
-}
-@keyframes imgLoadAnimate {
-    0%, 100% {
-        filter: grayscale(0%);
-        opacity: 1;
-    }
-    50% {
-        filter: grayscale(100%);
-        opacity: .3;
-    }
-}
-@keyframes usersInPhotoAnimate {
-    0% {
-        transform: scale(0);
-    }
-    100% {
-        transform: scale(1);
+    &--trash {
+        cursor: default;
+        animation: trashAnimate .5s infinite ease-in-out;
     }
 }
 @keyframes errFormAnimate {
@@ -69,31 +62,17 @@
         transform: translateX(2px);
     }
 }
-@keyframes writingAnimate {
-    from {
-        transform: rotate(0deg) translateX(1px) rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg) translateX(1px) rotate(-360deg);
-    }
-}
-@keyframes sendingAnimate {
+@keyframes likeAnimate {
     0%, 100% {
-        transform: translateX(0);
+        transform: scale(1, 1);
+        opacity: 1;
     }
     50% {
-        transform: translateX(-27px);
+        transform: scale(1.1, 1.1);
+        opacity: .7;
     }
 }
-@keyframes waitAnimate {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-@keyframes inprocessAnimate {
+@keyframes retweetAnimate {
     0%, 100% {
         opacity: .3;
     }
@@ -101,21 +80,29 @@
         opacity: 1;
     }
 }
-@keyframes tipsErrAnimate {
+@keyframes starAnimate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+@keyframes trashAnimate {
     0%, 100% {
-        transform: translateX(0);
+        transform: translate(0, 0px);
     }
     12.5% {
-        transform: translateX(-4px);
+        transform: translate(-3px, .5px);
     }
     37.5% {
-        transform: translateX(4px);
+        transform: translate(3px, 1.5px);
     }
     62.5% {
-        transform: translateX(-2px);
+        transform: translate(-2px, 1.5px);
     }
     87.5% {
-        transform: translateX(2px);
+        transform: translate(2px, .5px);
     }
 }
 @keyframes enterAnimate {

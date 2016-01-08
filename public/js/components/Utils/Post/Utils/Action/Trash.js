@@ -37,8 +37,8 @@ export default class Trash extends React.Component {
         const { inprocess } = this.state;
         const { id } = this.props;
         const iconClass = classNames({
-            'post-action__button': true,
-            'post-action__button--inprocess': inprocess
+            'post-action__icon': true,
+            'animate--trash': inprocess
         });
         return (
             <button

@@ -1,0 +1,150 @@
+.vertically_center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.overflow {
+    &--x {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+    &--y {
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+.tips {
+    opacity: .7;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &--deep {
+        opacity: .3;
+
+        &:hover {
+            opacity: 1;
+        }
+        &--peace {
+            opacity: .3;
+        }
+    }
+    &--active {
+        opacity: 1;
+
+        &:hover {
+            opacity: .7;
+        }
+        &--peace {
+            opacity: 1;
+        }
+    }
+    &--inprocess {
+        animation: inprocessAnimate 1.7s infinite cubic-bezier(0.4, 0, 1, 1);
+    }
+    &--error {
+        animation: tipsErrAnimate .5s ease-in-out;
+    }
+}
+@keyframes inprocessAnimate {
+    0%, 100% {
+        opacity: .3;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+@keyframes tipsErrAnimate {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    12.5% {
+        transform: translateX(-4px);
+    }
+    37.5% {
+        transform: translateX(4px);
+    }
+    62.5% {
+        transform: translateX(-2px);
+    }
+    87.5% {
+        transform: translateX(2px);
+    }
+}
+.cursor {
+    &--pointer {
+        cursor: pointer;
+    }
+    &--pre {
+        cursor: inline('caret--pre.gif'), w-resize;
+        cursor: -webkit-image-set(
+            inline('caret--pre@2x.gif') 2x
+        ), w-resize;
+    }
+    &--next {
+        cursor: inline('caret--next.gif'), e-resize;
+        cursor: -webkit-image-set(
+            inline('caret--next@2x.gif') 2x
+        ), e-resize;
+    }
+    &--zoomIn {
+        cursor: zoom-in;
+    }
+    &--zoomOut {
+        cursor: zoom-out;
+    }
+}
+.icon {
+    &--twitter{
+        color: var(--color-twitter);
+        svg {
+            fill: var(--color-twitter) !important;
+        }
+    }
+    &--instagram {
+        color: var(--color-instagram);
+        svg {
+            fill: var(--color-instagram) !important;
+        }
+    }
+    &--weibo {
+        color: var(--color-weibo);
+        svg {
+            fill: var(--color-weibo) !important;
+        }
+    }
+    &--like {
+        color: #E9574F;
+        svg {
+            fill: #E9574F;
+        }
+    }
+    &--retweet {
+        color: #1BADF8;
+        svg {
+            fill: #1BADF8;
+        }
+    }
+    &--reply {
+        color: #63DA38;
+        svg {
+            fill: #63DA38;
+        }
+    }
+    &--star {
+        color: #FFE33B;
+        svg {
+            fill: #FFE33B;
+        }
+    }
+    &--inactive,
+    &--calendar {
+        color: #C1C9D2;
+        svg {
+            fill: #C1C9D2;
+        }
+    }
+}

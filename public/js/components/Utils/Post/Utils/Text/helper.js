@@ -1,3 +1,5 @@
+import xssFilters from 'xss-filters';
+
 // via https://github.com/RoberMac/angular-linkify/blob/master/angular-linkify.js#L5
 const _linkify = (text, provider) => {
     if (!text) return;
@@ -88,4 +90,7 @@ export const trimSuffixLink = text => {
 }
 export const trimMediaLink = (text, { link }) => {
     return text.replace(link, '');
+}
+export const sanitizer = text => {
+    return xssFilters.inHTMLData(text);
 }

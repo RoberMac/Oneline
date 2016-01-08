@@ -5,7 +5,7 @@ import assign from 'object.assign';
 import Icon from '../../../Icon';
 
 export default ({ provider, id, post }) => {
-    const _id = id || post.id_str;
+    const _id = id || post && post.id_str;
     const linkObj = { to: `/home/${provider}/detail/${_id}` };
 
     if (post){
@@ -18,7 +18,7 @@ export default ({ provider, id, post }) => {
                 className="post-action btn tips--deep"
                 style={ _id ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
             >
-                <Icon className="post-action__button" viewBox="0 0 26 26" name="detail" />
+                <Icon className="post-action__icon" viewBox="0 0 34 26" name="detail" />
                 <span className="post-action__count" />
             </span>
         </Link>

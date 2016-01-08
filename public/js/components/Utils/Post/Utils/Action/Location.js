@@ -16,7 +16,7 @@ import Icon from '../../../Icon';
 export default (props) => (
     <Link to={selectLink[props.provider]({...props})}>
         <span className="post__location btn tips--deep">
-            <Icon className="post-action__button" viewBox="0 0 26 26" name="location" />
+            <Icon className="post-action__icon" viewBox="0 0 26 26" name="location" />
             <span className="post__location__name">{props.name}</span>
         </span>
     </Link>

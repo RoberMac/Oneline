@@ -208,3 +208,20 @@
         max-height: 66.7%;
     }
 }
+
+@keyframes writingAnimate {
+    from {
+        transform: rotate(0deg) translateX(1px) rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg) translateX(1px) rotate(-360deg);
+    }
+}
+@keyframes sendingAnimate {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(-27px);
+    }
+}

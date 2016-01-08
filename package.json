@@ -69,7 +69,8 @@
     "serve-favicon": "^2.3.0",
     "superagent": "^1.5.0",
     "twit": "^2.1.1",
-    "weibo-mid": "0.0.1"
+    "weibo-mid": "0.0.1",
+    "xss-filters": "^1.2.6"
   },
   "devDependencies": {
     "babel-core": "^6.3.13",

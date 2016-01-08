@@ -48,15 +48,15 @@ export default class Like extends React.Component {
             'icon--like tips--active': liked
         });
         const iconClass = classNames({
-            'post-action__button': true,
-            'post-action__button--inprocess': inprocess
+            'post-action__icon': true,
+            'animate--like': inprocess
         });
         return (
             <button
                 className={btnClass}
                 type="button"
                 onClick={this.toggleLike}
-                style={ id ? null : { 'pointerEvents': 'none' } }
+                style={ id ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
             >
                 <Icon className={iconClass} viewBox="0 0 26 26" name="like" />
                 <span className="post-action__count" data-count={count > 0 ? numAbbr(count) : ''} />

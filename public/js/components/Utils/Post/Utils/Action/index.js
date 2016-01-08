@@ -24,6 +24,7 @@ export const TwitterAction = ({ post, opts }) => {
             <Like provider="twitter" id={post.id_str} count={post.like_count} liked={post.liked} />
             <Retweet provider="twitter" post={post} />
             <Reply provider="twitter" post={post} />
+            <Source provider="twitter" screen_name={post.user.screen_name} id={post.id_str} />
             <Detail provider="twitter" id={post.id_str} />
             {post.location ? <Location provider="twitter" {...post.location} /> : null}
         </span>

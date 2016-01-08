@@ -46,7 +46,14 @@
         transform: translate3d(0, 0, 0) scaleX(1);
     }
 }
-
+@keyframes onelineEnterAnimate {
+    0% {
+        transform: scaleX(.01);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}
 .provider {
     &--twitter {
         ::selection {

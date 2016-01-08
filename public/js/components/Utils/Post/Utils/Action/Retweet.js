@@ -18,7 +18,7 @@ const RetweetBtn = ({ provider, post }) => {
                 className="post-action btn tips--deep"
                 style={ id_str ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
             >
-                <Icon className="post-action__button" viewBox="0 0 34 26" name="retweet" />
+                <Icon className="post-action__icon" viewBox="0 0 34 26" name="retweet" />
                 <span className="post-action__count" data-count={retweet_count > 0 ? numAbbr(retweet_count) : ''} />
             </span>
         </Link>
@@ -58,8 +58,8 @@ class DeleteRetweetBtn extends React.Component {
         const { inprocess } = this.state;
         const { id_str, retweet_count, retweeted_id_str } = this.props.post;
         const iconClass = classNames({
-            'post-action__button': true,
-            'post-action__button--inprocess': inprocess
+            'post-action__icon': true,
+            'animate--retweet': inprocess
         });
         return (
             <button

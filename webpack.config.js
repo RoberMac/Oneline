@@ -24,6 +24,7 @@ module.exports = {
             'debounce',
             'react-swipeable',
             // 'react-motion',
+            'xss-filters',
         ]
     },
     output: {

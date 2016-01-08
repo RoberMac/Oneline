@@ -22,7 +22,7 @@ export default (props) => (
             className="post-action btn tips--deep"
             style={ isActive({...props}) ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
         >
-            <Icon className="post-action__button" viewBox="0 0 26 26" name="source" />
+            <Icon className="post-action__icon" viewBox="0 0 26 26" name="source" />
             <span className="post-action__count" />
         </span>
     </a>

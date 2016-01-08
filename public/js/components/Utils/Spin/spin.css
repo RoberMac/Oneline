@@ -116,3 +116,28 @@
         }
     }
 }
+
+@keyframes loadAnimate--twitter {
+    0, 33.3%, 100% {
+        fill: var(--color-gray);
+    }
+    16.6% {
+        fill: var(--color-twitter);
+    }
+}
+@keyframes loadAnimate--instagram {
+    0, 33.3%, 66.7%, 100% {
+        fill: var(--color-gray);
+    }
+    50% {
+        fill: var(--color-instagram);
+    }
+}
+@keyframes loadAnimate--weibo {
+    0, 66.7%, 100% {
+        fill: var(--color-gray);
+    }
+    83.3% {
+        fill: var(--color-weibo);
+    }
+}
