@@ -5,10 +5,10 @@ import { handleImageError, lazySize, calcDegree } from './helper.js';
 
 // Components
 import Icon from '../../../Icon';
+import UserLink from '../../../UserLink';
 import Transition from '../../../Transition';
 import ViewOriginal from './Utils/ViewOriginal';
 import Video from './Utils/Video';
-
 
 class UsersInPhoto extends React.Component {
     constructor(props) {
@@ -36,8 +36,8 @@ class UsersInPhoto extends React.Component {
                 const { x, y } = user.position;
                 const degree = calcDegree(x, y, imgWidth, imgHeight);
                 const userTagStyle = {
-                    top: y * 100 + '%',
-                    left: 'calc(' + x * 100 + '% - 16px)',
+                    top: `calc(${y * 100}% + 5px)`,
+                    left: `calc(${x * 100}% - 17px)`,
                     transform: 'rotate(' + degree + 'deg)',
                     WebkitTransform: 'rotate(' + degree + 'deg)'
                 }
@@ -46,18 +46,19 @@ class UsersInPhoto extends React.Component {
                     WebkitTransform: 'rotate(' + (- degree) + 'deg)'
                 }
                 return (
-                    <a
-                        ref={user.user.username}
+                    <span
                         key={user.user.username}
-                        className='post-media__userTag animate--faster'
-                        href={`/home/instagram/user/${user.user.username}`}
+                        className='post-media__userTag'
                         style={userTagStyle}
                     >
-                        <div className="post-media__userTag__pointer"></div>
-                        <span className="post-media__userTag__content">
-                            <img style={avatarStyle} src={user.user.profile_picture} />
-                        </span>
-                    </a>
+                        <UserLink provider="instagram" screen_name={user.user.username}>
+                            <img
+                                style={avatarStyle}
+                                className="post-media__userTag__content"
+                                src={user.user.profile_picture}
+                            />
+                        </UserLink>
+                    </span>
                 );
             })
         } else {

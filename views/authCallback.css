@@ -1,3 +1,7 @@
+.animate--general{
+    -webkit-transition:all .7s ease-in-out;
+    transition:all .7s ease-in-out;
+}
 .vertically_center {
     display: -webkit-box;
     display: -webkit-flex;

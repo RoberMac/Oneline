@@ -48,8 +48,8 @@ export const isLeftPopup = () => {
 
     return _left > _width / 2;
 }
-export const getCountInfo = ({ actionType, provider, status }) => {
-    const limitCount = actionType === 'retweet' && provider === 'twitter' ? 116 : 140;
+export const getCountInfo = ({ action, provider, status }) => {
+    const limitCount = action === 'quote' && provider === 'twitter' ? 116 : 140;
 
     let count, isOverLimitCount;
     // Count
@@ -246,10 +246,10 @@ function dataURLtoBlob(dataURL) {
 export const initLivePreview = ({ type, provider, status, media, livePreviewPost, post }) => {
     if (type === 'reply') return {};
 
-    const { created_at, user } = livePreviewPost;
     let newLivePreviewPost = {};
 
-    // Common
+    // Common (Outside Post)
+    const { created_at, user } = livePreviewPost; // Restore from previous `livePreviewPost`
     assign(newLivePreviewPost, {
         provider,
         type,
@@ -258,12 +258,12 @@ export const initLivePreview = ({ type, provider, status, media, livePreviewPost
         user: user || window[`profile_${provider}`],
         media: initLivePreviewMedia({ media, provider })
     });
-    // Retweet / Quote
+    // Retweet / Quote (Inside Post)
     switch (type){
         case 'retweet':
         case 'quote':
             assign(newLivePreviewPost, {
-                [type]: post
+                [type]: provider === 'weibo' && post[type] || post
             });
             break;
     }
@@ -272,6 +272,5 @@ export const initLivePreview = ({ type, provider, status, media, livePreviewPost
 }
 function initLivePreviewMedia ({ media, provider }) {
     return media.map(({ url, ratio }) => ({ type: 'photo', image_url: url, ratio }));
-    // TODO: Support Weibo
 }
 

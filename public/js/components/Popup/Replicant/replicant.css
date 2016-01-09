@@ -8,6 +8,7 @@
     font-size: 27px;
     font-weight: var(--font-weight-bold);
     text-align: center;
+    cursor: default;
 
     &--deckard {
         &::before {

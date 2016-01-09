@@ -22,12 +22,6 @@
     }
     &__location {
         position: absolute 3px 3px * *;
-        height: 24px;
-
-        svg {
-            fill: var(--color-steel);
-            size: 20px;
-        }
 
         &:hover {
             .post__location__name {
@@ -36,14 +30,14 @@
         }
         &__name {
             display: none;
-            position: absolute 0 24px * *;
+            position: absolute 0 17px * *;
             width: 100px;
             color: var(--color-steel);
             text-align: right;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            font-size: 11px 24px;
+            font-size: 11px 17px;
 
             @media (--all-mobile-devices){
                 display: inline-block;
@@ -68,7 +62,13 @@
             }
             &__time {
                 font-size: 10px;
-            }    
+            }
+            &__location {
+                &__name {
+                    right: 15px;
+                    font-size: 11px 15px;
+                }
+            }
         }
     }
 }
@@ -82,10 +82,13 @@
         top: -10px;
     }
     .post__location {
-        transform: translateY(-10px);
+        transform: translateY(-7px);
     }
     .post--quote {
         background-color: var(--color-gray-drak);
+        .post__location {
+            transform: translateY(-5px);
+        }
     }
     .actions__count::after {
         color: var(--color-steel);

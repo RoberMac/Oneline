@@ -47,6 +47,7 @@ class DeleteRetweetBtn extends React.Component {
                 retweet_count: retweet_count - 1,
                 retweeted_id_str: null
             }))
+            // component will unmount, don't need `this.setState` anymore.
         })
         .catch(err => {
             __DEV__ && console.error(err)

@@ -193,7 +193,7 @@ export class Submit extends React.Component {
     }
     render() {
         const { action, provider, status, submitting, onClick } = this.props;
-        const { count, isOverLimitCount } = getCountInfo({ provider, status });
+        const { count, isOverLimitCount } = getCountInfo({ action, provider, status });
         const btnClass = classNames({
             'write__btn write__btn--send tips': true,
             [`icon--${provider}`]: true,

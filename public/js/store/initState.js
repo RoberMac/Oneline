@@ -17,12 +17,14 @@ export const initTimelineState = () => {
         newPosts: {
             isFetching: false,
             isFetchFail: false,
-            unreadCount: 0
+            unreadCount: 0,
+            fetchFrom: 'remote',
         },
         oldPosts: {
             isFetching: false,
             isFetchFail: false,
-            unreadCount: 0
+            unreadCount: 0,
+            fetchFrom: 'remote',
         },
         isInitLoad: true,
         showingPosts: [],

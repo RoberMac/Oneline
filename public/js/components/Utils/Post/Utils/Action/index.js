@@ -55,6 +55,7 @@ export const WeiboAction = ({ post, opts }) => {
     const Actions = opts.isDetailPost ? (
         <span className="cursor--pointer">
             <Source provider="weibo" uid={post.user.uid} mid={post.mid} />
+            <Star provider="weibo" id={post.id_str} stared={post.stared} />
             {post.location ? <Location provider="weibo" {...post.location} /> : null}
             {isAuthUser ? <Trash provider="weibo" id={post.id_str} /> : null}
         </span>

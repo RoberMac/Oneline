@@ -11,12 +11,14 @@ import Icon from '../../../Icon';
 export default class Like extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { inprocess: false }
+        this.state = { inprocess: false, liked: false, like_count: 0 }
         this.toggleLike = this.toggleLike.bind(this)
     }
     toggleLike() {
         const { inprocess } = this.state;
-        const { provider, id, count, liked } = this.props;
+        const { provider, id } = this.props;
+        const liked = this.state.liked || this.props.liked;
+        const count = this.state.like_count || this.props.count;
 
         if (inprocess) return;
         this.setState({ inprocess: true })
@@ -27,12 +29,14 @@ export default class Like extends React.Component {
             id
         })
         .then(() => {
+            const newLiked = !liked;
+            const newLikeCount = count + (liked ? -1 : 1);
             reduxStore.dispatch(updatePost({
                 id_str: id,
-                liked: !liked,
-                like_count: count + (liked ? -1 : 1)
+                liked: newLiked,
+                like_count: newLikeCount
             }))
-            this.setState({ inprocess: false })
+            this.setState({ inprocess: false, liked: newLiked, like_count: newLikeCount })
         })
         .catch(err => {
             __DEV__ && console.error(err)
@@ -41,22 +45,22 @@ export default class Like extends React.Component {
         })
     }
     render() {
-        const { inprocess } = this.state;
-        const { id, count, liked } = this.props;
+        const liked = this.state.liked || this.props.liked;
+        const count = this.state.like_count || this.props.count;
         const btnClass = classNames({
             'post-action tips--deep': true,
             'icon--like tips--active': liked
         });
         const iconClass = classNames({
             'post-action__icon': true,
-            'animate--like': inprocess
+            'animate--like': this.state.inprocess
         });
         return (
             <button
                 className={btnClass}
                 type="button"
                 onClick={this.toggleLike}
-                style={ id ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
+                style={ this.props.id ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
             >
                 <Icon className={iconClass} viewBox="0 0 26 26" name="like" />
                 <span className="post-action__count" data-count={count > 0 ? numAbbr(count) : ''} />

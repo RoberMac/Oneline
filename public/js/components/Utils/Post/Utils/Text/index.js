@@ -17,16 +17,19 @@ const selectMiddlewares = {
 
 export default ({ provider, text, middlewares, className }) => {
     const _middlewares = middlewares || selectMiddlewares[provider];
-    let _text = text;
+    let _text = text || '';
 
     _middlewares.unshift({ middleware: 'sanitizer' });
     _middlewares.forEach( ({ middleware, opts }) => {
         _text = Middlewares[middleware](_text, opts || {})
     });
 
-    return <p
-        className={`post-text ${className || ''}`}
-        dangerouslySetInnerHTML={{ __html: _text }}
-        onClick={CaptureClicks}
-    />;
+    return (_text
+        ? <p
+            className={`post-text ${className || ''}`}
+            dangerouslySetInnerHTML={{ __html: _text }}
+            onClick={CaptureClicks}
+        />
+        : <span />
+    );
 }
