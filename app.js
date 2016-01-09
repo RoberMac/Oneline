@@ -62,17 +62,23 @@ app
 }))
 .use(helmet())
 .use(helmet.hidePoweredBy({ setTo: 'PHP 4.2.0' }))
-.use(helmet.contentSecurityPolicy({
-    defaultSrc: ["'self'"],
-    styleSrc: ["'self'", "'unsafe-inline'"],
-    scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-    imgSrc: ["*", "data:", "blob:"],
-    mediaSrc: ["*"],
-    connectSrc: ['*'],
-    reportOnly: false,
+.use(helmet.csp({
+    directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        imgSrc: ["*", "data:", "blob:"],
+        mediaSrc: ["*"],
+    },
     setAllHeaders: false,
     disableAndroid: false,
-    safari5: false
+}))
+.use(helmet.xssFilter())
+.use(helmet.frameguard('deny'))
+.use(helmet.hsts({
+    maxAge: 10886400000,
+    includeSubdomains: true,
+    preload: true
 }));
 
 
