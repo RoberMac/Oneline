@@ -35,16 +35,16 @@ router.get('/', (req, res, next) => {
         providerList.forEach((userInfo, index) => {
             if (!userInfo) return;
 
-            let min_id = olIdObj[userInfo.provider + '_minId'];
-            let max_id = olIdObj[userInfo.provider + '_maxId'];
+            let minId = olIdObj[userInfo.provider + '_minId'];
+            let maxId = olIdObj[userInfo.provider + '_maxId'];
 
-            if (Object.keys(olIdObj).length > 0 && !(min_id || max_id)) return;
+            if (Object.keys(olIdObj).length > 0 && !(minId || maxId)) return;
 
             let opts = {
                 token      : userInfo.token,
                 tokenSecret: userInfo.tokenSecret,
-                min_id     : min_id,
-                max_id     : max_id
+                minId     : minId,
+                maxId     : maxId
             };
 
             timelinePromises[index] = timeline[userInfo.provider](opts)
@@ -56,10 +56,10 @@ router.get('/', (req, res, next) => {
         let providerList = ['twitter', 'instagram', 'weibo'];
         let combineData = {
             data    : [],
-            min_id  : {},
-            max_id  : {},
-            min_date: {},
-            max_date: {},
+            minId  : {},
+            maxId  : {},
+            minDate: {},
+            maxDate: {},
         };
 
         dataList.forEach((dataItem, index) => {
@@ -71,10 +71,10 @@ router.get('/', (req, res, next) => {
 
             dataItem = timelineFilter[provider](dataItem)
 
-            combineData.min_id[provider]   = dataItem.min_id
-            combineData.max_id[provider]   = dataItem.max_id
-            combineData.min_date[provider] = dataItem.min_date
-            combineData.max_date[provider] = dataItem.max_date
+            combineData.minId[provider]   = dataItem.minId
+            combineData.maxId[provider]   = dataItem.maxId
+            combineData.minDate[provider] = dataItem.minDate
+            combineData.maxDate[provider] = dataItem.maxDate
 
             combineData.data = combineData.data.concat(dataItem.data)
         })

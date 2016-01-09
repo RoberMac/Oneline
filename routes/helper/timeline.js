@@ -17,15 +17,15 @@ module.exports = {
             count: opts.count || 100
         };
 
-        if (opts.min_id){
-            tOpts.since_id = opts.min_id
-        } else if (opts.max_id) {
-            tOpts.max_id = opts.max_id
+        if (opts.minId){
+            tOpts.since_id = opts.minId
+        } else if (opts.maxId) {
+            tOpts.max_id = opts.maxId
         }
 
         return q_twit_get('statuses/home_timeline', tOpts)
         .then((data) => {
-            if (opts.max_id){
+            if (opts.maxId){
                 data[0].splice(0, 1)
             }
             return data;
@@ -53,10 +53,10 @@ module.exports = {
             count: opts.count || 100
         };
 
-        if (opts.min_id){
-            iOpts.min_id = opts.min_id
-        } else if (opts.max_id){
-            iOpts.max_id = opts.max_id
+        if (opts.minId){
+            iOpts.min_id = opts.minId
+        } else if (opts.maxId){
+            iOpts.max_id = opts.maxId
         }
 
         return q_ig_timeline(iOpts)
@@ -67,10 +67,10 @@ module.exports = {
             count: opts.count || 100
         };
 
-        if (opts.min_id){
-            wOpts.since_id = opts.min_id
-        } else if (opts.max_id) {
-            wOpts.max_id = opts.max_id
+        if (opts.minId){
+            wOpts.since_id = opts.minId
+        } else if (opts.maxId) {
+            wOpts.max_id = opts.maxId
         }
 
         return Weibo({
@@ -79,7 +79,7 @@ module.exports = {
             opts: wOpts
         })
         .then((data) => {
-            if (opts.max_id){
+            if (opts.maxId){
                 data['statuses'].splice(0, 1)
             }
             return data;

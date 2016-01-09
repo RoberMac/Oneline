@@ -1,0 +1,94 @@
+@import "./base.css";
+
+.oneline {
+    position: absolute 0 * * 40%;
+    size: 20% 100%;
+    background-color: var(--color-black);
+    z-index: 1;
+
+    @media (--phone-portrait){
+        left: 15%;
+        width: 70%;
+    }
+    @media (--tablet){
+        left: 25%;
+        width: 50%;
+    }
+    @media (--tablet-landscape){
+        left: 33.3%;
+        width: 33.3%;
+    }
+
+    &--enter {
+        animation: onelineEnterAnimate .7s ease-in-out;
+    }
+    &--timeline {
+        left: 33.3%;
+        width: 33.3%;
+        background-color: var(--color-gray);
+        @media (--phone-portrait){
+            left: 0%;
+            width: 100%;
+        }
+        @media (--tablet){
+            left: 15%;
+            width: 70%;
+        }
+        @media (--tablet-landscape){
+            left: 25%;
+            width: 50%;
+        }
+    }
+    &__wrapper {
+        position: absolute 0 * * 0;
+        size: 100%;
+        padding: 70px 0 0;
+        transform: translate3d(0, 0, 0) scaleX(1);
+    }
+}
+@keyframes onelineEnterAnimate {
+    0% {
+        transform: scaleX(.01);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}
+.provider {
+    &--twitter {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(42, 169, 224, 0.7);
+        }
+        a, a:visited {
+            color: var(--color-twitter);
+        }
+        img, video {
+            background: var(--color-white) inline('background--twitter.png') repeat;
+        }
+    }
+    &--instagram {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(63, 93, 135, 0.7);
+        }
+        a, a:visited {
+            color: var(--color-instagram);
+        }
+        img, video {
+            background: var(--color-white) inline('background--instagram.png') repeat;
+        }
+    }
+    &--weibo {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(230, 22, 45, 0.7);
+        }
+        a, a:visited {
+            color: var(--color-weibo);
+        }
+        img, video {
+            background: var(--color-white) inline('background--weibo.png') repeat;
+        }
+    }
+}

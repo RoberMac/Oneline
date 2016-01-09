@@ -1,0 +1,19 @@
+.post-text {
+    margin-top: 17px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    line-height: 1.4;
+    cursor: text;
+
+    img {
+        width: 1em;
+        margin: 0 .1em;
+        vertical-align: text-bottom;
+    }
+}
+
+.post--quote {
+    .post-text {
+        margin-top: 0;
+    }
+}

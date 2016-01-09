@@ -65,8 +65,8 @@ app
 .use(helmet.contentSecurityPolicy({
     defaultSrc: ["'self'"],
     styleSrc: ["'self'", "'unsafe-inline'"],
-    scriptSrc: ["'self'", "'unsafe-inline'"],
-    imgSrc: ["*", "data:"],
+    scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+    imgSrc: ["*", "data:", "blob:"],
     mediaSrc: ["*"],
     connectSrc: ['*'],
     reportOnly: false,
@@ -125,7 +125,7 @@ app
 .use('/actions', require('./routes/actions'))
 .use('/upload', require('./routes/upload'))
 .use('/public', express.static('public'))
-.all('/*', (req, res, next) => res.sendFile(__dirname + '/views/index.min.html'))
+.all('/*', (req, res, next) => res.sendFile(__dirname + '/index.html'))
 
 
 // Handing Error

@@ -10,13 +10,8 @@ const filterUtils = require('./utils');
 let filter = {
     twitter: data => {
         let cache = [];
-        let _now  = Date.now();
 
         for (let item of data){
-            let _created_at = Date.parse(item.created_at);
-
-            if (_created_at > _now) return;
-
             /**
              * Tweet / Reply
              *
@@ -24,14 +19,14 @@ let filter = {
             let tweetObj = {
                 type: 'tweet',
                 provider: 'twitter',
-                created_at: _created_at,
+                created_at: Date.parse(item.created_at),
                 id_str: item.id_str,
                 user: filterUtils.twitter.user(item.user),
                 text: item.text,
                 retweet_count: item.retweet_count,
-                favorite_count: item.favorite_count,
+                like_count: item.favorite_count,
                 retweeted: item.retweeted,
-                favorited: item.favorited
+                liked: item.favorited
             };
             // Media
             let t_extended_entities = item.extended_entities;
@@ -52,61 +47,45 @@ let filter = {
             }
 
             /**
-             * Retweet
+             * Retweet / Quote
              *
              */
-            if (item.retweeted_status){
-                let retweetItem = item.retweeted_status;
+            if (item.retweeted_status || item.quoted_status){
+                let r_type = item.retweeted_status ? 'retweet' : 'quote';
+                let r_item = item.retweeted_status || item.quoted_status;
 
-                // Extend Common Data
-                let type = 'retweet';
-                let r_id_str = item.id_str;
-                let id_str = retweetItem.id_str;
-                let text = retweetItem.text;
-                let retweet = {
-                    created_at: Date.parse(retweetItem.created_at),
-                    user: filterUtils.twitter.user(retweetItem.user)
+                let r_obj = {
+                    type: 'tweet',
+                    provider: 'twitter',
+                    created_at: Date.parse(r_item.created_at),
+                    id_str: r_item.id_str,
+                    user: filterUtils.twitter.user(r_item.user),
+                    text: r_item.text,
+                    retweet_count: r_item.retweet_count,
+                    like_count: r_item.favorite_count,
+                    retweeted: r_item.retweeted,
+                    liked: r_item.favorited
                 };
-                let favorite_count = retweetItem.favorite_count;
-
-                Object.assign(tweetObj, { type, r_id_str, id_str, text, retweet, favorite_count })
-
-                // Extend Media
-                let r_extended_entities = retweetItem.extended_entities;
+                // Media
+                let r_extended_entities = r_item.extended_entities;
                 if (r_extended_entities && r_extended_entities.media){
                     let media = filterUtils.twitter.media(r_extended_entities.media);
                     let mediaLink = r_extended_entities.media[0].url;
 
-                    Object.assign(tweetObj, { media, mediaLink })
+                    Object.assign(r_obj, { media, mediaLink })
                 }
+                // Location
+                if (r_item.place){
+                    Object.assign(r_obj, {
+                        location: {
+                            id: r_item.place.id,
+                            name: r_item.place.name
+                        }
+                    })
+                }
+
+                Object.assign(tweetObj, { type: r_type, [r_type]: r_obj })
             } 
-            /**
-             * Quote
-             *
-             */
-            else if (item.quoted_status){
-                let quoteItem = item.quoted_status;
-
-                // Extend Common Data
-                let type = 'quote';
-                let quote = {
-                    created_at: Date.parse(quoteItem.created_at),
-                    id_str: quoteItem.id_str,
-                    text: quoteItem.text,
-                    user: filterUtils.twitter.user(quoteItem.user)
-                };
-
-                Object.assign(tweetObj, { type, quote })
-
-                // Extend Media
-                let q_extended_entities = quoteItem.extended_entities;
-                if (q_extended_entities && q_extended_entities.media){
-                    let media = filterUtils.twitter.media(q_extended_entities.media);
-                    let mediaLink = q_extended_entities.media[0].url;
-
-                    Object.assign(tweetObj.quote, { media, mediaLink })
-                }
-            }
 
             cache.push(tweetObj);
         }
@@ -117,10 +96,10 @@ let filter = {
 
         if (lastData){
             Object.assign(returnObj, {
-                min_id  : lastData.id_str,
-                min_date: Date.parse(lastData.created_at),
-                max_id  : firstData.id_str,
-                max_date: Date.parse(firstData.created_at)
+                minId  : lastData.id_str,
+                minDate: Date.parse(lastData.created_at),
+                maxId  : firstData.id_str,
+                maxDate: Date.parse(firstData.created_at)
             })
         }
 
@@ -128,23 +107,18 @@ let filter = {
     },
     instagram: data => {
         let cache = [];
-        let _now  = Date.now();
 
         for (let item of data){
-            let _created_at = Date.parse(new Date(item.created_time * 1000));
-
-            if (_created_at > _now) return;
-
             let igPost = {
                 provider: 'instagram',
-                created_at: _created_at,
+                created_at: Date.parse(new Date(item.created_time * 1000)),
                 id_str: item.id,
                 type: 'post',
                 user: filterUtils.instagram.user(item.user),
                 text: item.caption && item.caption.text,
                 images: filterUtils.instagram.media(item.images),
-                favorite_count: item.likes.count,
-                favorited: item.user_has_liked,
+                like_count: item.likes.count,
+                liked: item.user_has_liked,
                 reply_count: item.comments.count,
                 link: item.link
             };
@@ -184,10 +158,10 @@ let filter = {
 
         if (lastData){
             Object.assign(returnObj, {
-                min_id  : lastData.id,
-                min_date: Date.parse(new Date(lastData.created_time * 1000)),
-                max_id  : firstData.id,
-                max_date: Date.parse(new Date(firstData.created_time * 1000))
+                minId  : lastData.id,
+                minDate: Date.parse(new Date(lastData.created_time * 1000)),
+                maxId  : firstData.id,
+                maxDate: Date.parse(new Date(firstData.created_time * 1000))
             })
         }
 
@@ -195,13 +169,8 @@ let filter = {
     },
     weibo: data => {
         let cache = [];
-        let _now  = Date.now();
 
         for (let item of data){
-            let _created_at = Date.parse(item.created_at);
-
-            if (_created_at > _now) return;
-
             /**
              * Tweet / Reply
              *
@@ -209,14 +178,15 @@ let filter = {
             let weiboObj = {
                 type: 'tweet',
                 provider: 'weibo',
-                created_at: _created_at,
+                created_at: Date.parse(item.created_at),
                 id_str: item.idstr,
                 mid: mid.encode(item.mid),
                 user: filterUtils.weibo.user(item.user),
                 text: item.text,
                 retweet_count: item.reposts_count,
-                comments_count: item.comments_count,
-                favorite_count: item.attitudes_count
+                reply_count: item.comments_count,
+                like_count: item.attitudes_count,
+                liked: item.favorited
             };
             // Media
             let pic_urls = item.pic_urls;
@@ -237,10 +207,10 @@ let filter = {
                 }
 
                 let name = _place_name;
-                let id = _place_id;
-                let q = item.geo.coordinates[0] + '_' + item.geo.coordinates[1];
+                let place_id = _place_id;
+                let id = item.geo.coordinates[0] + '_' + item.geo.coordinates[1];
 
-                Object.assign(weiboObj, { location: { name, id, q } })
+                Object.assign(weiboObj, { location: { name, place_id, id } })
             }
 
             /**
@@ -248,40 +218,48 @@ let filter = {
              *
              */
             if (item.retweeted_status){
-                let retweetType = /^转发微博|Repost|轉發微博$/.test(item.text) ? 'retweet' : 'quote';
-                let retweetItem = item.retweeted_status;
+                let r_type = /^转发微博|Repost|轉發微博$/.test(item.text) ? 'retweet' : 'quote';
+                let r_item = item.retweeted_status;
 
-                // Reset Tweet
-                if (retweetType === 'retweet'){
-                    let r_id_str = item.idstr;
-                    let id_str = retweetItem.idstr;
-                    let retweet_count = retweetItem.reposts_count;
-                    let comments_count = retweetItem.comments_count;
-                    let favorite_count = retweetItem.attitudes_count;
-
-                    Object.assign(weiboObj, {
-                        r_id_str, id_str, retweet_count, comments_count, favorite_count
-                    })
-                }
-                // Extend Common Data
-                Object.assign(weiboObj, {
-                    type: retweetType,
-                    retweet: {
-                        created_at: Date.parse(retweetItem.created_at),
-                        id_str: retweetItem.idstr,
-                        mid: mid.encode(retweetItem.mid),
-                        user: filterUtils.weibo.user(retweetItem.user),
-                        text: retweetItem.text
-                    }
-                })
-                // Extend Media
-                let pic_urls = retweetItem.pic_urls;
-                let pic_ids  = retweetItem.pic_ids;
+                let r_obj = {
+                    type: 'tweet',
+                    provider: 'weibo',
+                    created_at: Date.parse(r_item.created_at),
+                    id_str: r_item.idstr,
+                    mid: mid.encode(r_item.mid),
+                    user: filterUtils.weibo.user(r_item.user),
+                    text: r_item.text,
+                    retweet_count: r_item.reposts_count,
+                    reply_count: r_item.comments_count,
+                    like_count: r_item.attitudes_count,
+                    liked: r_item.favorited
+                };
+                // Media
+                let pic_urls = r_item.pic_urls;
+                let pic_ids  = r_item.pic_ids;
                 if (pic_urls && pic_urls.length > 0 || pic_ids && pic_urls.length > 0){
-                    Object.assign(weiboObj, {
+                    Object.assign(r_obj, {
                         media: filterUtils.weibo.media(pic_urls || pic_ids)
                     })
                 }
+                // Location
+                if (r_item.geo && r_item.geo.type === 'Point'){
+                    let _place_name, _place_id;
+                    let annotations = r_item.annotations;
+
+                    if (annotations && annotations[0].place){
+                        _place_name = annotations[0].place.title
+                        _place_id = annotations[0].place.poiid
+                    }
+
+                    let name = _place_name;
+                    let place_id = _place_id;
+                    let id = r_item.geo.coordinates[0] + '_' + r_item.geo.coordinates[1];
+
+                    Object.assign(r_obj, { location: { name, place_id, id } })
+                }
+
+                Object.assign(weiboObj, { type: r_type, [r_type]: r_obj })
             }
 
             cache.push(weiboObj)
@@ -293,10 +271,10 @@ let filter = {
 
         if (lastData){
             Object.assign(returnObj, {
-                min_id  : lastData.idstr,
-                min_date: Date.parse(lastData.created_at),
-                max_id  : firstData.idstr,
-                max_date: Date.parse(firstData.created_at)
+                minId  : lastData.idstr,
+                minDate: Date.parse(lastData.created_at),
+                maxId  : firstData.idstr,
+                maxDate: Date.parse(firstData.created_at)
             })
         }
 

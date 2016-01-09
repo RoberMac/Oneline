@@ -1,0 +1,133 @@
+.post-media {
+    position: relative;
+    width: 100%;
+    margin: 17px 0 0 0;
+    white-space: nowrap;
+    text-align: center;
+
+    &::-webkit-scrollbar { 
+        display: none; 
+    }
+
+    img, video {
+        max-width: 100%;
+        max-height: 100vh;
+        border-radius: 3px;
+    }
+    video {
+        cursor: pointer;
+    }
+    &--large {
+        position: relative;
+        margin: 3px 0;
+
+        > img, video {
+            position: absolute 0 * * 0;
+            size: 100% 100%;
+            max-height: none;
+        }
+    }
+    &--thumb {
+        img {
+            size: 80px;
+            margin-right: 7px;
+            border-radius: 1px;
+
+            @media (--all-mobile-devices){
+                size: calc(100% / 9 - 3px);
+                margin-right: 3px;
+            }
+        }
+    }
+    &--small {
+        img {
+            size: calc(100% / 9 - 7px);
+            margin-right: 7px;
+            border-radius: 50%;
+        }
+    }
+    &--gif {
+        cursor: inline('GIF.gif'), zoom-in !important;
+        cursor: -webkit-image-set(
+            inline('GIF@2x.gif') 2x
+        ), zoom-in !important;
+
+        @media (--all-mobile-devices){
+            border: 1px solid #D0104C;
+        }
+    }
+    &--inactive {
+        filter: grayscale(100%);
+        opacity: .7;
+    }
+    &--active {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+    &--hide {
+        display: none;
+    }
+    &--loading {
+        animation: imgLoadAnimate 1.7s infinite linear;
+    }
+    &__icon {
+        position: absolute;
+        size: 17px;
+        z-index: 3;
+
+        svg {
+            height: 17px;
+        }
+
+        &--origin {
+            top: 3px;
+            right: 3px;
+        }
+        &--users {
+            size: 14px;
+            bottom: -15px;
+            left: 0;
+
+            svg {
+                height: 14px;
+            }
+        }
+    }
+    &__userTag {
+        position: absolute;
+        transform-origin: 17px -6px;
+
+        &:before {
+            content: '';
+            position: absolute -6px * * calc(50% - 7px);
+            border-color: transparent transparent var(--color-instagram) transparent;
+            border-style: solid;
+            border-width: 0 7px 14px 7px;
+        }
+        &__content {
+            display: inline-block;
+            size: 32px;
+            border-radius: 50% !important;
+            border: 3px solid #3F5D87;
+        }
+    }
+    &__playBtn {
+        position: absolute 0 * * 0;
+        size: 50px;
+        cursor: pointer;
+        
+        &--playing {
+            opacity: 0;
+        }
+    }
+}
+@keyframes imgLoadAnimate {
+    0%, 100% {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+    50% {
+        filter: grayscale(100%);
+        opacity: .3;
+    }
+}

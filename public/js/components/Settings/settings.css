@@ -1,0 +1,36 @@
+@import "../common/base.css";
+
+.social-wrapper {
+    position: absolute 15% * *;
+    size: 100% 70%;
+}
+.social-list {
+    position: absolute;
+    size: 100% 33.3%;
+
+    &:nth-child(1){
+        top: 0;
+    }
+    &:nth-child(2){
+        top: 33.3%;
+    }
+    &:nth-child(3){
+        top: 66.7%;
+    }
+    &--one {
+        height: 100%;
+    }
+}
+.social-icon {
+    display: block;
+    margin: 0 auto;
+    width: 33.3%;
+    filter: grayscale(100%);
+
+    > svg {
+        width: 100%;
+    }
+    &--active {
+        filter: grayscale(0%);
+    }
+}

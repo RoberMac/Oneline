@@ -1,0 +1,40 @@
+.post-action {
+    position: relative;
+    padding-right: 3px;
+    margin-right: 5px;
+    height: 23px;
+
+    &__icon {
+        display: inline-block;
+        height: 17px;
+        vertical-align: middle;
+        fill: var(--color-steel);
+    }
+    &__count {
+        display: inline-block;
+        margin-left: 1px;
+        height: 23px;
+        vertical-align: middle;
+
+        &::after {
+            content: attr(data-count);
+            font-size: 10px 23px;
+            color: var(--color-steel);
+        }
+    }
+}
+
+.post--quote {
+    .post-action {
+        &__icon {
+            height: 15px;
+        }
+        &__count {
+            &::after {
+                content: attr(data-count);
+                font-size: 8px;
+                color: var(--color-steel);
+            }
+        }
+    }
+}
