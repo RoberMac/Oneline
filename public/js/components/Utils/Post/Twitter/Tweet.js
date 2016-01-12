@@ -12,10 +12,10 @@ export default ({ post, opts }) => (
         {!opts.isAvatarLess ? <Avatar provider="twitter" {...post.user} /> : null}
         <div className="post__content">
             <Text
+                provider="twitter"
                 text={post.text}
                 middlewares={[
-                    { middleware: 'trimMediaLink', opts: { link: post.mediaLink } },
-                    { middleware: 'linkify', opts: { provider: 'twitter' } }
+                    { order: 2, middleware: 'trimMediaLink', opts: { link: post.mediaLink } }
                 ]}
             />
             {post.media && post.media.length > 0

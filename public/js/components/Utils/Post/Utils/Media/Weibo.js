@@ -5,13 +5,17 @@ import { handleImageError, fuckLongWeibo } from './helper.js';
 
 // Components
 import Icon from '../../../Icon';
+import Spin from '../../../Spin';
+import Transition from '../../../Transition';
 import ViewOriginal from './Utils/ViewOriginal';
 
 class LargeImg extends React.Component {
     constructor(props) {
         super(props)
+        this.state = { loading: true }
         this.handleCursorChange = this.handleCursorChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
+        this.handleImageLoaded = this.handleImageLoaded.bind(this)
     }
     handleCursorChange(e) {
         const elem = this.refs.largeImg;
@@ -44,6 +48,10 @@ class LargeImg extends React.Component {
 
         zoomIn(nextIndex)
     }
+    handleImageLoaded(e) {
+        fuckLongWeibo(e)
+        this.setState({ loading: false })
+    }
     componentDidMount() {
         const elem = this.refs.largeImg;
 
@@ -60,18 +68,26 @@ class LargeImg extends React.Component {
             elem.removeEventListener('mousemove', this.handleCursorChange)
         }
     }
+    componentWillReceiveProps(nextProps) {
+        if (this.props.src === nextProps.src) return;
+        this.setState({ loading: true })
+    }
     render() {
         const { src, index, max } = this.props;
+        const { loading } = this.state;
         const middleSrc = src.replace(/square|small/, 'bmiddle');
         const largeSrc  = src.replace(/square|small/, 'large');
 
         return (
             <div className="post-media">
+                <Transition>
+                    {loading ? <Spin isFetching={true} initLoad={true} provider="weibo" /> : null}
+                </Transition>
                 <img
                     src={middleSrc}
                     alt="weibo_large_photo"
                     onClick={this.handleClick}
-                    onLoad={fuckLongWeibo}
+                    onLoad={this.handleImageLoaded}
                     onError={handleImageError}
                     ref="largeImg"
                 />

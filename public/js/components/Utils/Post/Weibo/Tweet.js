@@ -11,7 +11,13 @@ export default ({ post, opts }) => (
     <div>
         {!opts.isAvatarLess ? <Avatar provider="weibo" {...post.user} /> : null}
         <div className="post__content">
-            <Text provider="weibo" text={post.text} />
+            <Text
+                provider="weibo"
+                text={post.text}
+                middlewares={post.location && post.location.name ? [
+                    { order: 1, middleware: 'trimSuffixLink' }
+                ] : null}
+            />
 
             {post.media && post.media.length > 0
                 ? <WeiboMedia media={post.media} />

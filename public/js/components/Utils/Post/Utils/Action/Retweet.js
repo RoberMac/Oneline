@@ -19,7 +19,10 @@ const RetweetBtn = ({ provider, post }) => {
                 style={ id_str ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
             >
                 <Icon className="post-action__icon" viewBox="0 0 34 26" name="retweet" />
-                <span className="post-action__count" data-count={retweet_count > 0 ? numAbbr(retweet_count) : ''} />
+                <span
+                    className="post-action__count"
+                    data-count={retweet_count > 0 ? numAbbr(retweet_count) : ''}
+                />
             </span>
         </Link>
     );

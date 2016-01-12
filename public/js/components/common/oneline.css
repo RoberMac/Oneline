@@ -43,7 +43,6 @@
         position: absolute 0 * * 0;
         size: 100%;
         padding: 70px 0 0;
-        transform: translate3d(0, 0, 0) scaleX(1);
     }
 }
 @keyframes onelineEnterAnimate {

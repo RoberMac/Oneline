@@ -24,13 +24,30 @@ const selectPost = {
     }
 };
 
+export default class Post extends React.Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        // Update only `retweeted` changed
+        const prePost = this.props.item;
+        const preNestPost = prePost[prePost.type];
+        const nextPost = nextProps.item;
+        const nextNestPost = nextPost[nextPost.type];
 
-export default ({ className, item, ...opts }) => {
-    const { provider, type } = item;
-    const SelectedPost = selectPost[provider][type];
-    return (
-        <div className={`post provider--${provider} ${className || ''}`}>
-            <SelectedPost post={item} opts={opts} />
-        </div>
-    );
+        return (
+            prePost.retweeted !== nextPost.retweeted
+            || (
+                !!preNestPost && !!nextNestPost
+                && preNestPost.retweeted !== nextNestPost.retweeted
+            )
+        );
+    }
+    render() {
+        const { className, item, ...opts } = this.props;
+        const { provider, type } = item;
+        const SelectedPost = selectPost[provider][type];
+        return (
+            <div className={`post provider--${provider} ${className || ''}`}>
+                <SelectedPost post={item} opts={opts} />
+            </div>
+        );
+    }
 }

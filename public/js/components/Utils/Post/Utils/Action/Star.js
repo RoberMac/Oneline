@@ -10,13 +10,12 @@ import Icon from '../../../Icon';
 export default class Star extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { inprocess: false, stared: false }
+        this.state = { inprocess: false, stared: props.stared }
         this.toggleStar = this.toggleStar.bind(this)
     }
     toggleStar() {
-        const { inprocess } = this.state;
+        const { inprocess, stared } = this.state;
         const { provider, id } = this.props;
-        const stared = this.state.stared || this.props.stared;
 
         if (inprocess) return;
         this.setState({ inprocess: true })
@@ -40,14 +39,14 @@ export default class Star extends React.Component {
         })
     }
     render() {
-        const stared = this.state.stared || this.props.stared;
+        const { inprocess, stared } = this.state;
         const btnClass = classNames({
             'post-action tips--deep': true,
             'icon--star tips--active': stared
         });
         const iconClass = classNames({
             'post-action__icon': true,
-            'animate--star': this.state.inprocess
+            'animate--star': inprocess
         });
         return (
             <button

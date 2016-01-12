@@ -8,11 +8,13 @@
         overflow-x: auto;
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
+        transform: translate3d(0, 0, 0) scaleX(1);
     }
     &--y {
         overflow-x: hidden;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        transform: translate3d(0, 0, 0) scaleX(1);
     }
 }
 .tips {

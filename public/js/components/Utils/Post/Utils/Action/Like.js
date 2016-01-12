@@ -11,14 +11,12 @@ import Icon from '../../../Icon';
 export default class Like extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { inprocess: false, liked: false, like_count: 0 }
+        this.state = { inprocess: false, liked: props.liked, like_count: props.count }
         this.toggleLike = this.toggleLike.bind(this)
     }
     toggleLike() {
-        const { inprocess } = this.state;
+        const { inprocess, liked, like_count } = this.state;
         const { provider, id } = this.props;
-        const liked = this.state.liked || this.props.liked;
-        const count = this.state.like_count || this.props.count;
 
         if (inprocess) return;
         this.setState({ inprocess: true })
@@ -30,7 +28,7 @@ export default class Like extends React.Component {
         })
         .then(() => {
             const newLiked = !liked;
-            const newLikeCount = count + (liked ? -1 : 1);
+            const newLikeCount = like_count + (liked ? -1 : 1);
             reduxStore.dispatch(updatePost({
                 id_str: id,
                 liked: newLiked,
@@ -45,8 +43,7 @@ export default class Like extends React.Component {
         })
     }
     render() {
-        const liked = this.state.liked || this.props.liked;
-        const count = this.state.like_count || this.props.count;
+        const { liked, like_count } = this.state;
         const btnClass = classNames({
             'post-action tips--deep': true,
             'icon--like tips--active': liked
@@ -63,7 +60,7 @@ export default class Like extends React.Component {
                 style={ this.props.id ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
             >
                 <Icon className={iconClass} viewBox="0 0 26 26" name="like" />
-                <span className="post-action__count" data-count={count > 0 ? numAbbr(count) : ''} />
+                <span className="post-action__count" data-count={like_count > 0 ? numAbbr(like_count) : ''} />
             </button>
         );
     }
