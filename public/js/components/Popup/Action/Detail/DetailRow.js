@@ -18,7 +18,8 @@ export default ({ provider, list }) => (
             <div className="detail__row__content">
                 <Text
                     className="detail__row__text"
-                    provider={provider} text={item.text}
+                    provider={provider}
+                    text={item.text}
                 />
                 <TimeAgo className="detail__row__time" date={item.created_at} />
             </div>

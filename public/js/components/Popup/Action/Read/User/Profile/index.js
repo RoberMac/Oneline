@@ -29,6 +29,7 @@ const Bio = ({ provider, bio }) => (
     bio
     ? (
         <Text
+            provider={provider}
             className="profile__biography"
             text={bio} 
             middlewares={[
