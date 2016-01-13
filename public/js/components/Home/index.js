@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Swipeable from 'react-swipeable';
+import shallowCompare from 'react-addons-shallow-compare';
 
 // Helpers
 import { replaceTokenList } from '../../actions/auth';
@@ -11,6 +12,27 @@ import DependencyLoader from './loader';
 import Post from '../Utils/Post';
 import Spin from '../Utils/Spin';
 import Transition from '../Utils/Transition';
+class Timeline extends React.Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        __DEV__ && console.time('[shallowCompare]')
+        const shouldUpdate = shallowCompare(this, nextProps, nextState);
+        __DEV__ && console.timeEnd('[shallowCompare]')
+        return shouldUpdate;
+    }
+    render() {
+        return (
+            <div>
+            {
+                this.props.showingPosts
+                .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
+                .map(item => (
+                    <Post key={item.id_str} item={item} />
+                ))
+            }
+            </div>
+        );
+    }
+}
 class Home extends React.Component {
     constructor (props){
         super(props)
@@ -82,12 +104,9 @@ class Home extends React.Component {
                         {...newPosts}
                         onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
                     />
-                    {
-                        isDependenciesLoaded && showingPosts
-                        .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
-                        .map(item => (
-                            <Post key={item.id_str} item={item} />
-                        ))
+                    {isDependenciesLoaded && showingPosts
+                        ? <Timeline showingPosts={showingPosts} />
+                        : null
                     }
                     <Spin
                         type="oldPosts"

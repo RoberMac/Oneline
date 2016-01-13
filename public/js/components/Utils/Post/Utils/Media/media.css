@@ -70,6 +70,11 @@
     &--loading {
         animation: imgLoadAnimate 1.7s infinite linear;
     }
+    &__spin {
+        position: absolute 0 * * 0;
+        size: 50px;
+        transform: scale(0.7);
+    }
     &__icon {
         position: absolute;
         size: 17px;

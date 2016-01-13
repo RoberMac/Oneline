@@ -6,7 +6,7 @@ import './spin.css';
 export default ({ type, initLoad, isFetching, isFetchFail, unreadCount, provider, onClick }) => {
     const isNewPosts = type === 'newPosts';
     const wrapperClass = classNames({
-        'spin': true,
+        'spin animate--general': true,
         'spin--initLoad': initLoad,
         'spin--new': isNewPosts,
         'spin--old': !isNewPosts

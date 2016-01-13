@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -55,6 +55,7 @@
     "q": "^1.4.1",
     "react": "^0.14.6",
     "react-addons-css-transition-group": "^0.14.6",
+    "react-addons-shallow-compare": "^0.14.6",
     "react-addons-update": "^0.14.6",
     "react-dom": "^0.14.6",
     "react-redux": "^4.0.6",

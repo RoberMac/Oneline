@@ -80,9 +80,11 @@ class LargeImg extends React.Component {
 
         return (
             <div className="post-media">
-                <Transition>
-                    {loading ? <Spin isFetching={true} initLoad={true} provider="weibo" /> : null}
-                </Transition>
+                <div className="post-media__spin">
+                    <Transition>
+                        {loading ? <Spin isFetching={true} initLoad={true} provider="weibo" /> : null}
+                    </Transition>
+                </div>
                 <img
                     src={middleSrc}
                     alt="weibo_large_photo"

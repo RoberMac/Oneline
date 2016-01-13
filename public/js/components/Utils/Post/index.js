@@ -1,4 +1,5 @@
 import React from 'react';
+import shallowCompare from 'react-addons-shallow-compare';
 
 import './post.css';
 
@@ -26,26 +27,23 @@ const selectPost = {
 
 export default class Post extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
-        // Update only `retweeted` changed
-        const prePost = this.props.item;
-        const preNestPost = prePost[prePost.type];
-        const nextPost = nextProps.item;
-        const nextNestPost = nextPost[nextPost.type];
-
-        return (
-            prePost.retweeted !== nextPost.retweeted
-            || (
-                !!preNestPost && !!nextNestPost
-                && preNestPost.retweeted !== nextNestPost.retweeted
-            )
-        );
+        const shouldUpdate = shallowCompare(this, nextProps, nextState);
+        __DEV__ && shouldUpdate && console.log(`[PostUpdate]: ${nextProps.item.id_str}`)
+        return shouldUpdate;
+    }
+    componentDidMount() {
+        setTimeout(() => this.refs.post.style.opacity = 1)
     }
     render() {
         const { className, item, ...opts } = this.props;
         const { provider, type } = item;
         const SelectedPost = selectPost[provider][type];
         return (
-            <div className={`post provider--${provider} ${className || ''}`}>
+            <div
+                className={`post animate--faster provider--${provider} ${className || ''}`}
+                style={{ opacity: 0 }}
+                ref="post"
+            >
                 <SelectedPost post={item} opts={opts} />
             </div>
         );

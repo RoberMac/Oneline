@@ -133,7 +133,7 @@ export default class Read extends React.Component {
                     )
                     : null
                 }
-                {isLocked
+                {isLocked && isInitLoad
                     ? <Locked provider={provider} />
                     : isInitLoad || showingPosts.length >= 7
                         ? <Spin

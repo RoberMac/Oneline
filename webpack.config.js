@@ -9,6 +9,7 @@ module.exports = {
             'react-dom',
             'react-addons-css-transition-group',
             'react-addons-update',
+            'react-addons-shallow-compare',
             'react-redux',
             'redux',
             'react-router',
