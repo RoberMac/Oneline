@@ -3,7 +3,7 @@ import React from 'react';
 
 // Helper
 import * as Middlewares from './helper';
-import CaptureClicks from '../../../../../utils/CaptureClicks';
+import CaptureClicks from 'utils/CaptureClicks';
 /**
  * Order
  *     sanitizer: 0

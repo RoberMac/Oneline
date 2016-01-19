@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Icon from '../../../../Utils/Icon';
-import Post from '../../../../Utils/Post';
+import Icon from 'components/Utils/Icon';
+import Post from 'components/Utils/Post';
 
 // Helpers
 const selectTagHref = {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Post from '../../../../Utils/Post';
+import Post from 'components/Utils/Post';
 import Profile from './Profile';
 
 export default class User extends React.Component {

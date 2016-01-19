@@ -10,7 +10,7 @@ const isActive = ({ id, link, mid }) => {
     return id || link || mid;
 };
 
-import Icon from '../../../Icon';
+import Icon from 'components/Utils/Icon';
 
 export default (props) => (
     <a

@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Helpers
-import { selectUserSrc } from '../../../../../utils/select';
+import { selectUserSrc } from 'utils/select';
 // via https://github.com/KyleAMathews/isRetina
 const isRetina = (
     window.devicePixelRatio > 1.25
@@ -20,7 +20,7 @@ const converToHDAvatar = {
 };
 
 // Component
-import UserLink from '../../../UserLink';
+import UserLink from 'components/Utils/UserLink';
 
 // Export
 export const Avatar = ({ avatar, screen_name, name, provider }) => (

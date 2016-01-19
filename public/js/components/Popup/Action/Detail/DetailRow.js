@@ -1,8 +1,8 @@
 import React from 'react';
 
-import UserLink from '../../../Utils/UserLink';
-import Text from '../../../Utils/Post/Utils/Text';
-import TimeAgo from '../../../Utils/Post/Utils/TimeAgo';
+import UserLink from 'components/Utils/UserLink';
+import Text from 'components/Utils/Post/Utils/Text';
+import TimeAgo from 'components/Utils/Post/Utils/TimeAgo';
 
 export default ({ provider, list }) => (
     <div>

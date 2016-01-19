@@ -4,9 +4,9 @@ import classNames from 'classnames';
 import { handleImageError, lazySize, calcDegree } from './helper.js';
 
 // Components
-import Icon from '../../../Icon';
-import UserLink from '../../../UserLink';
-import Transition from '../../../Transition';
+import Icon from 'components/Utils/Icon';
+import UserLink from 'components/Utils/UserLink';
+import Transition from 'components/Utils/Transition';
 import ViewOriginal from './Utils/ViewOriginal';
 import Video from './Utils/Video';
 

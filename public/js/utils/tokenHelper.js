@@ -1,5 +1,5 @@
-import store from '../utils/store';
-import { decodeToken, isTokenExpired } from '../utils/jwtHelper';
+import store from 'utils/store';
+import { decodeToken, isTokenExpired } from 'utils/jwtHelper';
 
 // Utils
 const _removeToken = (tokenList, provider) => {

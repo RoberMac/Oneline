@@ -2,13 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Helpers
-import { Action } from '../../../../../../utils/api';
-import { addClassTemporarily } from '../../../../../../utils/dom';
+import { Action } from 'utils/api';
+import { addClassTemporarily } from 'utils/dom';
 
 // Components
-import Icon from '../../../../../Utils/Icon';
-import { Avatar } from '../../../../../Utils/Post/Utils/Avatar';
-import Text from '../../../../../Utils/Post/Utils/Text';
+import Icon from 'components/Utils/Icon';
+import { Avatar } from 'components/Utils/Post/Utils/Avatar';
+import Text from 'components/Utils/Post/Utils/Text';
 class FollowBtn extends React.Component {
     constructor(props) {
         super(props)

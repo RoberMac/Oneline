@@ -3,7 +3,7 @@ import debounce from 'debounce';
 import assign from 'object.assign';
 
 // Helper
-import { addClassTemporarily } from '../../../../utils/dom';
+import { addClassTemporarily } from 'utils/dom';
 import {
     extractMentions, isLeftPopup,
     submitWrite, draft,
@@ -11,10 +11,10 @@ import {
 } from './helper';
 
 // Components
-import Post from '../../../Utils/Post';
+import Post from 'components/Utils/Post';
 import { GeoPicker, MediaUpload, ToggleSensitive, ToggleWeiboEmotions, Submit } from './ToolBtns';
 import { MediaPreview, Mentions, WeiboEmotions } from './ToolPopup';
-import Transition from '../../../Utils/Transition';
+import Transition from 'components/Utils/Transition';
 
 // Export
 export default class Write extends React.Component {

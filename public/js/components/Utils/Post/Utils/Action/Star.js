@@ -1,12 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { updatePost } from '../../../../../actions/timeline';
-import reduxStore from '../../../../../store';
-import { Action } from '../../../../../utils/api';
-import { addClassTemporarily } from '../../../../../utils/dom';
+import { updatePost } from 'actions/timeline';
+import reduxStore from 'store';
+import { Action } from 'utils/api';
+import { addClassTemporarily } from 'utils/dom';
 
-import Icon from '../../../Icon';
+import Icon from 'components/Utils/Icon';
 export default class Star extends React.Component {
     constructor(props) {
         super(props)

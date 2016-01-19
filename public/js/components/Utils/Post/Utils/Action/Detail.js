@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import assign from 'object.assign';
 
-import Icon from '../../../Icon';
+import Icon from 'components/Utils/Icon';
 
 export default ({ provider, id, post }) => {
     const _id = id || post && post.id_str;

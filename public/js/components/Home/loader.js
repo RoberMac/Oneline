@@ -1,7 +1,7 @@
 import superagent from 'superagent';
 import { Promise } from 'es6-promise';
 
-import store from '../../utils/store';
+import store from 'utils/store';
 
 export default (activeProviders) => {
     return new Promise((resolve, reject) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { removeText, insertText } from './helper';
-import { weiboEmotify } from '../../../Utils/Post/Utils/Text/helper';
+import { weiboEmotify } from 'components/Utils/Post/Utils/Text/helper';
 
 export class MediaPreview extends React.Component {
     constructor(props) {

@@ -1,13 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import reduxStore from '../../../../../store';
-import numAbbr from '../../../../../utils/numAbbr';
-import { updatePost } from '../../../../../actions/timeline';
-import { Action } from '../../../../../utils/api';
-import { addClassTemporarily } from '../../../../../utils/dom';
+import reduxStore from 'store';
+import numAbbr from 'utils/numAbbr';
+import { updatePost } from 'actions/timeline';
+import { Action } from 'utils/api';
+import { addClassTemporarily } from 'utils/dom';
 
-import Icon from '../../../Icon';
+import Icon from 'components/Utils/Icon';
 export default class Like extends React.Component {
     constructor(props) {
         super(props)

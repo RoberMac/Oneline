@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import Icon from '../../../../Icon';
+import Icon from 'components/Utils/Icon';
 
 export default ({ link, provider }) => {
     const originIconClass = classNames(

@@ -5,7 +5,7 @@ import {
     isValidToken as _isValidToken,
     clearTokenList as _clearTokenList
 } from '../utils/tokenHelper';
-import { Auth } from '../utils/api';
+import { Auth } from 'utils/api';
 
 // Export
 export const UPDATE_TOKEN = 'UPDATE_TOKEN'

@@ -44,7 +44,15 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['', '.js', '.json', '.coffee'] 
+        extensions: ['', '.js', '.json', '.coffee'],
+        alias: {
+            'actions': path.join(__dirname, 'public/js/actions'),
+            'components': path.join(__dirname, 'public/js/components'),
+            'reducers': path.join(__dirname, 'public/js/reducers'),
+            'routes': path.join(__dirname, 'public/js/routes'),
+            'store': path.join(__dirname, 'public/js/store'),
+            'utils': path.join(__dirname, 'public/js/utils'),
+        }
     },
     plugins: [
         new webpack.DefinePlugin({

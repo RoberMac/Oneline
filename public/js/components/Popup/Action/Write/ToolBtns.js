@@ -2,11 +2,11 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Helper
-import { addClassTemporarily } from '../../../../utils/dom';
+import { addClassTemporarily } from 'utils/dom';
 import { getCountInfo, uploadMedia, addImagePreview } from './helper';
 
 // Components
-import Icon from '../../../Utils/Icon';
+import Icon from 'components/Utils/Icon';
 const disableBtnStyle = { 'pointerEvents': 'none', 'opacity': '.1' };
 export class GeoPicker extends React.Component {
     constructor(props) {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-import numAbbr from '../../../../../utils/numAbbr';
+import numAbbr from 'utils/numAbbr';
 
-import Icon from '../../../Icon';
+import Icon from 'components/Utils/Icon';
 
 export default ({ provider, post }) => {
     const { id_str, reply_count } = post;

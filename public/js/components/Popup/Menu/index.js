@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Link } from 'react-router';
 
 // Components
-import Icon from '../../Utils/Icon';
+import Icon from 'components/Utils/Icon';
 const MenuRows = ({ metadata }) => (
     <div>
     {metadata.map((item, index) => {

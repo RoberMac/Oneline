@@ -12,7 +12,7 @@ const selectLink = {
     )
 };
 
-import Icon from '../../../Icon';
+import Icon from 'components/Utils/Icon';
 export default (props) => (
     <Link to={selectLink[props.provider]({...props})}>
         <span className="post__location btn tips--deep">

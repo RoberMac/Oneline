@@ -1,11 +1,11 @@
 import React from 'react';
 
 // Helper
-import { Action } from '../../../../utils/api';
+import { Action } from 'utils/api';
 
 // Components
-import Spin from '../../../Utils/Spin';
-import Post from '../../../Utils/Post';
+import Spin from 'components/Utils/Spin';
+import Post from 'components/Utils/Post';
 import DetailContainer from './DetailContainer';
 
 // Export

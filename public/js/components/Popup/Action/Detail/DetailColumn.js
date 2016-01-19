@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import UserLink from '../../../Utils/UserLink';
+import UserLink from 'components/Utils/UserLink';
 
 export default ({ type, provider, list, children }) => {
     const _list = list || [];

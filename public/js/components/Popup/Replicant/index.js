@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import store from '../../../utils/store';
-import { Auth } from '../../../utils/api';
+import store from 'utils/store';
+import { Auth } from 'utils/api';
 import { replaceTokenList } from '../../../actions/auth';
 
 // Components
-import { addClassTemporarily } from '../../../utils/dom';
+import { addClassTemporarily } from 'utils/dom';
 const replicantClass = 'replicant vertically_center';
 
 class _Deckard extends React.Component {

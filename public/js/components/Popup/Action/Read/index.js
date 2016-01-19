@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Helpers
-import { Action } from '../../../../utils/api';
+import { Action } from 'utils/api';
 const initId = ({ provider, action, id }) => {
     switch (provider){
         case 'twitter':
@@ -25,8 +25,8 @@ const initId = ({ provider, action, id }) => {
 };
 
 // Components
-import Spin from '../../../Utils/Spin';
-import Icon from '../../../Utils/Icon';
+import Spin from 'components/Utils/Spin';
+import Icon from 'components/Utils/Icon';
 import User from './User';
 import Tags from './Tags';
 import Locations from './Locations';

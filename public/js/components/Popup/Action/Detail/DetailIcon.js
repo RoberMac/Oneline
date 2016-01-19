@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import Icon from '../../../Utils/Icon';
+import Icon from 'components/Utils/Icon';
 
-import numAbbr from '../../../../utils/numAbbr';
+import numAbbr from 'utils/numAbbr';
 const selectViewBox = (type) => {
     switch (type){
         case 'retweet':

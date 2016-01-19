@@ -1,10 +1,34 @@
 import { Promise } from 'es6-promise';
 import assign from 'object.assign';
 
-import { Timeline } from '../utils/api';
-import store from '../utils/store';
-import * as arrayUnique from '../utils/arrayUnique';
+import { Timeline } from 'utils/api';
+import store from 'utils/store';
+const arrayUnique = {
+    // via http://jszen.com/best-way-to-get-unique-values-of-an-array-in-javascript.7.html
+    literal: (a) => {
+        var n = {},r=[];
+        for(var i = 0; i < a.length; i++) 
+        {
+            if (!n[a[i]]) 
+            {
+                n[a[i]] = true; 
+                r.push(a[i]); 
+            }
+        }
+        return r;
+    },
+    object: (a) => {
+        var flags = [], output = [], l = a.length, i;
+        for (i = 0; i < l; i++) {
+            if(flags[a[i].s]) continue;
 
+            flags[a[i].s] = true;
+
+            output.push(a[i]);
+        }
+        return output;
+    }
+};
 export const determineFetchFrom = ({
     postsType,
     isAutoFetch,
@@ -191,9 +215,12 @@ function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
 
     invalidProviders.forEach((provider, index) => {
         const SUFFIX = index === invalidProviders.length - 1 ? '' : ',';
+        const postId = allPosts[typeForLocal][provider];
 
-        queryIdStr += `${provider}_${typeForRemote}-${allPosts[typeForLocal][provider]}${SUFFIX}`;
-    })
+        if (!postId) return;
+
+        queryIdStr += `${provider}_${typeForRemote}-${postId}${SUFFIX}`;
+    });
 
     return queryIdStr;
 }

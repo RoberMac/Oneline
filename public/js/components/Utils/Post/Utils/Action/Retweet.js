@@ -3,13 +3,13 @@ import { Link } from 'react-router';
 import classNames from 'classnames';
 
 // Helpers
-import numAbbr from '../../../../../utils/numAbbr';
-import reduxStore from '../../../../../store';
-import { updatePost } from '../../../../../actions/timeline';
-import { Action } from '../../../../../utils/api';
+import numAbbr from 'utils/numAbbr';
+import reduxStore from 'store';
+import { updatePost } from 'actions/timeline';
+import { Action } from 'utils/api';
 
 // Components
-import Icon from '../../../Icon';
+import Icon from 'components/Utils/Icon';
 const RetweetBtn = ({ provider, post }) => {
     const { id_str, retweet_count } = post;
     return (

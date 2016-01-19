@@ -4,9 +4,9 @@ import classNames from 'classnames';
 import { handleImageError, fuckLongWeibo } from './helper.js';
 
 // Components
-import Icon from '../../../Icon';
-import Spin from '../../../Spin';
-import Transition from '../../../Transition';
+import Icon from 'components/Utils/Icon';
+import Spin from 'components/Utils/Spin';
+import Transition from 'components/Utils/Transition';
 import ViewOriginal from './Utils/ViewOriginal';
 
 class LargeImg extends React.Component {

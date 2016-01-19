@@ -63,7 +63,8 @@
             color: var(--color-twitter);
         }
         img, video {
-            background: var(--color-white) inline('background--twitter.png') repeat;
+            background: var(--color-white) inline('background--twitter.svg') repeat 5px 5px;
+            background-size: 20px;
         }
     }
     &--instagram {
@@ -75,7 +76,8 @@
             color: var(--color-instagram);
         }
         img, video {
-            background: var(--color-white) inline('background--instagram.png') repeat;
+            background: var(--color-white) inline('background--instagram.svg') repeat;
+            background-size: 100px 30px;
         }
     }
     &--weibo {
@@ -87,7 +89,8 @@
             color: var(--color-weibo);
         }
         img, video {
-            background: var(--color-white) inline('background--weibo.png') repeat;
+            background: var(--color-white) inline('background--weibo.svg') repeat 5px 5px;
+            background-size: 20px;
         }
     }
 }

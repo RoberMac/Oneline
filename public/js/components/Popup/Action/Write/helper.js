@@ -1,10 +1,10 @@
 import { Promise } from 'es6-promise';
 import assign from 'object.assign';
 
-import store from '../../../../utils/store';
+import store from 'utils/store';
 import { updatePost } from '../../../../actions/timeline';
 import reduxStore from '../../../../store';
-import { Action, Media } from '../../../../utils/api';
+import { Action, Media } from 'utils/api';
 
 /**
  * Mention

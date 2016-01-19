@@ -4,8 +4,8 @@ import Swipeable from 'react-swipeable';
 import shallowCompare from 'react-addons-shallow-compare';
 
 // Helpers
-import { replaceTokenList } from '../../actions/auth';
-import { resetState, fetchPosts } from '../../actions/timeline';
+import { replaceTokenList } from 'actions/auth';
+import { resetState, fetchPosts } from 'actions/timeline';
 import DependencyLoader from './loader';
 
 // Components
@@ -66,6 +66,14 @@ class Home extends React.Component {
     handleSwipedRight() {
         this.props.history.push('/settings')
     }
+    handleWindowBlur() {
+        // Pause All Video
+        const videos = document.getElementsByTagName('video');
+
+        [].forEach.call(videos, video => {
+            video.pause()
+        });
+    }
     componentWillMount() {
         const { activeProviders, isInitLoad, resetState } = this.props;
 
@@ -82,6 +90,8 @@ class Home extends React.Component {
             this.autoFetchIntervalId = setInterval( () => {
                 this.loadPosts({ postsType: 'newPosts', isAutoFetch: true })
             }, 1000 * 60 * 3)
+            // Event
+            window.addEventListener('blur', this.handleWindowBlur);
         })
     }
     componentWillUnmount() {
@@ -91,6 +101,8 @@ class Home extends React.Component {
         // Unregister Auto Fetch
         __DEV__ && console.log('[Auto Fetch]: Unregistered')
         clearInterval(this.autoFetchIntervalId)
+        // Event
+        window.removeEventListener('blur', this.handleWindowBlur)
     }
     render() {
         const { newPosts, oldPosts, showingPosts, isInitLoad, children } = this.props;

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // Components
-import Icon from '../Utils/Icon';
+import Icon from 'components/Utils/Icon';
 const sidebarBtnClass = classNames('sidebar__button', 'btn', 'animate--faster');
 
 const ShowMenuBtn = ({ firstProvider }) => (

@@ -65,7 +65,11 @@ router.get('/', (req, res, next) => {
         dataList.forEach((dataItem, index) => {
             let provider = providerList[index];
 
-            dataItem = provider === 'weibo' ? dataItem.statuses : dataItem[0];
+            dataItem = (
+                provider === 'weibo'
+                    ? dataItem && dataItem.statuses
+                : dataItem && dataItem[0]
+            );
 
             if (!dataItem) return;
 

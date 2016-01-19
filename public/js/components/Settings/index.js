@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import Swipeable from 'react-swipeable';
 
-import { addToken, removeToken, clearTokenIfTokenExpired } from '../../actions/auth';
+import { addToken, removeToken, clearTokenIfTokenExpired } from 'actions/auth';
 import './settings.css';
 
 // Components
-import Icon from '../Utils/Icon';
-import Transition from '../Utils/Transition';
+import Icon from 'components/Utils/Icon';
+import Transition from 'components/Utils/Transition';
 let SocialAuthBtn = ({ provider, isActive, toggleAuth }) => {
     const soicalListClass = classNames('social-list', 'vertically_center');
     const soicalBtnClass = classNames({
