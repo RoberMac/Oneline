@@ -37,7 +37,6 @@ export default class Like extends React.Component {
             this.setState({ inprocess: false, liked: newLiked, like_count: newLikeCount })
         })
         .catch(err => {
-            __DEV__ && console.error(err)
             addClassTemporarily(this.refs.btn, 'tips--error', 500)
             this.setState({ inprocess: false })
         })

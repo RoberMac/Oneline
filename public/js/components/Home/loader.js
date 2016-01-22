@@ -1,7 +1,5 @@
-import superagent from 'superagent';
-import { Promise } from 'es6-promise';
-
 import store from 'utils/store';
+import { _fetch } from 'utils/api';
 
 export default (activeProviders) => {
     return new Promise((resolve, reject) => {
@@ -9,10 +7,7 @@ export default (activeProviders) => {
 
         if (activeProviders.indexOf('weibo') >= 0){
             ensureWeiboEmotionsStored()
-            .then(() => {
-                resolve()
-            })
-            .catch(err => __DEV__ && console.error(err))
+            .then(() => resolve())
         } else {
             resolve()
         }
@@ -33,15 +28,11 @@ function ensureWeiboEmotionsStored() {
 
     return new Promise((resolve, reject) => {
         if (!window.emotionsData || window.emotionsData['_v'] !== '1.0'){
-            superagent
-            .get('/public/dist/emotions_v1.min.json')
-            .set('Accept', 'application/json')
-            .end((err, res) => {
-                const data = res.body;
-                if (err || !res.ok){
-                    reject(err)
-                    return;
-                }
+            _fetch({
+                method: 'GET',
+                url: '/public/dist/emotions_v1.min.json'
+            })
+            .then(data => {
                 if (Object.prototype.toString.call(data) !== '[object Object]'){
                     reject('`emotionsData` is not a Object')
                     return;
@@ -55,6 +46,7 @@ function ensureWeiboEmotionsStored() {
                 ls.setItem('weiboEmotions', JSON.stringify(data))
                 resolve()
             })
+            .catch(err => reject(err))
         } else {
             resolve()
         }

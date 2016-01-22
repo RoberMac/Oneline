@@ -45,6 +45,7 @@ class SocialAuth extends React.Component {
         }
     }
     handleStorageChange(e) {
+        console.log(e)
         if (e.key === 'addToken'){ this.props.addToken() };
     }
     handleSwipedLeft() {

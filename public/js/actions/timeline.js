@@ -34,7 +34,6 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
                     fetchFromLocal({ postsType, ...timeline })
                     .then( newState => dispatch(postsRecive(newState)) )
                     .catch(err => {
-                        __DEV__ && console.error(err)
                         throw err
                     })
                     break;
@@ -44,7 +43,6 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
                     return fetchFromRemote({ postsType, isAutoFetch, invalidProviders, ...timeline })
                     .then( newState => dispatch(postsRecive(newState)) )
                     .catch(err => {
-                        __DEV__ && console.error(err)
                         dispatch(fetchFail({ postsType }))
                         throw err
                     })

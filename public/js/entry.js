@@ -4,6 +4,10 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 
+// Polyfill
+import 'es6-promise';
+import 'isomorphic-fetch';
+
 // Config
 import routes from './routes';
 import store from './store';

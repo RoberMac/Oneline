@@ -31,7 +31,6 @@ class FollowBtn extends React.Component {
             this.setState({ inprocess: false, following: !following })
         })
         .catch(err => {
-            __DEV__ && console.error(err)
             addClassTemporarily(this.refs.btn, 'tips--error', 500)
             this.setState({ inprocess: false })
         })

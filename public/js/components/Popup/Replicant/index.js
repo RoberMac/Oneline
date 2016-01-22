@@ -38,7 +38,7 @@ class _Deckard extends React.Component {
 
             setTimeout(() => {
                 clearInterval(this.intervals.fakeCode)
-                deckardElem.innerHTML = res.body.code
+                deckardElem.innerHTML = res.code
             }, 700)
 
             this.intervals['countDown'] = setInterval(
@@ -97,13 +97,13 @@ class _Rachael extends React.Component {
 
         Auth.rachael({ code })
         .then(res => {
-            if (res.body.msg.length > 0){
-                res.body.msg.forEach(msg => alert(msg))
+            if (res.msg.length > 0){
+                res.msg.forEach(msg => alert(msg))
             } else {
                 // 處理 Token
-                replaceTokenList(res.body.tokenList)
+                replaceTokenList(res.tokenList)
                 // 處理 Profile
-                res.body.profileList.forEach(profile => {
+                res.profileList.forEach(profile => {
                     store.set('profile_' + profile._provider, profile)
                 })
             }
@@ -112,7 +112,6 @@ class _Rachael extends React.Component {
 
         })
         .catch(err => {
-            __DEV__ && console.error(err)
             addClassTemporarily(this.refs.rachael, 'replicant--rachael--errCode', 500)
         })
     }

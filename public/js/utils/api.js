@@ -1,96 +1,110 @@
-import superagent from 'superagent';
-import { Promise } from 'es6-promise';
+import qs from 'querystring';
+import assign from 'object.assign';
 
-// Middlewares
-const protectedEndpoints = [
-    '/timeline',
-    '/actions',
-    '/auth/revoke',
-    '/auth/replicant/deckard',
-    '/upload'
-];
-const authorizeRequest = req => {
-    if (protectedEndpoints.some( endpoint => req.url.search(endpoint) >= 0 )){
-        let token = localStorage.getItem('tokenList');
-        req.header.authorization = `Bearer ${token}`;
+// Low-level API
+export const _fetch = ({ method, url, query, body }) => {
+    const _url = query ? `${url}?${qs.encode(query)}` : url;
+    const _opts = {
+        method,
+        headers: {}
+    };
+
+    if (body){
+        const isJSON = Object.prototype.toString.call(body) === '[object Object]';
+
+        assign(_opts, {
+            headers: isJSON ? {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            } : {},
+            body: isJSON ? JSON.stringify(body) : body
+        })
     }
 
-    return req;
-};
+    // Authorize Request
+    const authorizeRequest = (url) => {
+        const protectedEndpoints = [
+            '/timeline',
+            '/actions',
+            '/auth/revoke',
+            '/auth/replicant/deckard',
+            '/upload'
+        ];
 
-// Promisify
-const request = {
-    get: ({ url, query }) => (
-        new Promise((resolve, reject) => {
-            superagent
-            .get(url)
-            .use(authorizeRequest)
-            .query(query)
-            .end((err, res) => {
-                err ? reject(err) : resolve(res)
-            })
-        })
-    ),
-    post: ({ url, payload }) => (
-        new Promise((resolve, reject) => {
-            superagent
-            .post(url)
-            .use(authorizeRequest)
-            .send(payload)
-            .end((err, res) => {
-                err ? reject(err) : resolve(res)
-            })
-        })
-    ),
-    put: ({ url }) => (
-        new Promise((resolve, reject) => {
-            superagent
-            .put(url)
-            .use(authorizeRequest)
-            .end((err, res) => {
-                err ? reject(err) : resolve(res)
-            })
-        })
-    ),
-    del: ({ url }) => (
-        new Promise((resolve, reject) => {
-            superagent
-            .del(url)
-            .use(authorizeRequest)
-            .end((err, res) => {
-                err ? reject(err) : resolve(res)
-            })
-        })
-    ),
-};
+        if (protectedEndpoints.some(endpoint => url.search(endpoint) >= 0)){
+            let token = localStorage.getItem('tokenList');
+            return { authorization: `Bearer ${token}` };
+        } else {
+            return {};
+        }
+    };
+    assign(_opts.headers, authorizeRequest(url))
 
-// Export
+
+    return fetch(_url, _opts)
+    .then(res => {
+        // Check Status
+        if (res.status >= 200 && res.status < 300) {
+            return res;
+        } else {
+            let error = new Error(res.statusText)
+            error.res = res
+            throw error
+        }
+    })
+    .then(res => res.json())
+    .catch(err => {
+        __DEV__ && console.error(err)
+        throw err
+    })
+};
 export const Auth = {
-    revoke: ({ provider }) => request.del({ url: `/auth/revoke/${provider}`}),
-    deckard: ({ profileList }) => request.get({ url: '/auth/replicant/deckard', query: { profileList } }),
-    rachael: ({ code }) => request.post({ url: '/auth/replicant/rachael', payload: { code } })
+    revoke: ({ provider }) => _fetch({
+        method: 'DELETE',
+        url: `/auth/revoke/${provider}`
+    }),
+    deckard: ({ profileList }) => _fetch({
+        method: 'GET',
+        url: '/auth/replicant/deckard',
+        query: profileList && { profileList }
+    }),
+    rachael: ({ code }) => _fetch({
+        method: 'POST',
+        url: '/auth/replicant/rachael',
+        body: { code }
+    })
 }
-
 export const Timeline = {
-    get: ({ id }) => request.get({ url: '/timeline', query: { id } })
+    get: ({ id }) => _fetch({
+        method: 'GET',
+        url: '/timeline',
+        query: id && { id }
+    })
 }
-
 export const Action = {
-    create: ({ action, provider, id }) => request.put({
+    create: ({ action, provider, id }) => _fetch({
+        method: 'PUT',
         url: `/actions/${action}/${provider}/${id || 0}`
     }),
-    destroy: ({ action, provider, id }) => request.del({
+    destroy: ({ action, provider, id }) => _fetch({
+        method: 'DELETE',
         url: `/actions/${action}/${provider}/${id || 0}`
     }),
-    update: ({ action, provider, id }, payload) => request.post({
+    update: ({ action, provider, id }, body) => _fetch({
+        method: 'POST',
         url: `/actions/${action}/${provider}/${id || 0}`,
-        payload
+        body
     }),
-    get: ({ action, provider, id }, query) => request.get({
+    get: ({ action, provider, id }, query) => _fetch({
+        method: 'GET',
         url: `/actions/${action}/${provider}/${id || 0}`,
         query
     })
 }
 export const Media = {
-    upload: ({ provider }, payload) => request.post({ url: `/upload/${provider}`, payload })
+    upload: ({ provider }, body) => _fetch({
+        method: 'POST',
+        url: `/upload/${provider}`,
+        body
+    })
 }

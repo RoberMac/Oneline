@@ -45,10 +45,11 @@ class Home extends React.Component {
         const { fetchPosts, replaceTokenList, history } = this.props;
         return fetchPosts({ postsType, isAutoFetch })
         .catch(err => {
-            if (err.status === 401){
+            if (err.res.status === 401){
                 replaceTokenList([])
                 history.push('/settings')
             }
+            throw err
         })
     }
     handleSwipedLeft() {
@@ -112,7 +113,7 @@ class Home extends React.Component {
                 <div className="oneline__wrapper overflow--y">
                     <Spin
                         type="newPosts"
-                        initLoad={isInitLoad && isDependenciesLoaded}
+                        initLoad={isInitLoad || !isDependenciesLoaded}
                         {...newPosts}
                         onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
                     />
@@ -122,7 +123,7 @@ class Home extends React.Component {
                     }
                     <Spin
                         type="oldPosts"
-                        initLoad={isInitLoad && isDependenciesLoaded}
+                        initLoad={isInitLoad || !isDependenciesLoaded}
                         {...oldPosts}
                         onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
                     />

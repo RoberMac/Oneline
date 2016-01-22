@@ -76,8 +76,8 @@ export default class Read extends React.Component {
         }, minId ? { maxId: provider !== 'weibo' ? minId : minDate } : undefined)
         .then(res => {
             // Update State
-            const user = res.body.user;
-            const data = res.body.data.sort((a, b) => a.created_at < b.created_at ? 1 : -1);
+            const user = res.user;
+            const data = res.data.sort((a, b) => a.created_at < b.created_at ? 1 : -1);
             const lastPost = data[data.length - 1] && data[data.length - 1];
             const newState = {
                 showingPosts: showingPosts.concat(data),
@@ -97,7 +97,6 @@ export default class Read extends React.Component {
             })
         })
         .catch(err => {
-            __DEV__ && console.error(err)
             this.setState({ isFetching: false, isFetchFail: true, isLocked: true })
         })
     }

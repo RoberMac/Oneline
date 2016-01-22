@@ -1,4 +1,3 @@
-import { Promise } from 'es6-promise';
 import assign from 'object.assign';
 
 import store from 'utils/store';
@@ -133,7 +132,7 @@ export const submitWrite = (props) => {
                     id_str: id,
                     retweeted: true,
                     retweet_count: post.retweet_count + 1,
-                    retweeted_id_str: res.body.id_str
+                    retweeted_id_str: res.id_str
                 }))
             }
             resolve()
@@ -189,7 +188,7 @@ export const uploadMedia = ({ provider, file }) => {
 
         Media.upload({ provider }, fd)
         .then(res => {
-            const id = res.body.media_id;
+            const id = res.media_id;
             resolve(id)
         })
         .catch(err => {

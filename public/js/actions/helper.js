@@ -1,4 +1,3 @@
-import { Promise } from 'es6-promise';
 import assign from 'object.assign';
 
 import { Timeline } from 'utils/api';
@@ -103,7 +102,7 @@ export const fetchFromRemote = ({
         Timeline
         .get({ id: isInitLoad ? null : getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) })
         .then(res => {
-            const newRemotePosts = res.body.data;
+            const newRemotePosts = res.data;
             // Reject for Wrong Response
             if (!newRemotePosts) {
                 reject(new Error('[FetchFail]: WTF Responses?'))
@@ -123,8 +122,8 @@ export const fetchFromRemote = ({
                 return;
             }
             // Init Response Data
-            const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res.body : allPosts;
-            const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res.body : allPosts;
+            const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res : allPosts;
+            const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res : allPosts;
             const newAllPosts = {
                 posts: allPosts.posts.concat(newRemotePosts),
                 maxId: assign(allPosts.maxId, maxId),

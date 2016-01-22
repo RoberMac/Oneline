@@ -5,27 +5,32 @@ module.exports = {
     entry: {
         app: [path.resolve(__dirname, 'public/js/entry')],
         vendor: [
+            // React Core
             'react',
             'react-dom',
             'react-addons-css-transition-group',
             'react-addons-update',
             'react-addons-shallow-compare',
-            'react-redux',
-            'redux',
-            'react-router',
-            'history',
-            'superagent',
-            // 'redux-simple-router',
-            'redux-thunk',
-            'classnames',
-            'es6-promise',
+            // React Components
             'react-timeago',
             'react-visibility-sensor',
-            'object.assign',
-            'debounce',
             'react-swipeable',
-            // 'react-motion',
+            // Router
+            'react-router',
+            'history',
+            // Redux
+            'redux',
+            'react-redux',
+            'redux-thunk',
+            // Polyfill
+            'object.assign',
+            'es6-promise',
+            'isomorphic-fetch',
+            // Utils
+            'classnames',
+            'debounce',
             'xss-filters',
+            'querystring',
         ]
     },
     output: {

@@ -53,7 +53,6 @@ class DeleteRetweetBtn extends React.Component {
             // component will unmount, don't need `this.setState` anymore.
         })
         .catch(err => {
-            __DEV__ && console.error(err)
             addClassTemporarily(this.refs.btn, 'tips--error', 500)
             this.setState({ inprocess: false })
         })

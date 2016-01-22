@@ -36,10 +36,10 @@ export default class Detail extends React.Component {
         .get({ action, provider, id })
         .then(res => {
             // Update State
-            const post = res.body.post || location.state;
-            const likedList = res.body.like || [];
-            const replyList = res.body.reply || [];
-            const retweetedList = res.body.retweet || [];
+            const post = res.post || location.state;
+            const likedList = res.like || [];
+            const replyList = res.reply || [];
+            const retweetedList = res.retweet || [];
             const newState = {
                 post,
                 likedList,
@@ -59,7 +59,6 @@ export default class Detail extends React.Component {
             })
         })
         .catch(err => {
-            __DEV__ && console.error(err)
             this.setState({ isFetching: false, isFetchFail: true })
         })
     }

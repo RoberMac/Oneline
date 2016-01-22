@@ -114,7 +114,6 @@ export default class Write extends React.Component {
             setTimeout(() => { draft.remove({ action, provider }) }, 700)
         })
         .catch(err => {
-            __DEV__ && console.error(err)
             addClassTemporarily(this.refs.textarea, 'write__textarea--err', 500)
         })
         .then(() => {

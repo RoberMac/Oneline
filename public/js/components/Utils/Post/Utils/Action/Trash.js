@@ -28,7 +28,6 @@ export default class Trash extends React.Component {
             history.push('/home')
         })
         .catch(err => {
-            __DEV__ && console.error(err)
             addClassTemporarily(this.refs.btn, 'tips--error', 500)
             this.setState({ inprocess: false })
         })
