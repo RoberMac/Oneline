@@ -24,36 +24,37 @@ router.get('/', (req, res, next) => {
         q_userFindOne({id: 'instagram' + req.olPassports.instagram}),
         q_userFindOne({id: 'weibo' + req.olPassports.weibo})
     ])
-    .then(providerList => {
+    .then(profileList => {
+        const validProfileList = profileList.filter(i => i);
         let timelinePromises = [];
-        let _providerList = providerList.filter(provider => !!provider);
 
-        if (_providerList.length < Object.keys(req.olPassports).length){
+        if (validProfileList.length < Object.keys(req.olPassports).length){
             throw { statusCode: 401 }
         }
 
-        providerList.forEach((userInfo, index) => {
-            if (!userInfo) return;
+        profileList.forEach((profile, index) => {
+            if (!profile) return;
 
-            let minId = olIdObj[userInfo.provider + '_minId'];
-            let maxId = olIdObj[userInfo.provider + '_maxId'];
+            const provider = profile.provider;
+            const token = profile.token;
+            const tokenSecret = profile.tokenSecret;
+            const minId = olIdObj[`${provider}_minId`];
+            const maxId = olIdObj[`${provider}_maxId`];
 
             if (Object.keys(olIdObj).length > 0 && !(minId || maxId)) return;
 
-            let opts = {
-                token      : userInfo.token,
-                tokenSecret: userInfo.tokenSecret,
-                minId     : minId,
-                maxId     : maxId
-            };
-
-            timelinePromises[index] = timeline[userInfo.provider](opts)
+            timelinePromises[index] = timeline[provider]({
+                minId,
+                maxId,
+                token,
+                tokenSecret
+            })
         })
 
         return Q.all(timelinePromises);
     })
     .then(dataList => {
-        let providerList = ['twitter', 'instagram', 'weibo'];
+        const providerList = ['twitter', 'instagram', 'weibo'];
         let combineData = {
             data    : [],
             minId  : {},
@@ -63,7 +64,7 @@ router.get('/', (req, res, next) => {
         };
 
         dataList.forEach((dataItem, index) => {
-            let provider = providerList[index];
+            const provider = providerList[index];
 
             dataItem = (
                 provider === 'weibo'
@@ -79,7 +80,6 @@ router.get('/', (req, res, next) => {
             combineData.maxId[provider]   = dataItem.maxId
             combineData.minDate[provider] = dataItem.minDate
             combineData.maxDate[provider] = dataItem.maxDate
-
             combineData.data = combineData.data.concat(dataItem.data)
         })
 

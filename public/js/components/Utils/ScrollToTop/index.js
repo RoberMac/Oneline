@@ -3,8 +3,6 @@ import classNames from 'classnames';
 
 import Jump from 'utils/jump';
 
-import './scroll.css';
-
 // Components
 import Icon from '../Icon';
 

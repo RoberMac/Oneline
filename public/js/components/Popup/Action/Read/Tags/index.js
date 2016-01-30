@@ -4,10 +4,7 @@ import Icon from 'components/Utils/Icon';
 import Post from 'components/Utils/Post';
 
 // Helpers
-const selectTagHref = {
-    twitter  : ({ tagName }) => `//twitter.com/search?q=%23${tagName}`,
-    instagram: ({ tagName }) => `//instagram.com/explore/tags/${tagName}`
-};
+import { selectTagLink } from 'utils/select';
 
 export default class Tags extends React.Component {
     render() {
@@ -15,7 +12,7 @@ export default class Tags extends React.Component {
         return (
             <div>
                 <div className={`banner banner--${provider}`}>
-                    <a href={selectTagHref[provider]({ tagName: id })} target="_blank">
+                    <a href={selectTagLink[provider]({ tagName: id })} target="_blank">
                         <span className={`banner__title btn icon--${provider} tips--deep`}>
                             <Icon viewBox="0 0 60 60" name="tags" />
                             <span>{id}</span>
@@ -23,7 +20,7 @@ export default class Tags extends React.Component {
                     </a>
                 </div>
                 {showingPosts.map(item=> (
-                    <Post className="popupPost" key={item.id_str} item={item} />
+                    <Post className="popupPost" key={item.id_str} post={item} />
                 ))}
             </div>
         );

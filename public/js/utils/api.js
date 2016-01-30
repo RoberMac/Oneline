@@ -64,14 +64,14 @@ export const Auth = {
         url: `/auth/revoke/${provider}`
     }),
     deckard: ({ profileList }) => _fetch({
-        method: 'GET',
+        method: 'POST',
         url: '/auth/replicant/deckard',
-        query: profileList && { profileList }
+        body: profileList && { profileList }
     }),
     rachael: ({ code }) => _fetch({
-        method: 'POST',
+        method: 'GET',
         url: '/auth/replicant/rachael',
-        body: { code }
+        query: { code }
     })
 }
 export const Timeline = {
@@ -108,3 +108,11 @@ export const Media = {
         body
     })
 }
+export const Share = {
+    post: ({ provider, id }, body) => _fetch({
+        method: 'POST',
+        url: `/share/${provider}/${id}`,
+        body
+    })
+}
+

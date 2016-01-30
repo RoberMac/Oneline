@@ -1,7 +1,6 @@
 import React from 'react';
 import Swipeable from 'react-swipeable';
 
-import './popup.css';
 import Transition from 'components/Utils/Transition';
 
 export default class Popup extends React.Component {

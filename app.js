@@ -5,6 +5,7 @@ const res_time     = require('response-time');
 const favicon      = require('serve-favicon');
 const bodyParser   = require('body-parser');
 const session      = require('express-session');
+const MongoStore   = require('connect-mongo')(session);
 const cookieParser = require('cookie-parser');
 const mongoose     = require('mongoose');
 const morgan       = require('morgan');
@@ -16,12 +17,9 @@ const limiter      = require('connect-ratelimit');
 
 // global variables
 global.Q = require('q')
-global.User = require('./models/ol').User
+global.User = require('./models/ol').User;
 global.q_userFindOne = Q.nbind(User.findOne, User)
 global.q_userFindOneAndRemove = Q.nbind(User.findOneAndRemove, User)
-global.q_userFindOneAndUpdate = Q.nbind(User.findOneAndUpdate, User)
-global.Replicant = require('./models/ol').Replicant
-global.q_replicantFindOne = Q.nbind(Replicant.findOne, Replicant)
 
 // load dotenv
 require('dotenv').load()
@@ -29,15 +27,13 @@ require('dotenv').load()
 // Authentication strategies
 require('./strategies/strategies')(passport)
 
-
-// read database config form VCAP_SERVICES env
-const db_uri = process.env.MONGODB
-    ? JSON.parse(process.env.MONGODB).uri
-    : 'mongodb://test:test@localhost:27017/test'
-
-
 // Connect to DB
-mongoose.connect(db_uri);
+const DB_URI = (
+    process.env.MONGODB
+        ? JSON.parse(process.env.MONGODB).uri
+    : 'mongodb://test:test@localhost:27017/test'
+);
+mongoose.connect(DB_URI);
 mongoose.connection
 .on('err', (err) => console.error(err))
 .once('open', () => console.log('Connected to MongoDB'))
@@ -52,7 +48,12 @@ app
 .use(compress())
 .use(bodyParser.json({ limit: 5120000 }))
 .use(cookieParser())
-.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }))
+.use(session({
+    secret: process.env.SESSION_SECRET,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    resave: false,
+    saveUninitialized: false
+}))
 .use(passport.initialize())
 .use(res_time())
 .use(favicon(__dirname + '/public/img/favicon.ico'))
@@ -90,39 +91,35 @@ app
 
 // 保護 endpoints
 const jwt = require('jsonwebtoken');
+const checkToken = (req, res, next) => {
+    const tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [];
+    let validPassports = {};
+
+    // 提取有效 token 的 payload 到 req.olPassports
+    tokenList.forEach((token, index) => {
+        try {
+            const decoded = jwt.verify(token, process.env.KEY);
+            validPassports[decoded.provider] = decoded.uid
+        } catch (e){}
+    })
+
+    if (Object.keys(validPassports).length <= 0){
+        next({ statusCode: 401 })
+    } else {
+        req.olTokenList = tokenList;
+        req.olPassports = validPassports
+        req.olId = {}
+        next()
+    }
+};
 app.use([
     '/timeline',
     '/actions',
     '/auth/revoke',
     '/auth/replicant/deckard',
     '/upload'
-], (req, res, next) => {
-    let tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [];
-    let validPassports = {};
-    let invalidToken = [];
-
-    // 提取有效 token 的 payload 到 req.olPassports
-    tokenList.forEach((token, index) => {
-        try {
-            let decoded = jwt.verify(token, process.env.KEY);
-            validPassports[decoded.provider] = decoded.userId
-        } catch (e){
-            try {
-                invalidToken.push(jwt.decode(token).provider)
-            } catch (e){
-                invalidToken = ['twitter', 'instagram', 'weibo']
-            }
-        }
-    })
-
-    if (invalidToken.length > 0 || Object.keys(validPassports).length <= 0){
-        next({ statusCode: 401, invalidToken: invalidToken})
-    } else {
-        req.olPassports = validPassports
-        req.olId = {}
-        next()
-    }
-})
+], checkToken)
+app.post('/share', checkToken)
 
 // Routing
 app
@@ -130,6 +127,7 @@ app
 .use('/timeline', require('./routes/timeline'))
 .use('/actions', require('./routes/actions'))
 .use('/upload', require('./routes/upload'))
+.use('/share', require('./routes/share'))
 .use('/public', express.static('public'))
 .all('/*', (req, res, next) => res.sendFile(__dirname + '/index.html'))
 

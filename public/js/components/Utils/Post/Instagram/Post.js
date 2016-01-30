@@ -3,13 +3,13 @@ import React from 'react';
 // Components
 import Text from '../Utils/Text';
 import TimeAgo from '../Utils/TimeAgo';
+import Action from '../Utils/Action';
 import { Avatar } from '../Utils/Avatar';
 import { InstagramMedia } from '../Utils/Media';
-import { InstagramAction } from '../Utils/Action';
 
-export default ({ post, opts }) => (
+export default ({ post }) => (
     <div>
-        {!opts.isAvatarLess ? <Avatar provider="instagram" {...post.user} /> : null}
+        {!post.avatarless ? <Avatar provider="instagram" {...post.user} /> : null}
         <div className="post__content">
             <InstagramMedia
                 images={post.images}
@@ -19,7 +19,7 @@ export default ({ post, opts }) => (
             <Text provider="instagram" text={post.text} />
         </div>
 
-        <InstagramAction post={post} opts={opts} />
+        <Action post={post} />
         <TimeAgo date={post.created_at} />
     </div>
 );

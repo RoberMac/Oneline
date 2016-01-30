@@ -3,31 +3,18 @@ const mongoose = require('mongoose');
 const Schema   = mongoose.Schema;
 
 let userSchema = new Schema({
-    // provider + userId
-    id           : {
+    id           : { // provider + uid
         type     : String,
         unique   : true,
         require  : true,
         index    : true
-    },
-    userId       : {
-        type     : String,
-        require  : true
-    },
-    name         : {
-        type     : String,
-        require  : true
-    },
-    screen_name  : {
-        type     : String,
-        require  : true
     },
     provider     : {
         type     : String,
         lowercase: true,
         require  : true
     },
-    avatar       : {
+    screen_name  : {
         type     : String,
         require  : true
     },
@@ -37,8 +24,7 @@ let userSchema = new Schema({
     },
     tokenSecret  : String,
     refreshToken : String
-})
-
+});
 let replicantSchema = new Schema({
     id           : {
         type     : String,
@@ -62,9 +48,30 @@ let replicantSchema = new Schema({
         type     : Date,
         expires  : 60
     }
-})
+});
+let shareSchema = new Schema({
+    id           : {
+        type     : String,
+        unique   : true,
+        require  : true,
+        index    : true,
+    },
+    sharers      : {
+        type     : [Schema.Types.Mixed],
+        require  : true,
+    },
+    viewCount    : {
+        type     : Number,
+        require  : true,
+    },
+    data         : {
+        type     : Schema.Types.Mixed,
+        require  : true
+    }
+});
 
 module.exports = {
     User: mongoose.model('User', userSchema),
-    Replicant: mongoose.model('Replicant', replicantSchema)
+    Replicant: mongoose.model('Replicant', replicantSchema),
+    Share: mongoose.model('Share', shareSchema),
 }

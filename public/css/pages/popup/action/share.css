@@ -1,0 +1,14 @@
+.share {
+    position: relative calc(50vh - 35px) * *;
+    size: 100% 70px;
+    background: var(--color-gray);
+    cursor: default;
+
+    input {
+        size: 77% 30px;
+        padding: 7px;
+        font-size: var(--font-size-regular) 30px;
+        text-align: center;
+        cursor: default;
+    }
+}

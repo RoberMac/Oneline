@@ -146,7 +146,7 @@ export default class Write extends React.Component {
             <div className="write">
                 { action !== 'reply'
                     ? <div className="write__livePreview animate--enter overflow--y">
-                        <Post item={livePreviewPost}/>
+                        <Post post={livePreviewPost}/>
                     </div>
                     : null
                 }

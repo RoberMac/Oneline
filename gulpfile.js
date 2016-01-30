@@ -1,22 +1,20 @@
-var gulp       = require('gulp'),
-    path       = require('path'),
-    rename     = require('gulp-rename');
-
-
+const gulp   = require('gulp');
+const path   = require('path');
+const rename = require('gulp-rename');
 
 /**
- * SVG
+ * Minify & Combine SVG
  *
  */
-var paths_svg_src = 'public/img/src/*.svg';
+const svgmin   = require('gulp-svgmin');
+const svgstore = require('gulp-svgstore');
+const SVG_PATH = 'public/img/src/*.svg';
 
-var svgmin   = require('gulp-svgmin'),
-    svgstore = require('gulp-svgstore');
-// Minify & Combine
 gulp.task('svgstore', function () {
-    return gulp.src(paths_svg_src)
+    return (
+        gulp.src(SVG_PATH)
         .pipe(svgmin(function (file) {
-            var prefix = path.basename(file.relative, path.extname(file.relative));
+            const prefix = path.basename(file.relative, path.extname(file.relative));
             return {
                 plugins: [{
                     cleanupIDs: {
@@ -29,12 +27,44 @@ gulp.task('svgstore', function () {
         .pipe(svgstore())
         .pipe(rename('icon-sprites.svg'))
         .pipe(gulp.dest('public/img'))
+    );
 })
 
+/**
+ * CSS
+ *
+ */
+const postcss = require('gulp-postcss');
+const CSS_PATH = 'views/styles/src/*.css';
+
+gulp.task('css', function () {
+    const processors = [
+        require('postcss-import')({
+            path: ['public/css']
+        }),
+        require('postcss-nested'),
+        require('postcss-short'),
+        require('postcss-assets')({
+            loadPaths: ['public/img/assets']
+        }),
+        require('postcss-cssnext')({
+            autoprefixer: true
+        }),
+        require('css-mqpacker'),
+        require('lost'),
+        require('cssnano')
+    ];
+
+    return (
+        gulp.src(CSS_PATH)
+        .pipe(postcss(processors))
+        .pipe(gulp.dest('views/styles/dist'))
+    );
+})
 
 /**
  * Task
  *
  */
-gulp.task('default', ['svgstore']);
+gulp.task('default', ['svgstore', 'css']);
 

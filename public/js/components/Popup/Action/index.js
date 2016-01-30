@@ -3,6 +3,7 @@ import React from 'react';
 import Write from './Write';
 import Read from './Read';
 import Detail from './Detail';
+import Share from './Share';
 
 export const Action = props => {
     const { action } = props.params;
@@ -22,6 +23,9 @@ export const Action = props => {
             break;
         case 'detail':
             SelectAction = Detail;
+            break;
+        case 'share':
+            SelectAction = Share;
             break;
     }
 

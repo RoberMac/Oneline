@@ -1,11 +1,7 @@
 import React from 'react';
 
 // Helper
-const selectSrc = {
-    twitter: ({ screen_name, id }) => `//twitter.com/${screen_name}/status/${id}`,
-    instagram: ({ link }) => link,
-    weibo: ({ uid, mid }) => `//weibo.com/${uid}/${mid}`
-};
+import { selectSourceLink } from 'utils/select';
 const isActive = ({ id, link, mid }) => {
     return id || link || mid;
 };
@@ -13,15 +9,8 @@ const isActive = ({ id, link, mid }) => {
 import Icon from 'components/Utils/Icon';
 
 export default (props) => (
-    <a
-        href={selectSrc[props.provider]({...props})}
-        target="_blank"
-        role="button"
-    >
-        <span
-            className="post-action btn tips--deep"
-            style={ isActive({...props}) ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
-        >
+    <a href={selectSourceLink[props.provider]({...props})} target="_blank" role="button">
+        <span className={`post-action__btn btn tips--deep ${isActive({...props}) ? '' : 'tips--inactive'}`}>
             <Icon className="post-action__icon" viewBox="0 0 26 26" name="source" />
             <span className="post-action__count" />
         </span>

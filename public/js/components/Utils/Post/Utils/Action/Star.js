@@ -40,21 +40,16 @@ export default class Star extends React.Component {
     render() {
         const { inprocess, stared } = this.state;
         const btnClass = classNames({
-            'post-action tips--deep': true,
-            'icon--star tips--active': stared
+            'post-action__btn tips--deep': true,
+            'icon--star tips--active': stared,
+            'tips--inactive': !this.props.id
         });
         const iconClass = classNames({
             'post-action__icon': true,
             'animate--star': inprocess
         });
         return (
-            <button
-                className={btnClass}
-                type="button"
-                onClick={this.toggleStar}
-                style={ this.props.id ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
-                ref="btn"
-            >
+            <button className={btnClass} type="button" onClick={this.toggleStar} ref="btn">
                 <Icon className={iconClass} viewBox="0 0 26 26" name="star" />
                 <span className="post-action__count" />
             </button>

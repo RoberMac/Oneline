@@ -1,10 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const ROOT_PATH = path.resolve(__dirname);
+const APP_PATH = path.resolve(ROOT_PATH, 'public/js');
+const ENTRY_PATH = path.resolve(APP_PATH, 'entry');
+const BUILD_PATH = path.resolve(ROOT_PATH, 'public/dist');
+
 module.exports = {
     entry: {
-        app: [path.resolve(__dirname, 'public/js/entry')],
-        vendor: [
+        app: [path.resolve(ENTRY_PATH, 'app')],
+        share: [path.resolve(ENTRY_PATH, 'share')],
+        common: [
             // React Core
             'react',
             'react-dom',
@@ -34,41 +40,49 @@ module.exports = {
         ]
     },
     output: {
-        path: path.resolve(__dirname, 'public/dist'),
-        filename: 'app.js'
+        path: BUILD_PATH,
+        filename: '[name].js',
     },
     module: {
         loaders: [
             {
                 test: /\.jsx?$/,
-                include: path.resolve(__dirname, 'public/js'),
-                loaders: ['babel-loader?presets[]=es2015,presets[]=react,presets[]=stage-2']
+                include: APP_PATH,
+                // exclude: /(node_modules|bower_components)/,
+                loaders: ['babel']
             },
-            { test: /\.json$/, loader: "json-loader" },
-            { test: /\.css$/,  loader: "style-loader!css-loader!postcss-loader" }
+            { test: /\.json$/, loader: "json" },
+            { test: /\.css$/, loaders: ['style', 'css', 'postcss'] }
         ]
     },
     resolve: {
         extensions: ['', '.js', '.json', '.coffee'],
         alias: {
-            'actions': path.join(__dirname, 'public/js/actions'),
-            'components': path.join(__dirname, 'public/js/components'),
-            'reducers': path.join(__dirname, 'public/js/reducers'),
-            'routes': path.join(__dirname, 'public/js/routes'),
-            'store': path.join(__dirname, 'public/js/store'),
-            'utils': path.join(__dirname, 'public/js/utils'),
+            'actions': path.resolve(APP_PATH, 'actions'),
+            'components': path.resolve(APP_PATH, 'components'),
+            'reducers': path.resolve(APP_PATH, 'reducers'),
+            'routes': path.resolve(APP_PATH, 'routes'),
+            'store': path.resolve(APP_PATH, 'store'),
+            'utils': path.resolve(APP_PATH, 'utils')
         }
     },
     plugins: [
         new webpack.DefinePlugin({
-            __DEV__: process.env.NODE_ENV === 'development' || false
+            __DEV__: process.env.NODE_ENV === 'development' || false,
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
-        new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js'),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'common',
+            filename: 'common.js'
+        }),
         new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } })
     ],
     postcss: function (webpack){
         return [
-            require('postcss-import')({ addDependencyTo: webpack }),
+            require('postcss-import')({
+                path: ['public/css'],
+                addDependencyTo: webpack
+            }),
             require('postcss-nested'),
             require('postcss-short'),
             require('postcss-assets')({ loadPaths: ['public/img/assets'] }),

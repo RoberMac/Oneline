@@ -1,0 +1,119 @@
+@import "helpers/variables";
+
+.animate {
+    &--general {
+        transition: all .7s ease-in-out;
+    }
+    &--faster {
+        transition: all .3s ease-in-out;
+    }
+    &--transition {
+        &-enter {
+            opacity: 0;
+            transition: all .7s ease-in-out;
+        }
+        &-enter&-enter-active {
+            opacity: 1;
+        }
+        &-leave {
+            opacity: 1;
+            transition: all .7s ease-in-out;
+        }
+        &-leave&-leave-active {
+            opacity: 0;
+        }
+    }
+    &--enter {
+        animation: enterAnimate .7s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    &--like {
+        cursor: default;
+        animation: likeAnimate 1s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+    &--retweet {
+        cursor: default;
+        animation: retweetAnimate 1s infinite ease-in-out;        
+    }
+    &--star {
+        cursor: default;
+        animation: starAnimate 1s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);        
+    }
+    &--trash {
+        cursor: default;
+        animation: trashAnimate .5s infinite ease-in-out;
+    }
+}
+@keyframes errFormAnimate {
+    0%, 100% {
+        background-color: var(--color-white);
+        transform: translateX(0);
+    }
+    12.5% {
+        transform: translateX(-6px);
+    }
+    37.5% {
+        transform: translateX(5px);
+    }
+    50% {
+        background-color: var(--color-weibo);
+    }
+    62.5% {
+        transform: translateX(-3px);
+    }
+    87.5% {
+        transform: translateX(2px);
+    }
+}
+@keyframes likeAnimate {
+    0%, 100% {
+        transform: scale(1, 1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1, 1.1);
+        opacity: .7;
+    }
+}
+@keyframes retweetAnimate {
+    0%, 100% {
+        opacity: .3;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+@keyframes starAnimate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+@keyframes trashAnimate {
+    0%, 100% {
+        transform: translate(0, 0px);
+    }
+    12.5% {
+        transform: translate(-3px, .5px);
+    }
+    37.5% {
+        transform: translate(3px, 1.5px);
+    }
+    62.5% {
+        transform: translate(-2px, 1.5px);
+    }
+    87.5% {
+        transform: translate(2px, .5px);
+    }
+}
+@keyframes enterAnimate {
+    0% {
+        opacity: 0;
+        transform: translateY(100vh);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}

@@ -1,8 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import './app.css';
-
 import ScrollToTop from '../Utils/ScrollToTop';
 export default ({ location, main, leftSidebar, rightSidebar }) => {
     const isHome = !/^\/settings/.test(location.pathname);

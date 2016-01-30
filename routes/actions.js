@@ -5,21 +5,15 @@ const actions = require('./helper/actions');
 
 // Handing `action` & `provider` & `id` Params
 router.param('action', (req, res, next, action) => {
-
     req.olAction = action
-
     next()
 })
 router.param('provider', (req, res, next, provider) => {
-
     req.olProvider = provider
-
     next()
 })
 router.param('id', (req, res, next, id) => {
-
     req.olId = id
-
     next()
 })
 
@@ -28,7 +22,6 @@ router.all('/:action/:provider/:id', (req, res, next) => {
 
     q_userFindOne({ id: provider + req.olPassports[provider] })
     .then(found => {
-
         return actions[provider](req.olAction, {
 
             token      : found.token,

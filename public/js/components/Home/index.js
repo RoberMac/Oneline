@@ -9,9 +9,9 @@ import { resetState, fetchPosts } from 'actions/timeline';
 import DependencyLoader from './loader';
 
 // Components
-import Post from '../Utils/Post';
-import Spin from '../Utils/Spin';
-import Transition from '../Utils/Transition';
+import Post from 'components/Utils/Post';
+import Spin from 'components/Utils/Spin';
+import Transition from 'components/Utils/Transition';
 class Timeline extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         __DEV__ && console.time('[shallowCompare]')
@@ -26,7 +26,7 @@ class Timeline extends React.Component {
                 this.props.showingPosts
                 .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
                 .map(item => (
-                    <Post key={item.id_str} item={item} />
+                    <Post key={item.id_str} post={item} />
                 ))
             }
             </div>
@@ -45,6 +45,7 @@ class Home extends React.Component {
         const { fetchPosts, replaceTokenList, history } = this.props;
         return fetchPosts({ postsType, isAutoFetch })
         .catch(err => {
+            __DEV__ && console.error(err)
             if (err.res.status === 401){
                 replaceTokenList([])
                 history.push('/settings')
@@ -135,6 +136,7 @@ class Home extends React.Component {
         );
     }
 }
+
 
 // Export
 export default connect(

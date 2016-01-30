@@ -6,7 +6,7 @@ export default e => {
     if (elem.tagName !== 'A') return;
 
     const link = elem.getAttribute('href');
-    const isInsideLink = /^\//.test(link);
+    const isInsideLink = /^\/(?!\/)/.test(link);
 
     if (isInsideLink){
         e.preventDefault();

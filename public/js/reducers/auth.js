@@ -6,7 +6,6 @@ import { initAuthState } from '../store/initState';
 const initState = initAuthState();
 
 export default (state = initState, action) => {
-    console.log()
     switch (action.type){
         case UPDATE_TOKEN:
             return update(state, {

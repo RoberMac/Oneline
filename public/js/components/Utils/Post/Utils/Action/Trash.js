@@ -35,18 +35,16 @@ export default class Trash extends React.Component {
     render() {
         const { inprocess } = this.state;
         const { id } = this.props;
+        const btnClass = classNames({
+            'post-action__btn tips--deep': true,
+            'tips--inactive': !id
+        });
         const iconClass = classNames({
             'post-action__icon': true,
             'animate--trash': inprocess
         });
         return (
-            <button
-                className="post-action tips--deep"
-                type="button"
-                onClick={this.deletePost}
-                style={ id ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
-                ref="btn"
-            >
+            <button className={btnClass} type="button" onClick={this.deletePost} ref="btn">
                 <Icon className={iconClass} viewBox="0 0 26 26" name="trash" />
                 <span className="post-action__count" />
             </button>

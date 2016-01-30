@@ -12,12 +12,13 @@ import { Action } from 'utils/api';
 import Icon from 'components/Utils/Icon';
 const RetweetBtn = ({ provider, post }) => {
     const { id_str, retweet_count } = post;
+    const btnClass = classNames({
+        'post-action__btn btn tips--deep': true,
+        'tips--inactive': !id_str
+    })
     return (
         <Link to={`/home/${provider}/retweet/${id_str}`} state={post}>
-            <span
-                className="post-action btn tips--deep"
-                style={ id_str ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
-            >
+            <span className={btnClass}>
                 <Icon className="post-action__icon" viewBox="0 0 34 26" name="retweet" />
                 <span
                     className="post-action__count"
@@ -60,18 +61,16 @@ class DeleteRetweetBtn extends React.Component {
     render() {
         const { inprocess } = this.state;
         const { id_str, retweet_count, retweeted_id_str } = this.props.post;
+        const btnClass = classNames({
+            'post-action__btn tips--deep icon--retweet tips--active': true,
+            'tips--inactive': !(id_str && retweeted_id_str)
+        })
         const iconClass = classNames({
             'post-action__icon': true,
             'animate--retweet': inprocess
         });
         return (
-            <button
-                className="post-action tips--deep icon--retweet tips--active"
-                type="button"
-                onClick={this.deleteRetweet}
-                style={ id_str && retweeted_id_str ? null : { 'pointerEvents': 'none', 'opacity': '.1' } }
-                ref="btn"
-            >
+            <button className={btnClass} type="button" onClick={this.deleteRetweet} ref="btn">
                 <Icon className={iconClass} viewBox="0 0 34 26" name="retweet" />
                 <span className="post-action__count" data-count={retweet_count > 0 ? retweet_count : ''} />
             </button>

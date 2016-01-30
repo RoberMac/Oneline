@@ -1,8 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import './spin.css';
-
 export default ({ type, initLoad, isFetching, isFetchFail, unreadCount, provider, onClick }) => {
     const isNewPosts = type === 'newPosts';
     const wrapperClass = classNames({

@@ -1,0 +1,11 @@
+extend ./base.jade
+
+block title
+    title ｜ #{sharedData.data.user.name}: #{sharedData.data.text}
+
+block content
+    .root
+    script(type='text/javascript').
+        window.__share_data__ = !{JSON.stringify(sharedData)};
+    script(src="/public/dist/common.js")
+    script(src="/public/dist/share.js")

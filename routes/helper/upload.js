@@ -16,6 +16,6 @@ module.exports = {
         let b64content = fs.readFileSync(opts.filePath, { encoding: 'base64' });
 
         return q_twit('media/upload', { media_data: b64content })
-        .then(data => ({ statusCode: 200, media_id: data[0].media_id_string }))
+        .then(data => ({ media_id: data[0].media_id_string }))
     }
 }

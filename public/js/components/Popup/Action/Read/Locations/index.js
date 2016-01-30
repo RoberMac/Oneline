@@ -4,15 +4,7 @@ import Icon from 'components/Utils/Icon';
 import Post from 'components/Utils/Post';
 
 // Helpers
-const selectLocationHref = {
-    twitter  : ({ id }) => `//twitter.com/search?q=place%3A${id}`,
-    instagram: ({ id }) => `//instagram.com/explore/locations/${id}`,
-    weibo: ({ id, place_id }) => (
-        place_id
-            ? `//weibo.com/p/100101${place_id}`
-        : `//maps.google.com/maps?z=12&t=h&q=loc:${id.split('_')[0]}+${id.split('_')[1]}`
-    )
-};
+import { selectLocationLink } from 'utils/select';
 
 export default class Locations extends React.Component {
     render() {
@@ -23,7 +15,7 @@ export default class Locations extends React.Component {
             <div>
                 <div className={`banner banner--${provider}`}>
                     <a
-                        href={selectLocationHref[provider]({ id, place_id })}
+                        href={selectLocationLink[provider]({ id, place_id })}
                         target="_blank"
                     >
                         <span className={`banner__title btn icon--${provider} tips--deep`}>
@@ -33,7 +25,7 @@ export default class Locations extends React.Component {
                     </a>
                 </div>
                 {showingPosts.map(item=> (
-                    <Post className="popupPost" key={item.id_str} item={item} />
+                    <Post className="popupPost" key={item.id_str} post={item} />
                 ))}
             </div>
         );

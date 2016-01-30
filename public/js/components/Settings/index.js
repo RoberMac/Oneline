@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import Swipeable from 'react-swipeable';
 
 import { addToken, removeToken, clearTokenIfTokenExpired } from 'actions/auth';
-import './settings.css';
 
 // Components
 import Icon from 'components/Utils/Icon';
@@ -45,7 +44,6 @@ class SocialAuth extends React.Component {
         }
     }
     handleStorageChange(e) {
-        console.log(e)
         if (e.key === 'addToken'){ this.props.addToken() };
     }
     handleSwipedLeft() {

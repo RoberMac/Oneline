@@ -1,0 +1,65 @@
+@import "helpers/variables";
+
+.tips {
+    opacity: .7;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &--deep {
+        opacity: .3;
+
+        &:hover {
+            opacity: 1;
+        }
+        &--peace {
+            opacity: .3;
+        }
+    }
+    &--active {
+        opacity: 1;
+
+        &:hover {
+            opacity: .7;
+        }
+        &--peace {
+            opacity: 1;
+        }
+    }
+    &--inprocess {
+        animation: inprocessAnimate 1.7s infinite cubic-bezier(0.4, 0, 1, 1);
+    }
+    &--inactive {
+        opacity: .1;
+        pointer-events: none;
+    }
+    &--error {
+        animation: tipsErrAnimate .5s ease-in-out;
+    }
+}
+@keyframes inprocessAnimate {
+    0%, 100% {
+        opacity: .3;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+@keyframes tipsErrAnimate {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    12.5% {
+        transform: translateX(-4px);
+    }
+    37.5% {
+        transform: translateX(4px);
+    }
+    62.5% {
+        transform: translateX(-2px);
+    }
+    87.5% {
+        transform: translateX(2px);
+    }
+}

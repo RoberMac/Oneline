@@ -1,81 +1,55 @@
-doctype html
-html
-    head
-        meta(charset='UTF-8')
-        meta(name='keywords', content='Oneline')
-        meta(
-            name='description'
-            content='A Social Network Aggregator'
-        )
-        meta(
-            name='viewport'
-            content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui'
-        )
-        meta(
-            name='apple-mobile-web-app-capable'
-            content='yes'
-        )
-        meta(
-            name='mobile-web-app-capable'
-            content='yes'
-        )
-        meta(
-            name='apple-mobile-web-app-status-bar-style'
-            content='black'
-        )
-        meta(
-            name='apple-mobile-web-app-title'
-            content='Oneline'
-        )
-        link(ref='icon', type='image/x-icon', href='public/img/favicon.ico')
-        link(ref='shortcut icon', href='public/img/favicon.ico')
-        link(ref='apple-touch-icon', sizes='192x192', href='public/img/favicon.png')
-        title ｜ #{provider.substr(0, 1).toUpperCase() + provider.substr(1)}
-        style
-            include authCallback.css
-    body
-        div(
-            class='oneline overflow--y'
-            data-profile=profile
-            data-provider=provider
-            data-token=token
-        )
-            div.social-list.social-list--one.vertically_center
-                if provider === 'twitter'
-                    svg(
-                        class='social-icon animate--general'
-                        viewBox='0 0 300 300'
-                    )
-                        use(xlink:href="/public/img/icon-sprites.svg#twitter")
-                else if provider === 'instagram'
-                    svg(
-                        class='social-icon animate--general'
-                        viewBox='0 0 775 300'
-                    )
-                        use(xlink:href="/public/img/icon-sprites.svg#instagram")
-                else if provider === 'weibo'
-                    svg(
-                        class='social-icon animate--general'
-                        viewBox='0 0 300 300'
-                    )
-                        use(xlink:href="/public/img/icon-sprites.svg#weibo")
-        script(type='text/javascript').
-            (function (){
+extend ./base.jade
 
-                var socialIcon = document.getElementsByClassName('social-icon')[0],
-                    dataELem = document.getElementsByClassName('oneline')[0],
-                    token = dataELem.getAttribute('data-token'),
-                    provider = dataELem.getAttribute('data-provider'),
-                    profile = dataELem.getAttribute('data-profile');
+block title
+    title ｜ #{provider.substr(0, 1).toUpperCase() + provider.substr(1)}
 
-                // Cross-tab Communication
-                localStorage.setItem('addToken', token)
-                localStorage.setItem('profile_' + provider, profile)
+block styles
+    include ./styles/dist/base.css
+    include ./styles/dist/authCallback.css
 
+block content
+    div(
+        class='oneline overflow--y'
+        data-profile=profile
+        data-provider=provider
+        data-token=token
+    )
+        div.social-list.social-list--one.vertically_center
+            if provider === 'twitter'
+                svg(
+                    class='social-icon animate--general'
+                    viewBox='0 0 300 300'
+                )
+                    use(xlink:href="/public/img/icon-sprites.svg#twitter")
+            else if provider === 'instagram'
+                svg(
+                    class='social-icon animate--general'
+                    viewBox='0 0 775 300'
+                )
+                    use(xlink:href="/public/img/icon-sprites.svg#instagram")
+            else if provider === 'weibo'
+                svg(
+                    class='social-icon animate--general'
+                    viewBox='0 0 300 300'
+                )
+                    use(xlink:href="/public/img/icon-sprites.svg#weibo")
+    script(type='text/javascript').
+        (function (){
+
+            var socialIcon = document.getElementsByClassName('social-icon')[0],
+                dataELem = document.getElementsByClassName('oneline')[0],
+                token = dataELem.getAttribute('data-token'),
+                provider = dataELem.getAttribute('data-provider'),
+                profile = dataELem.getAttribute('data-profile');
+
+            // Cross-tab Communication
+            localStorage.setItem('addToken', token)
+            localStorage.setItem('profile_' + provider, profile)
+
+            setTimeout(function (){
+                socialIcon.setAttribute('class', socialIcon.getAttribute('class') + ' social-icon--active')
                 setTimeout(function (){
-                    socialIcon.setAttribute('class', socialIcon.getAttribute('class') + ' social-icon--active')
-                    setTimeout(function (){
-                        window.close()
-                    }, 1000)
-                }, 500)
-            })()
+                    window.close()
+                }, 1000)
+            }, 500)
+        })()

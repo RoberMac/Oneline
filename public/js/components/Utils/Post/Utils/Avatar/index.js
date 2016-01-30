@@ -1,9 +1,8 @@
 import React from 'react';
 
 // Helpers
-import { selectUserSrc } from 'utils/select';
-// via https://github.com/KyleAMathews/isRetina
-const isRetina = (
+import { selectUserLink } from 'utils/select';
+const isRetina = ( // via https://github.com/KyleAMathews/isRetina
     window.devicePixelRatio > 1.25
     || window.matchMedia 
     && window.matchMedia(''
@@ -32,7 +31,7 @@ export const Avatar = ({ avatar, screen_name, name, provider }) => (
             />
         </UserLink>
         <div className="post-profile__fullname">
-            <a href={selectUserSrc[provider](screen_name)} target="_blank">
+            <a href={selectUserLink[provider](screen_name)} target="_blank">
                 <strong>{name || screen_name}</strong>
             </a>
         </div>

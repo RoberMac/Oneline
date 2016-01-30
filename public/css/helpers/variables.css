@@ -1,0 +1,33 @@
+:root {
+    --font-family-base: "Helvetica Neue","Palatino","PingFang SC","Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+    --line-height-base: 1.4;
+
+    --font-size-xx-small: 9px;
+    --font-size-small: 12px;
+    --font-size-base: 14px;
+    --font-size-regular: 16px;
+
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-bold: 600;
+
+    --color-black: #000;
+    --color-black-alpha: color(var(--color-black) a(70%));
+    --color-white: #FFF;
+    --color-gray: #F1F1F1;
+    --color-gray-drak: #CECECF;
+    --color-steel: #666;
+
+    --color-twitter: #2AA9E0;
+    --color-instagram: #3F5D87;
+    --color-weibo: #E6162D;
+}
+
+@custom-media --all-mobile-devices (device-width <= 1024px), (width <= 1024px);
+@custom-media --phone (device-width <= 767px), (width <= 767px);
+@custom-media --phone-portrait (device-width <= 767px) and (orientation : portrait);
+@custom-media --phone-landscape (device-width <= 767px) and (orientation : landscape);
+@custom-media --tablet (768px <= device-width <= 1024px),(768px <= width <= 1024px);
+@custom-media --tablet-landscape (768px <= device-width <= 1024px) and (orientation : landscape),(768px <= width <= 1024px) and (orientation : landscape);
+
+@lost gutter 10px;

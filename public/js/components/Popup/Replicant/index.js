@@ -32,7 +32,7 @@ class _Deckard extends React.Component {
             if (profile){ profileList.push(profile) }
         });
 
-        Auth.deckard({ profileList: JSON.stringify(profileList) })
+        Auth.deckard({ profileList })
         .then(res => {
             let deadline = 60;
 
@@ -104,7 +104,7 @@ class _Rachael extends React.Component {
                 replaceTokenList(res.tokenList)
                 // 處理 Profile
                 res.profileList.forEach(profile => {
-                    store.set('profile_' + profile._provider, profile)
+                    store.set('profile_' + profile.provider, profile)
                 })
             }
 

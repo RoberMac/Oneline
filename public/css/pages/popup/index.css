@@ -1,0 +1,23 @@
+@import "helpers/variables";
+
+@import "./action";
+@import "./replicant";
+@import "./menu";
+
+
+.popup {
+    position: absolute 0 * * 0;
+    size: 100%;
+    z-index: 4;
+    background-color: var(--color-black-alpha);
+    cursor: zoom-out;
+    ::-webkit-scrollbar {
+        display: none; 
+    }
+
+    &__wrapper {
+        position: relative;
+        size: 100%;
+        overflow-x: hidden;
+    }
+}

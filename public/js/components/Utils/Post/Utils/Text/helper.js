@@ -1,6 +1,18 @@
 import xssFilters from 'xss-filters';
 
 // via https://github.com/RoberMac/angular-linkify/blob/master/angular-linkify.js#L5
+const SHARE_PAGE = window.__share_data__;
+const USER_PREFIX = {
+    twitter: SHARE_PAGE ? '//twitter.com' : '/home/twitter/user',
+    instagram: SHARE_PAGE ? '//instagram.com' : '/home/instagram/user',
+    weibo: SHARE_PAGE ? '//weibo.com/n' : '/home/weibo/user',   
+};
+const TAG_PREFIX = {
+    twitter: SHARE_PAGE ? '//twitter.com/search?q=%23' : '/home/twitter/tags',
+    instagram: SHARE_PAGE ? '//instagram.com/explore/tags' : '/home/instagram/tags',
+    weibo: SHARE_PAGE ? 'http://huati.weibo.com/k' : '/home/weibo/tags',    
+};
+const TARGET_ATTR = SHARE_PAGE ? 'target="_blank"' : '';
 const _linkify = (text, provider) => {
     if (!text) return;
 
@@ -20,14 +32,14 @@ const _linkify = (text, provider) => {
     // Twitter
     if (provider === 'twitter'){
         _text = _text.replace(/[\u200B-\u200F\u202C\uFEFF]/g, ''); // Zero-width char
-        _text = _text.replace(/(|\s)*@([\w]+)/g, '$1<a href="/home/twitter/user/$2">@$2</a>');
-        _text = _text.replace(/(^|\s)*[#＃]([^#＃\s!@$%^&*()+\-=\[\]{};':"\\|,.<>\/?\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u300c\u300d\u300e\u300f\u2018\u2019\u201c\u201D\uff08\uff09\u3014\u3015\u3010\u3011\u2014\u2026\u2013\uff0e\u300a\u300B\u3008\u3009]+)/g, '$1<a href="/home/twitter/tags/$2">#$2</a>');
+        _text = _text.replace(/(|\s)*@([\w]+)/g, `$1<a href="${USER_PREFIX['twitter']}/$2" ${TARGET_ATTR}>@$2</a>`);
+        _text = _text.replace(/(^|\s)*[#＃]([^#＃\s!@$%^&*()+\-=\[\]{};':"\\|,.<>\/?\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u300c\u300d\u300e\u300f\u2018\u2019\u201c\u201D\uff08\uff09\u3014\u3015\u3010\u3011\u2014\u2026\u2013\uff0e\u300a\u300B\u3008\u3009]+)/g, `$1<a href="${TAG_PREFIX['twitter']}/$2" ${TARGET_ATTR}>#$2</a>`);
     }
     // Instagram
     if (provider === 'instagram'){
         _text = _text.replace(/[\u200B-\u200F\u202C\uFEFF]/g, '');
-        _text = _text.replace(/(|\s)*@([\w\.]+)/g, '$1<a href="/home/instagram/user/$2">@$2</a>');
-        _text = _text.replace(/(^|\s)*[#＃]([^#＃\s!@$%^&*()+\-=\[\]{};':"\\|,.<>\/?\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u300c\u300d\u300e\u300f\u2018\u2019\u201c\u201D\uff08\uff09\u3014\u3015\u3010\u3011\u2014\u2026\u2013\uff0e\u300a\u300B\u3008\u3009]+)/g, '$1<a href="/home/instagram/tags/$2">#$2</a>');
+        _text = _text.replace(/(|\s)*@([\w\.]+)/g, `$1<a href="${USER_PREFIX['instagram']}/$2" ${TARGET_ATTR}>@$2</a>`);
+        _text = _text.replace(/(^|\s)*[#＃]([^#＃\s!@$%^&*()+\-=\[\]{};':"\\|,.<>\/?\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u300c\u300d\u300e\u300f\u2018\u2019\u201c\u201D\uff08\uff09\u3014\u3015\u3010\u3011\u2014\u2026\u2013\uff0e\u300a\u300B\u3008\u3009]+)/g, `$1<a href="${TAG_PREFIX['instagram']}/$2" ${TARGET_ATTR}>#$2</a>`);
     }
     // Weibo
     if (provider === 'weibo'){
@@ -46,6 +58,7 @@ const _linkify = (text, provider) => {
 // via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L57
 const _weiboEmotify = (text) => {
     if (!text) return;
+    if (!window.emotionsData) return text;
     let _text = text.replace(/\[[\u4e00-\u9fa5\w]+\]/g, str => {
         /**
          * Key Structure

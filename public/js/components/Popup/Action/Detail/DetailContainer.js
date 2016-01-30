@@ -14,15 +14,15 @@ export default ({ provider, post, likedList, replyList, retweetedList }) => {
                 <div className={`detail__container provider--${provider}`}>
                     <DetailColumn provider={provider}>
                         <DetailIcon
-                            name="like"
-                            text={{ type: 'count', content: post.like_count }}
-                            active={post.liked}
-                            iconCount={3}
-                        />
-                        <DetailIcon
                             name="retweet"
                             text={{ type: 'count', content: post.retweet_count }}
                             active={post.retweeted}
+                            iconCount={3}
+                        />
+                        <DetailIcon
+                            name="like"
+                            text={{ type: 'count', content: post.like_count }}
+                            active={post.liked}
                             iconCount={3}
                         />
                         <DetailIcon

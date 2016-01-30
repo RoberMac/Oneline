@@ -1,0 +1,116 @@
+.detail {
+    position: relative;
+    width: 100%;
+    cursor: default;
+
+    &__post {
+        z-index: 2;
+        box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    }
+
+    &__container {
+        position: relative -39px * * *;
+        margin: 0 17px;
+        padding: 7px 0px 0px;
+        font-size: var(--font-size-base) var(--line-height-base);
+        background-color: #FFF;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+        z-index: 1;
+    }
+
+    &__row {
+        position: relative;
+        border-top: 1px solid #F1F1F1;
+
+        &--reply {
+            border-top: 1px dashed #63DA38;
+        }
+
+        &__avatar {
+            size: 27px;
+            margin: 7px;
+        }
+        &__content {
+            margin: 7px;
+            width: calc(100% - 27px);
+            font-size: var(--font-size-small);
+        }
+        &__text {
+            margin: 0;
+        }
+        &__time {
+            position: absolute * 3px 1px *;
+            font-size: var(--font-size-xx-small);
+        }
+    }
+    &__column {
+        overflow: hidden;
+
+        > div {
+            padding: 7px;
+            white-space: nowrap;
+        }
+        &--empty {
+            > div {
+                text-align: center;
+            }
+        }
+        &--like, &--share {
+            border-top: 1px dashed #E9574F;
+        }
+        &--retweet {
+            border-top: 1px dashed #1BADF8;
+        }
+
+        &__icon {
+            position: relative;
+            text-align: center;
+            height: 30px;
+
+            &::before {
+                content: attr(data-text);
+                position: absolute * * 0 0;
+                width: 100%;
+                font-size: var(--font-size-xx-small);
+                line-height: 13px;
+            }
+            svg {
+                width: 30px;
+                height: 17px;
+            }
+            &--2 {
+                lost-column: 1/2;
+            }
+            &--3 {
+                lost-column: 1/3;
+            }
+            &--4 {
+                lost-column: 1/4;
+            }
+        }
+        &__cell {
+            display: inline-block;
+            position: relative;
+            margin: 3px;
+            size: 30px;
+            vertical-align: middle;
+            text-align: center;
+        }
+    }
+    &__avatar {
+        &::before {
+            content: '';
+            padding-top: 100%;
+            float: left;
+        }
+
+        img {
+            float: left;
+            width: 100%;
+            border-radius: 50%;
+        }
+    }
+}

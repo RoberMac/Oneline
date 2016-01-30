@@ -3,13 +3,13 @@ import React from 'react';
 // Components
 import Text from '../Utils/Text';
 import TimeAgo from '../Utils/TimeAgo';
+import Action from '../Utils/Action';
 import { Avatar } from '../Utils/Avatar';
 import { TwitterMedia } from '../Utils/Media';
-import { TwitterAction } from '../Utils/Action';
 
-export default ({ post, opts }) => (
+export default ({ post }) => (
     <div>
-        {!opts.isAvatarLess ? <Avatar provider="twitter" {...post.user} /> : null}
+        {!post.avatarless ? <Avatar provider="twitter" {...post.user} /> : null}
         <div className="post__content">
             <Text
                 provider="twitter"
@@ -24,7 +24,7 @@ export default ({ post, opts }) => (
             }
         </div>
 
-        <TwitterAction post={post} opts={opts} />
+        <Action post={post} />
         <TimeAgo date={post.created_at} />
     </div>
 );

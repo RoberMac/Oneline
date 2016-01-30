@@ -1,0 +1,85 @@
+@import "helpers/variables";
+
+.vertically_center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.overflow {
+    &--x {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        transform: translate3d(0, 0, 0) scaleX(1);
+    }
+    &--y {
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        transform: translate3d(0, 0, 0) scaleX(1);
+    }
+}
+.cursor {
+    &--pointer {
+        cursor: pointer;
+    }
+    &--pre {
+        cursor: inline('caret--pre.gif'), w-resize;
+        cursor: -webkit-image-set(
+            inline('caret--pre@2x.gif') 2x
+        ), w-resize;
+    }
+    &--next {
+        cursor: inline('caret--next.gif'), e-resize;
+        cursor: -webkit-image-set(
+            inline('caret--next@2x.gif') 2x
+        ), e-resize;
+    }
+    &--zoomIn {
+        cursor: zoom-in;
+    }
+    &--zoomOut {
+        cursor: zoom-out;
+    }
+}
+.provider {
+    &--twitter {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(42, 169, 224, 0.7);
+        }
+        a, a:visited {
+            color: var(--color-twitter);
+        }
+        img, video {
+            background: var(--color-white) inline('background--twitter.png') repeat 5px 5px;
+            background-size: 20px;
+        }
+    }
+    &--instagram {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(63, 93, 135, 0.7);
+        }
+        a, a:visited {
+            color: var(--color-instagram);
+        }
+        img, video {
+            background: var(--color-white) inline('background--instagram.png') repeat;
+            background-size: 100px 30px;
+        }
+    }
+    &--weibo {
+        ::selection {
+            color: var(--color-gray);
+            background-color: rgba(230, 22, 45, 0.7);
+        }
+        a, a:visited {
+            color: var(--color-weibo);
+        }
+        img, video {
+            background: var(--color-white) inline('background--weibo.png') repeat 5px 5px;
+            background-size: 20px;
+        }
+    }
+}

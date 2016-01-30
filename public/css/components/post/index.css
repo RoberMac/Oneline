@@ -1,0 +1,115 @@
+@import "helpers/variables";
+
+@import "./avatar";
+@import "./text";
+@import "./media";
+@import "./action";
+
+.post {
+    position: relative;
+    margin: 36px 7px;
+    padding: 0 10px 20px;
+    background-color: var(--color-white);
+    cursor: default;
+    border-radius: 3px;
+
+    &__time {
+        position: absolute * 3px 3px *;
+        color: #C1C9D2;
+        font-size: 11px;
+        cursor: pointer;
+        user-select: none;
+    }
+    &__location {
+        position: absolute 3px 3px * *;
+
+        &:hover {
+            .post__location__name {
+                display: inline-block;
+            }
+        }
+        &__name {
+            display: none;
+            position: absolute 0 17px * *;
+            width: 100px;
+            color: var(--color-steel);
+            text-align: right;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 11px 17px;
+
+            @media (--all-mobile-devices){
+                display: inline-block;
+            }
+        }
+    }
+    &__content {
+        position: relative -17px * *;
+    }
+    &--quote {
+        top: -12px;
+        margin: 27px 0 7px;
+        background-color: var(--color-gray);
+        font-size: var(--font-size-small);
+
+        strong, p {
+            color: var(--color-black);
+        }
+        .post {
+            &__content {
+                top: -10px !important;
+            }
+            &__time {
+                font-size: 10px;
+            }
+            &__location {
+                &__name {
+                    right: 15px;
+                    font-size: 11px 15px;
+                }
+            }
+        }
+    }
+}
+
+.userPost {
+    padding: 10px 10px 20px;
+    margin: 17px;
+    background-color: var(--color-gray);
+
+    .post__content {
+        top: -10px;
+    }
+    .post__location {
+        transform: translateY(-7px);
+    }
+    .post--quote {
+        background-color: var(--color-gray-drak);
+        .post__location {
+            transform: translateY(-5px);
+        }
+    }
+    .actions__count::after {
+        color: var(--color-steel);
+    }
+
+    &--gutter {
+        margin: 36px 17px 17px;
+        padding: 0 10px 20px;
+        background-color: var(--color-gray);
+
+        .post__content {
+            top: -17px;
+        }
+    }
+}
+
+.popupPost {
+    margin: 36px 17px 17px;
+    background-color: var(--color-gray);
+
+    .post--quote {
+        background-color: var(--color-gray-drak);
+    }
+}

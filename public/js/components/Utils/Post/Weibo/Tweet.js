@@ -3,13 +3,13 @@ import React from 'react';
 // Components
 import Text from '../Utils/Text';
 import TimeAgo from '../Utils/TimeAgo';
+import Action from '../Utils/Action';
 import { Avatar } from '../Utils/Avatar';
 import { WeiboMedia } from '../Utils/Media';
-import { WeiboAction } from '../Utils/Action';
 
-export default ({ post, opts }) => (
+export default ({ post }) => (
     <div>
-        {!opts.isAvatarLess ? <Avatar provider="weibo" {...post.user} /> : null}
+        {!post.avatarless ? <Avatar provider="weibo" {...post.user} /> : null}
         <div className="post__content">
             <Text
                 provider="weibo"
@@ -25,7 +25,7 @@ export default ({ post, opts }) => (
             }
         </div>
 
-        <WeiboAction post={post} opts={opts} />
+        <Action post={post} />
 
         <TimeAgo date={post.created_at} />
     </div>

@@ -26,14 +26,14 @@ export default {
         const validActions = [
             'user', 'tags', 'locations', 
             'read', 'tweet', 'retweet', 'quote', 'reply',
-            'detail'
+            'detail', 'share'
         ];
         if (validActions.indexOf(action) < 0){
             __DEV__ && console.error(`Warning: "${action}" is't valid action`)
             replaceState(null, '/home')
         }
 
-        const stateRequiredAction = ['retweet', 'quote', 'reply'];
+        const stateRequiredAction = ['retweet', 'quote', 'reply', 'share'];
         if (stateRequiredAction.indexOf(action) >= 0 && !nextState.location.state){
             __DEV__ && console.error(`Warning: "state" is missing`)
             replaceState(null, '/home')

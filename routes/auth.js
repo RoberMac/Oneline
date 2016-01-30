@@ -6,13 +6,13 @@ const router   = require('express').Router();
 
 // Handing `provider` Params
 router.param('provider', (req, res, next, provider) => {
-    let providerList = ['twitter', 'instagram', 'weibo'];
+    const validProviders = ['twitter', 'instagram', 'weibo'];
 
-    if (providerList.indexOf(provider) >= 0){
+    if (validProviders.indexOf(provider) >= 0){
         req.olProvider = provider
         next()
     } else {
-        next({ statusCode: 400, msg: 'bad syntax' })
+        next({ statusCode: 400, msg: 'invalid provider' })
     }
 })
 
@@ -24,27 +24,30 @@ router.get('/:provider', (req, res, next) => {
     passport.authenticate(req.olProvider, { session: false })(req, res, next)
 })
 router.get('/:provider/callback', (req, res, next) => {
-    passport.authenticate(req.olProvider, {
-        session: false
-    })(req, res, next)
+    passport.authenticate(req.olProvider, { session: false })(req, res, next)
 }, (req, res) => {
-
-    let token = jwt.sign({
-        'provider': req.user.provider,
-        'userId'  : req.user.userId
+    const user        = req.user;
+    const provider    = user.provider;
+    const uid         = user.uid;
+    const name        = user.name;
+    const screen_name = user.screen_name;
+    const avatar      = user.avatar
+    const token = jwt.sign({
+        provider,
+        uid
     }, process.env.KEY, {
-        expiresIn: req.user.provider === 'weibo' ? '7d' : '14d'
+        expiresIn: provider === 'weibo' ? '7d' : '14d'
     });
 
     res.render('authCallback', {
-        provider: req.olProvider,
-        token: token,
+        token,
+        provider,
         profile: {
-            uid        : req.user.userId,
-            name       : req.user.name,
-            avatar     : req.user.avatar,
-            screen_name: req.user.screen_name,
-            _provider  : req.olProvider
+            uid,
+            name,
+            avatar,
+            screen_name,
+            provider
         }
     })
 })
@@ -68,49 +71,42 @@ router.delete('/revoke/:provider', (req, res, next) => {
  * Replicant
  *
  */
-let crypto = require('crypto');
+const crypto = require('crypto');
+const Replicant = require('../models/ol').Replicant;
+const q_replicantFindOne = Q.nbind(Replicant.findOne, Replicant);
 
-router.get('/replicant/deckard', (req, res, next) => {
-    let passports = req.olPassports;
-    let code = crypto.createHash('md5')
-                .update(JSON.stringify(passports) + Date.now())
-                .digest('hex').slice(0, 7);
-    let tokenList = req.headers.authorization && JSON.parse(req.headers.authorization.split(' ')[1]) || [];
+router.post('/replicant/deckard', (req, res, next) => {
+    const code = (
+        crypto
+        .createHash('md5')
+        .update(JSON.stringify(req.olPassports) + Date.now())
+        .digest('hex')
+        .slice(0, 7)
+    );
 
-    // 保存於數據庫
     q_replicantFindOne({ id: code })
     .then(found => {
-        if (found){
-            found.id = code
-            found.token = JSON.stringify(tokenList)
-            found.token = req.query.profileList
-            found.createdAt = new Date()
-            found.save(err => {
-                if (err) return next({ statusCode: 500 })
-                res.json({ statusCode: 200, code: code })
-            })
-        } else {
-            let replicant = new Replicant({
+        if (!found){
+            const replicant = new Replicant({
                 id       : code,
-                token    : JSON.stringify(tokenList),
-                profile  : req.query.profileList,
+                token    : JSON.stringify(req.olTokenList),
+                profile  : JSON.stringify(req.body.profileList),
                 createdAt: new Date()
             });
             replicant.save(err => {
                 if (err) return next({ statusCode: 500 })
-                res.json({ statusCode: 200, code: code })
+                res.json({ code })
             })
+        } else {
+            next({ statusCode: 400, msg: 'code is existed' })
         }
     }, err => next({ statusCode: 500 }))
 })
-router.post('/replicant/rachael', (req, res, next) => {
-
-    // 保存於數據庫
-    q_replicantFindOne({ id: req.body.code })
+router.get('/replicant/rachael', (req, res, next) => {
+    q_replicantFindOne({ id: req.query.code })
     .then(found => {
         if (found){
             res.json({
-                statusCode: 200,
                 tokenList: JSON.parse(found.token || '[]'),
                 profileList: JSON.parse(found.profile || '[]'),
                 msg: JSON.parse(found.msg || '[]')

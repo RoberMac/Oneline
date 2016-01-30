@@ -1,4 +1,5 @@
 import React from 'react';
+import assign from 'object.assign';
 
 // Helper
 import { Action } from 'utils/api';
@@ -70,6 +71,10 @@ export default class Detail extends React.Component {
     render() {
         const { provider } = this.props;
         const { post, isInitLoad, isFetching, isFetchFail } = this.state;
+        let detailPost = assign(post, { detail: true });
+
+        if (detailPost.quote) { detailPost.quote.detail = true };
+
         return (
             isInitLoad
                 ? <Spin
@@ -78,10 +83,10 @@ export default class Detail extends React.Component {
                     initLoad={isInitLoad}
                     isFetching={isFetching}
                     isFetchFail={isFetchFail}
-                    onClick={this.loadPosts}
+                    onClick={this.loadDetail}
                 />
             : <div className="detail overflow--y animate--enter">
-                <Post className="detail__post" item={post} isDetailPost={true} />
+                <Post className="detail__post" post={detailPost} />
                 <DetailContainer provider={provider} {...this.state} />
             </div>
         );
