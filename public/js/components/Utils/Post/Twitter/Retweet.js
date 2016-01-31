@@ -2,10 +2,10 @@ import React from 'react';
 
 // Components
 import Text from '../Utils/Text';
-import TimeAgo from '../Utils/TimeAgo';
+import Media from '../Utils/Media';
 import Action from '../Utils/Action';
+import TimeAgo from '../Utils/TimeAgo';
 import { Avatar, RetweetAvatar} from '../Utils/Avatar';
-import { TwitterMedia } from '../Utils/Media';
 
 export default ({ post }) => (
     <div>
@@ -19,7 +19,7 @@ export default ({ post }) => (
                 ]}
             />
             {post.retweet.media && post.retweet.media.length > 0
-                ? <TwitterMedia media={post.retweet.media} />
+                ? <Media provider="twitter" media={post.retweet.media} />
                 : null
             }
         </div>

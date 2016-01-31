@@ -2,10 +2,10 @@ import React from 'react';
 
 // Components
 import Text from '../Utils/Text';
-import TimeAgo from '../Utils/TimeAgo';
 import Action from '../Utils/Action';
+import Media from '../Utils/Media';
+import TimeAgo from '../Utils/TimeAgo';
 import { Avatar } from '../Utils/Avatar';
-import { WeiboMedia } from '../Utils/Media';
 
 export default ({ post }) => (
     <div>
@@ -20,7 +20,7 @@ export default ({ post }) => (
             />
 
             {post.media && post.media.length > 0
-                ? <WeiboMedia media={post.media} />
+                ? <Media provider="weibo" media={post.media} />
                 : null
             }
         </div>

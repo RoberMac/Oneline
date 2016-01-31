@@ -17,17 +17,23 @@ router.param('id', (req, res, next, id) => {
  */
 const Share = require('../models/ol').Share;
 const q_shareFindOne = Q.nbind(Share.findOne, Share);
-router.post('/:provider/:id', (req, res, next) => {
-    const id = req.olProvider + req.olId;
+router.post('/:provider/:id', require('../middlewares/protectEndpoints'), (req, res, next) => {
+    const provider = req.olProvider;
+    const id = provider + req.olId;
     const sharer = req.body.sharer;
-    let post = Object.assign(req.body.post, { detail: true });
+    let post = Object.assign(req.body.post, { detail: true, avatarless: false });
 
     if (post.quote) { post.quote.detail = true }
 
     // Assign shared date to `sharer`
     Object.assign(sharer, { shared_at: Date.now() });
 
-    q_shareFindOne({ id  })
+    if (req.olPassports[provider] !== sharer.uid) {
+        next({ statusCode: 403 })
+        return;
+    }
+
+    q_shareFindOne({ id })
     .then(found => {
         if (found){
             // Update

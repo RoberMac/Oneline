@@ -2,10 +2,10 @@ import React from 'react';
 
 // Components
 import Text from '../Utils/Text';
-import TimeAgo from '../Utils/TimeAgo';
+import Media from '../Utils/Media';
 import Action from '../Utils/Action';
+import TimeAgo from '../Utils/TimeAgo';
 import { Avatar } from '../Utils/Avatar';
-import { TwitterMedia } from '../Utils/Media';
 
 export default ({ post }) => (
     <div>
@@ -20,7 +20,7 @@ export default ({ post }) => (
                 ]}
             />
             {post.media && post.media.length > 0
-                ? <TwitterMedia media={post.media} />
+                ? <Media provider="twitter" media={post.media} />
                 : null
             }
         </div>
@@ -36,7 +36,7 @@ export default ({ post }) => (
                     ]}
                 />
                 {post.quote.media && post.quote.media.length > 0
-                    ? <TwitterMedia media={post.quote.media} />
+                    ? <Media provider="twitter" media={post.quote.media} />
                     : null
                 }
             </div>

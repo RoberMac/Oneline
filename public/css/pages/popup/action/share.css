@@ -1,14 +1,22 @@
 .share {
-    position: relative calc(50vh - 35px) * *;
-    size: 100% 70px;
+    position: relative calc(50vh - 65px) * *;
+    size: 100% 130px;
     background: var(--color-gray);
     cursor: default;
 
-    input {
-        size: 77% 30px;
-        padding: 7px;
-        font-size: var(--font-size-regular) 30px;
+    &__text {
+        position: absolute 15px * * 1.5%;
+        size: 97% 70px;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    &__toolBar {
+        position: absolute * * 0px 0px;
+        size: 100% 45px;
         text-align: center;
-        cursor: default;
+    }
+    &__btn {
+        position: relative;
+        size: 20px;
     }
 }

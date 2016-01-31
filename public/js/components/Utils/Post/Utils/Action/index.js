@@ -2,11 +2,9 @@ import React from 'react';
 
 // Components
 import Icon from 'components/Utils/Icon';
-
 import Like from './Like';
 import Reply from './Reply';
 import Retweet from './Retweet';
-// Countless Actions
 import Source from './Source';
 import Star from './Star';
 import Trash from './Trash';
@@ -15,11 +13,7 @@ import Share from './Share';
 import Location from './Location';
 
 const ShowCountlessActions = ({ name, onClick }) => (
-    <button
-        className="post-action__btn tips--deep"
-        type="button"
-        onClick={onClick}
-    >
+    <button className="post-action__btn tips--deep" type="button" onClick={onClick}>
         <Icon className="post-action__icon" viewBox="0 0 50 50" name={name} />
         <span className="post-action__count" />
     </button>
@@ -44,7 +38,7 @@ const Actions = {
                     <Source provider="twitter" screen_name={post.user.screen_name} id={post.id_str} />
                     <Detail provider="twitter" id={post.id_str} />
                     <Share provider="twitter" post={post} />
-                    </div>
+                </div>
             : <div>
                 <Like provider="twitter" id={post.id_str} count={post.like_count} liked={post.liked} />
                 <Retweet provider="twitter" post={post} />
@@ -65,7 +59,7 @@ const Actions = {
                     <Source provider="instagram" link={post.link} />
                     <Detail provider="instagram" id={post.id_str} />
                     <Share provider="instagram" post={post} />
-                    </div>
+                </div>
             : <div>
                 <Like provider="instagram" count={post.like_count} />
                 <Reply provider="instagram" post={{ reply_count: post.reply_count }} />
@@ -82,7 +76,6 @@ const Actions = {
         return (post.detail
             ? <div>
                 <Source provider="weibo" uid={post.user.uid} mid={post.mid} />
-                <Star provider="weibo" id={post.id_str} stared={post.stared} />
                 {isAuthUser ? <Trash provider="weibo" id={post.id_str} /> : null}
             </div>
             : showCountlessActions
@@ -93,7 +86,7 @@ const Actions = {
                     <Source provider="weibo" uid={post.user.uid} mid={post.mid} />
                     <Detail provider="weibo" post={post} />
                     <Share provider="weibo" post={post} />
-                    </div>
+                </div>
             : <div>
                 <Retweet provider="weibo" post={post} />
                 <Reply provider="weibo" post={post} />

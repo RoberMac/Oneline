@@ -2,10 +2,10 @@ import React from 'react';
 
 // Components
 import Text from '../Utils/Text';
-import TimeAgo from '../Utils/TimeAgo';
+import Media from '../Utils/Media';
 import Action from '../Utils/Action';
+import TimeAgo from '../Utils/TimeAgo';
 import { Avatar, RetweetAvatar } from '../Utils/Avatar';
-import { WeiboMedia } from '../Utils/Media';
 
 export default ({ post }) => (
     <div>
@@ -20,7 +20,7 @@ export default ({ post }) => (
             />
 
             {post.retweet.media && post.retweet.media.length > 0
-                ? <WeiboMedia media={post.retweet.media} />
+                ? <Media provider="weibo" media={post.retweet.media} />
                 : null
             }
         </div>

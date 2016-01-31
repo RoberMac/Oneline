@@ -14,24 +14,17 @@ const Image = ({ image_url, ratio }) => (
 );
 
 // Export
-export default class Media extends React.Component {
-    render() {
-        const { media } = this.props;
-        return (
-            <div className="post-media">
-                {
-                    media.map((item, index) => (
-                        item.type === 'photo'
-                            ? <Image key={index} image_url={item.image_url} ratio={item.ratio} />
-                        : <Video
-                            key={index}
-                            src={item.video_url}
-                            poster={item.image_url}
-                            ratio={item.ratio}
-                        />
-                    ))
-                }
-            </div>
-        );
-    }
-}
+export default ({ media }) => (
+    <div className="post-media">
+        {media.map((item, index) => (
+            item.type === 'photo'
+                ? <Image key={index} image_url={item.image_url} ratio={item.ratio} />
+            : <Video
+                key={index}
+                src={item.video_url}
+                poster={item.image_url}
+                ratio={item.ratio}
+            />
+        ))}
+    </div>
+);

@@ -28,7 +28,8 @@ export const _fetch = ({ method, url, query, body }) => {
             '/actions',
             '/auth/revoke',
             '/auth/replicant/deckard',
-            '/upload'
+            '/upload',
+            '/share',
         ];
 
         if (protectedEndpoints.some(endpoint => url.search(endpoint) >= 0)){

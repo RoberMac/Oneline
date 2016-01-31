@@ -4,8 +4,8 @@ import React from 'react';
 import { Share } from 'utils/api';
 
 // Components
+import Icon from 'components/Utils/Icon';
 import Spin from 'components/Utils/Spin';
-import SelectText from 'components/Utils/SelectText';
 
 // Export
 export default class Index extends React.Component {
@@ -15,14 +15,19 @@ export default class Index extends React.Component {
 
         super(props)
         this.state = restoreState || {
+            post: {},
             sharedLink: '',
+            sharedText: '',
             isFetching: false,
             isFetchFail: false,
             isInitLoad: true
         }
+
+        this.toggleSharedText = this.toggleSharedText.bind(this)
     }
     fetchSharedLink() {
         const { provider, id, location } = this.props;
+        const post = location.state;
         const { isFetching } = this.state;
 
         if (isFetching) return;
@@ -30,13 +35,15 @@ export default class Index extends React.Component {
 
         Share
         .post({ provider, id }, {
+            post,
             sharer: window[`profile_${provider}`],
-            post: location.state
         })
         .then(res => {
             // Update State
             const newState = {
+                post,
                 sharedLink: `${window.location.origin}/share/${provider}/${id}`,
+                sharedText: '',
                 isFetching: false,
                 isFetchFail: false,
                 isInitLoad: false
@@ -54,14 +61,27 @@ export default class Index extends React.Component {
             this.setState({ isFetching: false, isFetchFail: true })
         })
     }
+    toggleSharedText() {
+        const { post, sharedText: preSharedText } = this.state;
+        const { text, user: { screen_name } } = post;
+
+        this.setState({
+            sharedText: (
+                preSharedText
+                    ? ''
+                : `｜ @${screen_name}: ` + (text.length > 17 ? `${text.slice(0, 17)}…` : text)
+            )
+        })
+    }
     componentDidMount() {
+        console.log(this.state)
         if (this.state.isInitLoad) {
             this.fetchSharedLink()
         }
     }
     render() {
         const { provider } = this.props;
-        const { sharedLink, isInitLoad, isFetching, isFetchFail } = this.state;
+        const { sharedLink, sharedText, isInitLoad, isFetching, isFetchFail } = this.state;
         return (
             isInitLoad
                 ? <Spin
@@ -73,8 +93,17 @@ export default class Index extends React.Component {
                     onClick={this.fetchSharedLink}
                 />
             : (
-                <div className={`share vertically_center provider--${provider}`}>
-                    <SelectText value={sharedLink} />
+                <div className={`share provider--${provider}`}>
+                    <textarea className="share__text" type="text" value={`${sharedText} ${sharedLink}`} readOnly />
+                    <div className="share__toolBar vertically_center">
+                        <button
+                            className={`share__btn ${sharedText ? '' : 'tips--deep--peace'}`}
+                            type="button"
+                            onClick={this.toggleSharedText}
+                        >
+                            <Icon viewBox="0 0 26 26" name="wand" />
+                        </button>
+                    </div>
                 </div>
             )
         );

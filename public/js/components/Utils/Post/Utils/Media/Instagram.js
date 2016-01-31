@@ -105,21 +105,15 @@ class Image extends React.Component {
 }
 
 // Export
-export default class Media extends React.Component {
-    render() {
-        const { images, videos, users_in_photo } = this.props;
-
-        return (
-            <div className="post-media">
-                { videos
-                        ? <Video
-                            src={videos.standard_resolution}
-                            poster={images.low_resolution}
-                            ratio={images.ratio}
-                        />
-                    : <Image images={images} users_in_photo={users_in_photo}/>
-                }
-            </div>
-        );
-    }
-}
+export default ({ images, videos, users_in_photo }) => (
+    <div className="post-media">
+        { videos
+                ? <Video
+                    src={videos.standard_resolution}
+                    poster={images.low_resolution}
+                    ratio={images.ratio}
+                />
+            : <Image images={images} users_in_photo={users_in_photo}/>
+        }
+    </div>
+);

@@ -71,9 +71,13 @@ export default class Detail extends React.Component {
     render() {
         const { provider } = this.props;
         const { post, isInitLoad, isFetching, isFetchFail } = this.state;
-        let detailPost = assign(post, { detail: true });
 
-        if (detailPost.quote) { detailPost.quote.detail = true };
+        let detailPost;
+        if (!isInitLoad) {
+            detailPost = assign(post, { detail: true });
+
+            if (detailPost.quote) { detailPost.quote.detail = true };
+        }
 
         return (
             isInitLoad
