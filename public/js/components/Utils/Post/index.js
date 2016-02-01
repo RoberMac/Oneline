@@ -29,12 +29,19 @@ export default class Post extends React.Component {
         __DEV__ && shouldUpdate && console.log(`[PostUpdate]: ${nextProps.post.id_str}`)
         return shouldUpdate;
     }
+    componentDidMount() {      
+        setTimeout(() => this.refs.post.style.opacity = 1)        
+    }
     render() {
         const { className, post } = this.props;
         const { provider, type } = post;
         const SelectedPost = selectPost[provider][type];
         return (
-            <div className={`post animate--faster provider--${provider} ${className || ''}`}>
+            <div
+                className={`post animate--faster provider--${provider} ${className || ''}`}
+                style={{ opacity: 0 }}
+                ref="post"
+            >
                 <SelectedPost post={post} />
             </div>
         );

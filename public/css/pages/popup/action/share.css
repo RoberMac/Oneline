@@ -18,5 +18,6 @@
     &__btn {
         position: relative;
         size: 20px;
+        margin: * 17px * 17px;
     }
 }

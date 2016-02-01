@@ -1,6 +1,14 @@
 "use strict";
-/* /share */
 const router = require('express').Router();
+const validator = require('is-my-json-valid');
+
+const USER_SCHEMA = require('./helper/validator/userSchema');
+const POST_SCHEMA = require('./helper/validator/postSchema');
+const FORMATS = require('./helper/validator/formats');
+const userValidate = validator(USER_SCHEMA, FORMATS);
+const postValidate = validator(POST_SCHEMA, FORMATS);
+const Share = require('../models/ol').Share;
+const q_shareFindOne = Q.nbind(Share.findOne, Share);
 
 router.param('provider', (req, res, next, provider) => {
     req.olProvider = provider
@@ -15,21 +23,29 @@ router.param('id', (req, res, next, id) => {
  * Store Shared Post
  *
  */
-const Share = require('../models/ol').Share;
-const q_shareFindOne = Q.nbind(Share.findOne, Share);
 router.post('/:provider/:id', require('../middlewares/protectEndpoints'), (req, res, next) => {
+    if (!req.body.sharer || !req.body.post){
+        next({ statusCode: 400, msg: 'sharer & post is required' })
+        return;
+    }
+
     const provider = req.olProvider;
     const id = provider + req.olId;
-    const sharer = req.body.sharer;
+    const sharer = Object.assign(req.body.sharer, { shared_at: Date.now() });
     let post = Object.assign(req.body.post, { detail: true, avatarless: false });
 
     if (post.quote) { post.quote.detail = true }
 
-    // Assign shared date to `sharer`
-    Object.assign(sharer, { shared_at: Date.now() });
-
-    if (req.olPassports[provider] !== sharer.uid) {
-        next({ statusCode: 403 })
+    /**
+     * Valid
+     *
+     */
+    if (req.olPassports[provider] !== sharer.uid || !userValidate(sharer)) {
+        next({ statusCode: 400, msg: 'invalid sharer' })
+        return;
+    }
+    if (!postValidate(post)) {
+        next({ statusCode: 400, msg: 'invalid post' })
         return;
     }
 

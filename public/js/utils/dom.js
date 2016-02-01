@@ -1,6 +1,10 @@
+import ClassList from 'classlist';
+
 export const addClassTemporarily = (elem, className, timeout) => {
-    elem.classList.add(className)
+    const targetClassList = new ClassList(elem);
+
+    targetClassList.add(className)
     setTimeout(() => {
-        elem.classList.remove(className)
+        targetClassList.remove(className)
     }, timeout)
 }
