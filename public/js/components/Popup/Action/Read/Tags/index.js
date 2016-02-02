@@ -14,7 +14,7 @@ export default class Tags extends React.Component {
                 <div className={`banner banner--${provider}`}>
                     <a href={selectTagLink[provider]({ tagName: id })} target="_blank">
                         <span className={`banner__title btn icon--${provider} tips--deep`}>
-                            <Icon viewBox="0 0 60 60" name="tags" />
+                            <Icon name="tags" />
                             <span>{id}</span>
                         </span>
                     </a>

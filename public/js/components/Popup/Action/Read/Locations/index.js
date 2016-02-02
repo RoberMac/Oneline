@@ -19,7 +19,7 @@ export default class Locations extends React.Component {
                         target="_blank"
                     >
                         <span className={`banner__title btn icon--${provider} tips--deep`}>
-                            <Icon viewBox="0 0 60 60" name="location" />
+                            <Icon name="location" />
                             <span>{name || ''}</span>
                         </span>
                     </a>

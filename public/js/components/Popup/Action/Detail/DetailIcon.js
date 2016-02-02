@@ -31,7 +31,7 @@ export default ({ name, text, iconCount, active }) => {
 
     return (
         <div className={iconClass} data-text={_text}>
-            <Icon viewBox={selectViewBox(name)} name={name} />
+            <Icon name={name} />
         </div>
     );
 };

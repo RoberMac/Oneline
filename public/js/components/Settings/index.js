@@ -22,7 +22,7 @@ let SocialAuthBtn = ({ provider, isActive, toggleAuth }) => {
                 type="button"
                 onClick={toggleAuth.bind(null, provider)}
             >
-                <Icon viewBox="0 0 300 300" name={provider} />
+                <Icon name={provider} />
             </button>
         </div>
     );

@@ -4,3 +4,12 @@
 @import "base/utils";
 
 @import "layout/oneline";
+
+.animate {
+    &--general {
+        transition: all .7s ease-in-out;
+    }
+    &--faster {
+        transition: all .3s ease-in-out;
+    }
+}

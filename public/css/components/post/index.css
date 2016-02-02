@@ -75,7 +75,7 @@
 
 .userPost {
     padding: 10px 10px 20px;
-    margin: 17px;
+    margin: 17px 7px;
     background-color: var(--color-gray);
 
     .post__content {

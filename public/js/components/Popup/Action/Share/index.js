@@ -46,7 +46,7 @@ export class ClipboardBtn extends React.Component {
                 data-clipboard-target=".share__text"
                 ref="btn"
             >
-                <Icon viewBox="0 0 26 26" className="animate--faster" name="clipboard" />
+                <Icon className="animate--faster" name="clipboard" />
             </button>
         );
     }
@@ -151,7 +151,7 @@ export default class Index extends React.Component {
                         type="button"
                         onClick={this.toggleSharedText}
                     >
-                        <Icon viewBox="0 0 26 26" name="wand" />
+                        <Icon name="wand" />
                     </button>
                 </div>
             </div>

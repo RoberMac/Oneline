@@ -53,7 +53,7 @@ export default class ScrollToTop extends React.Component {
 
         return (
             <button className={scrollBtnClass} onClick={this.scrollToTop}>
-                <Icon viewBox="0 0 200 100" name="show" />
+                <Icon name="show" />
             </button>
         );
     }

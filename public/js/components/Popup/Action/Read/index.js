@@ -43,7 +43,7 @@ const Locked = ({ provider }) => (
             cursor: 'default',
         }}
     >
-        <Icon viewBox="0 0 40 40" name="locked" />
+        <Icon name="locked" />
     </span>
 );
 export default class Read extends React.Component {

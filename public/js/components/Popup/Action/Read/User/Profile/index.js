@@ -49,7 +49,7 @@ class FollowBtn extends React.Component {
                 onClick={this.handleClick}
                 ref="btn"
             >
-                <Icon viewBox="0 0 60 60" name="following" />
+                <Icon name="following" />
             </button>
         );
     }
@@ -63,13 +63,13 @@ const Counts = ({ provider, counts }) => {
         ? (
             <div className="profile__count">
                 <div className={columnClass} data-count={counts.statuses}>
-                    <Icon viewBox="0 0 60 60" name={provider === 'instagram' ? 'post' : 'tweet'} />
+                    <Icon name={provider === 'instagram' ? 'post' : 'tweet'} />
                 </div>
                 <div className={columnClass} data-count={counts.followed_by}>
-                    <Icon viewBox="0 0 60 60" name="followed_by" />
+                    <Icon name="followed_by" />
                 </div>
                 <div className={columnClass} data-count={counts.follows}>
-                    <Icon viewBox="0 0 60 60" name="follows" />
+                    <Icon name="follows" />
                 </div>
             </div>
         )
@@ -92,7 +92,7 @@ const Website = ({ website }) => (
     ? (
         <div className="profile__website">
             <a href={website} target="_blank">
-                <Icon viewBox="0 0 100 100" name="link" className="tips animate--faster" />
+                <Icon name="link" className="tips animate--faster" />
             </a>
         </div>
     )
@@ -112,7 +112,7 @@ export default ({ provider, user }) => (
         }
         {user.location
             ? <span className="post__location">
-                <Icon className="post-action__icon" viewBox="0 0 60 60" name="location" />
+                <Icon className="post-action__icon" name="location" />
                 <span className="post__location__name">{user.location}</span>
             </span>
             : null

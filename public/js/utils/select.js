@@ -44,15 +44,3 @@ export const selectTextMiddlewares = {
         { order: 4, middleware: 'weiboEmotify' }
     ]
 };
-export const selectViewBox = (type) => {
-    switch (type){
-        case 'retweet':
-        case 'share':
-        case 'detail':
-            return '0 0 34 26';
-            break;
-        default:
-            return '0 0 26 26';
-            break;
-    }
-};

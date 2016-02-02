@@ -8,48 +8,23 @@ block styles
     include ./styles/dist/authCallback.css
 
 block content
-    div(
-        class='oneline overflow--y'
-        data-profile=profile
-        data-provider=provider
-        data-token=token
-    )
-        div.social-list.social-list--one.vertically_center
+    .oneline.overflow--y
+        .social-list.social-list--one.vertically_center
             if provider === 'twitter'
-                svg(
-                    class='social-icon animate--general'
-                    viewBox='0 0 300 300'
-                )
-                    use(xlink:href="/public/img/icon-sprites.svg#twitter")
+                include ./icons/twitter.svg
             else if provider === 'instagram'
-                svg(
-                    class='social-icon animate--general'
-                    viewBox='0 0 775 300'
-                )
-                    use(xlink:href="/public/img/icon-sprites.svg#instagram")
+                include ./icons/instagram.svg
             else if provider === 'weibo'
-                svg(
-                    class='social-icon animate--general'
-                    viewBox='0 0 300 300'
-                )
-                    use(xlink:href="/public/img/icon-sprites.svg#weibo")
+                include ./icons/weibo.svg
+
     script(type='text/javascript').
-        (function (){
+        // Cross-tab Communication
+        localStorage.setItem('addToken', !{JSON.stringify(token)})
+        localStorage.setItem('profile_' + !{JSON.stringify(provider)}, !{JSON.stringify(JSON.stringify(profile))})
 
-            var socialIcon = document.getElementsByClassName('social-icon')[0],
-                dataELem = document.getElementsByClassName('oneline')[0],
-                token = dataELem.getAttribute('data-token'),
-                provider = dataELem.getAttribute('data-provider'),
-                profile = dataELem.getAttribute('data-profile');
-
-            // Cross-tab Communication
-            localStorage.setItem('addToken', token)
-            localStorage.setItem('profile_' + provider, profile)
-
+        setTimeout(function (){
+            var socialIcon = document.getElementsByClassName('social-icon')[0];
+            socialIcon.setAttribute('class', socialIcon.getAttribute('class') + ' social-icon--active')
             setTimeout(function (){
-                socialIcon.setAttribute('class', socialIcon.getAttribute('class') + ' social-icon--active')
-                setTimeout(function (){
-                    window.close()
-                }, 1000)
-            }, 500)
-        })()
+            }, 1000)
+        }, 500)

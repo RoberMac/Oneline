@@ -54,7 +54,7 @@ export class GeoPicker extends React.Component {
 
         return (
             <button className={btnClass} style={btnStyle} type="button" onClick={this.handleClick}>
-                <Icon viewBox="0 0 200 200" name="geoPicker" />
+                <Icon name="geoPicker" />
             </button>
         );
     }
@@ -114,7 +114,7 @@ export class MediaUpload extends React.Component {
                     role="button"
                     ref="label"
                 >
-                    <Icon viewBox="0 0 200 200" name="camera" />
+                    <Icon name="camera" />
                 </label>
                 <input
                     style={{ display: 'none' }}
@@ -153,7 +153,7 @@ export class ToggleSensitive extends React.Component {
 
         return (
             <button className={btnClass} style={btnStyle} type="button" onClick={this.handleClick}>
-                <Icon viewBox="0 0 200 200" name="sensitive" />
+                <Icon name="sensitive" />
             </button>
         );
     }
@@ -181,7 +181,7 @@ export class ToggleWeiboEmotions extends React.Component {
 
         return (
             <button className={btnClass} type="button" onClick={this.handleClick}>
-                <Icon viewBox="0 0 200 200" name="emotions" />
+                <Icon name="emotions" />
             </button>
         );
     }
@@ -208,7 +208,7 @@ export class Submit extends React.Component {
                 onClick={onClick}
                 ref="btn"
             >
-                <Icon viewBox="0 0 113 72" name="writing" />
+                <Icon name="writing" />
             </button>
         );
     }

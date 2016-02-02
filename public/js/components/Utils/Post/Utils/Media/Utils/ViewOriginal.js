@@ -13,7 +13,7 @@ export default ({ link, provider }) => {
 
     return (
         <a className={originIconClass} href={link} target="_blank">
-            <Icon viewBox="0 0 100 100" name="eyeball" />
+            <Icon name="eyeball" />
         </a>
     );
 }

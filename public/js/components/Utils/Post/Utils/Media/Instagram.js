@@ -68,7 +68,7 @@ class UsersInPhoto extends React.Component {
         return (
             <div>
                 <button className={usersInPhotoIconClass} onClick={this.toggleUsersInPhoto}>
-                    <Icon viewBox="0 0 102 118" name="users_in_photo" />
+                    <Icon name="users_in_photo" />
                 </button>
 
                 <Transition>

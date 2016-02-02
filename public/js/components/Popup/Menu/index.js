@@ -18,7 +18,7 @@ const MenuRows = ({ metadata }) => (
         return (
            <Link to={link} key={icon}>
                 <span className={btnClass}>
-                    <Icon viewBox="0 0 200 200" name={icon} />
+                    <Icon name={icon} />
                 </span>
             </Link>
         );
@@ -58,7 +58,7 @@ const MenuSwitch = ({ currentProvider, activeProviders }) => {
             return (
                <Link to={`/home/${provider}`} key={direction}>
                     <span className={btnClass}>
-                        <Icon viewBox="0 0 77 77" name="2" />
+                        <Icon name="2" />
                     </span>
                 </Link>
             );

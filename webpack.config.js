@@ -52,7 +52,14 @@ module.exports = {
                 loaders: ['babel']
             },
             { test: /\.json$/, loader: "json" },
-            { test: /\.css$/, loaders: ['style', 'css', 'postcss'] }
+            { test: /\.css$/, loaders: ['style', 'css', 'postcss'] },
+            {
+                test: /\.svg$/,
+                loader: 'svg-sprite',
+                query: {
+                    prefixize: false
+                }
+            }
         ]
     },
     resolve: {
@@ -63,7 +70,8 @@ module.exports = {
             'reducers': path.resolve(APP_PATH, 'reducers'),
             'routes': path.resolve(APP_PATH, 'routes'),
             'store': path.resolve(APP_PATH, 'store'),
-            'utils': path.resolve(APP_PATH, 'utils')
+            'utils': path.resolve(APP_PATH, 'utils'),
+            'images': path.resolve(ROOT_PATH, 'public/img'),
         }
     },
     plugins: [
