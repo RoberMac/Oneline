@@ -7,7 +7,8 @@ export const rewriteMediaLink = ({ type, provider, data }) => {
 
     if (provider === 'weibo' || !metaData.get('isBlocked')) return data;
 
-    const PREFIX = `${__DEV__ ? 'http://127.0.0.1:8080' : window.location.protocol + window.location.host}/media`;
+    const _HOST = __DEV__ ? 'http://127.0.0.1:8080' : window.location.origin;
+    const PREFIX = `${_HOST}/media`;
     const REWRITER = {
         twitter: str => {
             return str.replace(
