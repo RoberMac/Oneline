@@ -1,4 +1,5 @@
 import store from 'utils/store';
+import metaData from 'utils/metaData';
 import { _fetch } from 'utils/api';
 
 export default (activeProviders) => {
@@ -16,34 +17,33 @@ export default (activeProviders) => {
 
 function ensureUserProfileLoaded(activeProviders) {
     activeProviders.forEach(provider => {
-        window[`profile_${provider}`] = store.get(`profile_${provider}`)
+        metaData.set(`profile_${provider}`, store.get(`profile_${provider}`))
     })
 }
 
 // Ensure weibo emotions data are stored in `localStorage`
 // via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L20
 function ensureWeiboEmotionsStored() {
-    const ls = window.localStorage;
-    window.emotionsData = JSON.parse(ls.getItem('weiboEmotions'));
+    const weiboEmotions = metaData.get('weiboEmotions');
 
     return new Promise((resolve, reject) => {
-        if (!window.emotionsData || window.emotionsData['_v'] !== '1.0'){
+        if (!weiboEmotions || weiboEmotions['_v'] !== '1.0'){
             _fetch({
                 method: 'GET',
                 url: '/public/dist/emotions_v1.min.json'
             })
             .then(data => {
                 if (Object.prototype.toString.call(data) !== '[object Object]'){
-                    reject('`emotionsData` is not a Object')
+                    reject('`weiboEmotions` is not a Object')
                     return;
                 }
                 if (data['_v'] !== '1.0'){
-                    reject('`emotionsData` is not v1.0')
+                    reject('`weiboEmotions` is not v1.0')
                     return;
                 }
 
-                window.emotionsData = data;
-                ls.setItem('weiboEmotions', JSON.stringify(data))
+                metaData.set('weiboEmotions', data);
+                window.localStorage.setItem('weiboEmotions', JSON.stringify(data))
                 resolve()
             })
             .catch(err => reject(err))

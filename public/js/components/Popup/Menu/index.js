@@ -3,13 +3,15 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { Link } from 'react-router';
 
+import metaData from 'utils/metaData';
+
 // Components
 import Icon from 'components/Utils/Icon';
-const MenuRows = ({ metadata }) => (
+const MenuRows = ({ data }) => (
     <div>
-    {metadata.map((item, index) => {
+    {data.map((item, index) => {
         const { link, provider, icon } = item;
-        const rowNum = metadata.length;
+        const rowNum = data.length;
         const btnClass = classNames({
             'menu--row menu__btn btn tips animate--faster': true,
             [`menu--row-${rowNum}-${index + 1}`]: true,
@@ -30,25 +32,25 @@ const MenuSwitch = ({ currentProvider, activeProviders }) => {
     const hasInstagram = activeProviders.indexOf('instagram') >= 0;
     const hasWeibo     = activeProviders.indexOf('weibo') >= 0;
 
-    let metadata = [];
+    let data = [];
     switch (currentProvider){
         case 'twitter':
-            hasInstagram ? metadata.push({ direction: 'left', provider: 'instagram' }) : null
-            hasWeibo     ? metadata.push({ direction: 'right', provider: 'weibo' }) : null
+            hasInstagram ? data.push({ direction: 'left', provider: 'instagram' }) : null
+            hasWeibo     ? data.push({ direction: 'right', provider: 'weibo' }) : null
             break;
         case 'instagram':
-            hasWeibo     ? metadata.push({ direction: 'left', provider: 'weibo' }) : null
-            hasTwitter   ? metadata.push({ direction: 'right', provider: 'twitter' }) : null
+            hasWeibo     ? data.push({ direction: 'left', provider: 'weibo' }) : null
+            hasTwitter   ? data.push({ direction: 'right', provider: 'twitter' }) : null
             break;
         case 'weibo':
-            hasTwitter   ? metadata.push({ direction: 'left', provider: 'twitter' }) : null
-            hasInstagram ? metadata.push({ direction: 'right', provider: 'instagram' }) : null
+            hasTwitter   ? data.push({ direction: 'left', provider: 'twitter' }) : null
+            hasInstagram ? data.push({ direction: 'right', provider: 'instagram' }) : null
             break
     }
 
     return (
         <div>
-        {metadata.map(item => {
+        {data.map(item => {
             const { provider, direction } = item;
             const btnClass = classNames({
                 'menu__btn menu__btn--switch tips--deep--peace': true,
@@ -67,34 +69,34 @@ const MenuSwitch = ({ currentProvider, activeProviders }) => {
     );
 };
 const _SettingsMenu = ({ activeProviders }) => {
-    let metadata = [];
+    let data = [];
     if (activeProviders.length > 0){
-        metadata.push({ link: '/settings/replicant/deckard', icon: 'deckard' })
+        data.push({ link: '/settings/replicant/deckard', icon: 'deckard' })
     }
-    metadata.push({ link: '/settings/replicant/rachael', icon: 'rachael' })
+    data.push({ link: '/settings/replicant/rachael', icon: 'rachael' })
 
-    return <MenuRows metadata={metadata} />;
+    return <MenuRows data={data} />;
 }
 const _HomeMenu = ({ params, activeProviders }) => {
     const provider = params.provider;
-    const uid = window[`profile_${provider}`].uid;
+    const uid = metaData.get(`profile_${provider}`).uid;
 
-    let metadata;
+    let data;
     switch (provider){
         case 'twitter':
-            metadata = [
+            data = [
                 { link: '/home/twitter/tweet', provider: 'twitter', icon: 'newTweet' },
                 { link: `/home/twitter/user/${uid}`, provider: 'twitter', icon: 'profile' },
                 // { link: '/home/twitter/notification', provider: 'twitter', icon: 'notification' }
             ]
             break;
         case 'instagram':
-            metadata = [
+            data = [
                 { link: `/home/instagram/user/${uid}`, provider: 'instagram', icon: 'profile' }
             ]
             break;
         case 'weibo':
-            metadata = [
+            data = [
                 { link: '/home/weibo/tweet', provider: 'weibo', icon: 'newTweet' },
                 { link: `/home/weibo/user/${uid}`, provider: 'weibo', icon: 'profile' }
             ]
@@ -103,7 +105,7 @@ const _HomeMenu = ({ params, activeProviders }) => {
 
     return (
         <div>
-            <MenuRows metadata={metadata} />
+            <MenuRows data={data} />
             <MenuSwitch currentProvider={provider} activeProviders={activeProviders}/>
         </div>
     );

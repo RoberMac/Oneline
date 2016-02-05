@@ -1,7 +1,8 @@
 import xssFilters from 'xss-filters';
 
+import metaData from 'utils/metaData';
 // via https://github.com/RoberMac/angular-linkify/blob/master/angular-linkify.js#L5
-const SHARE_PAGE = window.__share_data__;
+const SHARE_PAGE = metaData.get('sharePage');
 const USER_PREFIX = {
     twitter: SHARE_PAGE ? '//twitter.com' : '/home/twitter/user',
     instagram: SHARE_PAGE ? '//instagram.com' : '/home/instagram/user',
@@ -56,9 +57,10 @@ const _linkify = (text, provider) => {
     return _text;
 }
 // via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L57
+const weiboEmotions = metaData.get('weiboEmotions');
 const _weiboEmotify = (text) => {
     if (!text) return;
-    if (!window.emotionsData) return text;
+    if (!weiboEmotions) return text;
     let _text = text.replace(/\[[\u4e00-\u9fa5\w]+\]/g, str => {
         /**
          * Key Structure
@@ -67,7 +69,7 @@ const _weiboEmotify = (text) => {
          *
          */
         let key = str.replace(/[\[\]]/g, '');
-        let _id = emotionsData[key];
+        let _id = weiboEmotions[key];
 
         if (!_id) return str;
 

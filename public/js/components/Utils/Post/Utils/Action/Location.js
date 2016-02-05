@@ -2,8 +2,9 @@ import React from 'react';
 import { Link } from 'react-router';
 
 // Helper
+import metaData from 'utils/metaData';
 import { selectLocationLink } from 'utils/select';
-const SHARE_PAGE = window.__share_data__;
+const SHARE_PAGE = metaData.get('sharePage');
 const selectLink = (
     SHARE_PAGE
     ? selectLocationLink

@@ -1,6 +1,7 @@
 import assign from 'object.assign';
 
 import store from 'utils/store';
+import metaData from 'utils/metaData';
 import { updatePost } from '../../../../actions/timeline';
 import reduxStore from '../../../../store';
 import { Action, Media } from 'utils/api';
@@ -18,7 +19,7 @@ export const extractMentions = ({ status, provider }) => {
     if (mentionUser){
         mentionUser = mentionUser[2].trim().toLowerCase();
         return (
-            window[`mentions_${provider}`]
+            metaData.get(`mentions_${provider}`)
             .filter(provider === 'twitter'
                 ? item => Object.keys(item).some(key => item[key].toLowerCase().indexOf(mentionUser) >= 0)
                 : item => item.toLowerCase().indexOf(mentionUser) >= 0
@@ -254,7 +255,7 @@ export const initLivePreview = ({ type, provider, status, media, livePreviewPost
         type,
         created_at: created_at || Date.now(),
         text: status,
-        user: user || window[`profile_${provider}`],
+        user: user || metaData.get(`profile_${provider}`),
         media: initLivePreviewMedia({ media, provider })
     });
     // Retweet / Quote (Inside Post)

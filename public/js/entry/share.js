@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
+// Helpers
+import { rewriteMediaLink } from 'utils/rewrite';
+
 // Styles
 import './common.css';
 
@@ -125,12 +128,23 @@ class Share extends React.Component {
                 <div className="popup overflow--y">
                     <div className={wrapperClass}>
                         <div className="detail overflow--y animate--enter" ref="detail">
-                            <Post className="detail__post" post={data} />
+                            <Post
+                                className="detail__post"
+                                post={rewriteMediaLink({
+                                    type: 'post',
+                                    provider,
+                                    data
+                                })}
+                            />
                             <DetailContainer
                                 provider={provider}
                                 post={data}
                                 viewCount={viewCount}
-                                sharers={sharers}
+                                sharers={rewriteMediaLink({
+                                    type: 'sharers',
+                                    provider,
+                                    data: sharers
+                                })}
                             />
                         </div>
                     </div>

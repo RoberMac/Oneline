@@ -3,6 +3,7 @@ import ClassList from 'classlist';
 import Clipboard from 'clipboard'; 
 
 // Helper
+import metaData from 'utils/metaData';
 import { Share } from 'utils/api';
 import { addClassTemporarily } from 'utils/dom';
 
@@ -82,7 +83,7 @@ export default class Index extends React.Component {
         Share
         .post({ provider, id }, {
             post,
-            sharer: window[`profile_${provider}`],
+            sharer: metaData.get(`profile_${provider}`),
         })
         .then(res => {
             // Update State

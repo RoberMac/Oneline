@@ -11,5 +11,6 @@ block content
     .root
     script(type='text/javascript').
         window.__share_data__ = !{JSON.stringify(sharedData)};
+        window.__is_blocked__ = !{JSON.stringify(isBlocked)};
     script(src="/public/dist/common.js")
     script(src="/public/dist/share.js")

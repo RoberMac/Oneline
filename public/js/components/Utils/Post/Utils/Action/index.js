@@ -1,5 +1,7 @@
 import React from 'react';
 
+import metaData from 'utils/metaData';
+
 // Components
 import Icon from 'components/Utils/Icon';
 import Like from './Like';
@@ -22,8 +24,8 @@ const Actions = {
     twitter: ({ post, onClick, showCountlessActions }) => {
         const isAuthUser = (
             post.detail
-            && window.profile_twitter 
-            && post.user.screen_name === window.profile_twitter.screen_name
+            && metaData.get('profile_twitter') 
+            && post.user.screen_name === metaData.get('profile_twitter').screen_name
         );
         return (post.detail
             ? <div>
@@ -70,8 +72,8 @@ const Actions = {
     weibo: ({ post, onClick, showCountlessActions }) => {
         const isAuthUser = (
             post.detail
-            && window.profile_weibo
-            && post.user.screen_name === window.profile_weibo.screen_name
+            && metaData.get('profile_weibo')
+            && post.user.screen_name === metaData.get('profile_weibo').screen_name
         );
         return (post.detail
             ? <div>

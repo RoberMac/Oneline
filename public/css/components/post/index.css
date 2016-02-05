@@ -95,7 +95,7 @@
     }
 
     &--gutter {
-        margin: 36px 17px 17px;
+        margin: 36px 7px 17px;
         padding: 0 10px 20px;
         background-color: var(--color-gray);
 
@@ -106,7 +106,7 @@
 }
 
 .popupPost {
-    margin: 36px 17px 17px;
+    margin: 36px 7px 17px;
     background-color: var(--color-gray);
 
     .post--quote {
