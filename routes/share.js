@@ -109,7 +109,7 @@ router.get('/:provider/:id', (req, res, next) => {
                                 data: found.data,
                                 viewCount: found.viewCount
                             },
-                            isBlocked: !!req.acceptsLanguages('zh-cn', 'pa-pk', 'ko-kp', 'fa-ir')
+                            isBlocked: !!req.acceptsLanguages('zh', 'pa-pk', 'ko-kp', 'fa-ir')
                         })
                     }
                 })
