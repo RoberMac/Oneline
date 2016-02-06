@@ -10,12 +10,15 @@ block styles
 block content
     .oneline.overflow--y
         .social-list.social-list--one.vertically_center
-            if provider === 'twitter'
-                include ./icons/twitter.svg
-            else if provider === 'instagram'
-                include ./icons/instagram.svg
-            else if provider === 'weibo'
-                include ./icons/weibo.svg
+            case provider
+                when 'twitter'
+                    include ./icons/twitter.svg
+                when 'instagram'
+                    include ./icons/instagram.svg
+                when 'weibo'
+                    include ./icons/weibo.svg
+                default
+                    - throw new Error('invalid icon')
 
     script(type='text/javascript').
         // Cross-tab Communication

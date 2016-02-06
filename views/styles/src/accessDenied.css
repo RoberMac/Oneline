@@ -1,0 +1,33 @@
+@import "helpers/variables";
+
+.deny {
+    position: absolute 0 * * 0;
+    size: 100%;
+    background-color: var(--color-black-alpha);
+    ::-webkit-scrollbar {
+        display: none; 
+    }
+
+    &__wrapper {
+        position: relative;
+        width: 100%;
+        text-align: center;
+        font-size: var(--font-size-xx-small);
+        color: var(--color-steel);
+
+        ::selection {
+            background-color: #fff;
+        }
+    }
+    &__icon {
+        svg {
+            display: inline-block;
+            size: 70px;
+        }
+    }
+    &__title {
+        width: 77%;
+        margin: 0 auto;
+        word-wrap: break-word;
+    }
+}

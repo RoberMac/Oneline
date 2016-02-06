@@ -5,7 +5,6 @@ module.exports = {
         created_at: { required: true, type: 'number' },
         id_str: { required: true, type: 'string' },
         provider: 'validProvider',
-        text: { required: true, type: 'string' },
         type: 'validType',
         user: {
             required: true,

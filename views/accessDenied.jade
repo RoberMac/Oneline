@@ -1,0 +1,22 @@
+extend ./base.jade
+
+block title
+    title ｜禁｜止｜
+
+block styles
+    include ./styles/dist/base.css
+    include ./styles/dist/accessDenied.css
+
+block content
+    .deny.vertically_center
+        .deny__wrapper
+            .deny__icon
+                case icon
+                    when 'androidWechat'
+                        include ./icons/android_wechat.svg
+                    default
+                         - throw new Error('invalid icon')
+            p.deny__title
+
+    script(type='text/javascript').
+        document.querySelector('.deny__title').innerText = window.location.href

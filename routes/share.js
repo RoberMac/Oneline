@@ -94,6 +94,24 @@ router.post('/:provider/:id', require('../middlewares/protectEndpoints'), (req, 
  */
 router.get('/:provider/:id', (req, res, next) => {
     const id = req.olProvider + req.olId;
+    const UA = req.headers['user-agent'].toLowerCase();
+    const isAndroidWechat = /micromessenger/.test(UA) && /android/.test(UA);
+    const render = sharedData => {
+        if (isAndroidWechat) {
+            res.render('accessDenied', {
+                icon: 'androidWechat'
+            })
+        } else {
+            res.render('share', {
+                sharedData: {
+                    sharers: sharedData.sharers,
+                    data: sharedData.data,
+                    viewCount: sharedData.viewCount
+                },
+                isBlocked: !!req.acceptsLanguages('zh', 'pa-pk', 'ko-kp', 'fa-ir')
+            })
+        }
+    };
 
     q_shareFindOne({ id })
     .then(found => {
@@ -103,14 +121,7 @@ router.get('/:provider/:id', (req, res, next) => {
                     if (err) { 
                         next({ statusCode: 500 })
                     } else {
-                        res.render('share', {
-                            sharedData: {
-                                sharers: found.sharers,
-                                data: found.data,
-                                viewCount: found.viewCount
-                            },
-                            isBlocked: !!req.acceptsLanguages('zh', 'pa-pk', 'ko-kp', 'fa-ir')
-                        })
+                        render(found)
                     }
                 })
         } else {
