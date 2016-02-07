@@ -8,12 +8,11 @@ html {
 body {
     font-family: var(--font-family-base);
     font-size: var(--font-size-base);
-    font-weight: var(--font-weight-regular) var(--line-height-base);
-    text-rendering: optimizeLegibility;
+    font-weight: var(--font-weight-regular);
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
+    text-rendering: optimizeSpeed;
 }
 * {
     box-sizing: border-box;
