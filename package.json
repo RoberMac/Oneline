@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

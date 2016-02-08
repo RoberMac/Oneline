@@ -30,7 +30,7 @@ const proxyContext = [
     '/upload',
     '/share',
     '/public/img/icon-sprites.svg',
-    '/public/dist/emotions_v1.min.json',
+    '/public/dist/emotions_v2.min.json',
 ];
 const proxyOpts = {
     target: 'http://localhost:8080'

@@ -27,18 +27,18 @@ function ensureWeiboEmotionsStored() {
     const weiboEmotions = metaData.get('weiboEmotions');
 
     return new Promise((resolve, reject) => {
-        if (!weiboEmotions || weiboEmotions['_v'] !== '1.0'){
+        if (!weiboEmotions || weiboEmotions['_v'] !== '2.0'){
             _fetch({
                 method: 'GET',
-                url: '/public/dist/emotions_v1.min.json'
+                url: '/public/dist/emotions_v2.min.json'
             })
             .then(data => {
                 if (Object.prototype.toString.call(data) !== '[object Object]'){
                     reject('`weiboEmotions` is not a Object')
                     return;
                 }
-                if (data['_v'] !== '1.0'){
-                    reject('`weiboEmotions` is not v1.0')
+                if (data['_v'] !== '2.0'){
+                    reject('`weiboEmotions` is not v2.0')
                     return;
                 }
 

@@ -1,5 +1,6 @@
 .post-action {
     position:  absolute * * 0 7px;
+    width: calc(100% - 14px);
 
     &__btn {
         position: relative;
@@ -24,6 +25,18 @@
             font-size: 10px 23px;
             color: var(--color-steel);
         }
+    }
+
+    &__hide {
+        opacity: 0;
+    }
+    @media (--all-mobile-devices){
+        &__hide {
+            opacity: 1;
+        }
+    }
+    &:hover &__hide {
+        opacity: 1;
     }
 }
 
