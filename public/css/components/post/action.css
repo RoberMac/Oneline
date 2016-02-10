@@ -28,7 +28,7 @@
     }
 
     &__hide {
-        opacity: 0;
+        opacity: .2;
     }
     @media (--all-mobile-devices){
         &__hide {

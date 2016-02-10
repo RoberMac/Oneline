@@ -40,6 +40,7 @@ const ICONS_VIEWBOX = {
     "rachael": _SQUARE,
     "replicant": _SQUARE,
     "profile": _SQUARE,
+    "search": _SQUARE,
     "settings": _SQUARE,
     "tags": _SQUARE,
     // User Profile
@@ -49,11 +50,8 @@ const ICONS_VIEWBOX = {
     "link": _SQUARE,
     "post": _SQUARE,
     // Others
-    "direct_msg": "0 0 28 23",
     "locked": _SQUARE,
-    "mentions": _SQUARE,
-    "notification": _SQUARE,
-    "show": "0 0 200 100",
+    "scrollTo": _SQUARE,
     "wand": _SQUARE,
     "writing": "0 0 113 72"
 };

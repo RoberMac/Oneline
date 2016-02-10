@@ -12,7 +12,7 @@
         .spin__btn {
             top: -17px;
 
-            &:hover {
+            &:hover, &--active {
                 top: 7px;
             }
             @media (--all-mobile-devices){
@@ -27,7 +27,7 @@
         .spin__btn {
             bottom: -39px;
 
-            &:hover {
+            &:hover, &--active {
                 bottom: -15px;
             }
             @media (--all-mobile-devices){

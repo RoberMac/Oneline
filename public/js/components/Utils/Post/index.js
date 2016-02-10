@@ -26,7 +26,7 @@ const selectPost = {
 export default class Post extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         const shouldUpdate = shallowCompare(this, nextProps, nextState);
-        __DEV__ && shouldUpdate && console.log(`[PostUpdate]: ${nextProps.post.id_str}`)
+        __DEV__ && shouldUpdate && console.log(`[ComponentUpdate]: post${nextProps.post.id_str}`)
         return shouldUpdate;
     }
     componentDidMount() {      

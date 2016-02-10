@@ -8,22 +8,11 @@
     border-radius: 50%;
     z-index: 3;
 
-
-    @media (--all-mobile-devices){
-        background-color: var(--color-gray);
-    }
-
     &--top {
         top: -48px;
 
         &--active {
             top: 0px;
         }
-    }
-
-    svg {
-        size: 40px 20px;
-        stroke: var(--color-steel);
-        stroke-width: 7px;
     }
 }

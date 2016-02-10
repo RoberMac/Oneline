@@ -47,13 +47,13 @@ export default class ScrollToTop extends React.Component {
     render() {
         const { isShowScrollBtn } = this.state;
         const scrollBtnClass = classNames({
-            'scrollTo scrollTo--top tips--deep animate--faster': true,
+            'scrollTo scrollTo--top tips animate--faster': true,
             'scrollTo--top--active': isShowScrollBtn
         });
 
         return (
             <button className={scrollBtnClass} onClick={this.scrollToTop}>
-                <Icon name="show" />
+                <Icon name="scrollTo" />
             </button>
         );
     }

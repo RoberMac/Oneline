@@ -4,7 +4,6 @@
         size: 100% 33.3%;
         background-color: var(--color-gray);
         z-index: 5;
-        overflow: hidden;
         cursor: default;
     }
     &__textarea {

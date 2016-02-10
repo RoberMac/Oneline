@@ -87,7 +87,7 @@ const _HomeMenu = ({ params, activeProviders }) => {
             data = [
                 { link: '/home/twitter/tweet', provider: 'twitter', icon: 'newTweet' },
                 { link: `/home/twitter/user/${uid}`, provider: 'twitter', icon: 'profile' },
-                // { link: '/home/twitter/notification', provider: 'twitter', icon: 'notification' }
+                { link: '/home/twitter/search', provider: 'twitter', icon: 'search' }
             ]
             break;
         case 'instagram':
