@@ -19,10 +19,9 @@ export default ({ post }) => (
                 ] : null}
             />
 
-            {post.retweet.media && post.retweet.media.length > 0
-                ? <Media provider="weibo" media={post.retweet.media} />
-                : null
-            }
+            {post.retweet.media && post.retweet.media.length > 0 && (
+                <Media provider="weibo" media={post.retweet.media} />
+            )}
         </div>
 
         <RetweetAvatar provider="weibo" {...post.user}/>

@@ -19,7 +19,7 @@ export default ({ location, main, leftSidebar, rightSidebar }) => {
 
     return (
         <div>
-            { isHome ? <ScrollToTop target=".spin--new" container=".oneline__wrapper" duration={700} /> : null }
+            {isHome && <ScrollToTop target=".spin--new" container=".oneline__wrapper" duration={700} />}
 
             <div className={mainClass}>
                 {main}

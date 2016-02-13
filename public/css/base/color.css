@@ -1,0 +1,13 @@
+@import "helpers/variables";
+
+.color {
+    &--twitter {
+        color: var(--color-twitter);
+    }
+    &--instagram {
+        color: var(--color-instagram);
+    }
+    &--weibo {
+        color: var(--color-weibo);
+    }
+}

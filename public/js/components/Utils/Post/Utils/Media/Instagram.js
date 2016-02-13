@@ -94,11 +94,7 @@ class Image extends React.Component {
             <div className="post-media--large" style={lazySize(images.ratio)}>
                 <img src={images.standard_resolution} onError={handleImageError} ref="image" />
                 <ViewOriginal link={images.standard_resolution} provider="instagram" />
-                {
-                    users_in_photo
-                        ? <UsersInPhoto users_in_photo={users_in_photo} {...this.state}/>
-                    : null
-                }
+                {users_in_photo && <UsersInPhoto users_in_photo={users_in_photo} {...this.state}/>}
             </div>
         );
     }

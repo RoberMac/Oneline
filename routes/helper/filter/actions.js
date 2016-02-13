@@ -103,6 +103,19 @@ let filter = {
             }
 
             return returnObj;
+        },
+        trends (data){
+            const dataLength = data.length;
+            let cache = [];
+
+            data.forEach((item, index) => {
+                cache.push({
+                    name: item.name,
+                    volume: item.tweet_volume || dataLength - index
+                })
+            })
+
+            return cache;
         }
     },
     instagram: {

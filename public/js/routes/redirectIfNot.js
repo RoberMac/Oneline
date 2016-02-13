@@ -26,7 +26,7 @@ export default {
         const validActions = [
             'user', 'tags', 'locations', 
             'read', 'tweet', 'retweet', 'quote', 'reply',
-            'detail', 'share'
+            'detail', 'share', 'search',
         ];
         if (validActions.indexOf(action) < 0){
             __DEV__ && console.error(`Warning: "${action}" is't valid action`)

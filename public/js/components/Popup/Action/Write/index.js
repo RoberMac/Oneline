@@ -144,12 +144,11 @@ export default class Write extends React.Component {
 
         return (
             <div className="write">
-                { action !== 'reply'
-                    ? <div className="write__livePreview animate--enter overflow--y">
+                {action !== 'reply' && (
+                    <div className="write__livePreview animate--enter overflow--y">
                         <Post post={livePreviewPost}/>
                     </div>
-                    : null
-                }
+                )}
                 <form className="write__form">
 
                     <textarea
@@ -165,25 +164,21 @@ export default class Write extends React.Component {
                     <div className="write__textarea write__textarea--mirror"><span></span></div>
 
                     <div className="write__toolBar">
-                        { isTwitter
-                            ? <ToggleSensitive action={action} onChange={this.handleStateChange} />
-                            : null
-                        }
+                        {isTwitter && <ToggleSensitive action={action} onChange={this.handleStateChange} />}
                         <GeoPicker
                             action={action}
                             selected={Object.keys(geo).length > 0}
                             onChange={this.handleStateChange}
                         />
-                        { isTwitter
-                            ? <MediaUpload
+                        {isTwitter && (
+                            <MediaUpload
                                 provider={provider}
                                 media={media}
                                 action={action}
                                 onChange={this.handleStateChange}
                             />
-                            : null
-                        }
-                        { isWeibo ? <ToggleWeiboEmotions onChange={this.handleStateChange} /> : null }
+                        )}
+                        {isWeibo && <ToggleWeiboEmotions onChange={this.handleStateChange} />}
                         <Submit
                             action={action}
                             provider={provider}
@@ -193,29 +188,27 @@ export default class Write extends React.Component {
                         />
                     </div>
 
-                    { media.length > 0
-                            ? <MediaPreview media={media} onChange={this.handleStateChange} />
-                    : null }
+                    {media.length > 0 && <MediaPreview media={media} onChange={this.handleStateChange} />}
 
                     <Transition>
-                    { mentions.length > 0
-                        ? <Mentions
+                    {mentions.length > 0 && (
+                        <Mentions
                             mentions={mentions}
                             provider={provider}
                             toolPopupLeft={toolPopupLeft}
                             onChange={this.handleTextChange}
                         />
-                    : null }
+                    )}
                     </Transition>
 
                     <Transition>
-                    { emotions && isWeibo
-                        ? <WeiboEmotions
+                    {emotions && isWeibo && (
+                        <WeiboEmotions
                             emotions={emotions}
                             toolPopupLeft={toolPopupLeft}
                             onChange={this.handleTextChange}
                         />
-                    : null }
+                    )}
                     </Transition>
                 </form>
             </div>

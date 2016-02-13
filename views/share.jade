@@ -1,7 +1,7 @@
 extend ./base.jade
 
 block title
-    - const text = sharedData.data.text;
+    - const text = sharedData.data.text || '';
     - const screen_name = sharedData.data.user.screen_name;
     - const _title = text.length > 17 ? `${text.slice(0, 17)}…` : text;
 

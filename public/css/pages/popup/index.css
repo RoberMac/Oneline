@@ -4,7 +4,6 @@
 @import "./replicant";
 @import "./menu";
 
-
 .popup {
     position: absolute 0 * * 0;
     size: 100%;
@@ -19,5 +18,29 @@
         position: relative;
         size: 100%;
         overflow-x: hidden;
+    }
+}
+
+.banner {
+    padding: 17px 7px;
+    text-align: center;
+
+    &__title {
+        max-width: 100%;
+
+        > * {
+            display: inline-block;
+            height: 37px;
+            vertical-align: middle;
+        }
+        > span {
+            display: inline-block;
+            max-width: calc(100% - 37px);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: var(--font-size-regular) 37px;
+            font-weight: var(--font-weight-light);
+        }
     }
 }

@@ -110,7 +110,8 @@ export default class Index extends React.Component {
     }
     toggleSharedText() {
         const { post, sharedText: preSharedText } = this.state;
-        const { text, user: { screen_name } } = post;
+        const { user: { screen_name } } = post;
+        const text = post.text || '';
 
         this.setState({
             sharedText: (

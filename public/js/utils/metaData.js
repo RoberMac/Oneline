@@ -3,9 +3,6 @@ import store from 'utils/store';
 // Init
 const _metaData = {
     weiboEmotions: store.get('weiboEmotions'),
-    // profile_twitter: store.get('profile_twitter'),
-    // profile_instagram: store.get('profile_instagram'),
-    // profile_weibo: store.get('profile_weibo'),
     sharePage: !!window.__share_data__,
     isBlocked: window.__is_blocked__,
     isSafari: /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent)

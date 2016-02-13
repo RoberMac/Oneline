@@ -49,5 +49,17 @@
         svg {
             fill: #C1C9D2;
         }
+    },
+    &--gray {
+        color: var(--color-gray);
+        svg {
+            fill: var(--color-gray);
+        }
+    }
+    &--white {
+        color: var(--color-white);
+        svg {
+            fill: var(--color-white);
+        }
     }
 }

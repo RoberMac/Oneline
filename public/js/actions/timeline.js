@@ -135,3 +135,13 @@ function initUpdateCommands (obj){
 
     return cmds;
 }
+
+/**
+ * Update Showing Posts
+ *
+ */
+export const UPDATE_SHOWINGS_POSTS = 'UPDATE_SHOWINGS_POSTS';
+export const updateShowingPosts = (showingPosts) => ({
+    type: UPDATE_SHOWINGS_POSTS,
+    payload: { showingPosts }
+});

@@ -4,6 +4,7 @@ import Write from './Write';
 import Read from './Read';
 import Detail from './Detail';
 import Share from './Share';
+import Search from './Search';
 
 export const Action = props => {
     const { action } = props.params;
@@ -26,6 +27,9 @@ export const Action = props => {
             break;
         case 'share':
             SelectAction = Share;
+            break;
+        case 'search':
+            SelectAction = Search;
             break;
     }
 

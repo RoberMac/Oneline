@@ -58,22 +58,18 @@ class FollowBtn extends React.Component {
 const Counts = ({ provider, counts }) => {
     const columnClass = `profile__count__column icon--${provider}`;
 
-    return (
-        counts
-        ? (
-            <div className="profile__count">
-                <div className={columnClass} data-count={counts.statuses}>
-                    <Icon name={provider === 'instagram' ? 'post' : 'tweet'} />
-                </div>
-                <div className={columnClass} data-count={counts.followed_by}>
-                    <Icon name="followed_by" />
-                </div>
-                <div className={columnClass} data-count={counts.follows}>
-                    <Icon name="follows" />
-                </div>
+    return counts && (
+        <div className="profile__count">
+            <div className={columnClass} data-count={counts.statuses}>
+                <Icon name={provider === 'instagram' ? 'post' : 'tweet'} />
             </div>
-        )
-        : null
+            <div className={columnClass} data-count={counts.followed_by}>
+                <Icon name="followed_by" />
+            </div>
+            <div className={columnClass} data-count={counts.follows}>
+                <Icon name="follows" />
+            </div>
+        </div>
     );
 };
 const Bio = ({ provider, bio }) => (
@@ -106,16 +102,12 @@ export default ({ provider, user }) => (
         <Counts provider={provider} counts={user.counts} />
         <Bio provider={provider} bio={user.bio} />
         <Website website={user.website} />
-        {provider === 'twitter'
-            ? <FollowBtn provider={provider} following={user.following} uid={user.uid} />
-            : null
-        }
-        {user.location
-            ? <span className="post__location">
+        {provider === 'twitter' && <FollowBtn provider={provider} following={user.following} uid={user.uid} />}
+        {user.location && (
+            <span className="post__location">
                 <Icon className="post-action__icon" name="location" />
                 <span className="post__location__name">{user.location}</span>
             </span>
-            : null
-        }
+        )}
     </div>
 );

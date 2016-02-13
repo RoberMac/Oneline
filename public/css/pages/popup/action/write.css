@@ -9,7 +9,6 @@
     &__textarea {
         position: relative 17% * * 5%;
         size: 90% 60%;
-        font-size: var(--font-size-base) var(--line-height-base);
         background-color: var(--color-white);
         border-radius: 3px;
 
@@ -37,7 +36,6 @@
         position: relative 0 * * 0;
         size: 90% 100%;
         padding: 7px;
-        font-size: var(--font-size-base) var(--line-height-base);
         background-color: var(--color-white);
         border-radius: 3px;
 

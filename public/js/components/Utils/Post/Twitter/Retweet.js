@@ -9,7 +9,7 @@ import { Avatar, RetweetAvatar} from '../Utils/Avatar';
 
 export default ({ post }) => (
     <div>
-        {!post.avatarless ? <Avatar provider="twitter" {...post.retweet.user} /> : null}
+        {!post.avatarless && <Avatar provider="twitter" {...post.retweet.user} />}
         <div className="post__content">
             <Text
                 provider="twitter"
@@ -18,10 +18,9 @@ export default ({ post }) => (
                     { order: 2, middleware: 'trimMediaLink', opts: { link: post.retweet.mediaLink } }
                 ]}
             />
-            {post.retweet.media && post.retweet.media.length > 0
-                ? <Media provider="twitter" media={post.retweet.media} />
-                : null
-            }
+            {post.retweet.media && post.retweet.media.length > 0 && (
+                <Media provider="twitter" media={post.retweet.media} />
+            )}
         </div>
 
         <RetweetAvatar provider="twitter" {...post.user} />

@@ -281,6 +281,7 @@ let Actions = {
         },
         locations: twitterSearch,
         tags: twitterSearch,
+        search: twitterSearch,
         detail: {
             _get (opts){
                 return {
@@ -299,6 +300,25 @@ let Actions = {
                         const post = timelineFilter.twitter([postData[0]]).data[0];
                         const retweet = actionsFilter.twitter.retweet(retweetedData[0]);
                         return { post, retweet }
+                    }
+                }
+            }
+        },
+        trends: {
+            _get (opts){
+                return {
+                    triggerActionType: 'basic',
+                    action: {
+                        endpoint: 'trends/place',
+                        tOpts: {
+                            id: opts.id
+                        }
+                    },
+                    handleActionFunc: data => {
+                        return {
+                            data: actionsFilter.twitter.trends(data[0][0].trends),
+                            created_at: Date.parse(data[0][0].created_at)
+                        }
                     }
                 }
             }

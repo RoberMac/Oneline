@@ -124,14 +124,11 @@ export default class Read extends React.Component {
 
         return (
             <div>
-                {!isInitLoad
-                    ? (
-                        <div className="read animate--enter">
-                            <SelectRead showingPosts={showingPosts} user={user} {...this.props} />
-                        </div>
-                    )
-                    : null
-                }
+                {!isInitLoad && (
+                    <div className="read animate--enter">
+                        <SelectRead showingPosts={showingPosts} user={user} {...this.props} />
+                    </div>
+                )}
                 {isLocked && isInitLoad
                     ? <Locked provider={provider} />
                     : isInitLoad || showingPosts.length >= 7

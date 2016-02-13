@@ -1,0 +1,21 @@
+.search {
+    position: relative;
+    min-height: calc(100vh - 72px);
+    padding: 7px 0 7px;
+    margin: 36px 7px 7px;
+    border-radius: 3px;
+    background-color: #FFF;
+    cursor: default;
+
+    &__trends {
+        padding: 7px;
+        height: calc(100vh - 206px); /* 100vh - 36px * 2 - 7px * 2 - 17px * 2 - 37px - 49px */
+
+        &__item {
+            margin: 7px 0;
+            font-size: var(--font-size-regular);
+            text-align: center;
+            cursor: pointer;
+        }
+    }
+}

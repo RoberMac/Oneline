@@ -15,7 +15,7 @@ export default ({ provider, id, post }) => {
     return (
         <Link {...linkObj}>
             <span className={`post-action__btn btn tips--deep ${_id ? '' : 'tips--inactive'}`}>
-                <Icon className="post-action__icon" viewBox="0 0 34 26" name="detail" />
+                <Icon className="post-action__icon" name="detail" />
                 <span className="post-action__count" />
             </span>
         </Link>

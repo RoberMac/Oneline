@@ -53,7 +53,7 @@ export default class ScrollToTop extends React.Component {
 
         return (
             <button className={scrollBtnClass} onClick={this.scrollToTop}>
-                <Icon name="scrollTo" />
+                <Icon name="triangle" />
             </button>
         );
     }

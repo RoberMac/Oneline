@@ -15,7 +15,7 @@ const LeftSidebar = ({ activeProviders, location }) => {
     : (
         <Link to="/settings/replicant">
             <span className={sidebarBtnClass}>
-                <Icon name='replicant' />
+                <Icon name='sidebar_replicant' />
             </span>
         </Link>
     );
@@ -28,7 +28,7 @@ const RightSidebar = ({ activeProviders, location }) => {
     : (
         <Link to='/home'>
             <span className={sidebarBtnClass}>
-                <Icon name='ok' />
+                <Icon name='sidebar_ok' />
             </span>
         </Link>
     );

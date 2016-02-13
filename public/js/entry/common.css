@@ -3,6 +3,7 @@
 @import "base/reset";
 @import "base/utils";
 @import "base/icon";
+@import "base/color";
 @import "base/tips";
 @import "base/animation";
 
@@ -12,6 +13,7 @@
 @import "components/post";
 @import "components/scrollTo";
 @import "components/spin";
+@import "components/searchBar";
 
 @import "pages/popup";
 @import "pages/settings";

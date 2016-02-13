@@ -9,7 +9,7 @@ import { Avatar } from '../Utils/Avatar';
 
 export default ({ post }) => (
     <div>
-        {!post.avatarless ? <Avatar provider="twitter" {...post.user} /> : null}
+        {!post.avatarless && <Avatar provider="twitter" {...post.user} />}
         <div className="post__content">
             <Text
                 provider="twitter"
@@ -18,10 +18,7 @@ export default ({ post }) => (
                     { order: 2, middleware: 'trimMediaLink', opts: { link: post.mediaLink } }
                 ]}
             />
-            {post.media && post.media.length > 0
-                ? <Media provider="twitter" media={post.media} />
-                : null
-            }
+            {post.media && post.media.length > 0 && <Media provider="twitter" media={post.media} />}
         </div>
 
         <Action post={post} />

@@ -54,7 +54,7 @@ export default class Like extends React.Component {
         });
         return (
             <button className={btnClass} type="button" onClick={this.toggleLike}>
-                <Icon className={iconClass} viewBox="0 0 26 26" name="like" />
+                <Icon className={iconClass} name="like" />
                 <span className="post-action__count" data-count={like_count > 0 ? numAbbr(like_count) : ''} />
             </button>
         );

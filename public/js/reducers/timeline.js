@@ -1,6 +1,9 @@
 import update from 'react-addons-update';
 
-import { FETCH_START, RECEIVE_POSTS, FETCH_FAIL, UPDATE_POST, RESET_STATE }  from '../actions/timeline';
+import {
+    FETCH_START, RECEIVE_POSTS, FETCH_FAIL,
+    UPDATE_POST, UPDATE_SHOWINGS_POSTS, RESET_STATE
+}  from '../actions/timeline';
 import { initTimelineState } from '../store/initState';
 
 const initState = initTimelineState();
@@ -42,6 +45,10 @@ export default (state = initState, action) => {
                 allPosts: { $set: action.payload.allPosts }
             })
             break;
+        case UPDATE_SHOWINGS_POSTS:
+            return update(state, {
+                showingPosts: { $set: action.payload.showingPosts }
+            })
         case RESET_STATE:
             return initTimelineState();            
             break;

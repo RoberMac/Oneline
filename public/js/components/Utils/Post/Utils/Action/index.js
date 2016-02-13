@@ -24,7 +24,7 @@ const Actions = {
         return (post.detail
             ? <div>
                 <Source provider="twitter" screen_name={post.user.screen_name} id={post.id_str} />
-                {isAuthUser ? <Trash provider="twitter" id={post.id_str} /> : null}
+                {isAuthUser && <Trash provider="twitter" id={post.id_str} />}
             </div>
             : <div>
                 <Like provider="twitter" id={post.id_str} count={post.like_count} liked={post.liked} />
@@ -63,7 +63,7 @@ const Actions = {
         return (post.detail
             ? <div>
                 <Source provider="weibo" uid={post.user.uid} mid={post.mid} />
-                {isAuthUser ? <Trash provider="weibo" id={post.id_str} /> : null}
+                {isAuthUser && <Trash provider="weibo" id={post.id_str} /> }
             </div>
             : <div>
                 <Retweet provider="weibo" post={post} />
@@ -87,7 +87,7 @@ export default ({ post }) => {
             <span className="post-action">
                 <SelectedActions post={post} />
             </span>
-            {post.location ? <Location provider={post.provider} {...post.location} /> : null}
+            {post.location && <Location provider={post.provider} {...post.location} />}
         </div>
     );
 };

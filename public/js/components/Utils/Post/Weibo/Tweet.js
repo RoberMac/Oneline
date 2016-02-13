@@ -9,7 +9,7 @@ import { Avatar } from '../Utils/Avatar';
 
 export default ({ post }) => (
     <div>
-        {!post.avatarless ? <Avatar provider="weibo" {...post.user} /> : null}
+        {!post.avatarless && <Avatar provider="weibo" {...post.user} />}
         <div className="post__content">
             <Text
                 provider="weibo"
@@ -19,10 +19,7 @@ export default ({ post }) => (
                 ] : null}
             />
 
-            {post.media && post.media.length > 0
-                ? <Media provider="weibo" media={post.media} />
-                : null
-            }
+            {post.media && post.media.length > 0 && <Media provider="weibo" media={post.media} />}
         </div>
 
         <Action post={post} />

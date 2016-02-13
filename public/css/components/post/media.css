@@ -119,6 +119,7 @@
     &__playBtn {
         position: absolute 0 * * 0;
         size: 50px;
+        transform: rotate(90deg);
         cursor: pointer;
         
         &--playing {

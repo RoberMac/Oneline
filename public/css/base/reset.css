@@ -87,8 +87,9 @@ textarea {
     resize: none;
     white-space: pre-wrap;
     word-wrap: break-word;
-    font-family: inherit;
-    font-size: inherit;
+}
+input, textarea {
+    font-size: var(--font-size-base) var(--line-height-base);
 }
 button, .btn {
     background-color: transparent;

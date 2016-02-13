@@ -71,9 +71,9 @@ const MenuSwitch = ({ currentProvider, activeProviders }) => {
 const _SettingsMenu = ({ activeProviders }) => {
     let data = [];
     if (activeProviders.length > 0){
-        data.push({ link: '/settings/replicant/deckard', icon: 'deckard' })
+        data.push({ link: '/settings/replicant/deckard', icon: 'menu_deckard' })
     }
-    data.push({ link: '/settings/replicant/rachael', icon: 'rachael' })
+    data.push({ link: '/settings/replicant/rachael', icon: 'menu_rachael' })
 
     return <MenuRows data={data} />;
 }
@@ -85,20 +85,20 @@ const _HomeMenu = ({ params, activeProviders }) => {
     switch (provider){
         case 'twitter':
             data = [
-                { link: '/home/twitter/tweet', provider: 'twitter', icon: 'newTweet' },
-                { link: `/home/twitter/user/${uid}`, provider: 'twitter', icon: 'profile' },
-                { link: '/home/twitter/search', provider: 'twitter', icon: 'search' }
+                { link: '/home/twitter/tweet', provider: 'twitter', icon: 'menu_tweet' },
+                { link: `/home/twitter/user/${uid}`, provider: 'twitter', icon: 'menu_profile' },
+                { link: '/home/twitter/search', provider: 'twitter', icon: 'menu_search' }
             ]
             break;
         case 'instagram':
             data = [
-                { link: `/home/instagram/user/${uid}`, provider: 'instagram', icon: 'profile' }
+                { link: `/home/instagram/user/${uid}`, provider: 'instagram', icon: 'menu_profile' }
             ]
             break;
         case 'weibo':
             data = [
-                { link: '/home/weibo/tweet', provider: 'weibo', icon: 'newTweet' },
-                { link: `/home/weibo/user/${uid}`, provider: 'weibo', icon: 'profile' }
+                { link: '/home/weibo/tweet', provider: 'weibo', icon: 'menu_tweet' },
+                { link: `/home/weibo/user/${uid}`, provider: 'weibo', icon: 'menu_profile' }
             ]
             break
     }

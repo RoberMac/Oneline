@@ -50,7 +50,7 @@ export default class Star extends React.Component {
         });
         return (
             <button className={btnClass} type="button" onClick={this.toggleStar} ref="btn">
-                <Icon className={iconClass} viewBox="0 0 26 26" name="star" />
+                <Icon className={iconClass} name="star" />
                 <span className="post-action__count" />
             </button>
         );

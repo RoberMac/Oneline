@@ -23,7 +23,6 @@ const ICONS_VIEWBOX = {
     "trash": _SQUARE,
     // Post
     "eyeball": _SQUARE,
-    "play": _SQUARE,
     "users_in_photo": "0 0 100 117",
     // Write New Tweet
     "emotions": _SQUARE,
@@ -32,16 +31,16 @@ const ICONS_VIEWBOX = {
     "tweet": _SQUARE,
     // Sidebar & Menu
     "2": _SQUARE,
-    "cancel": _SQUARE,
-    "deckard": _SQUARE,
-    "newTweet": _SQUARE,
-    "ok": _SQUARE,
-    "menu": _SQUARE,
-    "rachael": _SQUARE,
-    "replicant": _SQUARE,
-    "profile": _SQUARE,
-    "search": _SQUARE,
-    "settings": _SQUARE,
+    "sidebar_cancel": _SQUARE,
+    "sidebar_ok": _SQUARE,
+    "sidebar_menu": _SQUARE,
+    "sidebar_settings": _SQUARE,
+    "sidebar_replicant": _SQUARE,
+    "menu_deckard": _SQUARE,
+    "menu_rachael": _SQUARE,
+    "menu_tweet": _SQUARE,
+    "menu_profile": _SQUARE,
+    "menu_search": _SQUARE,
     "tags": _SQUARE,
     // User Profile
     "followed_by": _SQUARE,
@@ -50,8 +49,10 @@ const ICONS_VIEWBOX = {
     "link": _SQUARE,
     "post": _SQUARE,
     // Others
+    "cancel": _SQUARE,
+    "search": _SQUARE,
     "locked": _SQUARE,
-    "scrollTo": _SQUARE,
+    "triangle": _SQUARE,
     "wand": _SQUARE,
     "writing": "0 0 113 72"
 };

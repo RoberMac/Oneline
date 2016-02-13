@@ -9,7 +9,7 @@ import { Avatar } from '../Utils/Avatar';
 
 export const InstagramPost = ({ post }) => (
     <div>
-        {!post.avatarless ? <Avatar provider="instagram" {...post.user} /> : null}
+        {!post.avatarless && <Avatar provider="instagram" {...post.user} />}
         <div className="post__content">
             <Media
                 provider="instagram"

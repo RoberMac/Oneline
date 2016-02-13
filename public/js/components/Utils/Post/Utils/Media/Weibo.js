@@ -82,7 +82,7 @@ class LargeImg extends React.Component {
             <div className="post-media">
                 <div className="post-media__spin">
                     <Transition>
-                        {loading ? <Spin isFetching={true} initLoad={true} provider="weibo" /> : null}
+                        {loading && <Spin isFetching={true} initLoad={true} provider="weibo" />}
                     </Transition>
                 </div>
                 <img
@@ -151,21 +151,18 @@ export default class Media extends React.Component {
                         })}
                         </div>
                     )
-                : null
-                }
-
-                { largeImgSrc 
-                        ? (
-                            <LargeImg
-                                src={largeImgSrc}
-                                index={largeImgIndex}
-                                max={media.length}
-                                zoomIn={this.zoomIn}
-                                zoomOut={this.zoomOut}
-                            /> 
-                        )
                     : null
                 }
+
+                {largeImgSrc && (
+                    <LargeImg
+                        src={largeImgSrc}
+                        index={largeImgIndex}
+                        max={media.length}
+                        zoomIn={this.zoomIn}
+                        zoomOut={this.zoomOut}
+                    /> 
+                )}
             </div>
         );
     }

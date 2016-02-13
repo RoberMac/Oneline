@@ -21,6 +21,11 @@ export const selectSourceLink = {
     instagram: ({ link }) => link,
     weibo: ({ uid, mid }) => `//weibo.com/${uid}/${mid}`
 };
+export const selectSearchLink = {
+    twitter: ({ searchText }) => `//twitter.com/search?q=${searchText}`,
+    instagram: () => '',
+    weibo: () => ''
+};
 export const selectTextMiddlewares = {
     /**
      * Order

@@ -7,8 +7,6 @@
     &__text {
         position: absolute 15px * * 1.5%;
         size: 97% 70px;
-        font-size: 14px;
-        line-height: 1.4;
     }
     &__toolBar {
         position: absolute * * 0px 0px;

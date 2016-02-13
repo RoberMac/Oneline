@@ -5,13 +5,14 @@ import shallowCompare from 'react-addons-shallow-compare';
 
 // Helpers
 import { replaceTokenList } from 'actions/auth';
-import { resetState, fetchPosts } from 'actions/timeline';
+import { resetState, fetchPosts, updateShowingPosts } from 'actions/timeline';
 import DependencyLoader from './loader';
 
 // Components
 import Post from 'components/Utils/Post';
 import Spin from 'components/Utils/Spin';
 import Transition from 'components/Utils/Transition';
+import SearchLocal from './SearchLocal';
 class Timeline extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         __DEV__ && console.time('[shallowCompare]')
@@ -36,8 +37,9 @@ class Timeline extends React.Component {
 class Home extends React.Component {
     constructor (props){
         super(props)
-        this.state = { isDependenciesLoaded: false }
+        this.state = { dependenciesLoaded: false, search: false }
         this.loadPosts = this.loadPosts.bind(this)
+        this.handleSearch = this.handleSearch.bind(this)
         this.handleSwipedLeft = this.handleSwipedLeft.bind(this)
         this.handleSwipedRight = this.handleSwipedRight.bind(this)
     }
@@ -52,6 +54,23 @@ class Home extends React.Component {
             }
             throw err
         })
+    }
+    handleSearch({ actionType, newShowingPosts }) {
+        const { updateShowingPosts, showingPosts } = this.props;
+
+        switch (actionType) {
+            case 'init':
+                this.recordShowingPost = showingPosts
+                this.setState({ search: true })
+                break;
+            case 'update':
+                updateShowingPosts(newShowingPosts)
+                break;
+            case 'reset':
+                updateShowingPosts(this.recordShowingPost)
+                this.setState({ search: false })
+                break;
+        }
     }
     handleSwipedLeft() {
         const { activeProviders } = this.props;
@@ -80,7 +99,7 @@ class Home extends React.Component {
         const { activeProviders, isInitLoad, resetState } = this.props;
 
         DependencyLoader(activeProviders)
-        .then(() => this.setState({ isDependenciesLoaded: true }))
+        .then(() => this.setState({ dependenciesLoaded: true }))
 
         // Reset `timePointer`
         resetState();
@@ -107,27 +126,32 @@ class Home extends React.Component {
         window.removeEventListener('blur', this.handleWindowBlur)
     }
     render() {
-        const { newPosts, oldPosts, showingPosts, isInitLoad, children } = this.props;
-        const { isDependenciesLoaded } = this.state;
+        const { newPosts, oldPosts, showingPosts, allPosts, isInitLoad, children } = this.props;
+        const { dependenciesLoaded, search } = this.state;
         return (
             <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
                 <div className="oneline__wrapper overflow--y">
                     <Spin
                         type="newPosts"
-                        initLoad={isInitLoad || !isDependenciesLoaded}
+                        initLoad={isInitLoad || !dependenciesLoaded}
                         {...newPosts}
                         onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
                     />
-                    {isDependenciesLoaded && showingPosts
-                        ? <Timeline showingPosts={showingPosts} />
+                    {dependenciesLoaded && showingPosts && !isInitLoad && (
+                        <div>
+                            <SearchLocal onChange={this.handleSearch} allPosts={allPosts.posts} />
+                            <Timeline showingPosts={showingPosts} />
+                        </div>
+                    )}
+                    {isInitLoad || !search
+                        ? <Spin
+                            type="oldPosts"
+                            initLoad={isInitLoad || !dependenciesLoaded}
+                            {...oldPosts}
+                            onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
+                        />
                         : null
                     }
-                    <Spin
-                        type="oldPosts"
-                        initLoad={isInitLoad || !isDependenciesLoaded}
-                        {...oldPosts}
-                        onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
-                    />
                 </div>
                 <Transition>
                     {children}
@@ -142,15 +166,16 @@ class Home extends React.Component {
 export default connect(
     state => {
         const { activeProviders } = state.auth;
-        const { newPosts, oldPosts, isInitLoad, showingPosts } = state.timeline;
+        const { newPosts, oldPosts, isInitLoad, showingPosts, allPosts } = state.timeline;
         return {
             activeProviders,
 
             newPosts,
             oldPosts,
             isInitLoad,
-            showingPosts
+            showingPosts,
+            allPosts,
         }
     },
-    { resetState, fetchPosts, replaceTokenList }
+    { resetState, fetchPosts, updateShowingPosts, replaceTokenList }
 )(Home)

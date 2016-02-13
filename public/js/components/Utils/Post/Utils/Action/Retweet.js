@@ -19,7 +19,7 @@ const RetweetBtn = ({ provider, post }) => {
     return (
         <Link to={`/home/${provider}/retweet/${id_str}`} state={post}>
             <span className={btnClass}>
-                <Icon className="post-action__icon" viewBox="0 0 34 26" name="retweet" />
+                <Icon className="post-action__icon" name="retweet" />
                 <span
                     className="post-action__count"
                     data-count={retweet_count > 0 ? numAbbr(retweet_count) : ''}
@@ -71,7 +71,7 @@ class DeleteRetweetBtn extends React.Component {
         });
         return (
             <button className={btnClass} type="button" onClick={this.deleteRetweet} ref="btn">
-                <Icon className={iconClass} viewBox="0 0 34 26" name="retweet" />
+                <Icon className={iconClass} name="retweet" />
                 <span className="post-action__count" data-count={retweet_count > 0 ? retweet_count : ''} />
             </button>
         );

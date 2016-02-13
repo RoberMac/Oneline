@@ -45,7 +45,7 @@ export default class Trash extends React.Component {
         });
         return (
             <button className={btnClass} type="button" onClick={this.deletePost} ref="btn">
-                <Icon className={iconClass} viewBox="0 0 26 26" name="trash" />
+                <Icon className={iconClass} name="trash" />
                 <span className="post-action__count" />
             </button>
         );

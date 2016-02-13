@@ -10,7 +10,7 @@ export default ({ provider, post }) => {
     return (
         <Link to={`/home/${provider}/reply/${id_str}`} state={post}>
             <span className={`post-action__btn btn tips--deep ${id_str ? '' : 'tips--inactive'}`}>
-                <Icon className="post-action__icon" viewBox="0 0 26 26" name="reply" />
+                <Icon className="post-action__icon" name="reply" />
                 <span className="post-action__count" data-count={reply_count > 0 ? numAbbr(reply_count) : ''} />
             </span>
         </Link>

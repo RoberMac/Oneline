@@ -8,7 +8,7 @@ export default ({ provider, post }) => {
     return (
         <Link to={`/home/${provider}/share/${id_str}`} state={post}>
             <span className={`post-action__btn btn tips--deep ${id_str ? '' : 'tips--inactive'}`}>
-                <Icon className="post-action__icon" viewBox="0 0 34 26" name="share" />
+                <Icon className="post-action__icon" name="share" />
                 <span className="post-action__count" />
             </span>
         </Link>

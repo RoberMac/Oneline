@@ -32,7 +32,7 @@ const LocationLink = ({ link, children }) => {
 export default (props) => (
     <LocationLink link={selectLink[props.provider]({...props})}>
         <span className="post__location btn tips--deep">
-            <Icon className="post-action__icon" viewBox="0 0 26 26" name="location" />
+            <Icon className="post-action__icon" name="location" />
             <span className="post__location__name">{props.name}</span>
         </span>
     </LocationLink>
