@@ -352,8 +352,10 @@ let Actions = {
                 if (isNaN(opts.id)){
                     return {
                         triggerActionType: 'queue',
-                        action: { endpoint: 'user_search', iOpts: { count: 1 } },
-                        handleActionFunc: data => ({ uid: data[0][0].id }),
+                        action: { endpoint: 'user_search' },
+                        handleActionFunc: data => ({
+                            uid: data[0].find(item => item.username === opts.id).id
+                        }),
                         actionObj
                     }
                 } else {
@@ -402,6 +404,32 @@ let Actions = {
                         const like = actionsFilter.instagram['like'](likeData[0].slice(0, 100));
                         const reply = actionsFilter.instagram['reply'](replyData[0].slice(0, 100));
                         return { post, like, reply };
+                    }
+                }
+            }
+        },
+        pediction_tags: {
+            _get (opts){
+                return {
+                    triggerActionType: 'basic',
+                    action: { endpoint: 'tag_search' },
+                    handleActionFunc: data => {
+                        return {
+                            data: actionsFilter.instagram['pediction_tags'](data[0].slice(0, 100))
+                        }
+                    }
+                }
+            }
+        },
+        pediction_users: {
+            _get (opts){
+                return {
+                    triggerActionType: 'basic',
+                    action: { endpoint: 'user_search' },
+                    handleActionFunc: data => {
+                        return {
+                            data: actionsFilter.instagram['pediction_users'](data[0].slice(0, 100))
+                        }
                     }
                 }
             }

@@ -2,62 +2,52 @@
 
 .icon {
     &--twitter{
-        color: var(--color-twitter);
         svg {
             fill: var(--color-twitter) !important;
         }
     }
     &--instagram {
-        color: var(--color-instagram);
         svg {
             fill: var(--color-instagram) !important;
         }
     }
     &--weibo {
-        color: var(--color-weibo);
         svg {
             fill: var(--color-weibo) !important;
         }
     }
     &--like {
-        color: #E9574F;
         svg {
             fill: #E9574F;
         }
     }
     &--retweet {
-        color: #1BADF8;
         svg {
             fill: #1BADF8;
         }
     }
     &--reply {
-        color: #63DA38;
         svg {
             fill: #63DA38;
         }
     }
     &--star {
-        color: #FFE33B;
         svg {
             fill: #FFE33B;
         }
     }
     &--inactive,
     &--calendar {
-        color: #C1C9D2;
         svg {
             fill: #C1C9D2;
         }
     },
-    &--gray {
-        color: var(--color-gray);
+    &--gray-drak {
         svg {
-            fill: var(--color-gray);
+            fill: var(--color-gray-drak);
         }
     }
     &--white {
-        color: var(--color-white);
         svg {
             fill: var(--color-white);
         }

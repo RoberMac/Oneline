@@ -1,4 +1,5 @@
 "use strict";
+const uniqBy =  require('lodash.uniqby');
 const filterUtils = require('./utils');
 
 
@@ -163,6 +164,32 @@ let filter = {
             Object.assign(userObj, filterUtils.instagram.user(data))
 
             return userObj;
+        },
+        pediction_tags (data){
+            const dataLength = data.length;
+            let cache = [];
+
+            data.forEach((item, index) => {
+                cache.push({
+                    name: item.name,
+                    volume: item.media_count || dataLength - index
+                })
+            })
+
+            return uniqBy(cache, 'name');
+        },
+        pediction_users (data){
+            const dataLength = data.length;
+            let cache = [];
+
+            data.forEach((item, index) => {
+                cache.push({
+                    name: item.username,
+                    volume: dataLength - index
+                })
+            })
+
+            return cache;
         }
     },
     weibo: {

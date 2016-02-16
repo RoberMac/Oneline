@@ -7,7 +7,7 @@
     background-color: #FFF;
     cursor: default;
 
-    &__trends {
+    &__pedictions {
         padding: 7px;
         height: calc(100vh - 206px); /* 100vh - 36px * 2 - 7px * 2 - 17px * 2 - 37px - 49px */
 

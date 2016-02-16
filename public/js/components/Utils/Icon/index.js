@@ -52,6 +52,8 @@ const ICONS_VIEWBOX = {
     "cancel": _SQUARE,
     "search": _SQUARE,
     "locked": _SQUARE,
+    "user": _SQUARE,
+    "mentions": _SQUARE,
     "triangle": _SQUARE,
     "wand": _SQUARE,
     "writing": "0 0 113 72"

@@ -3,25 +3,9 @@
 .searchBar {
     size: 35px;
 
-    &__form {
-        position: relative;
-        text-align: right;
-    }
-    &__input {
-        size: 35px;
-        padding-right: 7px;
-        background-color: var(--color-gray);
-        cursor: pointer;
-    }
-    &__icon {
-        position: absolute 0 * * 0;
-        padding: 7px;
-        size: 35px;
-    }
-
     &--active {
-        size: 100% 49px;
-        padding: 7px;
+        size: 100% 70px;
+        padding: 17px 7px;
 
         .searchBar {
             &__input {
@@ -32,7 +16,6 @@
             }
         }
     }
-
     &--local {
         position: absolute 0px 0px * *;
         background-color: var(--color-gray);
@@ -40,12 +23,40 @@
     }
     &--remote {
         position: relative;
+        size: 100% 49px;
+        padding: 7px;
         background-color: var(--color-white);
 
         .searchBar {
             &__input {
                 background-color: var(--color-gray);
             }
+            &__icon {
+                transform: rotate(180deg);
+            }
+        }
+    }
+    &__form {
+        position: relative;
+        text-align: right;
+    }
+    &__input {
+        size: 35px;
+        padding-right: 7px;
+        background-color: var(--color-gray);
+        cursor: pointer;
+    }
+    &__btn {
+        position: absolute;
+        top: 0;
+        padding: 7px;
+        size: 35px;
+
+        &--left {
+            left: 0;
+        }
+        &--right {
+            right: 0;
         }
     }
 }

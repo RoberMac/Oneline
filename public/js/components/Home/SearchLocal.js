@@ -1,69 +1,6 @@
 import React from 'react';
-import classNames from 'classnames';
 
-import Icon from 'components/Utils/Icon';
-class SearchBar extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = { active: false }
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleClick = this.handleClick.bind(this)
-    }
-    handleSubmit(e) {
-        e.preventDefault()
-        const inputElem = this.refs.input;
-        this.props.onSearchChange(inputElem.value)
-    }
-    handleClick (){
-        const { active } = this.state;
-        const inputElem = this.refs.input;
-
-        if (active) {
-            inputElem.blur()
-            inputElem.value = ''
-        } else {
-            inputElem.focus()
-        }
-
-        this.setState({ active: !active })
-        this.props.onIconClick()
-    }
-    render() {
-        const { type } = this.props;
-        const { active } = this.state;
-        const searchClass = classNames({
-            'searchBar searchBar--local animate--faster': true,
-            'searchBar--active': active
-        });
-        const searchIconClass = classNames({
-            'searchBar__icon': true,
-            'icon--gray': active,
-            'icon--white': !active
-        });
-        const searchIconName = active ? 'cancel' : 'search';
-        return (
-            <div className={searchClass}>
-                <form className="searchBar__form" onSubmit={this.handleSubmit}>
-                    <input
-                        className="searchBar__input animate--faster"
-                        type="text"
-                        autoComplete="off"
-                        spellCheck="false"
-                        required={true}
-                        ref="input"
-                    />
-                    <button
-                        className={searchIconClass}
-                        type="button"
-                        onClick={this.handleClick}
-                    >
-                        <Icon name={searchIconName} />
-                    </button>
-                </form>
-            </div>
-        );
-    }
-}
+import SearchBar from 'components/Utils/SearchBar';
 
 export default class SearchLocal extends React.Component {
     constructor(props) {
@@ -84,23 +21,45 @@ export default class SearchLocal extends React.Component {
 
         this.setState({ search: !search })
     }
-    handleSearchChange(searchText) {
+    handleSearchChange({ searchType, searchText }) {
         __DEV__ && console.time(`[Search] ${searchText}`)
 
+        if (!searchText) return;
+
         const { onChange, allPosts } = this.props;
-        const newShowingPosts = (
-            searchText
-                ? allPosts.filter(post => {
-                    const text = `${post.text} ${post.quote ? post.quote.text : ''} ${post.retweet ? post.retweet.text : ''}`;
-                    return text.toLowerCase().indexOf(searchText) >= 0;
-                })
-            : []
-        );
+        const newShowingPosts = searchText ? allPosts.filter(post => {
+            let srcText;
+
+            switch (searchType){
+                case 'text':
+                    srcText = (
+                        post.text
+                        + (post.quote && post.quote.text || '')
+                        + (post.retweet && post.retweet.text || '')
+                    );
+                    break;
+                case 'user':
+                    srcText = (
+                        post.user.name + post.user.screen_name
+                        + (post.quote && (post.quote.user.name + post.quote.user.screen_name) || '')
+                        + (post.retweet && (post.retweet.user.name + post.retweet.user.screen_name) || '')
+                    );
+                    break;
+            }
+
+            return srcText.toLowerCase().indexOf(searchText) >= 0;
+        }) : [];
+
         onChange({ actionType: 'update', newShowingPosts })
 
         __DEV__ && console.timeEnd(`[Search] ${searchText}`)
     }
     render() {
-        return <SearchBar onIconClick={this.toggleSearch} onSearchChange={this.handleSearchChange} />;
+        return <SearchBar
+            type="local"
+            provider="all"
+            onSearchChange={this.handleSearchChange}
+            onRightBtnClick={this.toggleSearch}
+        />;
     }
 }

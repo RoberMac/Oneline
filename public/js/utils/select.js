@@ -26,6 +26,25 @@ export const selectSearchLink = {
     instagram: () => '',
     weibo: () => ''
 };
+export const selectSearchType = {
+    local: {
+        all: [
+            { name: 'text', icon: 'search' },
+            { name: 'user', icon: 'user' },
+            // { name: 'location', icon: 'location' },
+        ]
+    },
+    remote: {
+        twitter: [
+            { name: 'text', icon: 'search' },
+        ],
+        instagram: [
+            { name: 'tags', icon: 'tags' },
+            { name: 'users', icon: 'user' },
+        ]
+    }
+};
+
 export const selectTextMiddlewares = {
     /**
      * Order

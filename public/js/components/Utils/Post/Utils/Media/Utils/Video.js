@@ -44,7 +44,9 @@ export default class Video extends React.Component {
                         onPlay={() => this.handlePlayStateChange(true)}
                         onPause={() => this.handlePlayStateChange(false)}
                     />
-                    <Icon className="post-media__playBtn animate--faster" name="triangle" />
+                    <span className="post-media__playBtn animate--faster">
+                        <Icon name="triangle" />
+                    </span>
                 </div>
             </VisibilitySensor>
         );

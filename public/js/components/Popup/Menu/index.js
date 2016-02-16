@@ -92,7 +92,8 @@ const _HomeMenu = ({ params, activeProviders }) => {
             break;
         case 'instagram':
             data = [
-                { link: `/home/instagram/user/${uid}`, provider: 'instagram', icon: 'menu_profile' }
+                { link: `/home/instagram/user/${uid}`, provider: 'instagram', icon: 'menu_profile' },
+                { link: '/home/instagram/search', provider: 'instagram', icon: 'menu_search' }
             ]
             break;
         case 'weibo':

@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -48,6 +48,7 @@
     "jade": "^1.11.0",
     "jsonwebtoken": "^5.5.4",
     "jwt-decode": "^1.5.1",
+    "lodash.uniqby": "^4.1.0",
     "mongoose": "^4.3.7",
     "morgan": "^1.6.1",
     "multer": "^1.1.0",
