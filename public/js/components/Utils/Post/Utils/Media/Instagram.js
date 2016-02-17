@@ -25,7 +25,7 @@ class UsersInPhoto extends React.Component {
         const { isShowing } = this.state;
 
         const usersInPhotoIconClass = classNames({
-            'post-media__icon post-media__icon--users icon--instagram': true,
+            'post-media__icon post-media__icon--users color--instagram': true,
             'tips--deep--peace animate--faster': true,
             'tips--active--peace': isShowing
         });

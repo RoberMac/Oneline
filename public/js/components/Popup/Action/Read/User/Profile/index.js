@@ -39,7 +39,7 @@ class FollowBtn extends React.Component {
         const { inprocess, following } = this.state;
         const btnClass = classNames({
             'profile__following tips--deep': true,
-            'icon--twitter tips--active': following,
+            'color--twitter tips--active': following,
             'tips--inprocess': inprocess
         });
         return (
@@ -56,7 +56,7 @@ class FollowBtn extends React.Component {
 }
 
 const Counts = ({ provider, counts }) => {
-    const columnClass = `profile__count__column icon--${provider}`;
+    const columnClass = `profile__count__column color--${provider}`;
 
     return counts && (
         <div className="profile__count">

@@ -9,7 +9,6 @@ import { initTimelineState } from '../store/initState';
 const initState = initTimelineState();
 
 export default (state = initState, action) => {
-    __DEV__ && console.log(`[Redux: ${action.type}]`);
     switch (action.type){
         case FETCH_START:
             return update(state, {

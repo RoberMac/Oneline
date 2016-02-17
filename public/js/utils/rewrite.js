@@ -1,11 +1,12 @@
 import update from 'react-addons-update';
 
-import metaData from 'utils/metaData';
+import reduxStore from 'store';
+const { base: { BLOCKED } } = reduxStore.getState();
 
 export const rewriteMediaLink = ({ type, provider, data }) => {
     __DEV__ && console.time('[rewriteMediaLink]')
 
-    if (provider === 'weibo' || !metaData.get('isBlocked')) return data;
+    if (provider === 'weibo' || !BLOCKED) return data;
 
     const _HOST = __DEV__ ? 'http://127.0.0.1:8080' : window.location.origin;
     const PREFIX = `${_HOST}/media`;

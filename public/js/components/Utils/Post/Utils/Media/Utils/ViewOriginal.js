@@ -7,7 +7,7 @@ export default ({ link, provider }) => {
     const originIconClass = classNames(
         'post-media__icon',
         'post-media__icon--origin',
-        `icon--${provider}`,
+        `color--${provider}`,
         'tips--deep'
     );
 

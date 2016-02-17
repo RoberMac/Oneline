@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { Link } from 'react-router';
 
-import metaData from 'utils/metaData';
+import reduxStore from 'store';
 
 // Components
 import Icon from 'components/Utils/Icon';
@@ -15,7 +15,7 @@ const MenuRows = ({ data }) => (
         const btnClass = classNames({
             'menu--row menu__btn btn tips animate--faster': true,
             [`menu--row-${rowNum}-${index + 1}`]: true,
-            [`icon--${provider}`]: provider
+            [`color--${provider}`]: provider
         });
         return (
            <Link to={link} key={icon}>
@@ -55,7 +55,7 @@ const MenuSwitch = ({ currentProvider, activeProviders }) => {
             const btnClass = classNames({
                 'menu__btn menu__btn--switch tips--deep--peace': true,
                 [`menu__btn--switch--${direction}`]: true,
-                [`icon--${provider}`]: true
+                [`color--${provider}`]: true
             })
             return (
                <Link to={`/home/${provider}`} key={direction}>
@@ -79,7 +79,7 @@ const _SettingsMenu = ({ activeProviders }) => {
 }
 const _HomeMenu = ({ params, activeProviders }) => {
     const provider = params.provider;
-    const uid = metaData.get(`profile_${provider}`).uid;
+    const { base: { [`profile_${provider}`]: { uid } } } = reduxStore.getState();
 
     let data;
     switch (provider){

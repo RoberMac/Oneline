@@ -1,9 +1,11 @@
 import assign from 'object.assign';
 
 // Helpers
-import { Timeline } from 'utils/api';
 import store from 'utils/store';
-import metaData from 'utils/metaData';
+import { Timeline } from 'utils/api';
+import reduxStore from 'store';
+import { updateBase } from 'actions/base';
+
 const arrayUnique = {
     // via http://jszen.com/best-way-to-get-unique-values-of-an-array-in-javascript.7.html
     literal: (a) => {
@@ -339,7 +341,9 @@ function recordMentions({ providers, posts }) {
         }
 
         store.set('mentions_' + provider, mentionsList[provider])
-        metaData.set(`mentions_${provider}`, mentionsList[provider])
+        reduxStore.dispatch(updateBase({
+            [`mentions_${provider}`]: mentionsList[provider]
+        }));
     })
 
     __DEV__ && console.timeEnd('[recordMentions]')

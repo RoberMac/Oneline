@@ -3,9 +3,9 @@ import ClassList from 'classlist';
 import Clipboard from 'clipboard'; 
 
 // Helper
-import metaData from 'utils/metaData';
 import { Share } from 'utils/api';
 import { addClassTemporarily } from 'utils/dom';
+import reduxStore from 'store';
 
 // Components
 import Icon from 'components/Utils/Icon';
@@ -83,7 +83,7 @@ export default class Index extends React.Component {
         Share
         .post({ provider, id }, {
             post,
-            sharer: metaData.get(`profile_${provider}`),
+            sharer: reduxStore.getState().base[`profile_${provider}`],
         })
         .then(res => {
             // Update State

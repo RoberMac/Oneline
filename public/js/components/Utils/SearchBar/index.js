@@ -77,13 +77,13 @@ export default class SearchBar extends React.Component {
         });
         const leftBtnClass = classNames({
             'searchBar__btn searchBar__btn--left': true,
-            'icon--gray-drak': active,
-            'icon--white': !active
+            'color--gray-drak': active,
+            'color--white': !active
         });
         const rightBtnClass = classNames({
             'searchBar__btn searchBar__btn--right': true,
-            'icon--gray-drak': active,
-            'icon--white': !active
+            'color--gray-drak': active,
+            'color--white': !active
         });
         return (
             <div className={searchBarClass}>

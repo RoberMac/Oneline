@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router';
 
 // Helpers
-import metaData from 'utils/metaData';
 import { selectUserLink } from 'utils/select';
-const SHARE_PAGE = metaData.get('sharePage');
+import reduxStore from 'store';
+const { base: { SHARE_PAGE } } = reduxStore.getState();
 
 export default ({ provider, screen_name, children, className }) => (
     provider === 'weibo' || SHARE_PAGE

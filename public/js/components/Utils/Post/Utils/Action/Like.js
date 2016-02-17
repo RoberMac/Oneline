@@ -44,8 +44,8 @@ export default class Like extends React.Component {
     render() {
         const { liked, like_count } = this.state;
         const btnClass = classNames({
-            'post-action__btn tips--deep': true,
-            'icon--like tips--active': liked,
+            'post-action__btn color--steel tips--deep': true,
+            'color--like tips--active': liked,
             'tips--inactive': !this.props.id
         });
         const iconClass = classNames({

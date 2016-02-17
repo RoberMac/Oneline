@@ -12,6 +12,7 @@ import DependencyLoader from './loader';
 import Post from 'components/Utils/Post';
 import Spin from 'components/Utils/Spin';
 import Transition from 'components/Utils/Transition';
+import ScrollToTop from '../Utils/ScrollToTop';
 import SearchLocal from './SearchLocal';
 class Timeline extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
@@ -100,6 +101,7 @@ class Home extends React.Component {
 
         DependencyLoader(activeProviders)
         .then(() => this.setState({ dependenciesLoaded: true }))
+        .catch((err) => __DEV__ && console.error(err))
 
         // Reset `timePointer`
         resetState();
@@ -130,6 +132,8 @@ class Home extends React.Component {
         const { dependenciesLoaded, search } = this.state;
         return (
             <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
+                <ScrollToTop target=".spin--new" container=".oneline__wrapper" duration={700} />
+
                 <div className="oneline__wrapper overflow--y">
                     <Spin
                         type="newPosts"

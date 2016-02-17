@@ -60,7 +60,10 @@ const ICONS_VIEWBOX = {
 };
 
 export default ({ viewBox, name, className }) => (
-    <svg viewBox={ICONS_VIEWBOX[name]} className={className ? className : ''}>
+    <svg
+        viewBox={ICONS_VIEWBOX[name]}
+        className={`${className ? className : ''} color--current--fill`}
+    >
         <use xlinkHref={`#${name}`}></use>
     </svg>
 );

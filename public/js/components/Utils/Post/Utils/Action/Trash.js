@@ -36,7 +36,7 @@ export default class Trash extends React.Component {
         const { inprocess } = this.state;
         const { id } = this.props;
         const btnClass = classNames({
-            'post-action__btn tips--deep': true,
+            'post-action__btn color--steel tips--deep': true,
             'tips--inactive': !id
         });
         const iconClass = classNames({

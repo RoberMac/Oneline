@@ -41,7 +41,8 @@ export default class Star extends React.Component {
         const { inprocess, stared } = this.state;
         const btnClass = classNames({
             'post-action__btn tips--deep': true,
-            'icon--star tips--active': stared,
+            'color--star tips--active': stared,
+            'color--steel': !stared,
             'tips--inactive': !this.props.id
         });
         const iconClass = classNames({

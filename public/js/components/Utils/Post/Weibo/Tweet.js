@@ -11,13 +11,7 @@ export default ({ post }) => (
     <div>
         {!post.avatarless && <Avatar provider="weibo" {...post.user} />}
         <div className="post__content">
-            <Text
-                provider="weibo"
-                text={post.text}
-                middlewares={post.location && post.location.name ? [
-                    { order: 1, middleware: 'trimSuffixLink' }
-                ] : null}
-            />
+            <Text provider="weibo" text={post.text} />
 
             {post.media && post.media.length > 0 && <Media provider="weibo" media={post.media} />}
         </div>

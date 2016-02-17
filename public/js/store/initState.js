@@ -1,11 +1,10 @@
-import { getActiveProviders } from '../utils/tokenHelper';
-
+import store from 'utils/store';
+import { getActiveProviders } from 'utils/tokenHelper';
 
 export const initAuthState = () => {
     return {
         providers: ['twitter', 'instagram', 'weibo'],
-        activeProviders: getActiveProviders(),
-        tokenList: localStorage.getItem('tokenList')
+        activeProviders: getActiveProviders()
     };
 }
 
@@ -37,5 +36,19 @@ export const initTimelineState = () => {
         },
         timePointer,
         timeRange
+    };
+}
+
+export const initBaseState = () => {
+    return {
+        SHARE_PAGE: !!window.__share_data__,
+        BLOCKED: !!window.__is_blocked__,
+        SAFARI: /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent),
+        weiboEmotions: store.get('weiboEmotions'),
+        // mentions_twitter,
+        // mentions_weibo,
+        // profile_twitter,
+        // profile_instagram,
+        // profile_weibo
     };
 }

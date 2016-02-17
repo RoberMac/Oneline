@@ -9,8 +9,7 @@ export default (state = initState, action) => {
     switch (action.type){
         case UPDATE_TOKEN:
             return update(state, {
-                activeProviders: { $set: action.activeProviders },
-                tokenList: { $set: action.tokenList }
+                activeProviders: { $set: action.activeProviders }
             })
             break;
         default:

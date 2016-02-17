@@ -12,7 +12,6 @@
         display: inline-block;
         height: 17px;
         vertical-align: middle;
-        fill: var(--color-steel);
     }
     &__count {
         display: inline-block;
@@ -23,7 +22,6 @@
         &::after {
             content: attr(data-count);
             font-size: 10px 23px;
-            color: var(--color-steel);
         }
     }
 

@@ -1,8 +1,18 @@
 import xssFilters from 'xss-filters';
 
-import metaData from 'utils/metaData';
+import reduxStore from 'store';
+import { UPDATE_BASE } from 'actions/base';
+let { base: { SHARE_PAGE, weiboEmotions } } = reduxStore.getState();
+reduxStore.subscribe(() => {
+    const { base, lastAction: { type: actionType } } = reduxStore.getState();
+
+    if (actionType !== UPDATE_BASE) return;
+
+    SHARE_PAGE = base.sharePage;
+    weiboEmotions = base.weiboEmotions;
+});
+
 // via https://github.com/RoberMac/angular-linkify/blob/master/angular-linkify.js#L5
-const SHARE_PAGE = metaData.get('sharePage');
 const USER_PREFIX = {
     twitter: SHARE_PAGE ? '//twitter.com' : '/home/twitter/user',
     instagram: SHARE_PAGE ? '//instagram.com' : '/home/instagram/user',
@@ -57,7 +67,6 @@ const _linkify = (text, provider) => {
     return _text;
 }
 // via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L57
-const weiboEmotions = metaData.get('weiboEmotions');
 const _weiboEmotify = (text) => {
     if (!text) return;
     if (!weiboEmotions) return text;

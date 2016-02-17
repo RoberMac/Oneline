@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -103,6 +103,7 @@
     "postcss-loader": "^0.8.0",
     "postcss-nested": "^1.0.0",
     "postcss-short": "^1.4.0",
+    "redux-logger": "^2.5.2",
     "style-loader": "^0.13.0",
     "svg-sprite-loader": "0.0.16",
     "webpack": "^1.12.10",

@@ -1,6 +1,7 @@
 import store from 'utils/store';
-import metaData from 'utils/metaData';
 import { _fetch } from 'utils/api';
+import reduxStore from 'store';
+import { updateBase } from 'actions/base';
 
 export default (activeProviders) => {
     return new Promise((resolve, reject) => {
@@ -16,15 +17,19 @@ export default (activeProviders) => {
 }
 
 function ensureUserProfileLoaded(activeProviders) {
+    let payload = {};
+
     activeProviders.forEach(provider => {
-        metaData.set(`profile_${provider}`, store.get(`profile_${provider}`))
-    })
+        payload[`profile_${provider}`] = store.get(`profile_${provider}`)
+    });
+
+    reduxStore.dispatch(updateBase(payload))
 }
 
 // Ensure weibo emotions data are stored in `localStorage`
 // via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L20
 function ensureWeiboEmotionsStored() {
-    const weiboEmotions = metaData.get('weiboEmotions');
+    const { base: { weiboEmotions } } = reduxStore.getState();
 
     return new Promise((resolve, reject) => {
         if (!weiboEmotions || weiboEmotions['_v'] !== '2.0'){
@@ -42,7 +47,7 @@ function ensureWeiboEmotionsStored() {
                     return;
                 }
 
-                metaData.set('weiboEmotions', data);
+                reduxStore.dispatch(updateBase({ weiboEmotions: data }))
                 window.localStorage.setItem('weiboEmotions', JSON.stringify(data))
                 resolve()
             })

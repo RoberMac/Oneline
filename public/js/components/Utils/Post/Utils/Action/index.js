@@ -1,6 +1,18 @@
 import React from 'react';
 
-import metaData from 'utils/metaData';
+// Helpers
+import reduxStore from 'store';
+import { UPDATE_BASE } from 'actions/base';
+let { base: { profile_twitter, profile_instagram, profile_weibo } } = reduxStore.getState();
+reduxStore.subscribe(() => {
+    const { base, lastAction: { type: actionType } } = reduxStore.getState();
+
+    if (actionType !== UPDATE_BASE) return;
+
+    profile_twitter = base.profile_twitter;
+    profile_instagram = base.profile_instagram;
+    profile_weibo = base.profile_weibo
+});
 
 // Components
 import Icon from 'components/Utils/Icon';
@@ -18,8 +30,8 @@ const Actions = {
     twitter: ({ post }) => {
         const isAuthUser = (
             post.detail
-            && metaData.get('profile_twitter') 
-            && post.user.screen_name === metaData.get('profile_twitter').screen_name
+            && profile_twitter 
+            && post.user.screen_name === profile_twitter.screen_name
         );
         return (post.detail
             ? <div>
@@ -57,8 +69,8 @@ const Actions = {
     weibo: ({ post }) => {
         const isAuthUser = (
             post.detail
-            && metaData.get('profile_weibo')
-            && post.user.screen_name === metaData.get('profile_weibo').screen_name
+            && profile_weibo
+            && post.user.screen_name === profile_weibo.screen_name
         );
         return (post.detail
             ? <div>

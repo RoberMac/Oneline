@@ -13,8 +13,8 @@ export default ({ provider, id, post }) => {
     }
 
     return (
-        <Link {...linkObj}>
-            <span className={`post-action__btn btn tips--deep ${_id ? '' : 'tips--inactive'}`}>
+        <Link {...linkObj} className={_id ? '' : 'tips--inactive'}>
+            <span className="post-action__btn btn color--steel tips--deep">
                 <Icon className="post-action__icon" name="detail" />
                 <span className="post-action__count" />
             </span>

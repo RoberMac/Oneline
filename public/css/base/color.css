@@ -10,4 +10,35 @@
     &--weibo {
         color: var(--color-weibo);
     }
+    &--like {
+        color: #E9574F;
+    }
+    &--retweet {
+        color: #1BADF8;
+    }
+    &--reply {
+        color: #63DA38;
+    }
+    &--star {
+        color: #FFE33B;
+    }
+
+
+    &--white {
+        color: var(--color-white);
+    }
+    &--gray-drak {
+        color: var(--color-gray-drak);
+    }
+    &--gray {
+        color: var(--color-gray);
+    }
+    &--steel {
+        color: var(--color-steel);
+    }
+    &--current {
+        &--fill {
+            fill: currentColor;
+        }
+    }
 }

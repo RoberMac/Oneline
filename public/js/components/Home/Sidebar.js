@@ -9,7 +9,7 @@ const sidebarBtnClass = classNames('sidebar__button', 'btn', 'animate--faster');
 
 const ShowMenuBtn = ({ firstProvider }) => (
     <Link to={`/home/${firstProvider}`}>
-        <span className={`${sidebarBtnClass} icon--${firstProvider}`} type="button">
+        <span className={`${sidebarBtnClass} color--${firstProvider}`} type="button">
             <svg viewBox="0 0 200 200">
                 <g fill-rule="evenodd">
                     <circle fill="#F1F1F1" cx="100" cy="100" r="100"/>

@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router';
 
 // Helper
-import metaData from 'utils/metaData';
 import { selectLocationLink } from 'utils/select';
-const SHARE_PAGE = metaData.get('sharePage');
+import reduxStore from 'store';
+const { base: { SHARE_PAGE } } = reduxStore.getState();
 const selectLink = (
     SHARE_PAGE
     ? selectLocationLink
@@ -31,7 +31,7 @@ const LocationLink = ({ link, children }) => {
 
 export default (props) => (
     <LocationLink link={selectLink[props.provider]({...props})}>
-        <span className="post__location btn tips--deep">
+        <span className="post__location btn color--steel tips--deep">
             <Icon className="post-action__icon" name="location" />
             <span className="post__location__name">{props.name}</span>
         </span>

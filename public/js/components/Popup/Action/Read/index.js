@@ -32,7 +32,7 @@ import Tags from './Tags';
 import Locations from './Locations';
 const Locked = ({ provider }) => (
     <span
-        className={`icon--${provider}`}
+        className={`color--${provider}`}
         style={{
             position: 'absolute',
             top: 'calc(50% - 25px)',

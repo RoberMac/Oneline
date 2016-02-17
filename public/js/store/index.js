@@ -3,22 +3,21 @@ import thunkMiddleware from 'redux-thunk';
 
 import rootReducer from '../reducers';
 
-const createStoreWithMiddleware = applyMiddleware(
-    thunkMiddleware
-)(createStore);
+// middlewares
+const middlewares = [thunkMiddleware];
+if (__DEV__) {
+    const createLogger = require('redux-logger');
+    const logger = createLogger({ duration: true });
+    middlewares.push(logger);
+}
 
-const configureStore = (initialState) => {
-    const store = createStoreWithMiddleware(rootReducer, initialState)
+// configureStore
+const store = applyMiddleware(...middlewares)(createStore)(rootReducer)
+if (module.hot) { // via https://github.com/reactjs/redux/blob/master/examples/async/store/configureStore.js#L13
+    module.hot.accept('../reducers', () => {
+        const nextReducer = require('../reducers')
+        store.replaceReducer(nextReducer)
+    })
+}
 
-    if (module.hot) {
-        // Enable Webpack hot module replacement for reducers
-        module.hot.accept('../reducers', () => {
-            const nextReducer = require('../reducers')
-            store.replaceReducer(nextReducer)
-        })
-    }
-
-    return store;
-};
-
-export default configureStore()
+export default store;

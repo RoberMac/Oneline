@@ -1,7 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import metaData from 'utils/metaData';
+import reduxStore from 'store';
+const { base: { SAFARI } } = reduxStore.getState();
 
 export default ({ type, initLoad, isFetching, isFetchFail, unreadCount, provider, onClick }) => {
     const isNewPosts = type === 'newPosts';
@@ -14,7 +15,7 @@ export default ({ type, initLoad, isFetching, isFetchFail, unreadCount, provider
     const btnClass = classNames({
         'spin__btn spin__btn--count animate--faster': true,
         [`${provider ? 'spin__btn--' + provider : ''}`]: true,
-        'spin__btn--active': metaData.get('isSafari'),
+        'spin__btn--active': SAFARI,
         'spin__btn--loading': isFetching,
         'spin__btn--loading--fail': isFetchFail,
         'spin__btn--new': isNewPosts,

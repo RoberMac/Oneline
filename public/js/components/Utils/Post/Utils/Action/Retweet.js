@@ -13,7 +13,7 @@ import Icon from 'components/Utils/Icon';
 const RetweetBtn = ({ provider, post }) => {
     const { id_str, retweet_count } = post;
     const btnClass = classNames({
-        'post-action__btn btn tips--deep': true,
+        'post-action__btn btn color--steel tips--deep': true,
         'tips--inactive': !id_str
     })
     return (
@@ -62,7 +62,7 @@ class DeleteRetweetBtn extends React.Component {
         const { inprocess } = this.state;
         const { id_str, retweet_count, retweeted_id_str } = this.props.post;
         const btnClass = classNames({
-            'post-action__btn tips--deep icon--retweet tips--active': true,
+            'post-action__btn tips--deep color--retweet tips--active': true,
             'tips--inactive': !(id_str && retweeted_id_str)
         })
         const iconClass = classNames({

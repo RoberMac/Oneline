@@ -11,9 +11,8 @@ export default ({ name, text, iconCount, active }) => {
     const iconClass = classNames({
         [`detail__column__icon detail__column__icon--${iconCount}`]: iconCount,
         'detail__column__cell': !iconCount,
-        [`icon--${name}`]: active,
-        'icon--inactive': !active
-
+        [`color--${name}`]: active,
+        'color--gray-drak': !active
     });
 
     let _text;
