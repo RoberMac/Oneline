@@ -1,4 +1,8 @@
 .write {
+    position: absolute 0 * * 0;
+    size: 100%;
+    overflow: hidden;
+
     &__form {
         position: absolute * * 0 0;
         size: 100% 33.3%;

@@ -47,7 +47,6 @@
             &::after {
                 content: attr(data-count);
                 font-size: 8px;
-                color: var(--color-steel);
             }
         }
     }
