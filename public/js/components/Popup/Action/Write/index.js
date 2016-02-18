@@ -158,7 +158,7 @@ export default class Write extends React.Component {
                         spellCheck="false"
                         required={action !== 'retweet'}
                         disabled={submitting}
-                        onChange={debounce(this.handleTextChange, 250)}
+                        onChange={debounce(this.handleTextChange, 300)}
                         ref="textarea"
                     />
                     <div className="write__textarea write__textarea--mirror"><span></span></div>

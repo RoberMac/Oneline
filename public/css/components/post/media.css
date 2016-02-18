@@ -71,9 +71,9 @@
         animation: imgLoadAnimate 1.7s infinite linear;
     }
     &__spin {
-        position: absolute 0 * * 0;
+        position: absolute -10px * * calc(50% - 25px);
         size: 50px;
-        transform: scale(0.7);
+        transform: scale(0.5);
     }
     &__icon {
         position: absolute;

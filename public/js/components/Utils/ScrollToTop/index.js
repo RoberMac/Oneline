@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import debounce from 'debounce';
 
 import Jump from 'utils/jump';
 
@@ -37,12 +38,14 @@ export default class ScrollToTop extends React.Component {
         this.lastPosTop = curTop
     }
     componentDidMount() {
+        this.debounceHandleContainerScoll = debounce(this.handleContainerScoll, 50)
+
         const containerElem = document.querySelector(this.props.container);
-        containerElem.addEventListener('scroll', this.handleContainerScoll)
+        containerElem.addEventListener('scroll', this.debounceHandleContainerScoll)
     }
     componentWillUnmount() {
         const containerElem = document.querySelector(this.props.container);
-        containerElem.removeEventListener('scroll', this.handleContainerScoll)
+        containerElem.removeEventListener('scroll', this.debounceHandleContainerScoll)
     }
     render() {
         const { isShowScrollBtn } = this.state;

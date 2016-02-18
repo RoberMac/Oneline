@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import debounce from 'debounce';
 
 import { handleImageError, fuckLongWeibo } from './helper.js';
 
@@ -53,10 +54,11 @@ class LargeImg extends React.Component {
         this.setState({ loading: false })
     }
     componentDidMount() {
+        this.debounceHandleCursorChange = debounce(this.handleCursorChange, 50)
         const elem = this.refs.largeImg;
 
         if (this.props.max > 1){
-            elem.addEventListener('mousemove', this.handleCursorChange)
+            elem.addEventListener('mousemove', this.debounceHandleCursorChange)
         } else {
             elem.classList.add('cursor--zoomOut')
         }
@@ -64,9 +66,7 @@ class LargeImg extends React.Component {
     componentWillUnmount() {
         const elem = this.refs.largeImg;
 
-        if (this.props.max > 1){
-            elem.removeEventListener('mousemove', this.handleCursorChange)
-        }
+        this.props.max > 1 && elem.removeEventListener('mousemove', this.debounceHandleCursorChange)
     }
     componentWillReceiveProps(nextProps) {
         if (this.props.src === nextProps.src) return;
@@ -79,7 +79,7 @@ class LargeImg extends React.Component {
         const largeSrc  = src.replace(/square|small/, 'large');
 
         return (
-            <div className="post-media">
+            <div className="post-media" onClick={this.handleClick} ref="largeImg" role="button">
                 <div className="post-media__spin">
                     <Transition>
                         {loading && <Spin isFetching={true} initLoad={true} provider="weibo" />}
@@ -87,11 +87,8 @@ class LargeImg extends React.Component {
                 </div>
                 <img
                     src={middleSrc}
-                    alt="weibo_large_photo"
-                    onClick={this.handleClick}
                     onLoad={this.handleImageLoaded}
                     onError={handleImageError}
-                    ref="largeImg"
                 />
                 <ViewOriginal link={largeSrc} provider="weibo" />
             </div>
@@ -130,39 +127,34 @@ export default class Media extends React.Component {
 
         return (
             <div>
-                {media.length !== 1 || largeImgIndex < 0
-                    ? (
-                        <div className={thumbWrapperClass}>
-                        {media.map((item, index)=> {
-                            const thumbClass = classNames({
-                                'post-media--gif': item.type === 'gif',
-                                'post-media--active cursor--zoomOut': index === largeImgIndex,
-                                'post-media--inactive': largeImgIndex >= 0 && index !== largeImgIndex,
-                                'animate--faster': true
-                            });
-                            return (
-                                <img
-                                    key={index}
-                                    className={thumbClass}
-                                    src={item.image_url}
-                                    onClick={this.zoomIn.bind(this, index, item.image_url)}
-                                />
-                            );
-                        })}
-                        </div>
-                    )
-                    : null
-                }
+            {(media.length !== 1 || largeImgIndex < 0) && (
+                <div className={thumbWrapperClass}>
+                {media.map((item, index)=> {
+                    const thumbClass = classNames({
+                        'post-media--gif': item.type === 'gif',
+                        'post-media--active cursor--zoomOut': index === largeImgIndex,
+                        'post-media--inactive': largeImgIndex >= 0 && index !== largeImgIndex,
+                        'animate--faster': true
+                    });
+                    return <img
+                        key={index}
+                        className={thumbClass}
+                        src={item.image_url}
+                        onClick={this.zoomIn.bind(this, index, item.image_url)}
+                    />;
+                })}
+                </div>
+            )}
 
-                {largeImgSrc && (
-                    <LargeImg
-                        src={largeImgSrc}
-                        index={largeImgIndex}
-                        max={media.length}
-                        zoomIn={this.zoomIn}
-                        zoomOut={this.zoomOut}
-                    /> 
-                )}
+            {largeImgSrc && (
+                <LargeImg
+                    src={largeImgSrc}
+                    index={largeImgIndex}
+                    max={media.length}
+                    zoomIn={this.zoomIn}
+                    zoomOut={this.zoomOut}
+                /> 
+            )}
             </div>
         );
     }
