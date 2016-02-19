@@ -7,7 +7,7 @@ import Action from '../Utils/Action';
 import TimeAgo from '../Utils/TimeAgo';
 import { Avatar, RetweetAvatar} from '../Utils/Avatar';
 
-export default ({ post }) => (
+export default ({ post, highlight }) => (
     <div>
         {!post.avatarless && <Avatar provider="twitter" {...post.retweet.user} />}
         <div className="post__content">
@@ -15,7 +15,8 @@ export default ({ post }) => (
                 provider="twitter"
                 text={post.retweet.text}
                 middlewares={[
-                    { order: 2, middleware: 'trimMediaLink', opts: { link: post.retweet.mediaLink } }
+                    { order: 2, middleware: 'trimMediaLink', opts: { link: post.retweet.mediaLink } },
+                    { order: 5, middleware: 'highlight', opts: { provider: 'twitter', highlight } },
                 ]}
             />
             {post.retweet.media && post.retweet.media.length > 0 && (

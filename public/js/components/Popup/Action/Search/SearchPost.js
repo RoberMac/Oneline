@@ -67,7 +67,9 @@ export default class SearchPost extends React.Component {
 
         return (
             <div>
-                {showingPosts.map(item => <Post className="popupPost" key={item.id_str} post={item} />)}
+                {showingPosts.map(item => (
+                    <Post className="popupPost" key={item.id_str} post={item} highlight={searchText} />
+                ))}
                 {isFetching || showingPosts.length >= 7
                     ? <Spin
                         type="oldPosts"

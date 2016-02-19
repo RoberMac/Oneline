@@ -53,6 +53,7 @@ export const selectTextMiddlewares = {
      *     trimMediaLink: 2
      *     Linkify: 3
      *     Emotify: 4
+     *     Highlight: 5
      */
     twitter: [
         { order: 0, middleware: 'sanitizer' },

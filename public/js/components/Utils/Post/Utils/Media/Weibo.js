@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import debounce from 'debounce';
+import debounce from 'lodash.debounce';
 
 import { handleImageError, fuckLongWeibo } from './helper.js';
 
@@ -36,7 +36,10 @@ class LargeImg extends React.Component {
             elem.classList.add('cursor--zoomOut')
         }
     }
-    handleClick() {
+    handleClick(e) {
+        console.log(e.target.tagName)
+        if (/a|svg|use/i.test(e.target.tagName)) return;
+
         const { index, max, zoomIn, zoomOut } = this.props;
         const elem = this.refs.largeImg;
         const nextIndex = elem.className.search('cursor--pre') >= 0 

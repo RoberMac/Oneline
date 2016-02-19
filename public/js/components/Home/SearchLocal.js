@@ -27,30 +27,38 @@ export default class SearchLocal extends React.Component {
         if (!searchText) return;
 
         const { onChange, allPosts } = this.props;
-        const newShowingPosts = searchText ? allPosts.filter(post => {
-            let srcText;
+        const newShowingPosts = searchText ? (
+            allPosts
+            .filter(post => {
+                let srcText;
 
-            switch (searchType){
-                case 'text':
-                    srcText = (
-                        post.text
-                        + (post.quote && post.quote.text || '')
-                        + (post.retweet && post.retweet.text || '')
-                    );
-                    break;
-                case 'user':
-                    srcText = (
-                        post.user.name + post.user.screen_name
-                        + (post.quote && (post.quote.user.name + post.quote.user.screen_name) || '')
-                        + (post.retweet && (post.retweet.user.name + post.retweet.user.screen_name) || '')
-                    );
-                    break;
-            }
+                switch (searchType){
+                    case 'text':
+                        srcText = (
+                            post.text
+                            + (post.quote && post.quote.text || '')
+                            + (post.retweet && post.retweet.text || '')
+                        );
+                        break;
+                    case 'user':
+                        srcText = (
+                            post.user.name + post.user.screen_name
+                            + (post.quote && (post.quote.user.name + post.quote.user.screen_name) || '')
+                            + (post.retweet && (post.retweet.user.name + post.retweet.user.screen_name) || '')
+                        );
+                        break;
+                }
 
-            return srcText.toLowerCase().indexOf(searchText) >= 0;
-        }) : [];
+                return srcText.toLowerCase().indexOf(searchText) >= 0;
+            })
+            .slice(0, 100)
+        ) : [];
 
-        onChange({ actionType: 'update', newShowingPosts })
+        onChange({
+            searchText,
+            actionType: 'update',
+            newShowingPosts
+        })
 
         __DEV__ && console.timeEnd(`[Search] ${searchText}`)
     }

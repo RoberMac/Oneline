@@ -1,15 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { handleImageError, lazySize, calcDegree } from './helper.js';
+import { handleImageError, lazySize, lazySrc, calcDegree } from './helper.js';
 
 // Components
+import LazyLoad from 'components/Utils/LazyLoad';
 import Icon from 'components/Utils/Icon';
 import UserLink from 'components/Utils/UserLink';
 import Transition from 'components/Utils/Transition';
 import ViewOriginal from './Utils/ViewOriginal';
 import Video from './Utils/Video';
-
 class UsersInPhoto extends React.Component {
     constructor(props) {
         super(props)
@@ -89,27 +89,38 @@ class Image extends React.Component {
         this.setState({ imgWidth: offsetWidth, imgHeight: offsetHeight })
     }
     render() {
-        const { images, users_in_photo } = this.props;
+        const { images, users_in_photo, visible } = this.props;
         return (
             <div className="post-media--large" style={lazySize(images.ratio)}>
-                <img src={images.standard_resolution} onError={handleImageError} ref="image" />
+                <img
+                    src={visible ? images.standard_resolution : lazySrc}
+                    onError={handleImageError}
+                    ref="image"
+                />
                 <ViewOriginal link={images.standard_resolution} provider="instagram" />
                 {users_in_photo && <UsersInPhoto users_in_photo={users_in_photo} {...this.state}/>}
             </div>
         );
     }
 }
+const Media = ({ images, videos, users_in_photo, visible }) => (
+    <div className="post-media">
+    {videos
+        ? <Video
+            src={videos.standard_resolution}
+            poster={images.low_resolution}
+            ratio={images.ratio}
+            visible={visible}
+        />
+        : <Image images={images} users_in_photo={users_in_photo} visible={visible} />
+    }
+    </div>
+);
+
 
 // Export
-export default ({ images, videos, users_in_photo }) => (
-    <div className="post-media">
-        { videos
-                ? <Video
-                    src={videos.standard_resolution}
-                    poster={images.low_resolution}
-                    ratio={images.ratio}
-                />
-            : <Image images={images} users_in_photo={users_in_photo}/>
-        }
-    </div>
+export default props => (
+    <LazyLoad once>
+        <Media {...props} />
+    </LazyLoad>
 );

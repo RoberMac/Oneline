@@ -25,7 +25,7 @@ const TAG_PREFIX = {
 };
 const TARGET_ATTR = SHARE_PAGE ? 'target="_blank"' : '';
 const _linkify = (text, provider) => {
-    if (!text) return;
+    if (!text) return '';
 
     let _text = text.replace(/(?:https?\:\/\/)+(?![^\s]*?")([\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?/ig, function(url) {
         let wrap = document.createElement('div');
@@ -120,3 +120,12 @@ export const trimMediaLink = (text, { link }) => {
 export const sanitizer = text => {
     return xssFilters.inHTMLData(text);
 }
+export const highlight = (text, { provider, highlight }) => {
+    if (!highlight) return text;
+
+    return text.replace(
+        new RegExp(`(${highlight})(?![^<]*>|[^<>]*<\/)`, 'gim'),
+        `<span class="highlight--${provider}">$1</span>`
+    );
+}
+

@@ -83,3 +83,17 @@
         }
     }
 }
+.highlight {
+    &--twitter {
+        color: var(--color-gray);
+        background-color: rgba(42, 169, 224, 0.7);
+    }
+    &--instagram {
+        color: var(--color-gray);
+        background-color: rgba(63, 93, 135, 0.7);
+    }
+    &--weibo {
+        color: var(--color-gray);
+        background-color: rgba(230, 22, 45, 0.7);
+    }
+}

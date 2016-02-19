@@ -42,7 +42,7 @@ export default class Post extends React.Component {
                 style={{ opacity: 0 }}
                 ref="post"
             >
-                <SelectedPost post={post} />
+                <SelectedPost {...this.props} />
             </div>
         );
     }

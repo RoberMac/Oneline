@@ -9,35 +9,7 @@ const BUILD_PATH = path.resolve(ROOT_PATH, 'public/dist');
 module.exports = {
     entry: {
         app: [path.resolve(ENTRY_PATH, 'app')],
-        share: [path.resolve(ENTRY_PATH, 'share')],
-        common: [
-            // React Core
-            'react',
-            'react-dom',
-            'react-addons-css-transition-group',
-            'react-addons-update',
-            'react-addons-shallow-compare',
-            // React Components
-            'react-timeago',
-            'react-visibility-sensor',
-            'react-swipeable',
-            // Router
-            'react-router',
-            'history',
-            // Redux
-            'redux',
-            'react-redux',
-            'redux-thunk',
-            // Polyfill
-            'object.assign',
-            'es6-promise',
-            'isomorphic-fetch',
-            // Utils
-            'classnames',
-            'debounce',
-            'xss-filters',
-            'querystring',
-        ]
+        share: [path.resolve(ENTRY_PATH, 'share')]
     },
     output: {
         path: BUILD_PATH,

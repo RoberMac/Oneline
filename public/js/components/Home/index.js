@@ -22,13 +22,14 @@ class Timeline extends React.Component {
         return shouldUpdate;
     }
     render() {
+        const { showingPosts, highlight } = this.props;
         return (
             <div>
             {
-                this.props.showingPosts
+                showingPosts
                 .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
                 .map(item => (
-                    <Post key={item.id_str} post={item} />
+                    <Post key={item.id_str} post={item} highlight={highlight} />
                 ))
             }
             </div>
@@ -38,7 +39,7 @@ class Timeline extends React.Component {
 class Home extends React.Component {
     constructor (props){
         super(props)
-        this.state = { dependenciesLoaded: false, search: false }
+        this.state = { dependenciesLoaded: false, search: false, searchText: '' }
         this.loadPosts = this.loadPosts.bind(this)
         this.handleSearch = this.handleSearch.bind(this)
         this.handleSwipedLeft = this.handleSwipedLeft.bind(this)
@@ -56,7 +57,7 @@ class Home extends React.Component {
             throw err
         })
     }
-    handleSearch({ actionType, newShowingPosts }) {
+    handleSearch({ searchText, actionType, newShowingPosts }) {
         const { updateShowingPosts, showingPosts } = this.props;
 
         switch (actionType) {
@@ -66,10 +67,11 @@ class Home extends React.Component {
                 break;
             case 'update':
                 updateShowingPosts(newShowingPosts)
+                this.setState({ searchText })
                 break;
             case 'reset':
                 updateShowingPosts(this.recordShowingPost)
-                this.setState({ search: false })
+                this.setState({ search: false, searchText: '' })
                 break;
         }
     }
@@ -129,22 +131,25 @@ class Home extends React.Component {
     }
     render() {
         const { newPosts, oldPosts, showingPosts, allPosts, isInitLoad, children } = this.props;
-        const { dependenciesLoaded, search } = this.state;
+        const { dependenciesLoaded, search, searchText } = this.state;
         return (
             <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
-                <ScrollToTop target=".spin--new" container=".oneline__wrapper" duration={700} />
+                <ScrollToTop target=".scrollTo--target" container=".oneline__wrapper" duration={700} />
 
                 <div className="oneline__wrapper overflow--y">
-                    <Spin
-                        type="newPosts"
-                        initLoad={isInitLoad || !dependenciesLoaded}
-                        {...newPosts}
-                        onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
-                    />
+                    <span className="scrollTo--target"></span>
+                    {!search &&
+                        <Spin
+                            type="newPosts"
+                            initLoad={isInitLoad || !dependenciesLoaded}
+                            {...newPosts}
+                            onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
+                        />
+                    }
                     {dependenciesLoaded && showingPosts && !isInitLoad && (
                         <div>
                             <SearchLocal onChange={this.handleSearch} allPosts={allPosts.posts} />
-                            <Timeline showingPosts={showingPosts} />
+                            <Timeline showingPosts={showingPosts} highlight={searchText} />
                         </div>
                     )}
                     {isInitLoad || !search

@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import debounce from 'debounce';
+import debounce from 'lodash.debounce';
 
 import Jump from 'utils/jump';
 
@@ -38,7 +38,7 @@ export default class ScrollToTop extends React.Component {
         this.lastPosTop = curTop
     }
     componentDidMount() {
-        this.debounceHandleContainerScoll = debounce(this.handleContainerScoll, 50)
+        this.debounceHandleContainerScoll = debounce(this.handleContainerScoll, 300)
 
         const containerElem = document.querySelector(this.props.container);
         containerElem.addEventListener('scroll', this.debounceHandleContainerScoll)

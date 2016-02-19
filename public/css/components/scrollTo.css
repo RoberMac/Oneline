@@ -15,4 +15,8 @@
             top: 0px;
         }
     }
+
+    &--target {
+        position: absolute 0 * * 0;
+    }
 }
