@@ -37,7 +37,6 @@ class LargeImg extends React.Component {
         }
     }
     handleClick(e) {
-        console.log(e.target.tagName)
         if (/a|svg|use/i.test(e.target.tagName)) return;
 
         const { index, max, zoomIn, zoomOut } = this.props;

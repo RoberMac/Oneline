@@ -1,7 +1,7 @@
 import React from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
 
-import { lazySize, lazySrc } from '../helper.js';
+import { lazySize } from '../helper.js';
 
 import Icon from 'components/Utils/Icon';
 
@@ -26,7 +26,7 @@ export default class Video extends React.Component {
         .classList[isPlay ? 'add' : 'remove']('post-media__playBtn--playing')
     }
     render() {
-        const { src, poster, ratio, visible } = this.props;
+        const { src, poster, ratio } = this.props;
         return (
             <VisibilitySensor onChange={isVisible => isVisible ? null : this.setPlayState(false)}>
                 <div
@@ -36,7 +36,7 @@ export default class Video extends React.Component {
                 >
                     <video
                         src={src}
-                        poster={visible ? poster : lazySrc}
+                        poster={poster}
                         preload="none"
                         webkit-playsinline="true"
                         loop

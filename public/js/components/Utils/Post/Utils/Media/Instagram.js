@@ -1,10 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { handleImageError, lazySize, lazySrc, calcDegree } from './helper.js';
+import { handleImageError, lazySize, calcDegree } from './helper.js';
 
 // Components
-import LazyLoad from 'components/Utils/LazyLoad';
 import Icon from 'components/Utils/Icon';
 import UserLink from 'components/Utils/UserLink';
 import Transition from 'components/Utils/Transition';
@@ -89,11 +88,11 @@ class Image extends React.Component {
         this.setState({ imgWidth: offsetWidth, imgHeight: offsetHeight })
     }
     render() {
-        const { images, users_in_photo, visible } = this.props;
+        const { images, users_in_photo } = this.props;
         return (
             <div className="post-media--large" style={lazySize(images.ratio)}>
                 <img
-                    src={visible ? images.standard_resolution : lazySrc}
+                    src={images.standard_resolution}
                     onError={handleImageError}
                     ref="image"
                 />
@@ -103,24 +102,17 @@ class Image extends React.Component {
         );
     }
 }
-const Media = ({ images, videos, users_in_photo, visible }) => (
+
+// Export
+export default ({ images, videos, users_in_photo }) => (
     <div className="post-media">
     {videos
         ? <Video
             src={videos.standard_resolution}
             poster={images.low_resolution}
             ratio={images.ratio}
-            visible={visible}
         />
-        : <Image images={images} users_in_photo={users_in_photo} visible={visible} />
+        : <Image images={images} users_in_photo={users_in_photo} />
     }
     </div>
-);
-
-
-// Export
-export default props => (
-    <LazyLoad once>
-        <Media {...props} />
-    </LazyLoad>
 );

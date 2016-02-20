@@ -17,7 +17,6 @@ export const fuckLongWeibo = event => {
 }
 
 export const lazySize = ratio => ({'paddingBottom': ratio * 100 + '%'});
-export const lazySrc = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
 const ratio2deg = ratio => Math.atan(ratio) * 180 / Math.PI;
 export const calcDegree = (x, y, w, h) => {
