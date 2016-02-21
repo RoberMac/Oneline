@@ -1,16 +1,17 @@
 import xssFilters from 'xss-filters';
 
-import reduxStore from 'store';
-import { UPDATE_BASE } from 'actions/base';
-let { base: { SHARE_PAGE, weiboEmotions } } = reduxStore.getState();
+import reduxStore from 'state/store';
+import { UPDATE_BASE } from 'state/actions/base';
+
+let { SHARE_PAGE, EMOTIONS } = reduxStore.getState().base;
 reduxStore.subscribe(() => {
-    const { base, lastAction: { type: actionType } } = reduxStore.getState();
+    const { base, lastAction: { type } } = reduxStore.getState();
 
-    if (actionType !== UPDATE_BASE) return;
+    if (type !== UPDATE_BASE) return;
 
-    SHARE_PAGE = base.sharePage;
-    weiboEmotions = base.weiboEmotions;
-});
+    SHARE_PAGE = base.SHARE_PAGE;
+    EMOTIONS = base.EMOTIONS;
+})
 
 // via https://github.com/RoberMac/angular-linkify/blob/master/angular-linkify.js#L5
 const USER_PREFIX = {
@@ -69,7 +70,7 @@ const _linkify = (text, provider) => {
 // via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L57
 const _weiboEmotify = (text) => {
     if (!text) return;
-    if (!weiboEmotions) return text;
+    if (!EMOTIONS['weibo']) return text;
     let _text = text.replace(/\[[\u4e00-\u9fa5\w]+\]/g, str => {
         /**
          * Key Structure
@@ -78,7 +79,7 @@ const _weiboEmotify = (text) => {
          *
          */
         let key = str.replace(/[\[\]]/g, '');
-        let _id = weiboEmotions[key];
+        let _id = EMOTIONS['weibo'][key];
 
         if (!_id) return str;
 

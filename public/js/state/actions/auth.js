@@ -4,7 +4,7 @@ import {
     replaceTokenList as _replaceTokenList,
     isValidToken as _isValidToken,
     clearTokenList as _clearTokenList
-} from '../utils/tokenHelper';
+} from 'utils/tokenHelper';
 import { Auth } from 'utils/api';
 
 // Export

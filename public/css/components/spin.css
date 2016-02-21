@@ -10,13 +10,13 @@
         z-index: 3;
 
         .spin__btn {
-            top: -17px;
+            transform: translateY(-17px);
 
             &:hover, &--active {
-                top: 7px;
+                transform: translateY(7px);
             }
             @media (--all-mobile-devices){
-                top: 7px;
+                transform: translateY(7px);
             }
         }
     }
@@ -25,13 +25,13 @@
         z-index: 2;
 
         .spin__btn {
-            bottom: -39px;
+            transform: translateY(39px);
 
             &:hover, &--active {
-                bottom: -15px;
+                transform: translateY(15px);
             }
             @media (--all-mobile-devices){
-                bottom: -15px;
+                transform: translateY(15px);
             }
         }
     }

@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 export default ({ location, main, leftSidebar, rightSidebar }) => {
-    const isHome = !/^\/settings/.test(location.pathname);
+    const isHome = location.pathname.indexOf('settings') < 0;
     const mainClass = classNames({
         'oneline oneline--enter animate--general': true,
         'oneline--timeline': isHome

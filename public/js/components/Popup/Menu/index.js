@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { Link } from 'react-router';
 
-import reduxStore from 'store';
+import reduxStore from 'state/store';
 
 // Components
 import Icon from 'components/Utils/Icon';
@@ -79,7 +79,7 @@ const _SettingsMenu = ({ activeProviders }) => {
 }
 const _HomeMenu = ({ params, activeProviders }) => {
     const provider = params.provider;
-    const { base: { [`profile_${provider}`]: { uid } } } = reduxStore.getState();
+    const { uid } = reduxStore.getState().base['PROFILE'][provider];
 
     let data;
     switch (provider){

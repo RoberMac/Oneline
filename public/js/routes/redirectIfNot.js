@@ -3,12 +3,12 @@ import { isValidToken } from '../utils/tokenHelper';
 export default {
     Home: (nextState, replaceState) => {
         if (nextState.location.pathname === '/'){
-            replaceState(null, '/home')
+            replaceState('/home')
         }
     },
     Auth: (nextState, replaceState) => {
         if (!isValidToken()){
-            replaceState(null, '/settings')
+            replaceState('/settings')
         }
     },
     VaildProvider: (nextState, replaceState) => {
@@ -17,7 +17,7 @@ export default {
 
         if (vaildProviders.indexOf(provider) < 0){
             __DEV__ && console.error(`Warning: "${provider}" is't valid provider`)
-            replaceState(null, '/home')
+            replaceState('/home')
         }
     },
     VaildAction: (nextState, replaceState) => {
@@ -30,13 +30,13 @@ export default {
         ];
         if (validActions.indexOf(action) < 0){
             __DEV__ && console.error(`Warning: "${action}" is't valid action`)
-            replaceState(null, '/home')
+            replaceState('/home')
         }
 
         const stateRequiredAction = ['retweet', 'quote', 'reply', 'share'];
         if (stateRequiredAction.indexOf(action) >= 0 && !nextState.location.state){
             __DEV__ && console.error(`Warning: "state" is missing`)
-            replaceState(null, '/home')
+            replaceState('/home')
         }
     }
 }

@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 
 // Helpers
 import { selectUserLink } from 'utils/select';
-import reduxStore from 'store';
+import reduxStore from 'state/store';
 const { base: { SHARE_PAGE } } = reduxStore.getState();
 
 export default ({ provider, screen_name, children, className }) => (

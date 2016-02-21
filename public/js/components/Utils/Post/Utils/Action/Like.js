@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import reduxStore from 'store';
+import reduxStore from 'state/store';
 import numAbbr from 'utils/numAbbr';
-import { updatePost } from 'actions/timeline';
+import { updatePost } from 'state/actions/timeline';
 import { Action } from 'utils/api';
 import { addClassTemporarily } from 'utils/dom';
 

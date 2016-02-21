@@ -1,4 +1,4 @@
-import history from './history';
+import { browserHistory as history } from 'react-router';
 
 export default e => {
     const elem = e.target;

@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 
 // Helper
 import { selectLocationLink } from 'utils/select';
-import reduxStore from 'store';
+import reduxStore from 'state/store';
 const { base: { SHARE_PAGE } } = reduxStore.getState();
 const selectLink = (
     SHARE_PAGE

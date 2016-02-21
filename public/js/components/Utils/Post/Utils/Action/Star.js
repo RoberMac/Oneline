@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { updatePost } from 'actions/timeline';
-import reduxStore from 'store';
+import { updatePost } from 'state/actions/timeline';
+import reduxStore from 'state/store';
 import { Action } from 'utils/api';
 import { addClassTemporarily } from 'utils/dom';
 

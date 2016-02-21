@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { browserHistory as history } from 'react-router';
 
 import store from 'utils/store';
 import { Auth } from 'utils/api';
-import { replaceTokenList } from '../../../actions/auth';
+import { replaceTokenList } from 'state/actions/auth';
 
 // Components
 import { addClassTemporarily } from 'utils/dom';
@@ -89,7 +90,7 @@ class _Rachael extends React.Component {
     handleSubmit(e) {
         e.preventDefault()
 
-        const { replaceTokenList, history } = this.props;
+        const { replaceTokenList } = this.props;
         const rachaelElem = this.refs.rachael;
         const code = rachaelElem.value;
 

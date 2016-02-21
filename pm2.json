@@ -1,0 +1,13 @@
+{
+    "apps": [{
+        "name": "Oneline",
+        "script": "./app.js",
+        "exec_interpreter": "node",
+        "watch": false,
+        "env": {
+            "NODE_ENV": "production"
+        },
+        "cwd": "/",
+        "ignoreWatch": ["node_modules"]
+    }]
+}

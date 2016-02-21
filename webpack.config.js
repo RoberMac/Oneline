@@ -37,11 +37,9 @@ module.exports = {
     resolve: {
         extensions: ['', '.js', '.json', '.coffee'],
         alias: {
-            'actions': path.resolve(APP_PATH, 'actions'),
             'components': path.resolve(APP_PATH, 'components'),
-            'reducers': path.resolve(APP_PATH, 'reducers'),
             'routes': path.resolve(APP_PATH, 'routes'),
-            'store': path.resolve(APP_PATH, 'store'),
+            'state': path.resolve(APP_PATH, 'state'),
             'utils': path.resolve(APP_PATH, 'utils'),
             'images': path.resolve(ROOT_PATH, 'public/img'),
         }

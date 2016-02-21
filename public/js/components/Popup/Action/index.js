@@ -1,4 +1,5 @@
 import React from 'react';
+import { browserHistory as history } from 'react-router';
 
 import Write from './Write';
 import Read from './Read';
@@ -35,7 +36,7 @@ export const Action = props => {
 
     return (
         <SelectAction
-            history={props.history}
+            history={history}
             location={props.location}
             {...props.params} // provider, action, id
         />

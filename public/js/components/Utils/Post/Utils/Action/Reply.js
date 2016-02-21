@@ -13,7 +13,7 @@ export default ({ provider, post }) => {
         'tips--inactive': !id_str
     });
     return (
-        <Link to={`/home/${provider}/reply/${id_str}`} state={post}>
+        <Link to={{ pathname: `/home/${provider}/reply/${id_str}`, state: post }}>
             <span className={btnClass}>
                 <Icon className="post-action__icon" name="reply" />
                 <span className="post-action__count" data-count={reply_count > 0 ? numAbbr(reply_count) : ''} />

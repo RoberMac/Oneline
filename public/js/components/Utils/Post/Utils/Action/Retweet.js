@@ -4,8 +4,8 @@ import classNames from 'classnames';
 
 // Helpers
 import numAbbr from 'utils/numAbbr';
-import reduxStore from 'store';
-import { updatePost } from 'actions/timeline';
+import reduxStore from 'state/store';
+import { updatePost } from 'state/actions/timeline';
 import { Action } from 'utils/api';
 
 // Components
@@ -17,7 +17,7 @@ const RetweetBtn = ({ provider, post }) => {
         'tips--inactive': !id_str
     })
     return (
-        <Link to={`/home/${provider}/retweet/${id_str}`} state={post}>
+        <Link to={{ pathname: `/home/${provider}/retweet/${id_str}`, state: post }}>
             <span className={btnClass}>
                 <Icon className="post-action__icon" name="retweet" />
                 <span

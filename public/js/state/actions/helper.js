@@ -3,8 +3,8 @@ import assign from 'object.assign';
 // Helpers
 import store from 'utils/store';
 import { Timeline } from 'utils/api';
-import reduxStore from 'store';
-import { updateBase } from 'actions/base';
+import reduxStore from 'state/store';
+import { updateBase } from 'state/actions/base';
 
 const arrayUnique = {
     // via http://jszen.com/best-way-to-get-unique-values-of-an-array-in-javascript.7.html
@@ -329,6 +329,7 @@ function recordMentions({ providers, posts }) {
     })
 
     // Store
+    let MENTIONS = {};
     providers.forEach(provider => {
         const isTwitter = provider === 'twitter';
         const isWeibo   = provider === 'weibo';
@@ -341,10 +342,9 @@ function recordMentions({ providers, posts }) {
         }
 
         store.set('mentions_' + provider, mentionsList[provider])
-        reduxStore.dispatch(updateBase({
-            [`mentions_${provider}`]: mentionsList[provider]
-        }));
+        MENTIONS[provider] = mentionsList[provider]
     })
+    reduxStore.dispatch(updateBase({ MENTIONS }));
 
     __DEV__ && console.timeEnd('[recordMentions]')
 }

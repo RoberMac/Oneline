@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import reduxStore from 'store';
+import reduxStore from 'state/store';
 const { base: { SAFARI } } = reduxStore.getState();
 
 export default ({ type, initLoad, isFetching, isFetchFail, unreadCount, provider, onClick }) => {

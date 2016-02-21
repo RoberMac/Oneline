@@ -2,24 +2,35 @@ import assign from 'object.assign';
 
 import store from 'utils/store';
 import { Action, Media } from 'utils/api';
-import reduxStore from 'store';
-import { updatePost } from 'actions/timeline';
+import reduxStore from 'state/store';
+import { updatePost } from 'state/actions/timeline';
+import { UPDATE_BASE } from 'state/actions/base';
 
 /**
  * Mention
  *
  */
+const MENTIONS_REGEX = {
+    twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
+    weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
+};
+let { MENTIONS } = reduxStore.getState().base;
+reduxStore.subscribe(() => {
+    const { base, lastAction: { type } } = reduxStore.getState();
+
+    if (type !== UPDATE_BASE) return;
+
+    MENTIONS = base.MENTIONS
+})
 export const extractMentions = ({ status, provider }) => {
-    const mentionRegex = {
-        twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
-        weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
-    };
-    let mentionUser = status.match(mentionRegex[provider]);
+    const isTwitter = provider === 'twitter';
+    let mentionUser = status.match(MENTIONS_REGEX[provider]);
+
     if (mentionUser){
         mentionUser = mentionUser[2].trim().toLowerCase();
         return (
-            reduxStore.getState().base[`mentions_${provider}`]
-            .filter(provider === 'twitter'
+            MENTIONS[provider]
+            .filter(isTwitter
                 ? item => Object.keys(item).some(key => item[key].toLowerCase().indexOf(mentionUser) >= 0)
                 : item => item.toLowerCase().indexOf(mentionUser) >= 0
             )
@@ -254,7 +265,7 @@ export const initLivePreview = ({ type, provider, status, media, livePreviewPost
         type,
         created_at: created_at || Date.now(),
         text: status,
-        user: user || reduxStore.getState().base[`profile_${provider}`],
+        user: user || reduxStore.getState().base['PROFILE'][provider],
         media: initLivePreviewMedia({ media, provider })
     });
     // Retweet / Quote (Inside Post)

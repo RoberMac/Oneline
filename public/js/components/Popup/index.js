@@ -1,5 +1,6 @@
 import React from 'react';
 import Swipeable from 'react-swipeable';
+import { browserHistory as history } from 'react-router';
 
 import Transition from 'components/Utils/Transition';
 
@@ -12,7 +13,7 @@ export default class Popup extends React.Component {
         this.handleSwipedRight = this.handleSwipedRight.bind(this)
     }
     hidePopup (){
-        const { history, location } = this.props;
+        const { location } = this.props;
         history.push(/settings/.test(location.pathname) ? '/settings' : '/home')
     }
     stopPropagation (e){
@@ -23,11 +24,11 @@ export default class Popup extends React.Component {
     }
     handleSwipedLeft(e) {
         e.stopPropagation()
-        this.props.history.go()
+        history.go()
     }
     handleSwipedRight(e) {
         e.stopPropagation()
-        this.props.history.goBack()
+        history.goBack()
     }
     componentDidMount (){
         window.addEventListener('keydown', this.handleKeyDown)

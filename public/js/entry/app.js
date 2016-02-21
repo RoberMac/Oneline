@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router';
+import { Router, browserHistory } from 'react-router';
 
 // Styles
 import './common.css';
@@ -13,13 +13,12 @@ import 'isomorphic-fetch';
 
 // Config
 import routes from '../routes';
-import store from '../store';
-import history from '../utils/history';
+import store from 'state/store';
 
 // Render
 ReactDOM.render(
     <Provider store={store}>
-        <Router history={history}>
+        <Router history={browserHistory}>
             {routes}
         </Router>
     </Provider>,

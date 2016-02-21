@@ -1,9 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
 import Swipeable from 'react-swipeable';
+import { connect } from 'react-redux';
+import { browserHistory as history } from 'react-router';
 
-import { addToken, removeToken, clearTokenIfTokenExpired } from 'actions/auth';
+import { addToken, removeToken, clearTokenIfTokenExpired } from 'state/actions/auth';
 
 // Components
 import Icon from 'components/Utils/Icon';
@@ -47,10 +48,10 @@ class SocialAuth extends React.Component {
         if (e.key === 'addToken'){ this.props.addToken() };
     }
     handleSwipedLeft() {
-        this.props.history.push('/home')
+        history.push('/home')
     }
     handleSwipedRight() {
-        this.props.history.push('/settings/replicant')
+        history.push('/settings/replicant')
     }
     componentWillMount() {
         this.props.clearTokenIfTokenExpired()

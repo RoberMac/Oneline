@@ -1,11 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import Swipeable from 'react-swipeable';
 import shallowCompare from 'react-addons-shallow-compare';
+import { connect } from 'react-redux';
+import { browserHistory as history } from 'react-router';
 
 // Helpers
-import { replaceTokenList } from 'actions/auth';
-import { resetState, fetchPosts, updateShowingPosts } from 'actions/timeline';
+import { replaceTokenList } from 'state/actions/auth';
+import { resetState, fetchPosts, updateShowingPosts } from 'state/actions/timeline';
 import DependencyLoader from './loader';
 
 // Components
@@ -46,7 +47,7 @@ class Home extends React.Component {
         this.handleSwipedRight = this.handleSwipedRight.bind(this)
     }
     loadPosts({ postsType, isAutoFetch }) {
-        const { fetchPosts, replaceTokenList, history } = this.props;
+        const { fetchPosts, replaceTokenList } = this.props;
         return fetchPosts({ postsType, isAutoFetch })
         .catch(err => {
             __DEV__ && console.error(err)
@@ -85,10 +86,10 @@ class Home extends React.Component {
             : 'instagram'
         );
 
-        this.props.history.push(`/home/${firstProvider}`)
+        history.push(`/home/${firstProvider}`)
     }
     handleSwipedRight() {
-        this.props.history.push('/settings')
+        history.push('/settings')
     }
     handleWindowBlur() {
         // Pause All Video

@@ -44,11 +44,18 @@ export const initBaseState = () => {
         SHARE_PAGE: !!window.__share_data__,
         BLOCKED: !!window.__is_blocked__,
         SAFARI: /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent),
-        weiboEmotions: store.get('weiboEmotions'),
-        // mentions_twitter,
-        // mentions_weibo,
-        // profile_twitter,
-        // profile_instagram,
-        // profile_weibo
+        EMOTIONS: {
+            weibo: store.get('weiboEmotions')
+        },
+        // MENTIONS: {
+        //     twitter,
+        //     instagram,
+        //     weibo
+        // },
+        // PROFILE: {
+        //     twitter,
+        //     instagram,
+        //     weibo
+        // }
     };
 }

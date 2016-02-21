@@ -1,6 +1,6 @@
 import update from 'react-addons-update';
 
-import reduxStore from 'store';
+import reduxStore from 'state/store';
 const { base: { BLOCKED } } = reduxStore.getState();
 
 export const rewriteMediaLink = ({ type, provider, data }) => {

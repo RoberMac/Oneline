@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
+import { browserHistory as history } from 'react-router';
 
-import reduxStore from 'store';
-import history from 'utils/history';
-import { deletePost } from 'actions/timeline';
+import reduxStore from 'state/store';
+import { deletePost } from 'state/actions/timeline';
 import { Action } from 'utils/api';
 import { addClassTemporarily } from 'utils/dom';
 
