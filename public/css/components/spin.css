@@ -39,11 +39,9 @@
     &--initLoad {
         position: absolute calc(50% - 35px) * * !important;
 
-        &.spin--new .spin__btn {
-            top: 11px !important;
-        }
+        &.spin--new .spin__btn,
         &.spin--old .spin__btn {
-            bottom: -11px !important;
+            transform: translateY(11px)!important;
         }
     }
 
@@ -68,10 +66,10 @@
         }
         &--loading {
             &[class~="spin__btn--new"] {
-                top: 7px !important;
+                transform: translateY(7px)!important;
             }
             &[class~="spin__btn--old"] {
-                bottom: -15px !important;
+                transform: translateY(15px)!important;
             }
             cursor: default;
             &::before {
