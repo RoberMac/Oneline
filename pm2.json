@@ -7,7 +7,6 @@
         "env": {
             "NODE_ENV": "production"
         },
-        "cwd": "/",
         "ignoreWatch": ["node_modules"]
     }]
 }

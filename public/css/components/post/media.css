@@ -41,8 +41,8 @@
     }
     &--small {
         img {
-            size: calc(100% / 9 - 7px);
-            margin-right: 7px;
+            size: calc(100% / 9 - 6px);
+            margin: 0 3px;
             border-radius: 50%;
         }
     }

@@ -9,9 +9,10 @@ const filterUtils = require('./utils');
 
 let filter = {
     twitter: data => {
+        const postsLength = data.length;
         let cache = [];
 
-        for (let item of data){
+        data.forEach((item, index) => {
             /**
              * Tweet / Reply
              *
@@ -19,7 +20,7 @@ let filter = {
             let tweetObj = {
                 type: 'tweet',
                 provider: 'twitter',
-                created_at: Date.parse(item.created_at),
+                created_at: Date.parse(item.created_at) + (postsLength - index),
                 id_str: item.id_str,
                 user: filterUtils.twitter.user(item.user),
                 text: item.text,
@@ -88,11 +89,11 @@ let filter = {
             } 
 
             cache.push(tweetObj);
-        }
+        })
 
         let returnObj = { data: cache };
         let firstData = data[0];
-        let lastData  = data[data.length - 1];
+        let lastData  = data[postsLength - 1];
 
         if (lastData){
             Object.assign(returnObj, {
@@ -106,12 +107,13 @@ let filter = {
         return returnObj;
     },
     instagram: data => {
+        const postsLength = data.length;
         let cache = [];
 
-        for (let item of data){
+        data.forEach((item, index) => {
             let igPost = {
                 provider: 'instagram',
-                created_at: Date.parse(new Date(item.created_time * 1000)),
+                created_at: Date.parse(new Date(item.created_time * 1000)) + (postsLength - index),
                 id_str: item.id,
                 type: 'post',
                 user: filterUtils.instagram.user(item.user),
@@ -149,12 +151,12 @@ let filter = {
             }
 
             cache.push(igPost);
-        }
+        })
 
 
         let returnObj = { data: cache };
         let firstData = data[0];
-        let lastData  = data[data.length - 1];
+        let lastData  = data[postsLength - 1];
 
         if (lastData){
             Object.assign(returnObj, {
@@ -168,9 +170,10 @@ let filter = {
         return returnObj;
     },
     weibo: data => {
+        const postsLength = data.length;
         let cache = [];
 
-        for (let item of data){
+        data.forEach((item, index) => {
             /**
              * Tweet / Reply
              *
@@ -178,7 +181,7 @@ let filter = {
             let weiboObj = {
                 type: 'tweet',
                 provider: 'weibo',
-                created_at: Date.parse(item.created_at),
+                created_at: Date.parse(item.created_at) + (postsLength - index),
                 id_str: item.idstr,
                 mid: mid.encode(item.mid),
                 user: filterUtils.weibo.user(item.user),
@@ -263,11 +266,11 @@ let filter = {
             }
 
             cache.push(weiboObj)
-        }
+        })
 
         let returnObj = { data: cache };
         let firstData = data[0];
-        let lastData  = data[data.length - 1];
+        let lastData  = data[postsLength - 1];
 
         if (lastData){
             Object.assign(returnObj, {

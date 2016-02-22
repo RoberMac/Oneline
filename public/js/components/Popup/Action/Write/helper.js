@@ -20,7 +20,7 @@ reduxStore.subscribe(() => {
 
     if (type !== UPDATE_BASE) return;
 
-    MENTIONS = base.MENTIONS
+    ({ MENTIONS } = base);
 })
 export const extractMentions = ({ status, provider }) => {
     const isTwitter = provider === 'twitter';

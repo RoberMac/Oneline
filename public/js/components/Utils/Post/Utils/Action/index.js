@@ -9,7 +9,7 @@ reduxStore.subscribe(() => {
 
     if (type !== UPDATE_BASE) return;
 
-    PROFILE = base.PROFILE
+    ({ PROFILE } = base);
 })
 
 // Components
@@ -28,7 +28,7 @@ const Actions = {
     twitter: ({ post }) => {
         const isAuthUser = (
             post.detail
-            && PROFILE['twitter'] 
+            && PROFILE && PROFILE['twitter'] 
             && post.user.screen_name === PROFILE['twitter'].screen_name
         );
         return (post.detail
@@ -67,7 +67,7 @@ const Actions = {
     weibo: ({ post }) => {
         const isAuthUser = (
             post.detail
-            && PROFILE['weibo']
+            && PROFILE && PROFILE['weibo']
             && post.user.screen_name === PROFILE['weibo'].screen_name
         );
         return (post.detail

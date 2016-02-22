@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import debounce from 'lodash.debounce';
+import ClassList from 'classlist';
 
 import { handleImageError, fuckLongWeibo } from './helper.js';
 
@@ -13,33 +14,37 @@ import ViewOriginal from './Utils/ViewOriginal';
 class LargeImg extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { loading: true }
+        this.state = { loading: true, width: {}, bound: {} }
         this.handleCursorChange = this.handleCursorChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.handleImageLoaded = this.handleImageLoaded.bind(this)
+        this.updateWidth = this.updateWidth.bind(this)
     }
     handleCursorChange(e) {
-        const elem = this.refs.largeImg;
-        const offsetX = e.offsetX;
-        const offsetWidth = elem.offsetWidth;
-        const preCursorBound = offsetWidth * 2 / 5;
-        const nextCursorBound = offsetWidth * 3 / 5;
+        const {
+            width: { imgWidth, windowWidth },
+            bound: { preCursorBound, nextCursorBound }
+        } = this.state;
+        const X = e.clientX - (windowWidth - imgWidth) / 2;
 
-        if (offsetX < preCursorBound){
-            elem.classList.remove('cursor--next', 'cursor--zoomOut')
-            elem.classList.add('cursor--pre')
-        } else if (offsetX > nextCursorBound){
-            elem.classList.remove('cursor--pre', 'cursor--zoomOut')
-            elem.classList.add('cursor--next')
+        if (X < preCursorBound){
+            this.imgClassList
+            .remove('cursor--next', 'cursor--zoomOut')
+            .add('cursor--pre')
+        } else if (X > nextCursorBound) {
+            this.imgClassList
+            .remove('cursor--pre', 'cursor--zoomOut')
+            .add('cursor--next')
         } else {
-            elem.classList.remove('cursor--pre', 'cursor--next')
-            elem.classList.add('cursor--zoomOut')
+            this.imgClassList
+            .remove('cursor--pre', 'cursor--next')
+            .add('cursor--zoomOut')
         }
     }
     handleClick(e) {
         if (/a|svg|use/i.test(e.target.tagName)) return;
 
-        const { index, max, zoomIn, zoomOut } = this.props;
+        const { index, count, onZoomIn } = this.props;
         const elem = this.refs.largeImg;
         const nextIndex = elem.className.search('cursor--pre') >= 0 
                             ? index - 1
@@ -47,35 +52,52 @@ class LargeImg extends React.Component {
                             ? index + 1
                         : index;
 
-        if (nextIndex < 0 || nextIndex >= max) return;
+        if (nextIndex < 0 || nextIndex >= count) return;
 
-        zoomIn(nextIndex)
+        onZoomIn(nextIndex)
     }
     handleImageLoaded(e) {
         fuckLongWeibo(e)
         this.setState({ loading: false })
     }
+    updateWidth() {
+        const imgWidth = this.refs.largeImg.offsetWidth;
+        this.setState({
+            width: {
+                imgWidth,
+                windowWidth: window.innerWidth
+            },
+            bound: {
+                preCursorBound: imgWidth * 2 / 5,
+                nextCursorBound: imgWidth * 3 / 5
+            }
+        });
+    }
     componentDidMount() {
-        this.debounceHandleCursorChange = debounce(this.handleCursorChange, 50)
         const elem = this.refs.largeImg;
 
-        if (this.props.max > 1){
-            elem.addEventListener('mousemove', this.debounceHandleCursorChange)
+        this.imgClassList = new ClassList(elem);
+        this.updateWidth();
+
+        window.addEventListener('resize', this.updateWidth)
+        if (this.props.count > 1) {
+            elem.addEventListener('mousemove', this.handleCursorChange)
         } else {
-            elem.classList.add('cursor--zoomOut')
+            this.imgClassList.add('cursor--zoomOut')
         }
     }
     componentWillUnmount() {
         const elem = this.refs.largeImg;
 
-        this.props.max > 1 && elem.removeEventListener('mousemove', this.debounceHandleCursorChange)
+        window.removeEventListener('resize', this.updateWidth)
+        this.props.count > 1 && elem.removeEventListener('mousemove', this.handleCursorChange)
     }
     componentWillReceiveProps(nextProps) {
         if (this.props.src === nextProps.src) return;
         this.setState({ loading: true })
     }
     render() {
-        const { src, index, max } = this.props;
+        const { src } = this.props;
         const { loading } = this.state;
         const middleSrc = src.replace(/square|small/, 'bmiddle');
         const largeSrc  = src.replace(/square|small/, 'large');
@@ -152,9 +174,8 @@ export default class Media extends React.Component {
                 <LargeImg
                     src={largeImgSrc}
                     index={largeImgIndex}
-                    max={media.length}
-                    zoomIn={this.zoomIn}
-                    zoomOut={this.zoomOut}
+                    count={media.length}
+                    onZoomIn={this.zoomIn}
                 /> 
             )}
             </div>

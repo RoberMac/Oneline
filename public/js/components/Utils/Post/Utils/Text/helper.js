@@ -9,8 +9,7 @@ reduxStore.subscribe(() => {
 
     if (type !== UPDATE_BASE) return;
 
-    SHARE_PAGE = base.SHARE_PAGE;
-    EMOTIONS = base.EMOTIONS;
+    ({ SHARE_PAGE, EMOTIONS } = base);
 })
 
 // via https://github.com/RoberMac/angular-linkify/blob/master/angular-linkify.js#L5
