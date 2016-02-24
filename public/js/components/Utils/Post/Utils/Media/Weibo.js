@@ -1,9 +1,19 @@
 import React from 'react';
 import classNames from 'classnames';
-import debounce from 'lodash.debounce';
 import ClassList from 'classlist';
 
+// Helpers
 import { handleImageError, fuckLongWeibo } from './helper.js';
+import reduxStore from 'state/store';
+import { UPDATE_BASE } from 'state/actions/base';
+let { base: { WIDTH } } = reduxStore.getState();
+reduxStore.subscribe(() => {
+    const { base, lastAction: { type } } = reduxStore.getState();
+
+    if (type !== UPDATE_BASE) return;
+
+    ({ WIDTH } = base);
+})
 
 // Components
 import Icon from 'components/Utils/Icon';
@@ -14,24 +24,24 @@ import ViewOriginal from './Utils/ViewOriginal';
 class LargeImg extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { loading: true, width: {}, bound: {} }
+        this.state = { loading: true }
         this.handleCursorChange = this.handleCursorChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.handleImageLoaded = this.handleImageLoaded.bind(this)
-        this.updateWidth = this.updateWidth.bind(this)
     }
     handleCursorChange(e) {
-        const {
-            width: { imgWidth, windowWidth },
-            bound: { preCursorBound, nextCursorBound }
-        } = this.state;
-        const X = e.clientX - (windowWidth - imgWidth) / 2;
+        const imgWidth = this.refs.largeImg.offsetWidth;
+        const BOUND = {
+            preCursorBound: imgWidth * 2 / 5,
+            nextCursorBound: imgWidth * 3 / 5
+        };
+        const X = e.clientX - (WIDTH.windowWidth - imgWidth) / 2;
 
-        if (X < preCursorBound){
+        if (X < BOUND.preCursorBound){
             this.imgClassList
             .remove('cursor--next', 'cursor--zoomOut')
             .add('cursor--pre')
-        } else if (X > nextCursorBound) {
+        } else if (X > BOUND.nextCursorBound) {
             this.imgClassList
             .remove('cursor--pre', 'cursor--zoomOut')
             .add('cursor--next')
@@ -60,26 +70,11 @@ class LargeImg extends React.Component {
         fuckLongWeibo(e)
         this.setState({ loading: false })
     }
-    updateWidth() {
-        const imgWidth = this.refs.largeImg.offsetWidth;
-        this.setState({
-            width: {
-                imgWidth,
-                windowWidth: window.innerWidth
-            },
-            bound: {
-                preCursorBound: imgWidth * 2 / 5,
-                nextCursorBound: imgWidth * 3 / 5
-            }
-        });
-    }
     componentDidMount() {
         const elem = this.refs.largeImg;
 
         this.imgClassList = new ClassList(elem);
-        this.updateWidth();
 
-        window.addEventListener('resize', this.updateWidth)
         if (this.props.count > 1) {
             elem.addEventListener('mousemove', this.handleCursorChange)
         } else {
@@ -89,7 +84,6 @@ class LargeImg extends React.Component {
     componentWillUnmount() {
         const elem = this.refs.largeImg;
 
-        window.removeEventListener('resize', this.updateWidth)
         this.props.count > 1 && elem.removeEventListener('mousemove', this.handleCursorChange)
     }
     componentWillReceiveProps(nextProps) {

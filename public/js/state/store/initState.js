@@ -47,15 +47,18 @@ export const initBaseState = () => {
         EMOTIONS: {
             weibo: store.get('weiboEmotions')
         },
-        // MENTIONS: {
-        //     twitter,
-        //     instagram,
-        //     weibo
-        // },
-        // PROFILE: {
-        //     twitter,
-        //     instagram,
-        //     weibo
-        // }
+        MENTIONS: {
+            // twitter,
+            // instagram,
+            // weibo
+        },
+        PROFILE: {
+            // twitter,
+            // instagram,
+            // weibo
+        },
+        WIDTH: {
+            // windowWidth
+        }
     };
 }

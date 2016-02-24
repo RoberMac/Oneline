@@ -16,9 +16,6 @@ export default class Popup extends React.Component {
         const { location } = this.props;
         history.push(/settings/.test(location.pathname) ? '/settings' : '/home')
     }
-    stopPropagation (e){
-        e.stopPropagation()
-    }
     handleKeyDown (e){
         if (e.keyCode === 27){ this.hidePopup() }
     }
@@ -46,7 +43,7 @@ export default class Popup extends React.Component {
                 onSwipedRight={this.handleSwipedRight}
             >
                 <div className="popup__wrapper" onClick={this.hidePopup}>
-                    <div onClick={this.stopPropagation}>
+                    <div onClick={e => e.stopPropagation()}>
                         {/(retweet|quote)/.test(pathname)
                             ? children
                             : <Transition>
