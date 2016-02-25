@@ -33,6 +33,7 @@ const ICONS_VIEWBOX = {
     "2": _SQUARE,
     "sidebar_cancel": _SQUARE,
     "sidebar_ok": _SQUARE,
+    "sidebar_go": _SQUARE,
     "sidebar_menu": _SQUARE,
     "sidebar_settings": _SQUARE,
     "sidebar_replicant": _SQUARE,

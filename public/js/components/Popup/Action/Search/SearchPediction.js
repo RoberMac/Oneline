@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 // Helpers
 import store from 'utils/store';
 import { Action } from 'utils/api';
+import { isTwitter as _isTwitter } from 'utils/detect';
 const PEDICTION = {
     twitter: {
         text: {
@@ -53,7 +54,7 @@ export default class SearchPediction extends React.Component {
         const { provider, searchType, searchText } = this.props;
         const { pedictions, isFetching } = this.state;
 
-        const isTwitter = provider === 'twitter';
+        const isTwitter = _isTwitter(provider);
         const P = PEDICTION[provider][searchType];
 
         if (isFetching || isTwitter && P['isFresh'](pedictions)) return;
@@ -92,7 +93,7 @@ export default class SearchPediction extends React.Component {
         }
     }
     componentDidMount() {
-        this.props.provider === 'twitter' && this.fetchPedictions()
+        _isTwitter(this.props.provider) && this.fetchPedictions()
     }
     render() {
         const { provider, searchType, searchText, onPedictionClick } = this.props;

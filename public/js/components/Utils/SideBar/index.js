@@ -1,12 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
+import { browserHistory as history } from 'react-router';
+
+// Helpers
+import { isHomePage, isPopupPage } from 'utils/detect';
+const sidebarBtnClass = 'sidebar__button btn animate--faster';
+const colorClass = pathname => {
+    const match = pathname.match(/twitter|instagram|weibo/);
+    return `color--${match ? match[0] : 'steel'}`;
+};
 
 // Components
 import Icon from 'components/Utils/Icon';
-const sidebarBtnClass = classNames('sidebar__button', 'btn', 'animate--faster');
-
+const GoBtn = ({ step, className }) => (
+    <button onClick={() => history.go(step)} className={className}>
+        <Icon name="sidebar_go" />
+    </button>
+);
 const ShowMenuBtn = ({ firstProvider }) => (
     <Link to={`/home/${firstProvider}`}>
         <span className={`${sidebarBtnClass} color--${firstProvider}`} type="button">
@@ -50,14 +61,19 @@ const BackToSettingsBtn = ({ activeProviders }) => (
         </span>
     </Link>
 );
-const LeftSidebar = ({ activeProviders }) => {
-    const isPopup = !/home$/.test(location.pathname);
-
-    return isPopup ? <span /> : <BackToSettingsBtn activeProviders={activeProviders} />;
-};
-const RightSidebar = ({ activeProviders }) => {
-    const isPopup = !/home$/.test(location.pathname);
-    let firstProvider = (
+const _LeftSidebar = ({ activeProviders, location: { pathname } }) => (
+    isPopupPage(pathname)
+        ? <GoBtn step={-1} className={`${sidebarBtnClass} ${colorClass(pathname)}`} />
+    : isHomePage(pathname)
+        ? <BackToSettingsBtn activeProviders={activeProviders} />
+    : <Link to="/settings/replicant">
+        <span className={sidebarBtnClass}>
+            <Icon name="sidebar_replicant" />
+        </span>
+    </Link>
+);
+const _RightSidebar = ({ activeProviders, location: { pathname } }) => {
+    const firstProvider = (
         activeProviders.indexOf('twitter') >= 0
             ? 'twitter'
         : activeProviders.indexOf('weibo') >= 0
@@ -65,15 +81,27 @@ const RightSidebar = ({ activeProviders }) => {
         : 'instagram'
     );
 
-    return isPopup ? <span /> : <ShowMenuBtn firstProvider={firstProvider}/>;
-}
+    return (
+        activeProviders.length <= 0 || isPopupPage(pathname)
+            ? <GoBtn
+                step="1"
+                className={`${sidebarBtnClass} ${colorClass(pathname)} rotate--180`}
+            />
+        : isHomePage(pathname)
+            ? <ShowMenuBtn firstProvider={firstProvider}/>
+        : <Link to="/home">
+            <span className={sidebarBtnClass}>
+                <Icon name="sidebar_ok" />
+            </span>
+        </Link>
+    );
+};
 
 
-// Export
-export const HomeLeftSidebar = connect(
+// Exports
+export const LeftSidebar = connect(
     state => ({ activeProviders: state.auth.activeProviders })
-)(LeftSidebar)
-
-export const HomeRightSidebar = connect(
+)(_LeftSidebar)
+export const RightSidebar = connect(
     state => ({ activeProviders: state.auth.activeProviders })
-)(RightSidebar)
+)(_RightSidebar)

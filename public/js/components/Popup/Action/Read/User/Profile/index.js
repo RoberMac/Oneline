@@ -4,6 +4,7 @@ import classNames from 'classnames';
 // Helpers
 import { Action } from 'utils/api';
 import { addClassTemporarily } from 'utils/dom';
+import { isTwitter, isInstagram } from 'utils/detect';
 
 // Components
 import Icon from 'components/Utils/Icon';
@@ -61,7 +62,7 @@ const Counts = ({ provider, counts }) => {
     return counts && (
         <div className="profile__count">
             <div className={columnClass} data-count={counts.statuses}>
-                <Icon name={provider === 'instagram' ? 'post' : 'tweet'} />
+                <Icon name={isInstagram(provider) ? 'post' : 'tweet'} />
             </div>
             <div className={columnClass} data-count={counts.followed_by}>
                 <Icon name="followed_by" />
@@ -102,7 +103,7 @@ export default ({ provider, user }) => (
         <Counts provider={provider} counts={user.counts} />
         <Bio provider={provider} bio={user.bio} />
         <Website website={user.website} />
-        {provider === 'twitter' && <FollowBtn provider={provider} following={user.following} uid={user.uid} />}
+        {isTwitter(provider) && <FollowBtn provider={provider} following={user.following} uid={user.uid} />}
         {user.location && (
             <span className="post__location">
                 <Icon className="post-action__icon" name="location" />

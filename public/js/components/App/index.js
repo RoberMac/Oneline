@@ -5,6 +5,7 @@ import debounce from 'lodash.debounce';
 // Helpers
 import reduxStore from 'state/store';
 import { updateBase } from 'state/actions/base';
+import { isHomePage } from 'utils/detect';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -24,19 +25,19 @@ export default class App extends React.Component {
         window.removeEventListener('resize', this.debounceHandleResize);
     }
     render() {
-        const { location, main, leftSidebar, rightSidebar } = this.props;
-        const isHome = location.pathname.indexOf('settings') < 0;
+        const { location: { pathname }, main, leftSidebar, rightSidebar } = this.props;
+        const homePage = isHomePage(pathname);
         const mainClass = classNames({
             'oneline oneline--enter animate--general': true,
-            'oneline--timeline': isHome
+            'oneline--timeline': homePage
         });
         const leftSidebarClass = classNames({
             'sidebar sidebar--left vertically_center animate--faster': true,
-            'sidebar--timeline sidebar--timeline--left': isHome
+            'sidebar--timeline sidebar--timeline--left': homePage
         });
         const rightSidebarClass = classNames({
             'sidebar sidebar--right vertically_center animate--faster': true,
-            'sidebar--timeline sidebar--timeline--right': isHome 
+            'sidebar--timeline sidebar--timeline--right': homePage 
         });
 
         return (

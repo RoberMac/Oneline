@@ -97,3 +97,8 @@
         background-color: rgba(230, 22, 45, 0.7);
     }
 }
+.rotate {
+    &--180 {
+        transform: rotate(180deg);
+    }
+}

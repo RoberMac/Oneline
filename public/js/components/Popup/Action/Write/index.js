@@ -4,6 +4,7 @@ import assign from 'object.assign';
 
 // Helper
 import { addClassTemporarily } from 'utils/dom';
+import { isTwitter as _isTwitter, isWeibo as _isWeibo } from 'utils/detect';
 import {
     extractMentions, isLeftPopup,
     submitWrite, draft,
@@ -139,8 +140,8 @@ export default class Write extends React.Component {
             emotions, livePreviewPost,
             toolPopupLeft, submitting
         } = this.state;
-        const isTwitter = provider === 'twitter';
-        const isWeibo   = provider === 'weibo';
+        const isTwitter = _isTwitter(provider);
+        const isWeibo   = _isWeibo(provider);
 
         return (
             <div className="write">

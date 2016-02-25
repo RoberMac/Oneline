@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { isWeibo } from 'utils/detect';
 import { removeText, insertText } from './helper';
 import { weiboEmotify } from 'components/Utils/Post/Utils/Text/helper';
 
@@ -63,7 +64,7 @@ export class Mentions extends React.Component {
         });
         return (
             <div className={popupClass}>
-                { provider === 'weibo'
+                {isWeibo(provider)
                     ? mentions.map(item => (
                         <button
                             key={item}

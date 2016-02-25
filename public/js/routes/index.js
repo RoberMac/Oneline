@@ -7,28 +7,18 @@ import redirectIfNot from './redirectIfNot';
  * Components
  *
  */
-import App from '../components/App';
-// Home
-import Home from '../components/Home';
-import { HomeLeftSidebar, HomeRightSidebar } from '../components/Home/Sidebar';
-const HomeComponents = {
-    main: Home,
-    leftSidebar: HomeLeftSidebar,
-    rightSidebar: HomeRightSidebar
-};
-// Settings
-import Settings from '../components/Settings';
-import { SettingsLeftSidebar, SettingsRightSidebar } from '../components/Settings/Sidebar';
-const SettingsComponents = {
-    main: Settings,
-    leftSidebar: SettingsLeftSidebar,
-    rightSidebar: SettingsRightSidebar
-};
+import App from 'components/App';
+// Home & Settings
+import Home from 'components/Home';
+import Settings from 'components/Settings';
+import { LeftSidebar, RightSidebar } from 'components/Utils/SideBar'
+const HomeComponents = { main: Home, leftSidebar: LeftSidebar, rightSidebar: RightSidebar };
+const SettingsComponents = { main: Settings, leftSidebar: LeftSidebar, rightSidebar: RightSidebar };
 // Popup
-import Popup from '../components/Popup';
-import { SettingsMenu, HomeMenu } from '../components/Popup/Menu';
-import { Deckard, Rachael } from '../components/Popup/Replicant';
-import { Action } from '../components/Popup/Action';
+import Popup from 'components/Popup';
+import { SettingsMenu, HomeMenu } from 'components/Popup/Menu';
+import { Deckard, Rachael } from 'components/Popup/Replicant';
+import { Action } from 'components/Popup/Action';
 
 /**
  * Export

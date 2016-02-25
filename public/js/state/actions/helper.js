@@ -3,6 +3,7 @@ import assign from 'object.assign';
 // Helpers
 import store from 'utils/store';
 import { Timeline } from 'utils/api';
+import { isTwitter as _isTwitter, isWeibo as _isWeibo, isInstagram as _isInstagram } from 'utils/detect';
 import reduxStore from 'state/store';
 import { updateBase } from 'state/actions/base';
 
@@ -282,10 +283,9 @@ function recordMentions({ providers, posts }) {
     });
     // Extract
     posts.forEach(({ provider, text, user }) => {
-        const isTwitter = provider === 'twitter';
-        const isWeibo   = provider === 'weibo';
+        const isTwitter = _isTwitter(provider);
 
-        if (provider === 'instagram') return;
+        if (_isInstagram(provider)) return;
 
         // Extract from post's text
         let textMentions  = text.match(mentionRegex[provider]); // TODO: Extract `quote` posts
@@ -322,7 +322,7 @@ function recordMentions({ providers, posts }) {
         mentionsList[provider].push(
             isTwitter
                 ? { 's': `@${authorMention.screen_name}`, 'u': authorMention.name }
-            : isWeibo
+            : _isWeibo(provider)
                 ? `@${authorMention.screen_name}`
             : null
         )
@@ -331,10 +331,8 @@ function recordMentions({ providers, posts }) {
     // Store
     let MENTIONS = {};
     providers.forEach(provider => {
-        const isTwitter = provider === 'twitter';
-        const isWeibo   = provider === 'weibo';
         // Remove Dups
-        mentionsList[provider] = arrayUnique[isTwitter ? 'object' : 'literal'](mentionsList[provider]);
+        mentionsList[provider] = arrayUnique[_isTwitter(provider) ? 'object' : 'literal'](mentionsList[provider]);
         // Limit max count (Level 2: remove old items)
         if (mentionsList[provider].length >= MAX_COUNT_L2){
             let _len = mentionsList[provider].length - MAX_COUNT_L2;

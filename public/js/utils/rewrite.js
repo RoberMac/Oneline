@@ -1,12 +1,13 @@
 import update from 'react-addons-update';
 
+import { isWeibo } from 'utils/detect';
 import reduxStore from 'state/store';
 const { base: { BLOCKED } } = reduxStore.getState();
 
 export const rewriteMediaLink = ({ type, provider, data }) => {
     __DEV__ && console.time('[rewriteMediaLink]')
 
-    if (provider === 'weibo' || !BLOCKED) return data;
+    if (isWeibo(provider) || !BLOCKED) return data;
 
     const _HOST = __DEV__ ? 'http://127.0.0.1:8080' : window.location.origin;
     const PREFIX = `${_HOST}/media`;

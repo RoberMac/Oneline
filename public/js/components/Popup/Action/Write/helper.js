@@ -2,6 +2,7 @@ import assign from 'object.assign';
 
 import store from 'utils/store';
 import { Action, Media } from 'utils/api';
+import { isTwitter as _isTwitter, isWeibo as _isWeibo } from 'utils/detect';
 import reduxStore from 'state/store';
 import { updatePost } from 'state/actions/timeline';
 import { UPDATE_BASE } from 'state/actions/base';
@@ -23,7 +24,7 @@ reduxStore.subscribe(() => {
     ({ MENTIONS } = base);
 })
 export const extractMentions = ({ status, provider }) => {
-    const isTwitter = provider === 'twitter';
+    const isTwitter = _isTwitter(provider);
     let mentionUser = status.match(MENTIONS_REGEX[provider]);
 
     if (mentionUser){
@@ -59,11 +60,11 @@ export const isLeftPopup = () => {
     return _left > _width / 2;
 }
 export const getCountInfo = ({ action, provider, status }) => {
-    const limitCount = action === 'quote' && provider === 'twitter' ? 116 : 140;
+    const limitCount = action === 'quote' && _isTwitter(provider) ? 116 : 140;
 
     let count, isOverLimitCount;
     // Count
-    if (provider === 'weibo'){
+    if (_isWeibo(provider)){
         let asciiLength = (status.match(/[\x00-\x7F]+/g) || []).join('').length;
         let nonAsciiLength = status.length - asciiLength;
 
@@ -116,8 +117,8 @@ export const submitWrite = (props) => {
     const { action, provider, id } = props;
     const { status, mentions, geo, media, sensitive } = props;
     const post = props.location.state;
-    const isTwitter = provider === 'twitter';
-    const isWeibo   = provider === 'weibo';
+    const isTwitter = _isTwitter(provider);
+    const isWeibo   = _isWeibo(provider);
     // Init
     let params = { status };
     if (isTwitter){
@@ -169,7 +170,7 @@ export const initStatus = ({ action, provider, id, location }) => {
             statusElem.value = draft.get({ action, provider }) || '';
             break;
         case 'reply':
-            if (provider === 'twitter'){
+            if (_isTwitter(provider)){
                 statusElem.value = (
                     [`@${post.user.screen_name}`] // Post Author
                     .concat(post.text.match(/(|\s)*@([\w]+)/g) || []) // Extract from post's text
@@ -180,7 +181,7 @@ export const initStatus = ({ action, provider, id, location }) => {
             }
             break;
         case 'retweet':
-            if (provider === 'weibo' && (post.retweet || post.quote)){
+            if (_isWeibo(provider) && (post.retweet || post.quote)){
                 statusElem.value = `//@${post.user.screen_name}: ${post.text}`;
                 statusElem.setSelectionRange(0, 0)
             }
@@ -273,7 +274,7 @@ export const initLivePreview = ({ type, provider, status, media, livePreviewPost
         case 'retweet':
         case 'quote':
             assign(newLivePreviewPost, {
-                [type]: provider === 'weibo' && post[type] || post
+                [type]: _isWeibo(provider) && post[type] || post
             });
             break;
     }
