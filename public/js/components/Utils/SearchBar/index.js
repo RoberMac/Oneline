@@ -35,7 +35,7 @@ export default class SearchBar extends React.Component {
         e && e.preventDefault()
 
         const { currentType: { name: searchType } } = this.state;
-        const searchText = this.refs.input.value.trim().toLowerCase();
+        const searchText = this.refs.input.value.trim();
 
         this.props.onSearchChange({ searchType, searchText })
     }

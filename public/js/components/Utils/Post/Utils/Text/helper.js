@@ -127,7 +127,7 @@ export const highlight = (text, { provider, highlight }) => {
 
     return text.replace(
         new RegExp(`(${highlight})(?![^<]*>|[^<>]*<\/)`, 'gim'),
-        `<span class="highlight--${provider}">$1</span>`
+        `<mark class="highlight--${provider}">$1</mark>`
     );
 }
 

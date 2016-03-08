@@ -1,16 +1,24 @@
 import store from 'utils/store';
 import { decodeToken, isTokenExpired } from 'utils/jwtHelper';
 
-// Utils
+// Helpers
 const _removeToken = (tokenList, provider) => {
     return tokenList.filter(token => provider !== decodeToken(token).provider)
+};
+const getTokenList = () => {
+    const isArray = target => Object.prototype.toString.call(target) === '[object Array]';
+    let tokenList = store.get('tokenList');
+
+    if (!isArray(tokenList)) tokenList = [];
+
+    return tokenList;
 };
 
 // Export
 export const addToken = () => {
     let newToken  = store.get('addToken');
     let provider  = decodeToken(newToken).provider;
-    let tokenList = store.get('tokenList') || [];
+    let tokenList = getTokenList();
 
     // Remove Dups Token
     tokenList = _removeToken(tokenList, provider)
@@ -25,7 +33,7 @@ export const addToken = () => {
     };
 }
 export const removeToken = provider => {
-    let tokenList = store.get('tokenList') || [];
+    let tokenList = getTokenList();
 
     tokenList = _removeToken(tokenList, provider)
 
@@ -41,7 +49,7 @@ export const replaceTokenList = tokenList => {
 
     return {
         activeProviders: getActiveProviders(),
-        tokenList: store.get('tokenList') || []
+        tokenList: getTokenList()
     };
 }
 export const clearTokenList = () => {
@@ -53,13 +61,11 @@ export const clearTokenList = () => {
     }
 }
 export const isValidToken = () => {
-    let tokenList = store.get('tokenList') || [];
+    let tokenList = getTokenList();
 
     return (tokenList.length > 0) && tokenList.every(token => !isTokenExpired(token));
 }
-export const getActiveProviders = () => (
-    store.get('tokenList') || []).map(token => decodeToken(token).provider
-);
+export const getActiveProviders = () => getTokenList().map(token => decodeToken(token).provider);
 
 
 

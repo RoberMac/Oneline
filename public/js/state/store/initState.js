@@ -56,9 +56,6 @@ export const initBaseState = () => {
             // twitter,
             // instagram,
             // weibo
-        },
-        WIDTH: {
-            // windowWidth
         }
     };
 }

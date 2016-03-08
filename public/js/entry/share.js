@@ -91,16 +91,21 @@ class Share extends React.Component {
         this.checkDetailHeight = this.checkDetailHeight.bind(this)
     }
     checkDetailHeight() {
-        if (this.refs.detail.offsetHeight > window.innerHeight) {
-            this.setState({ center: false })
-        } else {
+        if (this.refs.detail.offsetHeight < window.innerHeight && !this.POST_WITH_MEDIA) {
             this.setState({ center: true })
+        } else {
+            this.setState({ center: false })
         }
     }
     shouldComponentUpdate(nextProps, nextState) {
         return this.state.center !== nextState.center;
     }
     componentDidMount() {
+        this.POST_WITH_MEDIA = (() => {
+            const { data } = window.__share_data__;
+            return data.media || (data.quote && data.quote.media);
+        })();
+
         this.checkDetailHeight()
         setInterval(() => {
             this.checkDetailHeight()

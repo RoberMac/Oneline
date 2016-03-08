@@ -4,16 +4,6 @@ import ClassList from 'classlist';
 
 // Helpers
 import { handleImageError, fuckLongWeibo } from './helper.js';
-import reduxStore from 'state/store';
-import { UPDATE_BASE } from 'state/actions/base';
-let { base: { WIDTH } } = reduxStore.getState();
-reduxStore.subscribe(() => {
-    const { base, lastAction: { type } } = reduxStore.getState();
-
-    if (type !== UPDATE_BASE) return;
-
-    ({ WIDTH } = base);
-})
 
 // Components
 import Icon from 'components/Utils/Icon';
@@ -28,47 +18,71 @@ class LargeImg extends React.Component {
         this.handleCursorChange = this.handleCursorChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.handleImageLoaded = this.handleImageLoaded.bind(this)
+        this.getBound = this.getBound.bind(this)
     }
     handleCursorChange(e) {
-        const imgWidth = this.refs.largeImg.offsetWidth;
-        const BOUND = {
-            preCursorBound: imgWidth * 2 / 5,
-            nextCursorBound: imgWidth * 3 / 5
-        };
-        const X = e.clientX - (WIDTH.windowWidth - imgWidth) / 2;
+        const { index, count } = this.props;
 
-        if (X < BOUND.preCursorBound){
-            this.imgClassList
-            .remove('cursor--next', 'cursor--zoomOut')
-            .add('cursor--pre')
-        } else if (X > BOUND.nextCursorBound) {
-            this.imgClassList
-            .remove('cursor--pre', 'cursor--zoomOut')
-            .add('cursor--next')
-        } else {
-            this.imgClassList
-            .remove('cursor--pre', 'cursor--next')
-            .add('cursor--zoomOut')
+        this.imgClassList.remove('cursor--pre', 'cursor--next', 'cursor--zoomOut');
+        switch (this.getBound(e)) {
+            case 'left':
+                if (index === 0) return;
+                this.imgClassList.add('cursor--pre');
+                break;
+            case 'right':
+                if (index === count - 1) return;
+                this.imgClassList.add('cursor--next')
+                break;
+            case 'center':
+                this.imgClassList.add('cursor--zoomOut')
+                break;
         }
     }
     handleClick(e) {
         if (/a|svg|use/i.test(e.target.tagName)) return;
 
-        const { index, count, onZoomIn } = this.props;
-        const elem = this.refs.largeImg;
-        const nextIndex = elem.className.search('cursor--pre') >= 0 
-                            ? index - 1
-                        : elem.className.search('cursor--next') >= 0 
-                            ? index + 1
-                        : index;
+        const { index, count, onZoom } = this.props;
 
+        let nextIndex;
+        switch (this.getBound(e)) {
+            case 'left':
+                nextIndex = index - 1;
+                break;
+            case 'right':
+                nextIndex = index + 1;
+                break;
+            case 'center':
+                nextIndex = index;
+                break;
+        }
+
+        if (count === 1) nextIndex = index;
         if (nextIndex < 0 || nextIndex >= count) return;
+        if (count === 1) {
+            nextIndex = index;
+        }
 
-        onZoomIn(nextIndex)
+        onZoom(nextIndex)
     }
     handleImageLoaded(e) {
         fuckLongWeibo(e)
         this.setState({ loading: false })
+    }
+    getBound(e) {
+        const imgWidth = this.refs.largeImg.offsetWidth;
+        const BOUND = {
+            preCursorBound: imgWidth * 2 / 5,
+            nextCursorBound: imgWidth * 3 / 5
+        };
+        const X = e.clientX - (window.innerWidth - imgWidth) / 2;
+
+        if (X < BOUND.preCursorBound) {
+            return 'left';
+        } else if (X > BOUND.nextCursorBound) {
+            return 'right';
+        } else {
+            return 'center';
+        }
     }
     componentDidMount() {
         const elem = this.refs.largeImg;
@@ -119,21 +133,20 @@ export default class Media extends React.Component {
     constructor(props) {
         super(props)
         this.state = { largeImgSrc: '', largeImgIndex: -1 }
-        this.zoomIn = this.zoomIn.bind(this)
-        this.zoomOut = this.zoomOut.bind(this)
+        this.handleZoom = this.handleZoom.bind(this)
     }
-    zoomIn(index, src) {
+    handleZoom(index, src) {
+        // Zoom Out
         if (index === this.state.largeImgIndex){
-            this.zoomOut()
-            return;
+            this.setState({ largeImgSrc: '', largeImgIndex: -1 })
         }
-        this.setState({
-            largeImgSrc: src ? src : this.props.media[index].image_url,
-            largeImgIndex: index
-        })
-    }
-    zoomOut() {
-        this.setState({ largeImgSrc: '', largeImgIndex: -1 })
+        // Zoom In
+        else {
+            this.setState({
+                largeImgSrc: src ? src : this.props.media[index].image_url,
+                largeImgIndex: index
+            })
+        }
     }
     render() {
         const { media } = this.props;
@@ -158,7 +171,7 @@ export default class Media extends React.Component {
                         key={index}
                         className={thumbClass}
                         src={item.image_url}
-                        onClick={this.zoomIn.bind(this, index, item.image_url)}
+                        onClick={this.handleZoom.bind(this, index, item.image_url)}
                     />;
                 })}
                 </div>
@@ -169,7 +182,7 @@ export default class Media extends React.Component {
                     src={largeImgSrc}
                     index={largeImgIndex}
                     count={media.length}
-                    onZoomIn={this.zoomIn}
+                    onZoom={this.handleZoom}
                 /> 
             )}
             </div>

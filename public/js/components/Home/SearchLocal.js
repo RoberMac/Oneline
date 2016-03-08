@@ -49,7 +49,7 @@ export default class SearchLocal extends React.Component {
                         break;
                 }
 
-                return srcText.toLowerCase().indexOf(searchText) >= 0;
+                return srcText.toLowerCase().indexOf(searchText.toLowerCase()) >= 0;
             })
             .slice(0, 100)
         ) : [];
