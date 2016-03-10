@@ -1,5 +1,3 @@
-@import "helpers/variables";
-
 .spin {
     position: absolute * * * calc(50% - 35px);
     size: 70px;

@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -75,7 +75,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-svgmin": "^1.2.2",
     "gulp-svgstore": "^5.0.5",
-    "http-proxy-middleware": "^0.10.0",
+    "http-proxy-middleware": "^0.11.0",
     "isomorphic-fetch": "^2.2.1",
     "json-loader": "^0.5.4",
     "jwt-decode": "^1.5.1",
@@ -101,9 +101,9 @@
     "react-visibility-sensor": "^3.0.0",
     "redux": "^3.3.1",
     "redux-logger": "^2.5.2",
-    "redux-thunk": "^1.0.3",
+    "redux-thunk": "^2.0.1",
     "style-loader": "^0.13.0",
-    "svg-sprite-loader": "0.0.16",
+    "svg-sprite-loader": "0.0.17",
     "webpack": "^1.12.14",
     "webpack-dev-middleware": "^1.5.1",
     "webpack-hot-middleware": "^2.7.1",

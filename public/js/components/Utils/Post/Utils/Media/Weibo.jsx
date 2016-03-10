@@ -15,13 +15,15 @@ class LargeImg extends React.Component {
     constructor(props) {
         super(props)
         this.state = { loading: true }
-        this.handleCursorChange = this.handleCursorChange.bind(this)
+        this.handleMouseMove = this.handleMouseMove.bind(this)
         this.handleClick = this.handleClick.bind(this)
         this.handleImageLoaded = this.handleImageLoaded.bind(this)
         this.getBound = this.getBound.bind(this)
     }
-    handleCursorChange(e) {
+    handleMouseMove(e) {
         const { index, count } = this.props;
+
+        if (count <= 1) return;
 
         this.imgClassList.remove('cursor--pre', 'cursor--next', 'cursor--zoomOut');
         switch (this.getBound(e)) {
@@ -85,20 +87,9 @@ class LargeImg extends React.Component {
         }
     }
     componentDidMount() {
-        const elem = this.refs.largeImg;
+        this.imgClassList = new ClassList(this.refs.largeImg);
 
-        this.imgClassList = new ClassList(elem);
-
-        if (this.props.count > 1) {
-            elem.addEventListener('mousemove', this.handleCursorChange)
-        } else {
-            this.imgClassList.add('cursor--zoomOut')
-        }
-    }
-    componentWillUnmount() {
-        const elem = this.refs.largeImg;
-
-        this.props.count > 1 && elem.removeEventListener('mousemove', this.handleCursorChange)
+        this.props.count <= 1 && this.imgClassList.add('cursor--zoomOut')
     }
     componentWillReceiveProps(nextProps) {
         if (this.props.src === nextProps.src) return;
@@ -111,7 +102,13 @@ class LargeImg extends React.Component {
         const largeSrc  = src.replace(/square|small/, 'large');
 
         return (
-            <div className="post-media" onClick={this.handleClick} ref="largeImg" role="button">
+            <div
+                className="post-media"
+                onClick={this.handleClick}
+                onMouseMove={this.handleMouseMove}
+                ref="largeImg"
+                role="button"
+            >
                 <div className="post-media__spin">
                     <Transition>
                         {loading && <Spin isFetching={true} initLoad={true} provider="weibo" />}

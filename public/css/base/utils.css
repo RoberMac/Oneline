@@ -1,5 +1,3 @@
-@import "helpers/variables";
-
 .vertically_center {
     display: flex;
     justify-content: center;
