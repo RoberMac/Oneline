@@ -30,7 +30,8 @@ export const rewriteMediaLink = ({ type, provider, data }) => {
                 /(https?:\/\/[\w|\-]+?\.sinaimg.cn[^"]*?\.(gif|png|jpg|jpeg|mp4|webp))/g,
                 `${PREFIX}?src=$1`
             );
-        }
+        },
+        unsplash: str => str
     }
 
     let rewritedData;

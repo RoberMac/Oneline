@@ -13,7 +13,7 @@ export default {
     },
     VaildProvider: (nextState, replaceState) => {
         const provider = nextState.params.provider;
-        const vaildProviders = ['twitter', 'instagram', 'weibo'];
+        const vaildProviders = ['twitter', 'instagram', 'weibo', 'unsplash'];
 
         if (vaildProviders.indexOf(provider) < 0){
             __DEV__ && console.error(`Warning: "${provider}" is't valid provider`)

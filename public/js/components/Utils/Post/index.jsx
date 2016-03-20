@@ -3,8 +3,9 @@ import shallowCompare from 'react-addons-shallow-compare';
 
 // Component
 import { TwitterTweet, TwitterRetweet, TwitterQuote } from './Twitter';
-import { InstagramPost } from './Instagram';
 import { WeiboTweet, WeiboRetweet, WeiboQuote } from './Weibo';
+import { InstagramPost } from './Instagram';
+import { UnsplashPost } from './Unsplash';
 
 // Helper
 const selectPost = {
@@ -20,6 +21,9 @@ const selectPost = {
         tweet: WeiboTweet,
         retweet: WeiboRetweet,
         quote: WeiboQuote
+    },
+    unsplash: {
+        post: UnsplashPost
     }
 };
 
@@ -36,6 +40,7 @@ export default class Post extends React.Component {
         const { className, post } = this.props;
         const { provider, type } = post;
         const SelectedPost = selectPost[provider][type];
+
         return (
             <div
                 className={`post animate--faster provider--${provider} ${className || ''}`}

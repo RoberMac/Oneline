@@ -1,7 +1,8 @@
 "use strict";
-const Twit    = require('twit');
-const Ig      = require('instagram-node').instagram();
-const Weibo   = require('./weibo');
+const Twit  = require('twit');
+const Ig    = require('instagram-node').instagram();
+const Weibo = require('../../../utils/wrapper/weibo');
+const daemonState = require('../../../utils/daemon').state;
 
 module.exports = {
     twitter: opts => {
@@ -84,6 +85,11 @@ module.exports = {
             }
             return data;
         })
+    },
+    unsplash: opts => {
+        const LatestPhoto = daemonState.get('unsplash');
+
+        return opts.minId !== LatestPhoto.id ? [[LatestPhoto]] : [];
     }
 }
 

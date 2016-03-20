@@ -92,11 +92,11 @@ class Image extends React.Component {
         return (
             <div className="post-media--large" style={lazySize(images.ratio)}>
                 <img
-                    src={images.standard_resolution}
+                    src={images.large}
                     onError={handleImageError}
                     ref="image"
                 />
-                <ViewOriginal link={images.standard_resolution} provider="instagram" />
+                <ViewOriginal link={images.large} provider="instagram" />
                 {users_in_photo && <UsersInPhoto users_in_photo={users_in_photo} {...this.state}/>}
             </div>
         );
@@ -108,8 +108,8 @@ export default ({ images, videos, users_in_photo }) => (
     <div className="post-media">
     {videos
         ? <Video
-            src={videos.standard_resolution}
-            poster={images.low_resolution}
+            src={videos.large}
+            poster={images.small}
             ratio={images.ratio}
         />
         : <Image images={images} users_in_photo={users_in_photo} />

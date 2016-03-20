@@ -3,7 +3,6 @@
     size: 100% 70%;
 }
 .social-list {
-    position: absolute;
     size: 100% 33.3%;
 
     &:nth-child(1){
@@ -23,12 +22,12 @@
     display: block;
     margin: 0 auto;
     width: 33.3%;
-    filter: grayscale(100%);
+    filter: grayscale(100%) contrast(.5);
 
     > svg {
         width: 100%;
     }
     &--active {
-        filter: grayscale(0%);
+        filter: grayscale(0%) contrast(1);
     }
 }

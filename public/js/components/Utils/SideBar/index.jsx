@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { browserHistory as history } from 'react-router';
 
 // Helpers
-import { isHomePage, isPopupPage } from 'utils/detect';
+import { isSettingsPage, isHomePage, isPopupPage } from 'utils/detect';
 const sidebarBtnClass = 'sidebar__button btn animate--faster';
 const colorClass = pathname => {
     const match = pathname.match(/twitter|instagram|weibo/);
@@ -78,22 +78,33 @@ const _RightSidebar = ({ activeProviders, location: { pathname } }) => {
             ? 'twitter'
         : activeProviders.indexOf('weibo') >= 0
             ? 'weibo'
-        : 'instagram'
+        : activeProviders.indexOf('weibo') >= 0
+            ? 'instagram'
+        : activeProviders.indexOf('unsplash') >= 0
+            ? 'unsplash'
+        : null
     );
 
+    console.log(activeProviders, firstProvider)
     return (
-        activeProviders.length <= 0 || isPopupPage(pathname)
+        isPopupPage(pathname)
             ? <GoBtn
                 step="1"
                 className={`${sidebarBtnClass} ${colorClass(pathname)} rotate--180`}
             />
-        : isHomePage(pathname)
+        : activeProviders.length <= 0
+            ? <span />
+        : isHomePage(pathname) && firstProvider !== 'unsplash'
             ? <ShowMenuBtn firstProvider={firstProvider}/>
-        : <Link to="/home">
-            <span className={sidebarBtnClass}>
-                <Icon name="sidebar_ok" />
-            </span>
-        </Link>
+        : isSettingsPage(pathname)
+            ? (
+                <Link to="/home">
+                    <span className={sidebarBtnClass}>
+                        <Icon name="sidebar_ok" />
+                    </span>
+                </Link>
+            )
+        : <span />
     );
 };
 

@@ -10,20 +10,26 @@ block styles
 block content
     .oneline.overflow--y
         .social-list.social-list--one.vertically_center
-            case provider
-                when 'twitter'
-                    include ./icons/twitter.svg
-                when 'instagram'
-                    include ./icons/instagram.svg
-                when 'weibo'
-                    include ./icons/weibo.svg
-                default
-                    - throw new Error('invalid icon')
+            button.social-icon.animate--general
+                case provider
+                    when 'twitter'
+                        include ./icons/twitter.svg
+                    when 'instagram'
+                        include ./icons/instagram.svg
+                    when 'weibo'
+                        include ./icons/weibo.svg
+                    when 'unsplash'
+                        include ./icons/unsplash.svg
+                    default
+                        - throw new Error('invalid icon')
 
     script(type='text/javascript').
         // Cross-tab Communication
         localStorage.setItem('addToken', !{JSON.stringify(token)})
-        localStorage.setItem('profile_' + !{JSON.stringify(provider)}, !{JSON.stringify(JSON.stringify(profile))})
+        localStorage.setItem(
+            'profile_' + !{JSON.stringify(provider)},
+            !{JSON.stringify(JSON.stringify(profile))}
+        )
 
         setTimeout(function (){
             var socialIcon = document.getElementsByClassName('social-icon')[0];

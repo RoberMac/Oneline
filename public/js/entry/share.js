@@ -12,72 +12,69 @@ import './common.css';
 import Post from 'components/Utils/Post';
 import DetailColumn from 'components/Popup/Action/Detail/DetailColumn';
 import DetailIcon from 'components/Popup/Action/Detail/DetailIcon';
-const DetailContainer = ({ provider, post, viewCount, sharers }) => {
-    let DetailComponents;
+const DetailContainerWrapper = ({ provider, post, viewCount, sharers, children }) => (
+    <div className={`detail__container provider--${provider}`}>
+        <DetailColumn>
+            <DetailIcon
+                name="share"
+                text={{ type: 'count', content: sharers.length }}
+                iconCount={4}
+            />
+            <DetailIcon
+                name="detail"
+                text={{ type: 'count', content: viewCount }}
+                iconCount={4}
+            />
+            <DetailIcon
+                name="like"
+                text={{ type: 'count', content: post.like_count }}
+                active={post.liked}
+                iconCount={4}
+            />
+            {children}
+        </DetailColumn>
 
+        <DetailColumn type="share" provider={provider} list={sharers} />
+    </div>
+);
+const DetailContainer = props => {
+    const { provider, post, viewCount, sharers } = props;
+
+    let DetailComponents;
     switch (provider){
         case 'twitter':
         case 'weibo':
             DetailComponents = (
-                <div className={`detail__container provider--${provider}`}>
-                    <DetailColumn>
-                        <DetailIcon
-                            name="share"
-                            text={{ type: 'count', content: sharers.length }}
-                            iconCount={4}
-                        />
-                        <DetailIcon
-                            name="detail"
-                            text={{ type: 'count', content: viewCount }}
-                            iconCount={4}
-                        />
-                        <DetailIcon
-                            name="like"
-                            text={{ type: 'count', content: post.like_count }}
-                            active={post.liked}
-                            iconCount={4}
-                        />
-                        <DetailIcon
-                            name="retweet"
-                            text={{ type: 'count', content: post.retweet_count }}
-                            active={post.retweeted}
-                            iconCount={4}
-                        />
-                    </DetailColumn>
-
-                    <DetailColumn type="share" provider={provider} list={sharers} />
-                </div>
+                <DetailContainerWrapper {...props}>
+                    <DetailIcon
+                        name="retweet"
+                        text={{ type: 'count', content: post.retweet_count }}
+                        active={post.retweeted}
+                        iconCount={4}
+                    />
+                </DetailContainerWrapper>
             );
             break;
         case 'instagram':
             DetailComponents = (
-                <div className={`detail__container provider--${provider}`}>
-                    <DetailColumn>
-                        <DetailIcon
-                            name="share"
-                            text={{ type: 'count', content: sharers.length }}
-                            iconCount={4}
-                        />
-                        <DetailIcon
-                            name="detail"
-                            text={{ type: 'count', content: viewCount }}
-                            iconCount={4}
-                        />
-                        <DetailIcon
-                            name="like"
-                            text={{ type: 'count', content: post.like_count }}
-                            active={post.liked}
-                            iconCount={4}
-                        />
-                        <DetailIcon
-                            name="reply"
-                            text={{ type: 'count', content: post.reply_count }}
-                            iconCount={4}
-                        />
-                    </DetailColumn>
-
-                    <DetailColumn type="share" provider={provider} list={sharers} />
-                </div>
+                <DetailContainerWrapper {...props}>
+                    <DetailIcon
+                        name="reply"
+                        text={{ type: 'count', content: post.reply_count }}
+                        iconCount={4}
+                    />
+                </DetailContainerWrapper>
+            );
+            break;
+        case 'unsplash':
+            DetailComponents = (
+                <DetailContainerWrapper {...props}>
+                    <DetailIcon
+                        name="download"
+                        text={{ type: 'count', content: post.download_count }}
+                        iconCount={4}
+                    />
+                </DetailContainerWrapper>
             );
             break;
     }

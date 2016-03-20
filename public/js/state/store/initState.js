@@ -3,7 +3,7 @@ import { getActiveProviders } from 'utils/tokenHelper';
 
 export const initAuthState = () => {
     return {
-        providers: ['twitter', 'instagram', 'weibo'],
+        providers: ['twitter', 'instagram', 'weibo', 'unsplash'],
         activeProviders: getActiveProviders()
     };
 }

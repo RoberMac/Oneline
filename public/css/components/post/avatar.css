@@ -4,8 +4,7 @@
 
     &__avatar {
         size: 48px;
-        border-width: 1px;
-        border-style: solid;
+        border: 1px solid currentColor;
         border-radius: 50%;
 
         &--retweet {
@@ -43,16 +42,5 @@
         &__fullname {
             margin-bottom: 7px;
         }
-    }
-}
-.provider {
-    &--twitter .post-profile {
-        border-color: var(--color-twitter);
-    }
-    &--instagram .post-profile {
-        border-color: var(--color-instagram);
-    }
-    &--weibo .post-profile {
-        border-color: var(--color-weibo);
     }
 }

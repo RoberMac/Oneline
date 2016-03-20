@@ -7,7 +7,7 @@ const POST_SCHEMA = require('./helper/validator/postSchema');
 const FORMATS = require('./helper/validator/formats');
 const userValidate = validator(USER_SCHEMA, FORMATS);
 const postValidate = validator(POST_SCHEMA, FORMATS);
-const Share = require('../models/ol').Share;
+const Share = require('../utils/models').Share;
 const q_shareFindOne = Q.nbind(Share.findOne, Share);
 
 router.param('provider', (req, res, next, provider) => {
@@ -23,7 +23,7 @@ router.param('id', (req, res, next, id) => {
  * Store Shared Post
  *
  */
-router.post('/:provider/:id', require('../middlewares/protectEndpoints'), (req, res, next) => {
+router.post('/:provider/:id', require('../utils/middlewares'), (req, res, next) => {
     if (!req.body.sharer || !req.body.post){
         next({ statusCode: 400, msg: 'sharer & post is required' })
         return;

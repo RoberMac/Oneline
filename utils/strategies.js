@@ -1,7 +1,10 @@
 "use strict";
-const TwitterStrategy   = require('passport-twitter').Strategy;
-const InstagramStrategy = require('passport-instagram').Strategy;
-const WeiboStrategy     = require('passport-weibo').Strategy;
+const STRATEGY = {
+    twitter: require('passport-twitter').Strategy,
+    instagram: require('passport-instagram').Strategy,
+    weibo: require('passport-weibo').Strategy,
+    unsplash: require('passport-unsplash').Strategy
+};
 
 const oauth1 = (token, tokenSecret, profile, done) => {
     const provider = profile.provider;
@@ -47,18 +50,26 @@ const oauth1 = (token, tokenSecret, profile, done) => {
 const oauth2 = (token, refreshToken, profile, done) => {
     const provider = profile.provider;
     const uid = profile.id;
-    const name = profile.displayName;
-    const avatar = (
-        provider === 'instagram'
-            ? profile._json.data.profile_picture
-        : profile._json.profile_image_url
-    );
-    const screen_name = (
-        provider === 'instagram'
-            ? profile._json.data.username
-        : profile._json.screen_name
-    );
     const id = provider + uid;
+
+    let avatar, screen_name, name;
+    switch (provider) {
+        case 'instagram':
+            avatar = profile._json.data.profile_picture;
+            screen_name = profile.username;
+            name = profile.displayName;
+            break;
+        case 'weibo':
+            avatar = profile._json.profile_image_url;
+            screen_name = profile._json.screen_name;
+            name = profile.displayName;
+            break;
+        case 'unsplash':
+            avatar = profile.avatar.medium;
+            screen_name = profile.username;
+            name = `${profile.name.first_name} ${profile.name.last_name}`;
+            break;
+    }
 
     q_userFindOne({ id })
     .then(found => {
@@ -97,21 +108,27 @@ const oauth2 = (token, refreshToken, profile, done) => {
 
 module.exports = passport => {
     // Twitter
-    passport.use(new TwitterStrategy({
+    passport.use(new STRATEGY.twitter({
         'consumerKey'   : process.env.TWITTER_KEY,
         'consumerSecret': process.env.TWITTER_SECRET,
         'callbackURL'   : process.env.TWITTER_CB_URL
     }, oauth1))
     // Instagram
-    passport.use(new InstagramStrategy({
+    passport.use(new STRATEGY.instagram({
         'clientID'    : process.env.INSTAGRAM_KEY,
         'clientSecret': process.env.INSTAGRAM_SECRET,
         'callbackURL' : process.env.INSTAGRAM_CB_URL
     }, oauth2))
     // Weibo
-    passport.use(new WeiboStrategy({
+    passport.use(new STRATEGY.weibo({
         'clientID'    : process.env.WEIBO_KEY,
         'clientSecret': process.env.WEIBO_SECRET,
         'callbackURL' : process.env.WEIBO_CB_URL
+    }, oauth2))
+    // Unsplash
+    passport.use(new STRATEGY.unsplash({
+        'clientID'    : process.env.UNSPLASH_KEY,
+        'clientSecret': process.env.UNSPLASH_SECRET,
+        'callbackURL' : process.env.UNSPLASH_CB_URL
     }, oauth2))
 }

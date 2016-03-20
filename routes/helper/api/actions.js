@@ -1,9 +1,9 @@
 "use strict";
 const Twit    = require('twit');
 const Ig      = require('instagram-node').instagram();
-const Weibo   = require('./weibo');
-const timelineFilter = require('./filter/timeline');
-const actionsFilter = require('./filter/actions');
+const Weibo   = require('../../../utils/wrapper/weibo');
+const timelineFilter = require('../filter/timeline');
+const actionsFilter = require('../filter/actions');
 
 const twitterSearch = {
     _get (opts){

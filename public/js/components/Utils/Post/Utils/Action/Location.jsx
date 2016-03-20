@@ -15,7 +15,8 @@ const selectLink = (
             name
                 ? `/home/weibo/locations/${id}?name=${name}&place_id=${place_id}`
             : `/home/weibo/locations/${id}`
-        )
+        ),
+        unsplash: ({ name }) => `//maps.google.com/maps?z=12&t=h&q=${name}`
     }
 );
 
@@ -23,9 +24,9 @@ const selectLink = (
 import Icon from 'components/Utils/Icon';
 const LocationLink = ({ link, children }) => {
     return (
-        SHARE_PAGE
-            ? <a href={link} target="_blank">{children}</a>
-        : <Link to={link}>{children}</Link>
+        /^\/home/.test(link)
+            ? <Link to={link}>{children}</Link>
+        : <a href={link} target="_blank">{children}</a>
     );
 };
 

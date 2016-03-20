@@ -1,7 +1,7 @@
 "use strict";
 /* /actions */
 const router  = require('express').Router();
-const actions = require('./helper/actions');
+const actions = require('./helper/api/actions');
 
 // Handing `action` & `provider` & `id` Params
 router.param('action', (req, res, next, action) => {

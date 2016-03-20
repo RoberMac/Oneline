@@ -8,7 +8,7 @@ import Video from './Utils/Video';
 const Image = ({ image_url, ratio }) => (
     <div className="post-media--large" style={lazySize(ratio)}>
         <img src={image_url} onError={handleImageError} />
-        <ViewOriginal link={image_url} provider="twitter" />
+        <ViewOriginal link={`${image_url}:large`} provider="twitter" />
     </div>
 );
 

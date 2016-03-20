@@ -15,7 +15,8 @@ const isRetina = ( // via https://github.com/KyleAMathews/isRetina
 const converToHDAvatar = {
     twitter  : avatar => isRetina ? avatar.replace('normal', 'bigger') : avatar,
     instagram: avatar => avatar,
-    weibo    : avatar => isRetina ? avatar.replace('/50/', '/180/') : avatar
+    weibo    : avatar => isRetina ? avatar.replace('/50/', '/180/') : avatar,
+    unsplash : avatar => isRetina ? avatar.replace('&h=64&w=64&', '&h=96&w=96&') : avatar
 };
 
 // Component

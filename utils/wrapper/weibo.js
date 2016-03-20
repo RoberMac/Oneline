@@ -1,17 +1,18 @@
 "use strict";
-
 const Q = require('q');
 const request = require('request');
+
+const toJSON = require('./toJSON');
 
 module.exports = params => {
     let deferred = Q.defer();
     let _method  = params.method;
-    let _opts = { url: 'https://api.weibo.com/2/' + params.endpoint + '.json' };
+    let _opts = { url: `https://api.weibo.com/2/${params.endpoint}.json` };
 
     _opts[_method === 'get' ? 'qs' : 'form'] = params.opts;
 
     request[_method](_opts, (err, res, body) => {
-        body = parseBody(body)
+        body = toJSON(body)
 
         if (err || res.statusCode !== 200){
             let statusCode;
@@ -41,15 +42,4 @@ module.exports = params => {
     })
 
     return deferred.promise;
-}
-
-function parseBody(body){
-    let data;
-    try {
-        data = JSON.parse(body)
-    } catch (e) {
-        data = body
-    } finally {
-        return data
-    }
 }

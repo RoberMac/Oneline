@@ -1,10 +1,11 @@
 {
   "name": "Oneline",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prod": "gulp && NODE_ENV=production webpack -p --progress --colors",
+    "prod-watch": "gulp && NODE_ENV=production webpack -p --watch --progress --colors",
     "dev": "NODE_ENV=development node dev-server.js",
     "start": "NODE_ENV=production node app.js"
   },
@@ -46,6 +47,7 @@
     "passport": "^0.3.2",
     "passport-instagram": "^1.0.0",
     "passport-twitter": "^1.0.4",
+    "passport-unsplash": "^0.1.0",
     "passport-weibo": "^0.1.2",
     "q": "^1.4.1",
     "querystring": "^0.2.0",

@@ -1,7 +1,8 @@
 export const selectUserLink = {
     twitter  : screen_name => `//twitter.com/${screen_name}`,
     instagram: screen_name => `//instagram.com/${screen_name}`,
-    weibo    : screen_name => `//weibo.com/n/${screen_name}`
+    weibo    : screen_name => `//weibo.com/n/${screen_name}`,
+    unsplash: screen_name => `http://unsplash.com/${screen_name}`
 };
 export const selectLocationLink = {
     twitter  : ({ id }) => `//twitter.com/search?q=place%3A${id}`,
@@ -10,7 +11,8 @@ export const selectLocationLink = {
         place_id
             ? `//weibo.com/p/100101${place_id}`
         : `//maps.google.com/maps?z=12&t=h&q=loc:${id.split('_')[0]}+${id.split('_')[1]}`
-    )
+    ),
+    unsplash: ({ name }) => `//maps.google.com/maps?z=12&t=h&q=${name}`
 };
 export const selectTagLink = {
     twitter  : ({ tagName }) => `//twitter.com/search?q=%23${tagName}`,
@@ -19,8 +21,12 @@ export const selectTagLink = {
 export const selectSourceLink = {
     twitter: ({ screen_name, id }) => `//twitter.com/${screen_name}/status/${id}`,
     instagram: ({ link }) => link,
-    weibo: ({ uid, mid }) => `//weibo.com/${uid}/${mid}`
+    weibo: ({ uid, mid }) => `//weibo.com/${uid}/${mid}`,
+    unsplash: ({ id }) => `//unsplash.com/photos/${id}`
 };
+export const selectDownloadLink = {
+    unsplash: ({ id }) => `//unsplash.com/photos/${id}/download`
+}
 export const selectSearchLink = {
     twitter: ({ searchText }) => `//twitter.com/search?q=${searchText}`,
     instagram: () => '',
@@ -67,5 +73,6 @@ export const selectTextMiddlewares = {
         { order: 0, middleware: 'sanitizer' },
         { order: 3, middleware: 'linkify', opts: { provider: 'weibo' } },
         { order: 4, middleware: 'weiboEmotify' }
-    ]
+    ],
+    unsplash: []
 };

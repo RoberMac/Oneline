@@ -3,7 +3,7 @@
 const fs      = require('fs');
 const router  = require('express').Router();
 const multer  = require('multer');
-const upload  = require('./helper/upload');
+const upload  = require('./helper/api/upload');
 
 let upload2Local = multer({
     storage: multer.diskStorage({

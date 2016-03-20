@@ -2,7 +2,7 @@
 /* /timeline */
 const router = require('express').Router();
 const timelineFilter = require('./helper/filter/timeline');
-const timeline   = require('./helper/timeline');
+const timelineFetch = require('./helper/api/timeline');
 
 
 router.get('/', (req, res, next) => {
@@ -22,7 +22,8 @@ router.get('/', (req, res, next) => {
     Q.all([
         q_userFindOne({id: 'twitter' + req.olPassports.twitter}),
         q_userFindOne({id: 'instagram' + req.olPassports.instagram}),
-        q_userFindOne({id: 'weibo' + req.olPassports.weibo})
+        q_userFindOne({id: 'weibo' + req.olPassports.weibo}),
+        q_userFindOne({id: 'unsplash' + req.olPassports.unsplash}),
     ])
     .then(profileList => {
         const validProfileList = profileList.filter(i => i);
@@ -43,7 +44,7 @@ router.get('/', (req, res, next) => {
 
             if (Object.keys(olIdObj).length > 0 && !(minId || maxId)) return;
 
-            timelinePromises[index] = timeline[provider]({
+            timelinePromises[index] = timelineFetch[provider]({
                 minId,
                 maxId,
                 token,
@@ -54,7 +55,7 @@ router.get('/', (req, res, next) => {
         return Q.all(timelinePromises);
     })
     .then(dataList => {
-        const providerList = ['twitter', 'instagram', 'weibo'];
+        const providerList = ['twitter', 'instagram', 'weibo', 'unsplash'];
         let combineData = {
             data    : [],
             minId  : {},

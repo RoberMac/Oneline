@@ -13,3 +13,4 @@ export const isPopupPage = pathname => !/(home|settings)\/?$/i.test(pathname);
 export const isTwitter = provider => /twitter/i.test(provider);
 export const isInstagram = provider => /instagram/i.test(provider);
 export const isWeibo = provider => /weibo/i.test(provider);
+export const isUnsplash = provider => /unsplash/i.test(provider);

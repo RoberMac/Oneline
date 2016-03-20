@@ -26,6 +26,9 @@
     &--weibo {
         color: var(--color-weibo);
     }
+    &--unsplash {
+        color: var(--color-unsplash);
+    }
     &--like {
         color: #E9574F;
     }

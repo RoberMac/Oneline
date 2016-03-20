@@ -44,7 +44,7 @@
     &--twitter {
         ::selection {
             color: var(--color-gray);
-            background-color: rgba(42, 169, 224, 0.7);
+            background-color: var(--color-twitter-alpha);
         }
         a, a:visited {
             color: var(--color-twitter);
@@ -57,7 +57,7 @@
     &--instagram {
         ::selection {
             color: var(--color-gray);
-            background-color: rgba(63, 93, 135, 0.7);
+            background-color: var(--color-instagram-alpha);
         }
         a, a:visited {
             color: var(--color-instagram);
@@ -70,7 +70,7 @@
     &--weibo {
         ::selection {
             color: var(--color-gray);
-            background-color: rgba(230, 22, 45, 0.7);
+            background-color: var(--color-weibo-alpha);
         }
         a, a:visited {
             color: var(--color-weibo);
@@ -80,19 +80,36 @@
             background-size: 20px;
         }
     }
+    &--unsplash {
+        ::selection {
+            color: var(--color-gray);
+            background-color: var(--color-unsplash-alpha);
+        }
+        a, a:visited {
+            color: var(--color-unsplash);
+        }
+        img, video {
+            background: var(--color-white) inline('background--unsplash.png') repeat 5px 5px;
+            background-size: 100px 30px;
+        }
+    }
 }
 .highlight {
     &--twitter {
         color: var(--color-gray);
-        background-color: rgba(42, 169, 224, 0.7);
+        background-color: var(--color-twitter-alpha);
     }
     &--instagram {
         color: var(--color-gray);
-        background-color: rgba(63, 93, 135, 0.7);
+        background-color: var(--color-instagram-alpha);
     }
     &--weibo {
         color: var(--color-gray);
-        background-color: rgba(230, 22, 45, 0.7);
+        background-color: var(--color-weibo-alpha);
+    }
+    &--unsplash {
+        color: var(--color-gray);
+        background-color: var(--color-unsplash-alpha);
     }
 }
 .rotate {

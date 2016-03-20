@@ -1,208 +1,295 @@
 "use strict";
-/** 
- * 向前端發送數據前，過濾多餘信息
- *
- */
 const mid    = require('weibo-mid');
 const filterUtils = require('./utils');
 
+/*
+ ------------------
+   POST STRUCTURE
+ ------------------
+ * 
+ * - Post
+ ---------
+    BASE
+ ---------
+ *     - type: tweet, retweet, quote
+ *     - provider: twitter, instagram, weibo, unsplash
+ *     - created_at
+ *     - id_str
+ *     - mid [w]
+ *     - link [i]
+ *     - user
+ *         - name
+ *         - screen_name
+ *         - uid
+ *         - avatar
+ *     - text
+ *     - media [t|w]
+ *     - mediaLink [t]
+ *     - images, videos [i]
+ *     - location
+ *         - name
+ *         - id
+ *         - place_id [w]
+ *     - retweet_count, retweeted [t|w]
+ *     - like_count, liked
+ *     - reply_count [i, w]
+ *     - download_count [u]
+ ---------------------------
+   NEST POST: same as BASE
+ ---------------------------
+ *     - retweet, quote
+ *
+ *
+ ------------------
+ * [t] twitter
+ * [i] instagram
+ * [w] weibo
+ * [u] unsplash
+ *
+ */
+const buildTwitterPost = data => {
+    const postsLength = data.length;
+    let cache = [];
 
-let filter = {
-    twitter: data => {
-        const postsLength = data.length;
-        let cache = [];
+    data.forEach((item, index) => {
+        /**
+         * Tweet / Reply
+         *
+         */
+        let tweetObj = {
+            type: 'tweet',
+            provider: 'twitter',
+            created_at: Date.parse(item.created_at) + (postsLength - index),
+            id_str: item.id_str,
+            user: filterUtils.twitter.user(item.user),
+            text: item.text,
+            retweet_count: item.retweet_count,
+            like_count: item.favorite_count,
+            retweeted: item.retweeted,
+            liked: item.favorited
+        };
+        // Media
+        let t_extended_entities = item.extended_entities;
+        if (t_extended_entities && t_extended_entities.media){
+            let media = filterUtils.twitter.media(t_extended_entities.media);
+            let mediaLink = t_extended_entities.media[0].url;
 
-        data.forEach((item, index) => {
-            /**
-             * Tweet / Reply
-             *
-             */
-            let tweetObj = {
+            Object.assign(tweetObj, { media, mediaLink })
+        }
+        // Location
+        if (item.place){
+            Object.assign(tweetObj, {
+                location: {
+                    id: item.place.id,
+                    name: item.place.name
+                }
+            })
+        }
+
+        /**
+         * Retweet / Quote
+         *
+         */
+        if (item.retweeted_status || item.quoted_status){
+            let r_type = item.retweeted_status ? 'retweet' : 'quote';
+            let r_item = item.retweeted_status || item.quoted_status;
+
+            let r_obj = {
                 type: 'tweet',
                 provider: 'twitter',
-                created_at: Date.parse(item.created_at) + (postsLength - index),
-                id_str: item.id_str,
-                user: filterUtils.twitter.user(item.user),
-                text: item.text,
-                retweet_count: item.retweet_count,
-                like_count: item.favorite_count,
-                retweeted: item.retweeted,
-                liked: item.favorited
+                created_at: Date.parse(r_item.created_at),
+                id_str: r_item.id_str,
+                user: filterUtils.twitter.user(r_item.user),
+                text: r_item.text,
+                retweet_count: r_item.retweet_count,
+                like_count: r_item.favorite_count,
+                retweeted: r_item.retweeted,
+                liked: r_item.favorited
             };
             // Media
-            let t_extended_entities = item.extended_entities;
-            if (t_extended_entities && t_extended_entities.media){
-                let media = filterUtils.twitter.media(t_extended_entities.media);
-                let mediaLink = t_extended_entities.media[0].url;
+            let r_extended_entities = r_item.extended_entities;
+            if (r_extended_entities && r_extended_entities.media){
+                let media = filterUtils.twitter.media(r_extended_entities.media);
+                let mediaLink = r_extended_entities.media[0].url;
 
-                Object.assign(tweetObj, { media, mediaLink })
+                Object.assign(r_obj, { media, mediaLink })
             }
             // Location
-            if (item.place){
-                Object.assign(tweetObj, {
+            if (r_item.place){
+                Object.assign(r_obj, {
                     location: {
-                        id: item.place.id,
-                        name: item.place.name
+                        id: r_item.place.id,
+                        name: r_item.place.name
                     }
                 })
             }
 
-            /**
-             * Retweet / Quote
-             *
-             */
-            if (item.retweeted_status || item.quoted_status){
-                let r_type = item.retweeted_status ? 'retweet' : 'quote';
-                let r_item = item.retweeted_status || item.quoted_status;
+            Object.assign(tweetObj, { type: r_type, [r_type]: r_obj })
+        } 
 
-                let r_obj = {
-                    type: 'tweet',
-                    provider: 'twitter',
-                    created_at: Date.parse(r_item.created_at),
-                    id_str: r_item.id_str,
-                    user: filterUtils.twitter.user(r_item.user),
-                    text: r_item.text,
-                    retweet_count: r_item.retweet_count,
-                    like_count: r_item.favorite_count,
-                    retweeted: r_item.retweeted,
-                    liked: r_item.favorited
-                };
-                // Media
-                let r_extended_entities = r_item.extended_entities;
-                if (r_extended_entities && r_extended_entities.media){
-                    let media = filterUtils.twitter.media(r_extended_entities.media);
-                    let mediaLink = r_extended_entities.media[0].url;
+        cache.push(tweetObj);
+    })
 
-                    Object.assign(r_obj, { media, mediaLink })
-                }
-                // Location
-                if (r_item.place){
-                    Object.assign(r_obj, {
-                        location: {
-                            id: r_item.place.id,
-                            name: r_item.place.name
-                        }
-                    })
-                }
+    let returnObj = { data: cache };
+    let firstData = data[0];
+    let lastData  = data[postsLength - 1];
 
-                Object.assign(tweetObj, { type: r_type, [r_type]: r_obj })
-            } 
-
-            cache.push(tweetObj);
+    if (lastData){
+        Object.assign(returnObj, {
+            minId  : lastData.id_str,
+            minDate: Date.parse(lastData.created_at),
+            maxId  : firstData.id_str,
+            maxDate: Date.parse(firstData.created_at)
         })
+    }
 
-        let returnObj = { data: cache };
-        let firstData = data[0];
-        let lastData  = data[postsLength - 1];
+    return returnObj;
+};
 
-        if (lastData){
-            Object.assign(returnObj, {
-                minId  : lastData.id_str,
-                minDate: Date.parse(lastData.created_at),
-                maxId  : firstData.id_str,
-                maxDate: Date.parse(firstData.created_at)
+const buildInstagramPost = data => {
+    const postsLength = data.length;
+    let cache = [];
+
+    data.forEach((item, index) => {
+        let igPost = {
+            provider: 'instagram',
+            created_at: Date.parse(new Date(item.created_time * 1000)) + (postsLength - index),
+            id_str: item.id,
+            type: 'post',
+            user: filterUtils.instagram.user(item.user),
+            text: item.caption && item.caption.text,
+            images: filterUtils.instagram.media(item.images),
+            like_count: item.likes.count,
+            liked: item.user_has_liked,
+            reply_count: item.comments.count,
+            link: item.link
+        };
+
+        // Video
+        if (item.type === 'video'){
+            Object.assign(igPost, {
+                videos: {
+                    small: item.videos.low_resolution.url,
+                    large: item.videos.standard_resolution.url
+                }
             })
         }
 
-        return returnObj;
-    },
-    instagram: data => {
-        const postsLength = data.length;
-        let cache = [];
+        // User In Photo
+        if (item.users_in_photo.length > 0){
+            Object.assign(igPost, { users_in_photo: item.users_in_photo })
+        }
 
-        data.forEach((item, index) => {
-            let igPost = {
-                provider: 'instagram',
-                created_at: Date.parse(new Date(item.created_time * 1000)) + (postsLength - index),
-                id_str: item.id,
-                type: 'post',
-                user: filterUtils.instagram.user(item.user),
-                text: item.caption && item.caption.text,
-                images: filterUtils.instagram.media(item.images),
-                like_count: item.likes.count,
-                liked: item.user_has_liked,
-                reply_count: item.comments.count,
-                link: item.link
-            };
-
-            // Video
-            if (item.type === 'video'){
-                Object.assign(igPost, {
-                    videos: {
-                        low_resolution: item.videos.low_resolution.url,
-                        standard_resolution: item.videos.standard_resolution.url
-                    }
-                })
-            }
-
-            // User In Photo
-            if (item.users_in_photo.length > 0){
-                Object.assign(igPost, { users_in_photo: item.users_in_photo })
-            }
-
-            // Location
-            if (item.location){
-                Object.assign(igPost, {
-                    location: {
-                        name: item.location.name,
-                        id: item.location.id
-                    }
-                })
-            }
-
-            cache.push(igPost);
-        })
-
-
-        let returnObj = { data: cache };
-        let firstData = data[0];
-        let lastData  = data[postsLength - 1];
-
-        if (lastData){
-            Object.assign(returnObj, {
-                minId  : lastData.id,
-                minDate: Date.parse(new Date(lastData.created_time * 1000)),
-                maxId  : firstData.id,
-                maxDate: Date.parse(new Date(firstData.created_time * 1000))
+        // Location
+        if (item.location){
+            Object.assign(igPost, {
+                location: {
+                    name: item.location.name,
+                    id: item.location.id
+                }
             })
         }
 
-        return returnObj;
-    },
-    weibo: data => {
-        const postsLength = data.length;
-        let cache = [];
+        cache.push(igPost);
+    })
 
-        data.forEach((item, index) => {
-            /**
-             * Tweet / Reply
-             *
-             */
-            let weiboObj = {
+
+    let returnObj = { data: cache };
+    let firstData = data[0];
+    let lastData  = data[postsLength - 1];
+
+    if (lastData){
+        Object.assign(returnObj, {
+            minId  : lastData.id,
+            minDate: Date.parse(new Date(lastData.created_time * 1000)),
+            maxId  : firstData.id,
+            maxDate: Date.parse(new Date(firstData.created_time * 1000))
+        })
+    }
+
+    return returnObj;
+};
+
+const buildWeiboPost = data => {
+    const postsLength = data.length;
+    let cache = [];
+
+    data.forEach((item, index) => {
+        /**
+         * Tweet / Reply
+         *
+         */
+        let weiboObj = {
+            type: 'tweet',
+            provider: 'weibo',
+            created_at: Date.parse(item.created_at) + (postsLength - index),
+            id_str: item.idstr,
+            mid: mid.encode(item.mid),
+            user: filterUtils.weibo.user(item.user),
+            text: item.text,
+            retweet_count: item.reposts_count,
+            reply_count: item.comments_count,
+            like_count: item.attitudes_count,
+            liked: item.favorited
+        };
+        // Media
+        let pic_urls = item.pic_urls;
+        let pic_ids  = item.pic_ids;
+        if (pic_urls && pic_urls.length > 0 || pic_ids && pic_ids.length > 0){
+            Object.assign(weiboObj, {
+                media: filterUtils.weibo.media(pic_urls || pic_ids)
+            })
+        }
+        // Location
+        if (item.geo && item.geo.type === 'Point'){
+            let _place_name, _place_id;
+            let annotations = item.annotations;
+
+            if (annotations && annotations[0].place){
+                _place_name = annotations[0].place.title
+                _place_id = annotations[0].place.poiid
+            }
+
+            let name = _place_name;
+            let place_id = _place_id;
+            let id = item.geo.coordinates[0] + '_' + item.geo.coordinates[1];
+
+            Object.assign(weiboObj, { location: { name, place_id, id } })
+        }
+
+        /**
+         * Retweet & Quote
+         *
+         */
+        if (item.retweeted_status){
+            let r_type = /^转发微博|Repost|轉發微博$/.test(item.text) ? 'retweet' : 'quote';
+            let r_item = item.retweeted_status;
+
+            let r_obj = {
                 type: 'tweet',
                 provider: 'weibo',
-                created_at: Date.parse(item.created_at) + (postsLength - index),
-                id_str: item.idstr,
-                mid: mid.encode(item.mid),
-                user: filterUtils.weibo.user(item.user),
-                text: item.text,
-                retweet_count: item.reposts_count,
-                reply_count: item.comments_count,
-                like_count: item.attitudes_count,
-                liked: item.favorited
+                created_at: Date.parse(r_item.created_at),
+                id_str: r_item.idstr,
+                mid: mid.encode(r_item.mid),
+                user: filterUtils.weibo.user(r_item.user),
+                text: r_item.text,
+                retweet_count: r_item.reposts_count,
+                reply_count: r_item.comments_count,
+                like_count: r_item.attitudes_count,
+                liked: r_item.favorited
             };
             // Media
-            let pic_urls = item.pic_urls;
-            let pic_ids  = item.pic_ids;
-            if (pic_urls && pic_urls.length > 0 || pic_ids && pic_ids.length > 0){
-                Object.assign(weiboObj, {
+            let pic_urls = r_item.pic_urls;
+            let pic_ids  = r_item.pic_ids;
+            if (pic_urls && pic_urls.length > 0 || pic_ids && pic_urls.length > 0){
+                Object.assign(r_obj, {
                     media: filterUtils.weibo.media(pic_urls || pic_ids)
                 })
             }
             // Location
-            if (item.geo && item.geo.type === 'Point'){
+            if (r_item.geo && r_item.geo.type === 'Point'){
                 let _place_name, _place_id;
-                let annotations = item.annotations;
+                let annotations = r_item.annotations;
 
                 if (annotations && annotations[0].place){
                     _place_name = annotations[0].place.title
@@ -211,78 +298,79 @@ let filter = {
 
                 let name = _place_name;
                 let place_id = _place_id;
-                let id = item.geo.coordinates[0] + '_' + item.geo.coordinates[1];
+                let id = r_item.geo.coordinates[0] + '_' + r_item.geo.coordinates[1];
 
-                Object.assign(weiboObj, { location: { name, place_id, id } })
+                Object.assign(r_obj, { location: { name, place_id, id } })
             }
 
-            /**
-             * Retweet & Quote
-             *
-             */
-            if (item.retweeted_status){
-                let r_type = /^转发微博|Repost|轉發微博$/.test(item.text) ? 'retweet' : 'quote';
-                let r_item = item.retweeted_status;
-
-                let r_obj = {
-                    type: 'tweet',
-                    provider: 'weibo',
-                    created_at: Date.parse(r_item.created_at),
-                    id_str: r_item.idstr,
-                    mid: mid.encode(r_item.mid),
-                    user: filterUtils.weibo.user(r_item.user),
-                    text: r_item.text,
-                    retweet_count: r_item.reposts_count,
-                    reply_count: r_item.comments_count,
-                    like_count: r_item.attitudes_count,
-                    liked: r_item.favorited
-                };
-                // Media
-                let pic_urls = r_item.pic_urls;
-                let pic_ids  = r_item.pic_ids;
-                if (pic_urls && pic_urls.length > 0 || pic_ids && pic_urls.length > 0){
-                    Object.assign(r_obj, {
-                        media: filterUtils.weibo.media(pic_urls || pic_ids)
-                    })
-                }
-                // Location
-                if (r_item.geo && r_item.geo.type === 'Point'){
-                    let _place_name, _place_id;
-                    let annotations = r_item.annotations;
-
-                    if (annotations && annotations[0].place){
-                        _place_name = annotations[0].place.title
-                        _place_id = annotations[0].place.poiid
-                    }
-
-                    let name = _place_name;
-                    let place_id = _place_id;
-                    let id = r_item.geo.coordinates[0] + '_' + r_item.geo.coordinates[1];
-
-                    Object.assign(r_obj, { location: { name, place_id, id } })
-                }
-
-                Object.assign(weiboObj, { type: r_type, [r_type]: r_obj })
-            }
-
-            cache.push(weiboObj)
-        })
-
-        let returnObj = { data: cache };
-        let firstData = data[0];
-        let lastData  = data[postsLength - 1];
-
-        if (lastData){
-            Object.assign(returnObj, {
-                minId  : lastData.idstr,
-                minDate: Date.parse(lastData.created_at),
-                maxId  : firstData.idstr,
-                maxDate: Date.parse(firstData.created_at)
-            })
+            Object.assign(weiboObj, { type: r_type, [r_type]: r_obj })
         }
 
-        return returnObj;
-    }
-}
+        cache.push(weiboObj)
+    })
 
-module.exports = filter
+    let returnObj = { data: cache };
+    let firstData = data[0];
+    let lastData  = data[postsLength - 1];
+
+    if (lastData){
+        Object.assign(returnObj, {
+            minId  : lastData.idstr,
+            minDate: Date.parse(lastData.created_at),
+            maxId  : firstData.idstr,
+            maxDate: Date.parse(firstData.created_at)
+        })
+    }
+
+    return returnObj;
+};
+
+const buildUnsplashPost = data => {
+    const now = Date.now();
+    const item = data[0];
+    let cache = [];
+
+    let post = {
+        provider: 'unsplash',
+        created_at: now,
+        id_str: item.id,
+        type: 'post',
+        user: filterUtils.unsplash.user(item.user),
+        text: '',
+        images: filterUtils.unsplash.media({
+            urls: item.urls,
+            width: item.width,
+            height: item.height,
+        }),
+        like_count: item.likes,
+        liked: item.liked_by_user,
+        download_count: item.downloads
+    };
+
+    // Location
+    if (item.location){
+        Object.assign(post, {
+            location: {
+                name: item.location.city
+            }
+        })
+    }
+
+    cache.push(post);
+
+    return {
+        data: cache,
+        minId  : item.id,
+        minDate: now,
+        maxId  : item.id,
+        maxDate: now
+    };
+};
+
+
+module.exports = {
+    twitter: buildTwitterPost,
+    instagram: buildInstagramPost,
+    weibo: buildWeiboPost,
+    unsplash: buildUnsplashPost
+}

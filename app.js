@@ -17,15 +17,15 @@ const limiter      = require('connect-ratelimit');
 
 // global variables
 global.Q = require('q')
-global.User = require('./models/ol').User;
+global.User = require('./utils/models').User;
 global.q_userFindOne = Q.nbind(User.findOne, User)
 global.q_userFindOneAndRemove = Q.nbind(User.findOneAndRemove, User)
 
 // load dotenv
-require('dotenv').load()
+require('dotenv').load();
 
 // Authentication strategies
-require('./strategies/strategies')(passport)
+require('./utils/strategies')(passport);
 
 // Connect to DB
 const DB_URI = (
@@ -38,9 +38,11 @@ mongoose.connection
 .on('err', (err) => console.error(err))
 .once('open', () => console.log('Connected to MongoDB'))
 
+// Daemon
+require('./utils/daemon').autoFetch();
 
 // App Settings
-app.set('trust proxy', true)
+app.set('trust proxy', true);
 
 // Middlewares
 app
@@ -87,7 +89,7 @@ app
     '/auth/revoke',
     '/auth/replicant/deckard',
     '/upload',
-], require('./middlewares/protectEndpoints'));
+], require('./utils/middlewares'));
 
 
 // Template engines

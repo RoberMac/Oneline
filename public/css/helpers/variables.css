@@ -19,8 +19,13 @@
     --color-steel: #666;
 
     --color-twitter: #2AA9E0;
+    --color-twitter-alpha: rgba(42, 169, 224, 0.7);
     --color-instagram: #3F5D87;
+    --color-instagram-alpha: rgba(63, 93, 135, 0.7);
     --color-weibo: #E6162D;
+    --color-weibo-alpha: rgba(230, 22, 45, 0.7);
+    --color-unsplash: #999;
+    --color-unsplash-alpha: rgba(153, 153, 153, 0.7);
 }
 
 @custom-media --all-mobile-devices (device-width <= 1024px), (width <= 1024px);

@@ -3,7 +3,7 @@ import assign from 'object.assign';
 // Helpers
 import store from 'utils/store';
 import { Timeline } from 'utils/api';
-import { isTwitter as _isTwitter, isWeibo as _isWeibo, isInstagram as _isInstagram } from 'utils/detect';
+import { isTwitter as _isTwitter, isWeibo as _isWeibo } from 'utils/detect';
 import reduxStore from 'state/store';
 import { updateBase } from 'state/actions/base';
 
@@ -285,7 +285,7 @@ function recordMentions({ providers, posts }) {
     posts.forEach(({ provider, text, user }) => {
         const isTwitter = _isTwitter(provider);
 
-        if (_isInstagram(provider)) return;
+        if (!_isTwitter(provider) || !_isWeibo(provider)) return;
 
         // Extract from post's text
         let textMentions  = text.match(mentionRegex[provider]); // TODO: Extract `quote` posts

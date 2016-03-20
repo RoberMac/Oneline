@@ -6,7 +6,7 @@ const router   = require('express').Router();
 
 // Handing `provider` Params
 router.param('provider', (req, res, next, provider) => {
-    const validProviders = ['twitter', 'instagram', 'weibo'];
+    const validProviders = ['twitter', 'instagram', 'weibo', 'unsplash'];
 
     if (validProviders.indexOf(provider) >= 0){
         req.olProvider = provider
@@ -72,7 +72,7 @@ router.delete('/revoke/:provider', (req, res, next) => {
  *
  */
 const crypto = require('crypto');
-const Replicant = require('../models/ol').Replicant;
+const Replicant = require('../utils/models').Replicant;
 const q_replicantFindOne = Q.nbind(Replicant.findOne, Replicant);
 
 router.post('/replicant/deckard', (req, res, next) => {

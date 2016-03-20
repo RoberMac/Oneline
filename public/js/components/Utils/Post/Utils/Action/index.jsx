@@ -23,6 +23,7 @@ import Trash from './Trash';
 import Detail from './Detail';
 import Share from './Share';
 import Location from './Location';
+import Download from './Download';
 
 const Actions = {
     twitter: ({ post }) => {
@@ -86,8 +87,23 @@ const Actions = {
                 </span>
             </div>
        );
+    },
+    unsplash: ({ post }) => {
+        return (post.detail
+            ? <div>
+                <Source provider="unsplash" id={post.id_str} />
+            </div>
+            : <div>
+                <Like provider="unsplash" count={post.like_count} />
+                <span className="post-action__hide animate--faster">
+                    <Download provider="unsplash" id={post.id_str} count={post.download_count} />
+                    <Source provider="unsplash" id={post.id_str} />
+                    <Share provider="unsplash" post={post} />
+                </span>
+            </div>
+        );
     }
-}
+};
 
 // Export
 export default ({ post }) => {

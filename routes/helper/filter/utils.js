@@ -1,26 +1,30 @@
 "use strict";
+
+// Helpers
+const calcRatio = (width, height) => (height / width).toFixed(5);
+
 /**
  * Trim User
  *
  */
-function trimTweetUser (user){
-    let name        = user.name;
-    let uid         = user.id_str;
-    let screen_name = user.screen_name;
-    let avatar      = user.profile_image_url_https;
+function trimTweetUser(user) {
+    const name        = user.name;
+    const uid         = user.id_str;
+    const screen_name = user.screen_name;
+    const avatar      = user.profile_image_url_https;
 
     return { name, uid, screen_name, avatar };
 }
-function trimInstagramUser (user){
-    let name        = user.full_name;
-    let avatar      = user.profile_picture;
-    let screen_name = user.username;
-    let uid         = user.id;
-    let created_at  = user.created_time * 1000;
+function trimInstagramUser(user) {
+    const name        = user.full_name;
+    const avatar      = user.profile_picture;
+    const screen_name = user.username;
+    const uid         = user.id;
+    const created_at  = user.created_time * 1000;
 
     return { name, avatar, screen_name, uid, created_at };
 }
-function trimWeiboUser (user){
+function trimWeiboUser(user) {
     if (!user){
         user = {
             name: '微博小秘书',
@@ -30,10 +34,18 @@ function trimWeiboUser (user){
         }
     }
 
-    let name = user.name;
-    let uid = user.idstr;
-    let screen_name = user.screen_name;
-    let avatar = user.profile_image_url;
+    const name = user.name;
+    const uid = user.idstr;
+    const screen_name = user.screen_name;
+    const avatar = user.profile_image_url;
+
+    return { name, uid, screen_name, avatar };
+}
+function trimUnsplashUser(user) {
+    const name        = user.name;
+    const uid         = user.id;
+    const screen_name = user.username;
+    const avatar      = user.profile_image.medium;
 
     return { name, uid, screen_name, avatar };
 }
@@ -41,7 +53,7 @@ function trimWeiboUser (user){
  * Filter Media
  *
  */
-function filterTweetMedia (items){
+function filterTweetMedia(items) {
     let cache = [];
 
     for (let item of items){
@@ -66,17 +78,17 @@ function filterTweetMedia (items){
 
     return cache
 }
-function filterInstagramImages (images){
-    let _low = images.low_resolution;
-    let _standard = images.standard_resolution;
+function filterInstagramImage(image){
+    const _low = image.low_resolution;
+    const _standard = image.standard_resolution;
 
-    let low_resolution = _low.url;
-    let standard_resolution = _standard.url;
-    let ratio = (_standard.height / _standard.width).toFixed(5);
-
-    return { low_resolution, standard_resolution, ratio };
+    return {
+        small: _low.url,
+        large: _standard.url,
+        ratio: calcRatio(_standard.width, _standard.height)
+    };
 }
-function filterWeiboMedia(items){
+function filterWeiboMedia(items) {
     let cache = [];
 
     for (let item of items){
@@ -95,6 +107,14 @@ function filterWeiboMedia(items){
 
     return cache
 }
+function filterUnsplashImage(image) {
+    return {
+        small: image.urls.regular.replace('&w=1080&', '&w=640&'),
+        large: image.urls.regular,
+        ratio: calcRatio(image.width, image.height)
+    };
+}
+
 
 module.exports = {
     twitter: {
@@ -103,10 +123,14 @@ module.exports = {
     },
     instagram: {
         user: trimInstagramUser,
-        media: filterInstagramImages
+        media: filterInstagramImage
     },
     weibo: {
         user: trimWeiboUser,
         media: filterWeiboMedia
+    },
+    unsplash: {
+        user: trimUnsplashUser,
+        media: filterUnsplashImage
     }
 }

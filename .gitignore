@@ -30,4 +30,4 @@ ignore
 TODO
 .env
 .sass-cache
-/public/js/libs/ol-angular.js
+stats.json
