@@ -351,7 +351,7 @@ const buildUnsplashPost = data => {
     if (item.location){
         Object.assign(post, {
             location: {
-                name: item.location.city
+                name: item.location.city || item.location.country
             }
         })
     }

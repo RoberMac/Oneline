@@ -11,8 +11,9 @@ router.get('/', (req, res, next) => {
 
     if (req.query.id){
         req.query.id.split(',').forEach(id_str => {
-            let key   = id_str.split('-')[0];
-            let value = id_str.split('-')[1];
+            const id_split = id_str.split('Id-');
+            const key   = `${id_split[0]}Id`;
+            const value = id_split[1];
 
             olIdObj[key] = value
         })

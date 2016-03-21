@@ -89,7 +89,7 @@ module.exports = {
     unsplash: opts => {
         const LatestPhoto = daemonState.get('unsplash');
 
-        return opts.minId !== LatestPhoto.id ? [[LatestPhoto]] : [];
+        return !opts.maxId && opts.minId !== LatestPhoto.id ? [[LatestPhoto]] : [];
     }
 }
 

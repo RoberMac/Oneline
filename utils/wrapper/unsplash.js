@@ -41,7 +41,6 @@ module.exports = params => {
             } catch (e){
                 statusCode = 400;
             } finally {
-                console.log(body)
                 deferred.reject({
                     statusCode: statusCode,
                     msg: body
