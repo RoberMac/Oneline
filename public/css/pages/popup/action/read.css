@@ -119,4 +119,23 @@
             }
         }
     }
+    &--unsplash {
+        ::selection {
+            color: var(--color-unsplash-alpha);
+            background-color: var(--color-gray);
+        }
+
+        .profile__biography {
+            background-color: var(--color-unsplash);
+
+            a, a:visited {
+                color: #D0D0D0;
+            }
+        }
+        .profile__website {
+            svg {
+                stroke: var(--color-unsplash);
+            }
+        }
+    }
 }

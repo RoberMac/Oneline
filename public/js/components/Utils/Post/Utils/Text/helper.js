@@ -1,10 +1,8 @@
 import xssFilters from 'xss-filters';
 
 // Helpers
-import { isTwitter, isInstagram, isWeibo } from 'utils/detect';
 import reduxStore from 'state/store';
 import { UPDATE_BASE } from 'state/actions/base';
-
 let { SHARE_PAGE, EMOTIONS } = reduxStore.getState().base;
 reduxStore.subscribe(() => {
     const { base, lastAction: { type } } = reduxStore.getState();
@@ -14,22 +12,60 @@ reduxStore.subscribe(() => {
     ({ SHARE_PAGE, EMOTIONS } = base);
 })
 
-// via https://github.com/RoberMac/angular-linkify/blob/master/angular-linkify.js#L5
+// Constants
 const USER_PREFIX = {
-    twitter: SHARE_PAGE ? '//twitter.com' : '/home/twitter/user',
-    instagram: SHARE_PAGE ? '//instagram.com' : '/home/instagram/user',
-    weibo: SHARE_PAGE ? '//weibo.com/n' : '/home/weibo/user',   
+    twitter: SHARE_PAGE ? '//twitter.com/' : '/home/twitter/user/',
+    instagram: SHARE_PAGE ? '//instagram.com/' : '/home/instagram/user/',
+    weibo: SHARE_PAGE ? '//weibo.com/n/' : '/home/weibo/user/',
 };
 const TAG_PREFIX = {
-    twitter: SHARE_PAGE ? '//twitter.com/search?q=%23' : '/home/twitter/tags',
-    instagram: SHARE_PAGE ? '//instagram.com/explore/tags' : '/home/instagram/tags',
-    weibo: SHARE_PAGE ? 'http://huati.weibo.com/k' : '/home/weibo/tags',    
+    twitter: SHARE_PAGE ? '//twitter.com/search?q=%23' : '/home/twitter/tags/',
+    instagram: SHARE_PAGE ? '//instagram.com/explore/tags/' : '/home/instagram/tags/',
+    weibo: SHARE_PAGE ? 'http://huati.weibo.com/k/' : '/home/weibo/tags/',
+    unsplash: SHARE_PAGE ? '//unsplash.com/search?utf8=✓&keyword=' : '/home/unsplash/tags/'
 };
 const TARGET_ATTR = SHARE_PAGE ? 'target="_blank"' : '';
-const _linkify = (text, provider) => {
+const MATCH_ZERO_WIDTH_CHAR = /[\u200B-\u200F\u202C\uFEFF]/g;
+const MATCH_MENTION_WORD = /(|\s)*@([\w]+)/g;
+const MATCH_MENTION_CHINESE = /(|\s)*@([\u4e00-\u9fa5\w-]+)/g;
+const MATCH_LINK = new RegExp([
+    '(?:https?:\/\/)+',
+    '(?![^\\s]*?")',
+    '([\\w.,@?!^=%&amp;:\/~+#-]*[\\w@?!^=%&amp;\/~+#-])?'
+].join(''), 'gi');
+const MATCH_SUFFIX_LINK = new RegExp([
+    '(?:https?\:\/\/)+',
+    '(?![^\\s]*?")',
+    '([\\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?$'
+].join(''), 'gi');
+const MATCH_TAG = new RegExp([
+    '(^|\\s)*',
+    '[#＃]',
+    '([',
+        '^＃\\s!?@$%^&*()+-=\\[\\]{};\':"|,.<>\/\\\\',
+        '\u3002\uff1f\uff01\uff0c\u3001\uff1b', // 。？！，、；
+        '\uff1a\u300c\u300d\u300e\u300f\u2018', // ：「」『』‘
+        '\u2019\u201c\u201D\uff08\uff09\u3014', // ’“”（）〔
+        '\u3015\u3010\u3011\u2014\u2026\u2013', // 〕【】—…–
+        '\uff0e\u300a\u300B\u3008\u3009\uFF03', // ．《》〈〉＃
+    ']+)'
+].join(''), 'g')
+
+// Export
+export const linkify = _linkify;
+export const weiboEmotify = _weiboEmotify;
+export const trimSuffixLink = _trimSuffixLink;
+export const trimMediaLink = _trimMediaLink;
+export const sanitizer = _sanitizer;
+export const highlight = _highlight;
+
+
+function _linkify(text, { provider }) {
     if (!text) return '';
 
-    let _text = text.replace(/(?:https?\:\/\/)+(?![^\s]*?")([\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?/ig, function(url) {
+    let _text;
+    // Linkify URL
+    _text = text.replace(MATCH_LINK, url => {
         let wrap = document.createElement('div');
         let anch = document.createElement('a');
         anch.href = url;
@@ -39,37 +75,57 @@ const _linkify = (text, provider) => {
         return wrap.innerHTML;
     });
 
-    // bugfix
     if (!_text) return '';
 
-    // Twitter
-    if (isTwitter(provider)){
-        _text = _text.replace(/[\u200B-\u200F\u202C\uFEFF]/g, ''); // Zero-width char
-        _text = _text.replace(/(|\s)*@([\w]+)/g, `$1<a href="${USER_PREFIX['twitter']}/$2" ${TARGET_ATTR}>@$2</a>`);
-        _text = _text.replace(/(^|\s)*[#＃]([^#＃\s!@$%^&*()+\-=\[\]{};':"\\|,.<>\/?\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u300c\u300d\u300e\u300f\u2018\u2019\u201c\u201D\uff08\uff09\u3014\u3015\u3010\u3011\u2014\u2026\u2013\uff0e\u300a\u300B\u3008\u3009]+)/g, `$1<a href="${TAG_PREFIX['twitter']}/$2" ${TARGET_ATTR}>#$2</a>`);
-    }
-    // Instagram
-    if (isInstagram(provider)){
-        _text = _text.replace(/[\u200B-\u200F\u202C\uFEFF]/g, '');
-        _text = _text.replace(/(|\s)*@([\w\.]+)/g, `$1<a href="${USER_PREFIX['instagram']}/$2" ${TARGET_ATTR}>@$2</a>`);
-        _text = _text.replace(/(^|\s)*[#＃]([^#＃\s!@$%^&*()+\-=\[\]{};':"\\|,.<>\/?\u3002\uff1f\uff01\uff0c\u3001\uff1b\uff1a\u300c\u300d\u300e\u300f\u2018\u2019\u201c\u201D\uff08\uff09\u3014\u3015\u3010\u3011\u2014\u2026\u2013\uff0e\u300a\u300B\u3008\u3009]+)/g, `$1<a href="${TAG_PREFIX['instagram']}/$2" ${TARGET_ATTR}>#$2</a>`);
-    }
-    // Weibo
-    if (isWeibo(provider)){
-        _text = _text.replace(/(|\s)*@([\u4e00-\u9fa5\w-]+)/g, '$1<a href="http://weibo.com/n/$2" target="_blank">@$2</a>');
-        _text = _text.replace(/(^|\s)*#([^#]+)#/g, function (str, $1, $2){
-            str = str || '';
-            $1  = $1 || '';
-            $2  = $2 || '';
+    // Remove Zero-width characters
+    _text = _text.replace(MATCH_ZERO_WIDTH_CHAR, '');
 
-            return $1 + '<a href="http://huati.weibo.com/k/' + $2.replace(/\[([\u4e00-\u9fa5]*\])/g, '') + '" target="_blank">#' + $2 + '#</a>';
-        });
+    // Linkify Mentions
+    switch (provider) {
+        case 'twitter':
+        case 'instagram':
+            _text = _text.replace(
+                MATCH_MENTION_WORD,
+                `$1<a href="${USER_PREFIX[provider]}$2" ${TARGET_ATTR}>@$2</a>`
+            );
+            break;
+        case 'weibo':
+            _text = _text.replace(
+                MATCH_MENTION_CHINESE,
+                '$1<a href="http://weibo.com/n/$2" target="_blank">@$2</a>'
+            );
+            break;
+    }
+
+    // Linkify Tags
+    switch (provider) {
+        case 'twitter':
+        case 'instagram':
+        case 'unsplash':
+            _text = _text.replace(
+                MATCH_TAG,
+                `$1<a href="${TAG_PREFIX[provider]}$2" ${TARGET_ATTR}>#$2</a>`
+            );
+            break;
+        case 'weibo':
+            _text = _text.replace(/(^|\s)*#([^#]+)#/g, (str, $1, $2) => {
+                str = str || '';
+                $1  = $1 || '';
+                $2  = $2 || '';
+
+                return (
+                    $1 +
+                    '<a href="http://huati.weibo.com/k/' +
+                    $2.replace(/\[([\u4e00-\u9fa5]*\])/g, '') +
+                    '" target="_blank">#' + $2 + '#</a>'
+                );
+            });
+            break;
     }
 
     return _text;
 }
-// via https://github.com/RoberMac/angular-weibo-emotify/blob/master/dist/angular-weibo-emotify.js#L57
-const _weiboEmotify = (text) => {
+function _weiboEmotify(text) {
     if (!text) return;
     if (!EMOTIONS['weibo']) return text;
     let _text = text.replace(/\[[\u4e00-\u9fa5\w]+\]/g, str => {
@@ -103,31 +159,22 @@ const _weiboEmotify = (text) => {
 
     return _text || '';
 }
-
-
-// Export
-export const linkify = (text, { provider }) => {
-    return _linkify(text, provider);
+function _trimSuffixLink(text) {
+    return text.replace(MATCH_SUFFIX_LINK, '');
 }
-export const weiboEmotify = text => {
-    return _weiboEmotify(text)
-}
-export const trimSuffixLink = text => {
-    const suffixLink = /(?:https?\:\/\/)+(?![^\s]*?")([\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?$/ig
-    return text.replace(suffixLink, '');
-}
-export const trimMediaLink = (text, { link }) => {
+function _trimMediaLink(text, { link }) {
     return text.replace(link, '');
 }
-export const sanitizer = text => {
+function _sanitizer(text) {
     return xssFilters.inHTMLData(text);
 }
-export const highlight = (text, { provider, highlight }) => {
+function _highlight(text, { provider, highlight }) {
     if (!highlight) return text;
 
+    const MATCH_HIGHLIGHT = new RegExp(`(${highlight})(?![^<]*>|[^<>]*<\/)`, 'gim');
+
     return text.replace(
-        new RegExp(`(${highlight})(?![^<]*>|[^<>]*<\/)`, 'gim'),
+        MATCH_HIGHLIGHT,
         `<mark class="highlight--${provider}">$1</mark>`
     );
 }
-

@@ -54,7 +54,7 @@ export default class Like extends React.Component {
             'animate--like': this.state.inprocess
         });
         return (
-            <button className={btnClass} type="button" onClick={this.toggleLike}>
+            <button className={btnClass} onClick={this.toggleLike} type="button" ref="btn">
                 <Icon className={iconClass} name="like" />
                 <span className="post-action__count" data-count={like_count > 0 ? numAbbr(like_count) : ''} />
             </button>

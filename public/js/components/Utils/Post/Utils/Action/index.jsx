@@ -94,7 +94,7 @@ const Actions = {
                 <Source provider="unsplash" id={post.id_str} />
             </div>
             : <div>
-                <Like provider="unsplash" count={post.like_count} />
+                <Like provider="unsplash" id={post.id_str} count={post.like_count} liked={post.liked} />
                 <span className="post-action__hide animate--faster">
                     <Download provider="unsplash" id={post.id_str} count={post.download_count} />
                     <Source provider="unsplash" id={post.id_str} />

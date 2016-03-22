@@ -4,7 +4,6 @@ import React from 'react';
 import Text from '../Utils/Text';
 import Media from '../Utils/Media';
 import Action from '../Utils/Action';
-import TimeAgo from '../Utils/TimeAgo';
 import { Avatar } from '../Utils/Avatar';
 
 export const UnsplashPost = ({ post, highlight }) => (
@@ -22,6 +21,5 @@ export const UnsplashPost = ({ post, highlight }) => (
         </div>
 
         <Action post={post} />
-        <TimeAgo date={post.created_at} />
     </div>
 );

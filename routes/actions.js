@@ -23,14 +23,12 @@ router.all('/:action/:provider/:id', (req, res, next) => {
     q_userFindOne({ id: provider + req.olPassports[provider] })
     .then(found => {
         return actions[provider](req.olAction, {
-
             token      : found.token,
             tokenSecret: found.tokenSecret,
             id         : req.olId,
             params     : req.body.params,
             method     : req.method.toLowerCase(),
             query      : req.query
-
         })
     })
     .then(data => res.json(data))

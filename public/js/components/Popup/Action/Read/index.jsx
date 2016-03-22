@@ -2,7 +2,7 @@ import React from 'react';
 
 // Helpers
 import { Action } from 'utils/api';
-const initId = ({ provider, action, id }) => {
+const calcId = ({ provider, action, id }) => {
     switch (provider){
         case 'twitter':
             switch (action){
@@ -19,9 +19,14 @@ const initId = ({ provider, action, id }) => {
             break;
         case 'instagram':
         case 'weibo':
+        case 'unsplash':
             return id;
             break;
     }
+};
+const calcUnsplashNextPage = ({ action, showingPosts }) => {
+    const PAGE_COUNT = action === 'user' ? 10 : 20;
+    return Math.floor(showingPosts.length / PAGE_COUNT) + 1;
 };
 
 // Components
@@ -65,6 +70,21 @@ export default class Read extends React.Component {
         const { provider, action, id } = this.props;
         const { showingPosts, isFetching, minId, minDate } = this.state;
 
+        let nextPage;
+        switch (provider) {
+            case 'twitter':
+            case 'instagram':
+                nextPage = minId; // for oldest post's id
+                break;
+            case 'weibo':
+                nextPage = minDate; // for oldest post's created date
+                break;
+            case 'unsplash':
+                nextPage = calcUnsplashNextPage({ action, showingPosts }); // for next page
+                break;
+        }
+
+
         if (isFetching) return;
         this.setState({ isFetching: true, isFetchFail: false })
 
@@ -72,8 +92,8 @@ export default class Read extends React.Component {
         .get({
             provider,
             action,
-            id: initId({ provider, action, id })
-        }, minId ? { maxId: provider !== 'weibo' ? minId : minDate } : undefined)
+            id: calcId({ provider, action, id })
+        }, minId ? { maxId: nextPage } : undefined)
         .then(res => {
             // Update State
             const user = res.user;

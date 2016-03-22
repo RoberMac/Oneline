@@ -1,4 +1,4 @@
-var unsplash = require('./wrapper/unsplash');
+var Unsplash = require('./wrapper/Unsplash');
 
 /**
  * State Cache
@@ -8,7 +8,7 @@ const stateStore = {};
 const state = {
     get: key => stateStore[key],
     set: (key, value) => { stateStore[key] = value; }
-}
+};
 
 /***
  *  Auto Fetch
@@ -17,7 +17,7 @@ const state = {
 function autoFetch() {
     // Auto Fetch Unsplash Photo (every 3 mins))
     (function autoFetchUnsplash() {
-        unsplash({
+        Unsplash({
             method: 'get',
             endpoint: '/photos/random',
             client_id: process.env.UNSPLASH_KEY

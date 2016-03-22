@@ -14,7 +14,7 @@ module.exports = params => {
     request[_method](_opts, (err, res, body) => {
         body = toJSON(body)
 
-        if (err || res.statusCode !== 200){
+        if (err || !/2\d\d/.test(res.statusCode)){
             let statusCode;
             try {
                 statusCode = res.statusCode;

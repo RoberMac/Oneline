@@ -21,7 +21,16 @@ router.param('provider', (req, res, next, provider) => {
  *
  */
 router.get('/:provider', (req, res, next) => {
-    passport.authenticate(req.olProvider, { session: false })(req, res, next)
+    let authOpts = { session: false };
+    switch (req.olProvider) {
+        case 'unsplash':
+            Object.assign(authOpts, { scope: ['public', 'read_photos', 'write_likes'] });
+            break;
+        default:
+            break;
+    }
+
+    passport.authenticate(req.olProvider, authOpts)(req, res, next)
 })
 router.get('/:provider/callback', (req, res, next) => {
     passport.authenticate(req.olProvider, { session: false })(req, res, next)

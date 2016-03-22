@@ -78,14 +78,13 @@ const _RightSidebar = ({ activeProviders, location: { pathname } }) => {
             ? 'twitter'
         : activeProviders.indexOf('weibo') >= 0
             ? 'weibo'
-        : activeProviders.indexOf('weibo') >= 0
+        : activeProviders.indexOf('instagram') >= 0
             ? 'instagram'
         : activeProviders.indexOf('unsplash') >= 0
             ? 'unsplash'
         : null
     );
 
-    console.log(activeProviders, firstProvider)
     return (
         isPopupPage(pathname)
             ? <GoBtn

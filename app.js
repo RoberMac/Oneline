@@ -20,6 +20,7 @@ global.Q = require('q')
 global.User = require('./utils/models').User;
 global.q_userFindOne = Q.nbind(User.findOne, User)
 global.q_userFindOneAndRemove = Q.nbind(User.findOneAndRemove, User)
+global.__base = __dirname;
 
 // load dotenv
 require('dotenv').load();

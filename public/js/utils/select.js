@@ -16,7 +16,8 @@ export const selectLocationLink = {
 };
 export const selectTagLink = {
     twitter  : ({ tagName }) => `//twitter.com/search?q=%23${tagName}`,
-    instagram: ({ tagName }) => `//instagram.com/explore/tags/${tagName}`
+    instagram: ({ tagName }) => `//instagram.com/explore/tags/${tagName}`,
+    unsplash: ({ tagName }) => `//unsplash.com/search?utf8=✓&keyword=${tagName}`
 };
 export const selectSourceLink = {
     twitter: ({ screen_name, id }) => `//twitter.com/${screen_name}/status/${id}`,
@@ -74,5 +75,8 @@ export const selectTextMiddlewares = {
         { order: 3, middleware: 'linkify', opts: { provider: 'weibo' } },
         { order: 4, middleware: 'weiboEmotify' }
     ],
-    unsplash: []
+    unsplash: [
+        { order: 0, middleware: 'sanitizer' },
+        { order: 3, middleware: 'linkify', opts: { provider: 'unsplash' } }
+    ]
 };
