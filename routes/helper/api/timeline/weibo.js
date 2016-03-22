@@ -1,5 +1,5 @@
 "use strict";
-const Weibo = require(`${__base}/utils/wrapper/Weibo`);
+const Weibo = require(`${__base}/utils/wrapper/weibo`);
 
 
 module.exports = opts => {

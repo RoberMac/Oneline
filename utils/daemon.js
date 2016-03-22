@@ -1,4 +1,4 @@
-var Unsplash = require('./wrapper/Unsplash');
+var Unsplash = require('./wrapper/unsplash');
 
 /**
  * State Cache
