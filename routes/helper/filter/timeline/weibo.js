@@ -108,9 +108,9 @@ module.exports = data => {
 
     if (lastData){
         Object.assign(returnObj, {
-            minId  : lastData.idstr,
+            minId  : lastData.id_str,
             minDate: lastData.created_at,
-            maxId  : firstData.idstr,
+            maxId  : firstData.id_str,
             maxDate: firstData.created_at
         })
     }
