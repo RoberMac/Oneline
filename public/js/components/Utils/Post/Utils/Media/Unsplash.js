@@ -12,7 +12,7 @@ import ViewOriginal from './Utils/ViewOriginal';
 export default ({ images }) => (
     <div className="post-media">
         <div className="post-media--large" style={lazySize(images.ratio)}>
-            <img src={images.large} onError={handleImageError} />
+            <img src={images.small} onError={handleImageError} />
             <ViewOriginal link={images.large} provider="unsplash" />
         </div>
     </div>
