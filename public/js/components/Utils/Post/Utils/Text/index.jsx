@@ -2,7 +2,7 @@ import React from 'react';
 
 
 // Helper
-import * as Middlewares from './helper';
+import Middlewares from './helper';
 import CaptureClicks from 'utils/CaptureClicks';
 import { selectTextMiddlewares } from 'utils/select';
 

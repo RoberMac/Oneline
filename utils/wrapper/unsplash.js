@@ -6,7 +6,7 @@ const request = require('request');
 const toJSON = require('./toJSON');
 const API_URL = "https://api.unsplash.com";
 const API_VERSION = "v1";
-const OAUTH_TOKEN_URL = "https://unsplash.com/oauth/token";
+const OAUTH_TOKEN_URL = "https://unsplash.com/oauth";
 
 
 module.exports = params => {
@@ -28,23 +28,27 @@ module.exports = params => {
             )
         }
     };
-    _opts[_method === 'get' ? 'qs' : 'body'] = params.opts;
+
+    if (_method === 'get') {
+        _opts.qs = params.opts;
+    } else if (_method === 'post') {
+        _opts.body = params.opts;
+        _opts.json = true;
+    }
 
     // Start Request
     request(_opts, (err, res, body) => {
-        body = toJSON(body)
+        body = toJSON(body);
 
         if (err || !/2\d\d/.test(res.statusCode)){
             let statusCode;
+            const msg = body && body.errors && body.errors[0] || body || 'no error messages';
             try {
                 statusCode = res.statusCode;
             } catch (e){
                 statusCode = 400;
             } finally {
-                deferred.reject({
-                    statusCode: statusCode,
-                    msg: body
-                })
+                deferred.reject({ statusCode, msg })
             }
         } else {
             deferred.resolve(body)

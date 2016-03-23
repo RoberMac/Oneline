@@ -1,7 +1,8 @@
 "use strict";
 /* /actions */
 const router  = require('express').Router();
-const actions = require('./helper/api/actions');
+const Auth    = require('./helper/api/auth');
+const Actions = require('./helper/api/actions');
 
 // Handing `action` & `provider` & `id` Params
 router.param('action', (req, res, next, action) => {
@@ -18,21 +19,56 @@ router.param('id', (req, res, next, id) => {
 })
 
 router.all('/:action/:provider/:id', (req, res, next) => {
-    let provider = req.olProvider;
+    const provider = req.olProvider;
+    const id = provider + req.olPassports[provider];
+    let actionOpts = {
+        id         : req.olId,
+        params     : req.body.params,
+        method     : req.method.toLowerCase(),
+        query      : req.query
+    };
 
-    q_userFindOne({ id: provider + req.olPassports[provider] })
+    q_userFindOne({ id })
     .then(found => {
-        return actions[provider](req.olAction, {
+        Object.assign(actionOpts, {
             token      : found.token,
             tokenSecret: found.tokenSecret,
-            id         : req.olId,
-            params     : req.body.params,
-            method     : req.method.toLowerCase(),
-            query      : req.query
-        })
+            refreshToken: found.refreshToken
+        });
+
+        return Actions[provider](req.olAction, actionOpts);
+    })
+    .fail(err => {
+        const isTokenExpired = /expired?/i.test(err.msg);
+
+        if (isTokenExpired) {
+            // Try to refresh token and re-request
+            return (
+                Auth[provider]['refreshToken'](actionOpts.refreshToken)
+                .then(updateToken)
+                .then(reRequest)
+            );
+        } else {
+            throw err;
+        }
     })
     .then(data => res.json(data))
     .fail(err => next(err))
+
+
+    function updateToken(data) {
+        const update = {
+            token: data.access_token,
+            refreshToken: data.refresh_token
+        };
+
+        Object.assign(actionOpts, update);
+
+        return q_userFindOneAndUpdate({ id }, update);
+    }
+    function reRequest() {
+        return Actions[provider](req.olAction, actionOpts);
+    }
 })
 
 module.exports = router

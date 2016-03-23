@@ -34,9 +34,9 @@ const MATCH_LINK = new RegExp([
     '([\\w.,@?!^=%&amp;:\/~+#-]*[\\w@?!^=%&amp;\/~+#-])?'
 ].join(''), 'gi');
 const MATCH_SUFFIX_LINK = new RegExp([
-    '(?:https?\:\/\/)+',
+    '(?:https?:\/\/)+',
     '(?![^\\s]*?")',
-    '([\\w.,@?!^=%&amp;:\/~+#-]*[\w@?!^=%&amp;\/~+#-])?$'
+    '([\\w.,@?!^=%&amp;:\/~+#-]*[\\w@?!^=%&amp;\/~+#-])?$'
 ].join(''), 'gi');
 const MATCH_TAG = new RegExp([
     '(^|\\s)*',
@@ -51,16 +51,19 @@ const MATCH_TAG = new RegExp([
     ']+)'
 ].join(''), 'g')
 
+
 // Export
-export const linkify = _linkify;
-export const weiboEmotify = _weiboEmotify;
-export const trimSuffixLink = _trimSuffixLink;
-export const trimMediaLink = _trimMediaLink;
-export const sanitizer = _sanitizer;
-export const highlight = _highlight;
+export default {
+    linkify,
+    weiboEmotify,
+    trimSuffixLink,
+    trimMediaLink,
+    sanitizer,
+    highlight
+};
 
 
-function _linkify(text, { provider }) {
+function linkify(text, { provider }) {
     if (!text) return '';
 
     let _text;
@@ -125,7 +128,7 @@ function _linkify(text, { provider }) {
 
     return _text;
 }
-function _weiboEmotify(text) {
+function weiboEmotify(text) {
     if (!text) return;
     if (!EMOTIONS['weibo']) return text;
     let _text = text.replace(/\[[\u4e00-\u9fa5\w]+\]/g, str => {
@@ -159,16 +162,16 @@ function _weiboEmotify(text) {
 
     return _text || '';
 }
-function _trimSuffixLink(text) {
+function trimSuffixLink(text) {
     return text.replace(MATCH_SUFFIX_LINK, '');
 }
-function _trimMediaLink(text, { link }) {
+function trimMediaLink(text, { link }) {
     return text.replace(link, '');
 }
-function _sanitizer(text) {
+function sanitizer(text) {
     return xssFilters.inHTMLData(text);
 }
-function _highlight(text, { provider, highlight }) {
+function highlight(text, { provider, highlight }) {
     if (!highlight) return text;
 
     const MATCH_HIGHLIGHT = new RegExp(`(${highlight})(?![^<]*>|[^<>]*<\/)`, 'gim');

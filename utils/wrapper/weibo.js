@@ -12,7 +12,7 @@ module.exports = params => {
     _opts[_method === 'get' ? 'qs' : 'form'] = params.opts;
 
     request[_method](_opts, (err, res, body) => {
-        body = toJSON(body)
+        body = toJSON(body);
 
         if (err || !/2\d\d/.test(res.statusCode)){
             let statusCode;
