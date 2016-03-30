@@ -16,7 +16,7 @@ const HomeComponents = { main: Home, leftSidebar: LeftSidebar, rightSidebar: Rig
 const SettingsComponents = { main: Settings, leftSidebar: LeftSidebar, rightSidebar: RightSidebar };
 // Popup
 import Popup from 'components/Popup';
-import { SettingsMenu, HomeMenu } from 'components/Popup/Menu';
+import { SettingsMenu, HomeMenu, ProviderMenu } from 'components/Popup/Menu';
 import { Deckard, Rachael } from 'components/Popup/Replicant';
 import { Action } from 'components/Popup/Action';
 
@@ -30,8 +30,11 @@ export default (
         <IndexRoute onEnter={redirectIfNot.Home} />
 
         <Route path="home" components={HomeComponents} onEnter={redirectIfNot.Auth}>
-            <Route path=":provider" component={Popup} onEnter={redirectIfNot.VaildProvider}>
+            <Route path="menu" component={Popup}>
                 <IndexRoute component={HomeMenu} />
+            </Route>
+            <Route path=":provider" component={Popup} onEnter={redirectIfNot.VaildProvider}>
+                <IndexRoute component={ProviderMenu} />
                 <Route path=":action(/:id)" component={Action} onEnter={redirectIfNot.VaildAction} />
             </Route>
         </Route>

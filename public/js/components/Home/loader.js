@@ -9,7 +9,7 @@ export default (activeProviders) => {
     return new Promise((resolve, reject) => {
         ensureUserProfileLoaded(activeProviders)
 
-        if (activeProviders.indexOf('weibo') >= 0){
+        if (~activeProviders.indexOf('weibo')){
             ensureWeiboEmotionsStored()
             .then(() => resolve())
         } else {

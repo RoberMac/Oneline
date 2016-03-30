@@ -25,21 +25,22 @@
                 top: calc(75% - 35px);
             }
         }
+        &-4 {
+            &-1 {
+                top: calc(20% - 35px);
+            }
+            &-2 {
+                top: calc(40% - 35px);
+            }
+            &-3 {
+                top: calc(60% - 35px);
+            }
+            &-4 {
+                top: calc(80% - 35px);
+            }
+        }
     }
     &__btn {
         size: 70px;
-
-        &--switch {
-            position: absolute;
-            top: calc(50% - 35px);
-
-            &--left {
-                left: 0;
-                transform: rotate(180deg);
-            }
-            &--right {
-                right: 0;
-            }
-        }
     }
 }

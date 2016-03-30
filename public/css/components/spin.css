@@ -110,6 +110,9 @@
         &--weibo {
             background-color: var(--color-weibo);
         }
+        &--unsplash {
+            background-color: var(--color-unsplash);
+        }
     }
 }
 

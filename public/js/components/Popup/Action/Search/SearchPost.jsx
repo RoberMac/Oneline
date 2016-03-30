@@ -2,6 +2,7 @@ import React from 'react';
 import assign from 'object.assign';
 
 // Helpers
+import { selectNextPageId } from 'utils/select';
 import { Action } from 'utils/api';
 const initSearchState = {
     showingPosts: [],
@@ -24,6 +25,7 @@ export default class SearchPost extends React.Component {
     fetchPosts() {
         const { provider, searchText } = this.props;
         const { showingPosts, isFetching, minId } = this.state;
+        const nextPageId = selectNextPageId[provider]({ minId, showingPosts, action: 'search', });
 
         if (isFetching || !searchText) return;
         this.setState({ isFetching: true, isFetchFail: false })
@@ -33,7 +35,7 @@ export default class SearchPost extends React.Component {
             provider,
             action: 'search',
             id: window.encodeURIComponent(`${searchText}`),
-        }, minId ? { maxId: minId } : undefined)
+        }, minId ? { maxId: nextPageId } : undefined)
         .then(res => {
             // Update State
             const data = res.data.sort((a, b) => a.created_at < b.created_at ? 1 : -1);

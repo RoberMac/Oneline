@@ -1,6 +1,7 @@
 import React from 'react';
 
 // Helpers
+import { selectNextPageId } from 'utils/select';
 import { Action } from 'utils/api';
 const calcId = ({ provider, action, id }) => {
     switch (provider){
@@ -23,10 +24,6 @@ const calcId = ({ provider, action, id }) => {
             return id;
             break;
     }
-};
-const calcUnsplashNextPage = ({ action, showingPosts }) => {
-    const PAGE_COUNT = action === 'user' ? 10 : 20;
-    return Math.floor(showingPosts.length / PAGE_COUNT) + 1;
 };
 
 // Components
@@ -64,26 +61,12 @@ export default class Read extends React.Component {
             minId: '',
             minDate: 0
         }
-        this.loadPosts = this.loadPosts.bind(this);
+        this.fetchPosts = this.fetchPosts.bind(this);
     }
-    loadPosts() {
+    fetchPosts() {
         const { provider, action, id } = this.props;
         const { showingPosts, isFetching, minId, minDate } = this.state;
-
-        let nextPage;
-        switch (provider) {
-            case 'twitter':
-            case 'instagram':
-                nextPage = minId; // for oldest post's id
-                break;
-            case 'weibo':
-                nextPage = minDate; // for oldest post's created date
-                break;
-            case 'unsplash':
-                nextPage = calcUnsplashNextPage({ action, showingPosts }); // for next page
-                break;
-        }
-
+        const nextPageId = selectNextPageId[provider]({ minId, minDate, action, showingPosts });
 
         if (isFetching) return;
         this.setState({ isFetching: true, isFetchFail: false })
@@ -93,7 +76,7 @@ export default class Read extends React.Component {
             provider,
             action,
             id: calcId({ provider, action, id })
-        }, minId ? { maxId: nextPage } : undefined)
+        }, minId ? { maxId: nextPageId } : undefined)
         .then(res => {
             // Update State
             const user = res.user;
@@ -122,7 +105,7 @@ export default class Read extends React.Component {
     }
     componentDidMount() {
         if (this.state.isInitLoad) {
-            this.loadPosts()
+            this.fetchPosts()
         }
     }
     render() {
@@ -158,7 +141,7 @@ export default class Read extends React.Component {
                             initLoad={isInitLoad}
                             isFetching={isFetching}
                             isFetchFail={isFetchFail}
-                            onClick={this.loadPosts}
+                            onClick={this.fetchPosts}
                         />
                     : null
                 }

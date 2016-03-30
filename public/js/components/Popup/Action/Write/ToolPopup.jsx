@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { isWeibo } from 'utils/detect';
 import { removeText, insertText } from './helper';
-import { weiboEmotify } from 'components/Utils/Post/Utils/Text/helper';
+import Middlewares from 'components/Utils/Post/Utils/Text/helper';
 
 export class MediaPreview extends React.Component {
     constructor(props) {
@@ -124,7 +124,7 @@ export class WeiboEmotions extends React.Component {
                         key={index}
                         onClick={this.insertEmotions.bind(null, item)}
                         type="button"
-                        dangerouslySetInnerHTML={{ __html: weiboEmotify(`[${item}]`) }}
+                        dangerouslySetInnerHTML={{ __html: Middlewares.weiboEmotify(`[${item}]`) }}
                     >
                     </button>
                 ))}

@@ -1,42 +1,21 @@
 import React from 'react';
 import Swipeable from 'react-swipeable';
-import shallowCompare from 'react-addons-shallow-compare';
 import { connect } from 'react-redux';
 import { browserHistory as history } from 'react-router';
 
 // Helpers
+import { selectFirstProvider } from 'utils/select';
 import { replaceTokenList } from 'state/actions/auth';
 import { resetState, fetchPosts, updateShowingPosts } from 'state/actions/timeline';
 import DependencyLoader from './loader';
 
 // Components
-import Post from 'components/Utils/Post';
 import Spin from 'components/Utils/Spin';
 import Transition from 'components/Utils/Transition';
 import ScrollToTop from '../Utils/ScrollToTop';
 import SearchLocal from './SearchLocal';
-class Timeline extends React.Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        __DEV__ && console.time('[shallowCompare]')
-        const shouldUpdate = shallowCompare(this, nextProps, nextState);
-        __DEV__ && console.timeEnd('[shallowCompare]')
-        return shouldUpdate;
-    }
-    render() {
-        const { showingPosts, highlight } = this.props;
-        return (
-            <div>
-            {
-                showingPosts
-                .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
-                .map(item => (
-                    <Post key={item.id_str} post={item} highlight={highlight} />
-                ))
-            }
-            </div>
-        );
-    }
-}
+import Timeline from './Timeline';
+
 class Home extends React.Component {
     constructor (props){
         super(props)
@@ -77,16 +56,9 @@ class Home extends React.Component {
         }
     }
     handleSwipedLeft() {
-        const { activeProviders } = this.props;
-        let firstProvider = (
-            activeProviders.indexOf('twitter') >= 0
-                ? 'twitter'
-            : activeProviders.indexOf('weibo') >= 0
-                ? 'weibo'
-            : 'instagram'
-        );
+        const { provider } = selectFirstProvider(this.props.activeProviders)
 
-        history.push(`/home/${firstProvider}`)
+        history.push(`/home/${provider}`)
     }
     handleSwipedRight() {
         history.push('/settings')
@@ -130,41 +102,56 @@ class Home extends React.Component {
         // Event
         window.removeEventListener('blur', this.handleWindowBlur)
     }
+    _renderTimeline() {
+        const { showingPosts, allPosts, isInitLoad } = this.props;
+        const { dependenciesLoaded, searchText } = this.state;
+
+        return dependenciesLoaded && showingPosts && !isInitLoad && (
+            <div>
+                <SearchLocal onChange={this.handleSearch} allPosts={allPosts.posts} />
+                <Timeline showingPosts={showingPosts} highlight={searchText} />
+            </div>
+        );
+    }
+    _renderNewSpin() {
+        const { newPosts, isInitLoad } = this.props;
+        const { dependenciesLoaded, search } = this.state;
+
+        return !search && (
+            <Spin
+                type="newPosts"
+                initLoad={isInitLoad || !dependenciesLoaded}
+                {...newPosts}
+                onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
+            />
+        );
+    }
+    _renderOldSpin() {
+        const { oldPosts, isInitLoad } = this.props;
+        const { dependenciesLoaded, search } = this.state;
+
+        return (isInitLoad || !search) && (
+            <Spin
+                type="oldPosts"
+                initLoad={isInitLoad || !dependenciesLoaded}
+                {...oldPosts}
+                onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
+            />
+        );
+    }
     render() {
-        const { newPosts, oldPosts, showingPosts, allPosts, isInitLoad, children } = this.props;
-        const { dependenciesLoaded, search, searchText } = this.state;
         return (
             <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
                 <ScrollToTop target=".scrollTo--target" container=".oneline__wrapper" duration={700} />
 
                 <div className="oneline__wrapper overflow--y">
                     <span className="scrollTo--target"></span>
-                    {!search &&
-                        <Spin
-                            type="newPosts"
-                            initLoad={isInitLoad || !dependenciesLoaded}
-                            {...newPosts}
-                            onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
-                        />
-                    }
-                    {dependenciesLoaded && showingPosts && !isInitLoad && (
-                        <div>
-                            <SearchLocal onChange={this.handleSearch} allPosts={allPosts.posts} />
-                            <Timeline showingPosts={showingPosts} highlight={searchText} />
-                        </div>
-                    )}
-                    {isInitLoad || !search
-                        ? <Spin
-                            type="oldPosts"
-                            initLoad={isInitLoad || !dependenciesLoaded}
-                            {...oldPosts}
-                            onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
-                        />
-                        : null
-                    }
+                    {this._renderNewSpin()}
+                    {this._renderTimeline()}
+                    {this._renderOldSpin()}
                 </div>
                 <Transition>
-                    {children}
+                    {this.props.children}
                 </Transition>
             </Swipeable>
         );

@@ -2,7 +2,7 @@ import React from 'react';
 
 // Helpers
 import { selectSearchLink, selectSearchType } from 'utils/select';
-import { isTwitter } from 'utils/detect';
+import { isTwitter, isUnsplash } from 'utils/detect';
 
 // Components
 import Banner from 'components/Popup/Utils/Banner';
@@ -42,7 +42,7 @@ export default class Search extends React.Component {
                     onSearchChange={this.handleSearchChange}
                     onRightBtnClick={() => this.handleSearchChange({ searchText: '' })}
                 />
-                {isTwitter(provider) && searchText
+                {isTwitter(provider) && searchText || isUnsplash(provider)
                     ? <SearchPost {...this.state} {...this.props} />
                     : <SearchPediction
                         onPedictionClick={this.handleSearchChange}

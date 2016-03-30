@@ -1,3 +1,36 @@
+/**
+ * Provider
+ */
+export const selectProviderColor = {
+    twitter: '#2AA9E0',
+    instagram: '#3F5D87',
+    weibo: '#E6162D',
+    unsplash: '#999'
+};
+export const selectFirstProvider = activeProviders => {
+    const provider = (
+        ~activeProviders.indexOf('twitter')
+            ? 'twitter'
+        : ~activeProviders.indexOf('instagram')
+            ? 'instagram'
+        : ~activeProviders.indexOf('weibo')
+            ? 'weibo'
+        : ~activeProviders.indexOf('unsplash')
+            ? 'unsplash'
+        : ''
+    );
+
+    if (!provider) throw 'invalid provider';
+
+    return {
+        provider,
+        color: selectProviderColor[provider]
+    };
+};
+
+/**
+ * Link
+ */
 export const selectUserLink = {
     twitter  : screen_name => `//twitter.com/${screen_name}`,
     instagram: screen_name => `//instagram.com/${screen_name}`,
@@ -31,7 +64,20 @@ export const selectDownloadLink = {
 export const selectSearchLink = {
     twitter: ({ searchText }) => `//twitter.com/search?q=${searchText}`,
     instagram: () => '',
-    weibo: () => ''
+    weibo: () => '',
+    unsplash: ({ searchText }) => `//unsplash.com/search?utf8=✓&keyword=${searchText}`,
+};
+/**
+ * Others
+ */
+export const selectNextPageId = {
+    twitter: ({ minId }) => minId, // for oldest post's id
+    instagram: ({ minId }) => minId,
+    weibo: ({ minDate }) => minDate, // for oldest post's created date
+    unsplash: ({ action, showingPosts }) => {
+        const PAGE_COUNT = action === 'user' ? 10 : 20;
+        return Math.floor(showingPosts.length / PAGE_COUNT) + 1;
+    }
 };
 export const selectSearchType = {
     local: {
@@ -48,10 +94,12 @@ export const selectSearchType = {
         instagram: [
             { name: 'tags', icon: 'tags' },
             { name: 'users', icon: 'user' },
+        ],
+        unsplash: [
+            { name: 'text', icon: 'search' }
         ]
     }
 };
-
 export const selectTextMiddlewares = {
     /**
      * Order
