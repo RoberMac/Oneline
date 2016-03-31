@@ -6,7 +6,6 @@ import { Timeline } from 'utils/api';
 import { isTwitter as _isTwitter, isWeibo as _isWeibo } from 'utils/detect';
 import reduxStore from 'state/store';
 import { updateBase } from 'state/actions/base';
-
 const arrayUnique = {
     // via http://jszen.com/best-way-to-get-unique-values-of-an-array-in-javascript.7.html
     literal: (a) => {
@@ -267,13 +266,7 @@ function recordMentions({ providers, posts }) {
     const MAX_COUNT_L2 = 3000;
     const mentionRegex = {
         twitter: /(|\s)*@([\w]+)/g,
-        instagram: /(|\s)*@([\w\.]+)/g,
         weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g
-    };
-    const PREFIX = {
-        twitter: '//twitter.com/',
-        instagram: '//instagram.com/',
-        weibo: '//weibo.com/n/'
     };
 
     // Init
@@ -284,11 +277,12 @@ function recordMentions({ providers, posts }) {
     // Extract
     posts.forEach(({ provider, text, user }) => {
         const isTwitter = _isTwitter(provider);
+        const isWeibo = _isWeibo(provider);
 
-        if (!_isTwitter(provider) || !_isWeibo(provider)) return;
+        if (!isTwitter && !isWeibo) return;
 
         // Extract from post's text
-        let textMentions  = text.match(mentionRegex[provider]); // TODO: Extract `quote` posts
+        let textMentions = text.match(mentionRegex[provider]); // TODO: Extract `quote` posts
         if (textMentions){
             // Trim
             textMentions = textMentions.map(i => i.trim())
@@ -317,12 +311,13 @@ function recordMentions({ providers, posts }) {
 
             mentionsList[provider] = mentionsList[provider].concat(textMentions)
         }
+
         // Extract from post's author
         let authorMention = user;
         mentionsList[provider].push(
             isTwitter
                 ? { 's': `@${authorMention.screen_name}`, 'u': authorMention.name }
-            : _isWeibo(provider)
+            : isWeibo
                 ? `@${authorMention.screen_name}`
             : null
         )
@@ -333,6 +328,7 @@ function recordMentions({ providers, posts }) {
     providers.forEach(provider => {
         // Remove Dups
         mentionsList[provider] = arrayUnique[_isTwitter(provider) ? 'object' : 'literal'](mentionsList[provider]);
+
         // Limit max count (Level 2: remove old items)
         if (mentionsList[provider].length >= MAX_COUNT_L2){
             let _len = mentionsList[provider].length - MAX_COUNT_L2;

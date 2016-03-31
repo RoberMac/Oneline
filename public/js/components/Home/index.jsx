@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { browserHistory as history } from 'react-router';
 
 // Helpers
-import { selectFirstProvider } from 'utils/select';
 import { replaceTokenList } from 'state/actions/auth';
 import { resetState, fetchPosts, updateShowingPosts } from 'state/actions/timeline';
 import DependencyLoader from './loader';
@@ -56,9 +55,7 @@ class Home extends React.Component {
         }
     }
     handleSwipedLeft() {
-        const { provider } = selectFirstProvider(this.props.activeProviders)
-
-        history.push(`/home/${provider}`)
+        history.push('/home/menu')
     }
     handleSwipedRight() {
         history.push('/settings')
