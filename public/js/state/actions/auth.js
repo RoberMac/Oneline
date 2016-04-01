@@ -8,28 +8,40 @@ import {
 import { Auth } from 'utils/api';
 
 // Export
-export const UPDATE_TOKEN = 'UPDATE_TOKEN'
+export const UPDATE_TOKEN = 'UPDATE_TOKEN';
 
 
 export const addToken = () => {
     const { activeProviders } = _addToken();
-    return { type: UPDATE_TOKEN, activeProviders }
-}
+    return {
+        type: UPDATE_TOKEN,
+        payload: { activeProviders }
+    };
+};
 export const removeToken = (provider) => {
     Auth.revoke({ provider })
 
     const { activeProviders } = _removeToken(provider);
-    return { type: UPDATE_TOKEN, activeProviders }
-}
+    return {
+        type: UPDATE_TOKEN,
+        payload: { activeProviders }
+    };
+};
 export const replaceTokenList = (_tokenList) => {
     const { activeProviders } = _replaceTokenList(_tokenList);
-    return { type: UPDATE_TOKEN, activeProviders }
-}
+    return {
+        type: UPDATE_TOKEN,
+        payload: { activeProviders }
+    };
+};
 export const clearTokenIfTokenExpired = () => {
     return (dispatch, getState) => {
         if (!_isValidToken()){
             const { activeProviders } = _clearTokenList();
-            dispatch({ type: UPDATE_TOKEN, activeProviders })
+            dispatch({
+                type: UPDATE_TOKEN,
+                payload: { activeProviders }
+            })
         }
-    }
-}
+    };
+};

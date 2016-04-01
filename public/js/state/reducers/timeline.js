@@ -1,55 +1,53 @@
-import update from 'react-addons-update';
+import Immutable from 'immutable';
 
 import {
     FETCH_START, RECEIVE_POSTS, FETCH_FAIL,
     UPDATE_POST, UPDATE_SHOWINGS_POSTS, RESET_STATE
-}  from '../actions/timeline';
+} from '../actions/timeline';
 import { initTimelineState } from '../store/initState';
 
-const initState = initTimelineState();
+const initState = () => Immutable.fromJS(initTimelineState());
 
-export default (state = initState, action) => {
+export default (state = initState(), action) => {
     switch (action.type){
         case FETCH_START:
-            return update(state, {
+            return state.mergeDeep({
                 [action.payload.postsType]: {
-                    isFetching: { $set: true },
-                    isFetchFail: { $set: false }
+                    isFetching: true,
+                    isFetchFail: false
                 }
-            })
+            });
             break;
         case RECEIVE_POSTS:
-            return update(state, {
+            return state.mergeDeep({
                 [action.payload.postsType]: {
-                    isFetching: { $set: false },
-                    unreadCount: { $set: action.payload.unreadCount }
+                    isFetching: false,
+                    unreadCount: action.payload.unreadCount
                 },
-                isInitLoad: { $set: false },
-                showingPosts: { $set: action.payload.showingPosts },
-                allPosts: { $set: action.payload.allPosts },
-                timePointer: { $set: action.payload.timePointer }
-            })
+                isInitLoad: false,
+                showingPosts: action.payload.showingPosts,
+                allPosts: action.payload.allPosts,
+                timePointer: action.payload.timePointer
+            });
             break;
         case FETCH_FAIL:
-            return update(state, {
+            return state.mergeDeep({
                 [action.payload.postsType]: {
-                    isFetching: { $set: false },
-                    isFetchFail: { $set: true }
+                    isFetching: false,
+                    isFetchFail: true
                 }
-            })
+            });
             break;
         case UPDATE_POST:
-            return update(state, {
-                showingPosts: { $set: action.payload.showingPosts },
-                allPosts: { $set: action.payload.allPosts }
-            })
+            return state.merge({
+                showingPosts: action.payload.showingPosts,
+                allPosts: action.payload.allPosts
+            });
             break;
         case UPDATE_SHOWINGS_POSTS:
-            return update(state, {
-                showingPosts: { $set: action.payload.showingPosts }
-            })
+            return state.set('showingPosts', action.payload.showingPosts);
         case RESET_STATE:
-            return initTimelineState();            
+            return initState();            
             break;
         default:
             return state;

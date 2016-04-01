@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.13.2",
+  "version": "0.13.3",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -78,6 +78,7 @@
     "gulp-svgmin": "^1.2.2",
     "gulp-svgstore": "^6.0.0",
     "http-proxy-middleware": "^0.13.0",
+    "immutable": "^3.7.6",
     "isomorphic-fetch": "^2.2.1",
     "json-loader": "^0.5.4",
     "jwt-decode": "^2.0.1",

@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { selectUserLink } from 'utils/select';
 import { isWeibo } from 'utils/detect';
 import reduxStore from 'state/store';
-const { base: { SHARE_PAGE } } = reduxStore.getState();
+const SHARE_PAGE = reduxStore.getState().base.get('SHARE_PAGE');
 
 export default ({ provider, screen_name, children, className }) => (
     isWeibo(provider) || SHARE_PAGE

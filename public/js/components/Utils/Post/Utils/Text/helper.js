@@ -3,13 +3,18 @@ import xssFilters from 'xss-filters';
 // Helpers
 import reduxStore from 'state/store';
 import { UPDATE_BASE } from 'state/actions/base';
-let { SHARE_PAGE, EMOTIONS } = reduxStore.getState().base;
+
+// State Handing
+const { base } = reduxStore.getState();
+let SHARE_PAGE = base.get('SHARE_PAGE');
+let EMOTIONS = base.get('EMOTIONS');
 reduxStore.subscribe(() => {
     const { base, lastAction: { type } } = reduxStore.getState();
 
     if (type !== UPDATE_BASE) return;
 
-    ({ SHARE_PAGE, EMOTIONS } = base);
+    SHARE_PAGE = base.get('SHARE_PAGE');
+    EMOTIONS = base.get('EMOTIONS');
 })
 
 // Constants
@@ -26,8 +31,11 @@ const TAG_PREFIX = {
 };
 const TARGET_ATTR = SHARE_PAGE ? 'target="_blank"' : '';
 const MATCH_ZERO_WIDTH_CHAR = /[\u200B-\u200F\u202C\uFEFF]/g;
-const MATCH_MENTION_WORD = /(|\s)*@([\w]+)/g;
-const MATCH_MENTION_CHINESE = /(|\s)*@([\u4e00-\u9fa5\w-]+)/g;
+const MATCH_MENTION = {
+    twitter: /(|\s)*@([\w]+)/g,
+    instagram: /(|\s)*@([\w\.]+)/g,
+    weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g
+};
 const MATCH_LINK = new RegExp([
     '(?:https?:\/\/)+',
     '(?![^\\s]*?")',
@@ -88,13 +96,13 @@ function linkify(text, { provider }) {
         case 'twitter':
         case 'instagram':
             _text = _text.replace(
-                MATCH_MENTION_WORD,
+                MATCH_MENTION[provider],
                 `$1<a href="${USER_PREFIX[provider]}$2" ${TARGET_ATTR}>@$2</a>`
             );
             break;
         case 'weibo':
             _text = _text.replace(
-                MATCH_MENTION_CHINESE,
+                MATCH_MENTION[provider],
                 '$1<a href="http://weibo.com/n/$2" target="_blank">@$2</a>'
             );
             break;

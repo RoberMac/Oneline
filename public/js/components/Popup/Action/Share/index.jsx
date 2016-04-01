@@ -83,7 +83,7 @@ export default class Index extends React.Component {
         Share
         .post({ provider, id }, {
             post,
-            sharer: reduxStore.getState().base['PROFILE'][provider],
+            sharer: reduxStore.getState().base.get('PROFILE')[provider],
         })
         .then(res => {
             // Update State

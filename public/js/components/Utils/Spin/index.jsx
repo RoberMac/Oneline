@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import reduxStore from 'state/store';
-const { base: { SAFARI } } = reduxStore.getState();
+const SAFARI = reduxStore.getState().base.get('SAFARI');
 
 export default ({ type, initLoad, isFetching, isFetchFail, unreadCount, provider, onClick }) => {
     const isNewPosts = type === 'newPosts';

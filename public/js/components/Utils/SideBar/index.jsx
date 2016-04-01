@@ -21,28 +21,26 @@ const _LeftSidebar = ({ activeProviders, location: { pathname } }) => (
         ? <HomeSidebarBtn link="/settings" activeProviders={activeProviders} />
     : <ReplicantBtn />
 );
-const _RightSidebar = ({ activeProviders, location: { pathname } }) => {
-    return (
-        isPopupPage(pathname)
-            ? <HistoryGoBtn
-                step="1"
-                className={`${colorClass(pathname)} rotate--180`}
-            />
-        : activeProviders.length <= 0
-            ? <span />
-        : isHomePage(pathname)
-            ? <HomeSidebarBtn link="/home/menu" activeProviders={activeProviders} />
-        : isSettingsPage(pathname)
-            ? <GoToHomeBtn />
-        : <span />
-    );
-};
+const _RightSidebar = ({ activeProviders, location: { pathname } }) => (
+    isPopupPage(pathname)
+        ? <HistoryGoBtn
+            step="1"
+            className={`${colorClass(pathname)} rotate--180`}
+        />
+    : activeProviders.length <= 0
+        ? <span />
+    : isHomePage(pathname)
+        ? <HomeSidebarBtn link="/home/menu" activeProviders={activeProviders} />
+    : isSettingsPage(pathname)
+        ? <GoToHomeBtn />
+    : <span />
+);
 
 
 // Exports
 export const LeftSidebar = connect(
-    state => ({ activeProviders: state.auth.activeProviders })
+    state => ({ activeProviders: state.auth.get('activeProviders') })
 )(_LeftSidebar)
 export const RightSidebar = connect(
-    state => ({ activeProviders: state.auth.activeProviders })
+    state => ({ activeProviders: state.auth.get('activeProviders') })
 )(_RightSidebar)

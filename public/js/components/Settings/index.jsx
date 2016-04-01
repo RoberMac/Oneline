@@ -67,7 +67,7 @@ class SocialAuth extends React.Component {
         }));
     }
     render() {
-        const { providers, activeProviders, children } = this.props;
+        const { children } = this.props;
         const soicalWrapperClass = classNames('social-wrapper', 'overflow--y', 'animate--faster');
 
         return (
@@ -85,9 +85,9 @@ class SocialAuth extends React.Component {
 
 // Export
 export default connect(
-    state => {
-        const { providers, activeProviders } = state.auth;
-        return { providers, activeProviders }
-    },
+    state => ({
+        providers: state.auth.get('providers'),
+        activeProviders: state.auth.get('activeProviders')
+    }),
     { addToken, removeToken, clearTokenIfTokenExpired }
 )(SocialAuth)

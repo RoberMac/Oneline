@@ -3,13 +3,15 @@ import { isValidToken } from '../utils/tokenHelper';
 // Helerps
 import reduxStore from 'state/store';
 import { UPDATE_TOKEN } from 'state/actions/auth';
-let { activeProviders } = reduxStore.getState().auth;
+
+// State Handing
+let activeProviders = reduxStore.getState().auth.get('activeProviders');
 reduxStore.subscribe(() => {
     const { auth, lastAction: { type } } = reduxStore.getState();
 
     if (type !== UPDATE_TOKEN) return;
 
-    ({ activeProviders } = auth);
+    activeProviders = auth.get('activeProviders');
 })
 
 // Export

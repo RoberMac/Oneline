@@ -1,8 +1,6 @@
-import update from 'react-addons-update';
-
 import { isWeibo } from 'utils/detect';
 import reduxStore from 'state/store';
-const { base: { BLOCKED } } = reduxStore.getState();
+const BLOCKED = reduxStore.getState().base.get('BLOCKED');
 
 export const rewriteMediaLink = ({ type, provider, data }) => {
     __DEV__ && console.time('[rewriteMediaLink]')

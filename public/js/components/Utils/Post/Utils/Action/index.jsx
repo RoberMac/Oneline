@@ -3,13 +3,15 @@ import React from 'react';
 // Helpers
 import reduxStore from 'state/store';
 import { UPDATE_BASE } from 'state/actions/base';
-let { PROFILE } = reduxStore.getState().base;
+
+// State Handing
+let PROFILE = reduxStore.getState().base.get('PROFILE');
 reduxStore.subscribe(() => {
     const { base, lastAction: { type } } = reduxStore.getState();
 
     if (type !== UPDATE_BASE) return;
 
-    ({ PROFILE } = base);
+    PROFILE = base.get('PROFILE');
 })
 
 // Components

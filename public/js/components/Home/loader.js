@@ -3,7 +3,7 @@ import { _fetch } from 'utils/api';
 import reduxStore from 'state/store';
 import { updateBase } from 'state/actions/base';
 
-const { base: { EMOTIONS } } = reduxStore.getState();
+const EMOTIONS = reduxStore.getState().base.get('EMOTIONS');
 
 export default (activeProviders) => {
     return new Promise((resolve, reject) => {

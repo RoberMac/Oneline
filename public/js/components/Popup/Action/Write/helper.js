@@ -15,13 +15,14 @@ const MENTIONS_REGEX = {
     twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
     weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
 };
-let { MENTIONS } = reduxStore.getState().base;
+// State Handing
+let MENTIONS = reduxStore.getState().base.get('MENTIONS');
 reduxStore.subscribe(() => {
     const { base, lastAction: { type } } = reduxStore.getState();
 
     if (type !== UPDATE_BASE) return;
 
-    ({ MENTIONS } = base);
+    MENTIONS = base.get('MENTIONS');
 })
 export const extractMentions = ({ status, provider }) => {
     const isTwitter = _isTwitter(provider);
