@@ -22,9 +22,11 @@ const fetchFail = (payload) => ({ type: FETCH_FAIL, payload });
 
 export const fetchPosts = ({ postsType, isAutoFetch }) => {
     return (dispatch, getState) => {
-        const { auth, timeline } = getState();
+        const _state = getState();
+        const auth = _state.auth.toObject();
+        const timeline = _state.timeline.toObject();
 
-        if (timeline[postsType].isFetching) return;
+        if (timeline[postsType].get('isFetching')) return;
 
         return determineFetchFrom({ postsType, isAutoFetch, ...auth, ...timeline })
         .then(({ fetchFrom, invalidProviders }) => {
@@ -56,7 +58,7 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
  * Manipulate (Single) Post
  *
  */
-import update from 'react-addons-update';
+import Immutable from 'immutable';
 
 export const UPDATE_POST = 'UPDATE_POST';
 export const updatePost = (newPost) => {
@@ -65,44 +67,51 @@ export const updatePost = (newPost) => {
     return (dispatch, getState) => {
         __DEV__ && console.time(`[updatePost: ${id}]`)
 
-        const { showingPosts, allPosts } = getState().timeline;
+        const _state = getState();
+        const showingPosts = _state.timeline.get('showingPosts');
+        const allPosts = _state.timeline.get('allPosts');
+
         const newShowingPosts = showingPosts.map(updatePostIfFound);
-        const newAllPosts = allPosts.posts.map(updatePostIfFound);
+        const newAllPosts = allPosts.get('posts').map(updatePostIfFound);
 
         dispatch({
             type: UPDATE_POST,
             payload: {
                 showingPosts: newShowingPosts,
-                allPosts: update(allPosts, {
-                    posts: { $set: newAllPosts }
-                })
+                allPosts: allPosts.merge({ posts: newAllPosts })
             }
         })
 
         __DEV__ && console.timeEnd(`[updatePost: ${id}]`)
     };
 
-    function updatePostIfFound(item) {
-        const nestPostType = item.retweet && 'retweet' || item.quote && 'quote';
-        const postId = item.id_str;
-        const nestPostId = nestPostType && item[nestPostType].id_str;
+    function updatePostIfFound(post) {
+        const nestPostType = post.retweet && 'retweet' || post.quote && 'quote';
+        const postId = post.id_str;
+        const nestPostId = nestPostType && post[nestPostType].id_str;
 
-        return (
-            id === postId
-                ? update(item, initUpdateCommands(newPost))
-            : id === nestPostId
-                ? update(item, {
-                    [nestPostType]: initUpdateCommands(newPost)
-                })
-            : item
-        );
+        let updatedPost;
+        if (id === postId) {
+            post = Immutable.fromJS(post);
+            updatedPost = post.merge(newPost).toJS();
+        } else if (id === nestPostId) {
+            post = Immutable.fromJS(post);
+            updatedPost = post.merge({ [nestPostType]: newPost }).toJS();
+        } else {
+            updatedPost = post;
+        }
+
+        return updatedPost;
     }
 }
 export const deletePost = ({ id }) => {
     return (dispatch, getState) => {
         __DEV__ && console.time(`[deletePost: ${id}]`)
 
-        const { showingPosts, allPosts } = getState().timeline;
+        const _state = getState();
+        const showingPosts = _state.timeline.get('showingPosts');
+        const allPosts = _state.timeline.get('allPosts');
+
         const newShowingPosts = showingPosts.filter(deletePostIfFound);
         const newAllPosts = allPosts.posts.filter(deletePostIfFound);
 
@@ -110,30 +119,16 @@ export const deletePost = ({ id }) => {
             type: UPDATE_POST,
             payload: {
                 showingPosts: newShowingPosts,
-                allPosts: update(allPosts, {
-                    posts: { $set: newAllPosts }
-                })
+                allPosts: allPosts.merge({ posts: newAllPosts })
             }
         })
 
         __DEV__ && console.timeEnd(`[deletePost: ${id}]`)
     };
 
-    function deletePostIfFound(item) {
-        const postId = item.id_str;
-
-        return postId !== id;
+    function deletePostIfFound(post) {
+        return post.id_str !== id;
     }
-}
-
-function initUpdateCommands (obj){
-    let cmds = {};
-
-    Object.keys(obj).forEach(i => {
-        cmds[i] = { $set: obj[i] }
-    });
-
-    return cmds;
 }
 
 /**

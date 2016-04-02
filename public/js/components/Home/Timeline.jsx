@@ -12,6 +12,7 @@ export default class Timeline extends React.Component {
     }
     render() {
         const { showingPosts, highlight } = this.props;
+
         return (
             <div>
             {

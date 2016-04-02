@@ -118,7 +118,9 @@ class Home extends React.Component {
             <Spin
                 type="newPosts"
                 initLoad={isInitLoad || !dependenciesLoaded}
-                {...newPosts}
+                isFetching={newPosts.get('isFetching')}
+                isFetchFail={newPosts.get('isFetchFail')}
+                unreadCount={newPosts.get('unreadCount')}
                 onClick={this.loadPosts.bind(this, { postsType: 'newPosts' })}
             />
         );
@@ -131,7 +133,9 @@ class Home extends React.Component {
             <Spin
                 type="oldPosts"
                 initLoad={isInitLoad || !dependenciesLoaded}
-                {...oldPosts}
+                isFetching={oldPosts.get('isFetching')}
+                isFetchFail={oldPosts.get('isFetchFail')}
+                unreadCount={oldPosts.get('unreadCount')}
                 onClick={this.loadPosts.bind(this, { postsType: 'oldPosts' })}
             />
         );
@@ -158,18 +162,14 @@ class Home extends React.Component {
 
 // Export
 export default connect(
-    state => {
-        const { activeProviders } = state.auth;
-        const { newPosts, oldPosts, isInitLoad, showingPosts, allPosts } = state.timeline;
-        return {
-            activeProviders,
+    state => ({
+        activeProviders: state.auth.get('activeProviders'),
 
-            newPosts,
-            oldPosts,
-            isInitLoad,
-            showingPosts,
-            allPosts,
-        }
-    },
+        newPosts: state.timeline.get('newPosts'),
+        oldPosts: state.timeline.get('oldPosts'),
+        isInitLoad: state.timeline.get('isInitLoad'),
+        showingPosts: state.timeline.get('showingPosts'),
+        allPosts: state.timeline.get('allPosts'),
+    }),
     { resetState, fetchPosts, updateShowingPosts, replaceTokenList }
 )(Home)

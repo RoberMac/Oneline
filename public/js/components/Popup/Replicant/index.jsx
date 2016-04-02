@@ -136,9 +136,9 @@ class _Rachael extends React.Component {
 
 // Export
 export const Deckard = connect(
-    state => ({ activeProviders: state.auth.activeProviders })
+    state => ({ activeProviders: state.auth.get('activeProviders') })
 )(_Deckard)
 export const Rachael = connect(
-    state => ({ activeProviders: state.auth.activeProviders }),
+    state => ({ activeProviders: state.auth.get('activeProviders') }),
     { replaceTokenList }
 )(_Rachael)

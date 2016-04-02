@@ -45,7 +45,7 @@ export default (state = initState(), action) => {
             });
             break;
         case UPDATE_SHOWINGS_POSTS:
-            return state.set('showingPosts', action.payload.showingPosts);
+            return state.merge('showingPosts', action.payload.showingPosts);
         case RESET_STATE:
             return initState();            
             break;

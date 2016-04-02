@@ -1,5 +1,3 @@
-import assign from 'object.assign';
-
 // Helpers
 import store from 'utils/store';
 import { Timeline } from 'utils/api';
@@ -51,16 +49,17 @@ export const determineFetchFrom = ({
 
         switch (postsType) {
             case 'newPosts':
-                const hasNewPostsInLocal = newPosts.unreadCount > 0;
+                const hasNewPostsInLocal = newPosts.get('unreadCount') > 0;
                 const isFetchFromLocal = hasNewPostsInLocal && !isAutoFetch;
 
                 fetchFrom = isFetchFromLocal ? 'local' : 'remote';
                 invalidProviders = isFetchFromLocal ? [] : activeProviders;
                 break;
             case 'oldPosts':
-                invalidProviders = activeProviders.filter(
-                    provider => timePointer - allPosts.minDate[provider] < timeRange
-                );
+                invalidProviders = activeProviders.filter(provider => {
+                    const minDate = allPosts.getIn(['minDate', provider]);
+                    return timePointer - minDate < timeRange;
+                });
                 fetchFrom = invalidProviders.length <= 0 ? 'local' : 'remote';
                 break;
         }
@@ -72,9 +71,11 @@ export const determineFetchFrom = ({
 export const fetchFromLocal = ({ postsType, showingPosts, allPosts, timePointer, timeRange }) => {
     return new Promise((resolve, reject) => {
         const isFetchNewPosts = postsType === 'newPosts';
-        const { newUnreadCount, newShowingPosts, newTimePointer } = isFetchNewPosts
-            ? extractFreshPosts({ allPosts, timeRange })
-        : extractOldPosts({ showingPosts, allPosts, timePointer, timeRange });
+        const { newUnreadCount, newShowingPosts, newTimePointer } = (
+            isFetchNewPosts
+                ? extractFreshPosts({ allPosts, timeRange })
+            : extractOldPosts({ showingPosts, allPosts, timePointer, timeRange })
+        );
 
         resolve({
             postsType,
@@ -103,12 +104,19 @@ export const fetchFromRemote = ({
 }) => {
 
     return new Promise((resolve, reject) => {
+        const _posts = allPosts.get('posts');
+        const _maxId = allPosts.get('maxId');
+        const _maxDate = allPosts.get('maxDate');
+        const _minId = allPosts.get('minId');
+        const _minDate = allPosts.get('minDate');
+        const unreadCount = newPosts.get('unreadCount');
         const isFetchNewPosts = postsType === 'newPosts';
 
         Timeline
         .get({ id: isInitLoad ? null : getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) })
         .then(res => {
             const newRemotePosts = res.data;
+
             // Reject for Wrong Response
             if (!newRemotePosts) {
                 reject(new Error('[FetchFail]: WTF Responses?'))
@@ -117,29 +125,25 @@ export const fetchFromRemote = ({
                 if (!isFetchNewPosts){
                     reject(new Error('[FetchFail]: No More Posts'))
                 } else {
-                    resolve({
-                        postsType,
-                        unreadCount: newPosts.unreadCount,
-                        showingPosts,
-                        allPosts,
-                        timePointer
-                    })
+                    resolve({ postsType, unreadCount, showingPosts, allPosts, timePointer })
                 }
                 return;
             }
+
             // Init Response Data
-            const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res : allPosts;
-            const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res : allPosts;
-            const newAllPosts = {
-                posts: allPosts.posts.concat(newRemotePosts),
-                maxId: assign(allPosts.maxId, maxId),
-                maxDate: assign(allPosts.maxDate, maxDate),
-                minId: assign(allPosts.minId, minId),
-                minDate: assign(allPosts.minDate, minDate)
-            };
+            const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res : {};
+            const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res : {};
+            const newAllPosts = allPosts.merge({
+                posts: _posts.concat(newRemotePosts),
+                maxId: maxId ? _maxId.merge(maxId) : _maxId,
+                maxDate: maxDate ? _maxDate.merge(maxDate) : _maxDate,
+                minId: minId ? _minId.merge(minId) : _minId,
+                minDate: minDate ? _minDate.merge(minDate) : _minDate
+            });
+
             // Store and dispatch
             if (isAutoFetch){
-                const newUnreadCount = newPosts.unreadCount + newRemotePosts.length;
+                const newUnreadCount = unreadCount + newRemotePosts.length;
                 resolve({
                     postsType,
                     unreadCount: newUnreadCount,
@@ -164,6 +168,7 @@ export const fetchFromRemote = ({
 
                 isFetchNewPosts ? setTitleUnreadCount(newUnreadCount) : null
             }
+
             // Always record mentions in posts
             recordMentions({ providers: invalidProviders, posts: newRemotePosts })
         })
@@ -180,32 +185,37 @@ function extractFreshPosts({ allPosts, timeRange }) {
 
     return {
         newUnreadCount: 0,
-        newShowingPosts: allPosts.posts.filter(post => NOW - post.created_at < timeRange),
+        newShowingPosts: allPosts.get('posts').filter(post => NOW - post.created_at < timeRange),
         newTimePointer: NOW - timeRange,
     };
 }
 // 提取下一個（非空） 30 分鐘內的貼文
 function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
+    const posts = allPosts.get('posts');
     let isEmpty = true;
     let newShowingPosts = [];
     let newTimePointer = timePointer;
 
     while (isEmpty){
-        newShowingPosts = allPosts.posts.filter(post => {
-            let timeDiff = newTimePointer - post.created_at;
+        newShowingPosts = posts.filter(post => {
+            const timeDiff = newTimePointer - post.created_at;
 
-            return 0 < timeDiff && timeDiff <= timeRange;;
-        })
+            return 0 < timeDiff && timeDiff <= timeRange;
+        });
 
-        newTimePointer -= timeRange
+        newTimePointer -= timeRange;
 
         if (newShowingPosts.length > 0){
-            isEmpty = false
+            isEmpty = false;
         }
     }
 
-    newShowingPosts = sortPosts(showingPosts.concat(newShowingPosts))
-    newTimePointer = newShowingPosts[newShowingPosts.length - 1].created_at
+    newShowingPosts = (
+        showingPosts
+        .concat(newShowingPosts)
+        .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
+    );
+    newTimePointer = newShowingPosts.last().created_at;
 
     return {
         newUnreadCount: 0,
@@ -220,7 +230,7 @@ function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
 
     invalidProviders.forEach((provider, index) => {
         const SUFFIX = index === invalidProviders.length - 1 ? '' : ',';
-        const postId = allPosts[typeForLocal][provider];
+        const postId = allPosts.getIn([typeForLocal, provider]);
 
         if (!postId) return;
 
@@ -228,9 +238,6 @@ function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
     });
 
     return queryIdStr;
-}
-function sortPosts(posts) {
-    return posts.sort((a, b) => a.created_at < b.created_at ? 1 : -1)
 }
 // 標題未讀數提醒
 function setTitleUnreadCount(count) {

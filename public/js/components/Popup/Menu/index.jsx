@@ -63,11 +63,11 @@ const _ProviderMenu = ({ params, PROFILE }) => {
 
 // Export
 export const SettingsMenu = connect(
-    state => ({ activeProviders: state.auth.activeProviders })
+    state => ({ activeProviders: state.auth.get('activeProviders') })
 )(_SettingsMenu);
 export const HomeMenu = connect(
-    state => ({ activeProviders: state.auth.activeProviders })
+    state => ({ activeProviders: state.auth.get('activeProviders') })
 )(_HomeMenu);
 export const ProviderMenu = connect(
-    state => ({ PROFILE: state.base.PROFILE })
+    state => ({ PROFILE: state.base.get('PROFILE') })
 )(_ProviderMenu);
