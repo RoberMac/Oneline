@@ -1,9 +1,7 @@
-import Immutable from 'immutable';
-
 import { UPDATE_TOKEN }  from '../actions/auth';
 import { initAuthState } from '../store/initState';
 
-const initState = Immutable.Map(initAuthState());
+const initState = initAuthState();
 
 export default (state = initState, action) => {
     switch (action.type){

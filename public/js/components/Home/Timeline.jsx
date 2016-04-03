@@ -8,6 +8,7 @@ export default class Timeline extends React.Component {
         __DEV__ && console.time('[shallowCompare]')
         const shouldUpdate = shallowCompare(this, nextProps, nextState);
         __DEV__ && console.timeEnd('[shallowCompare]')
+        __DEV__ && shouldUpdate && console.log('[ComponentUpdate]: Timeline')
         return shouldUpdate;
     }
     render() {

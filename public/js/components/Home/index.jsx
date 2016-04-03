@@ -105,7 +105,7 @@ class Home extends React.Component {
 
         return dependenciesLoaded && showingPosts && !isInitLoad && (
             <div>
-                <SearchLocal onChange={this.handleSearch} allPosts={allPosts.posts} />
+                <SearchLocal onChange={this.handleSearch} allPosts={allPosts.get('posts')} />
                 <Timeline showingPosts={showingPosts} highlight={searchText} />
             </div>
         );

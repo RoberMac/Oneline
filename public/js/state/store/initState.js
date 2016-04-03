@@ -1,46 +1,46 @@
+import { Map } from 'immutable';
+
 import store from 'utils/store';
 import { getActiveProviders } from 'utils/tokenHelper';
 
 export const initAuthState = () => {
-    return {
+    return Map({
         providers: ['twitter', 'instagram', 'weibo', 'unsplash'],
         activeProviders: getActiveProviders()
-    };
-}
-
+    });
+};
 export const initTimelineState = () => {
     const timePointer = Date.now();
     const timeRange = 1800000;
 
-    return {
-        newPosts: {
+    return Map({
+        newPosts: Map({
             isFetching: false,
             isFetchFail: false,
             unreadCount: 0,
             fetchFrom: 'remote',
-        },
-        oldPosts: {
+        }),
+        oldPosts: Map({
             isFetching: false,
             isFetchFail: false,
             unreadCount: 0,
             fetchFrom: 'remote',
-        },
+        }),
         isInitLoad: true,
-        showingPosts: [],
-        allPosts: {
+        showingPosts: [], // <- mutable
+        allPosts: Map({
             posts: [],
             maxId: {},
             maxDate: {},
             minId: {},
             minDate: {}
-        },
+        }),
         timePointer,
         timeRange
-    };
-}
-
+    });
+};
 export const initBaseState = () => {
-    return {
+    return Map({
         SHARE_PAGE: !!window.__share_data__,
         BLOCKED: !!window.__is_blocked__,
         SAFARI: /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent),
@@ -57,5 +57,5 @@ export const initBaseState = () => {
             // instagram,
             // weibo
         }
-    };
-}
+    });
+};

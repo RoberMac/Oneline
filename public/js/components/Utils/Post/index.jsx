@@ -33,8 +33,8 @@ export default class Post extends React.Component {
         __DEV__ && shouldUpdate && console.log(`[ComponentUpdate]: post${nextProps.post.id_str}`)
         return shouldUpdate;
     }
-    componentDidMount() {      
-        setTimeout(() => this.refs.post.style.opacity = 1)        
+    componentDidMount() {
+        setTimeout(() => this.refs.post.style.opacity = 1)
     }
     render() {
         const { className, post } = this.props;

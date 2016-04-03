@@ -267,7 +267,7 @@ export const initLivePreview = ({ type, provider, status, media, livePreviewPost
         type,
         created_at: created_at || Date.now(),
         text: status,
-        user: user || reduxStore.getState().base['PROFILE'][provider],
+        user: user || reduxStore.getState().base.get('PROFILE')[provider],
         media: initLivePreviewMedia({ media, provider })
     });
     // Retweet / Quote (Inside Post)

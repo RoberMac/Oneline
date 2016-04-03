@@ -1,3 +1,5 @@
+import assign from 'object.assign';
+
 // Helpers
 import store from 'utils/store';
 import { Timeline } from 'utils/api';
@@ -57,7 +59,9 @@ export const determineFetchFrom = ({
                 break;
             case 'oldPosts':
                 invalidProviders = activeProviders.filter(provider => {
-                    const minDate = allPosts.getIn(['minDate', provider]);
+                    if (provider === 'unsplash') return;
+
+                    const minDate = allPosts.get('minDate')[provider];
                     return timePointer - minDate < timeRange;
                 });
                 fetchFrom = invalidProviders.length <= 0 ? 'local' : 'remote';
@@ -104,11 +108,6 @@ export const fetchFromRemote = ({
 }) => {
 
     return new Promise((resolve, reject) => {
-        const _posts = allPosts.get('posts');
-        const _maxId = allPosts.get('maxId');
-        const _maxDate = allPosts.get('maxDate');
-        const _minId = allPosts.get('minId');
-        const _minDate = allPosts.get('minDate');
         const unreadCount = newPosts.get('unreadCount');
         const isFetchNewPosts = postsType === 'newPosts';
 
@@ -131,14 +130,16 @@ export const fetchFromRemote = ({
             }
 
             // Init Response Data
-            const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res : {};
-            const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res : {};
-            const newAllPosts = allPosts.merge({
-                posts: _posts.concat(newRemotePosts),
-                maxId: maxId ? _maxId.merge(maxId) : _maxId,
-                maxDate: maxDate ? _maxDate.merge(maxDate) : _maxDate,
-                minId: minId ? _minId.merge(minId) : _minId,
-                minDate: minDate ? _minDate.merge(minDate) : _minDate
+            const newAllPosts = allPosts.withMutations(map => {
+                const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res : {};
+                const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res : {};
+
+                map.set('posts', allPosts.get('posts').concat(newRemotePosts))
+
+                maxId ? map.set('maxId', assign(allPosts.get('maxId'), maxId)) : null
+                maxDate ? map.set('maxDate', assign(allPosts.get('maxDate'), maxDate)) : null
+                minId ? map.set('minId', assign(allPosts.get('minId'), minId)) : null
+                minDate ? map.set('minDate', assign(allPosts.get('minDate'), minDate)) : null
             });
 
             // Store and dispatch
@@ -215,7 +216,7 @@ function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
         .concat(newShowingPosts)
         .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
     );
-    newTimePointer = newShowingPosts.last().created_at;
+    newTimePointer = newShowingPosts[newShowingPosts.length - 1].created_at;
 
     return {
         newUnreadCount: 0,
@@ -230,7 +231,7 @@ function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
 
     invalidProviders.forEach((provider, index) => {
         const SUFFIX = index === invalidProviders.length - 1 ? '' : ',';
-        const postId = allPosts.getIn([typeForLocal, provider]);
+        const postId = allPosts.get(typeForLocal)[provider];
 
         if (!postId) return;
 

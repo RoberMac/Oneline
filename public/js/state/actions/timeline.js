@@ -58,7 +58,7 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
  * Manipulate (Single) Post
  *
  */
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 
 export const UPDATE_POST = 'UPDATE_POST';
 export const updatePost = (newPost) => {
@@ -78,7 +78,7 @@ export const updatePost = (newPost) => {
             type: UPDATE_POST,
             payload: {
                 showingPosts: newShowingPosts,
-                allPosts: allPosts.merge({ posts: newAllPosts })
+                allPosts: allPosts.set('posts', newAllPosts)
             }
         })
 
@@ -90,18 +90,13 @@ export const updatePost = (newPost) => {
         const postId = post.id_str;
         const nestPostId = nestPostType && post[nestPostType].id_str;
 
-        let updatedPost;
         if (id === postId) {
-            post = Immutable.fromJS(post);
-            updatedPost = post.merge(newPost).toJS();
+            return fromJS(post).merge(newPost).toJS();
         } else if (id === nestPostId) {
-            post = Immutable.fromJS(post);
-            updatedPost = post.merge({ [nestPostType]: newPost }).toJS();
+            return fromJS(post).merge({ [nestPostType]: newPost }).toJS();
         } else {
-            updatedPost = post;
+            return post;
         }
-
-        return updatedPost;
     }
 }
 export const deletePost = ({ id }) => {
@@ -113,13 +108,13 @@ export const deletePost = ({ id }) => {
         const allPosts = _state.timeline.get('allPosts');
 
         const newShowingPosts = showingPosts.filter(deletePostIfFound);
-        const newAllPosts = allPosts.posts.filter(deletePostIfFound);
+        const newAllPosts = allPosts.get('posts').filter(deletePostIfFound);
 
         dispatch({
             type: UPDATE_POST,
             payload: {
                 showingPosts: newShowingPosts,
-                allPosts: allPosts.merge({ posts: newAllPosts })
+                allPosts: allPosts.set('posts', newAllPosts)
             }
         })
 
