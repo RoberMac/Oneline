@@ -1,4 +1,10 @@
 /**
+ * Utils
+ *
+ */
+export const selectLastWeekMs = () => Date.now() - 1000 * 60 * 60 * 24 * 7;
+
+/**
  * Provider
  */
 export const selectProviderColor = {
@@ -74,9 +80,9 @@ export const selectNextPageId = {
     twitter: ({ minId }) => minId, // for oldest post's id
     instagram: ({ minId }) => minId,
     weibo: ({ minDate }) => minDate, // for oldest post's created date
-    unsplash: ({ action, showingPosts }) => {
+    unsplash: ({ action, postsSize }) => {
         const PAGE_COUNT = action === 'user' ? 10 : 20;
-        return Math.floor(showingPosts.length / PAGE_COUNT) + 1;
+        return Math.floor(postsSize / PAGE_COUNT) + 1;
     }
 };
 export const selectSearchType = {

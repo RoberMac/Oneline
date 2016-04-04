@@ -1,13 +1,6 @@
 import React from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
 
-// Component
-import { TwitterTweet, TwitterRetweet, TwitterQuote } from './Twitter';
-import { WeiboTweet, WeiboRetweet, WeiboQuote } from './Weibo';
-import { InstagramPost } from './Instagram';
-import { UnsplashPost } from './Unsplash';
-
-// Helper
+// Helpers
 const selectPost = {
     twitter: {
         tweet: TwitterTweet,
@@ -27,12 +20,14 @@ const selectPost = {
     }
 };
 
-export default class Post extends React.Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        const shouldUpdate = shallowCompare(this, nextProps, nextState);
-        __DEV__ && shouldUpdate && console.log(`[ComponentUpdate]: post${nextProps.post.id_str}`)
-        return shouldUpdate;
-    }
+// Components
+import ReRender from 'components/Utils/HoCs/ReRender';
+import { TwitterTweet, TwitterRetweet, TwitterQuote } from './Twitter';
+import { WeiboTweet, WeiboRetweet, WeiboQuote } from './Weibo';
+import { InstagramPost } from './Instagram';
+import { UnsplashPost } from './Unsplash';
+
+class Post extends React.Component {
     componentDidMount() {
         setTimeout(() => this.refs.post.style.opacity = 1)
     }
@@ -52,3 +47,7 @@ export default class Post extends React.Component {
         );
     }
 }
+Post.displayName = 'Post';
+
+// Export
+export default ReRender(Post);

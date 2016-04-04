@@ -4,6 +4,7 @@ import assign from 'object.assign';
 import store from 'utils/store';
 import { Timeline } from 'utils/api';
 import { isTwitter as _isTwitter, isWeibo as _isWeibo } from 'utils/detect';
+import { selectLastWeekMs } from 'utils/select';
 import reduxStore from 'state/store';
 import { updateBase } from 'state/actions/base';
 const arrayUnique = {
@@ -131,10 +132,16 @@ export const fetchFromRemote = ({
 
             // Init Response Data
             const newAllPosts = allPosts.withMutations(map => {
+                const lastWeekMs = selectLastWeekMs();
                 const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res : {};
                 const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res : {};
 
-                map.set('posts', allPosts.get('posts').concat(newRemotePosts))
+                map.set('posts', (
+                    allPosts
+                    .get('posts')
+                    .concat(newRemotePosts)
+                    .filter(i => i.created_at > lastWeekMs)
+                ))
 
                 maxId ? map.set('maxId', assign(allPosts.get('maxId'), maxId)) : null
                 maxDate ? map.set('maxDate', assign(allPosts.get('maxDate'), maxDate)) : null
@@ -193,10 +200,11 @@ function extractFreshPosts({ allPosts, timeRange }) {
 // 提取下一個（非空） 30 分鐘內的貼文
 function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
     const posts = allPosts.get('posts');
+    const lastWeekMs = selectLastWeekMs();
+
     let isEmpty = true;
     let newShowingPosts = [];
     let newTimePointer = timePointer;
-
     while (isEmpty){
         newShowingPosts = posts.filter(post => {
             const timeDiff = newTimePointer - post.created_at;
@@ -206,7 +214,7 @@ function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
 
         newTimePointer -= timeRange;
 
-        if (newShowingPosts.length > 0){
+        if (newShowingPosts.length > 0 || newTimePointer < lastWeekMs){
             isEmpty = false;
         }
     }

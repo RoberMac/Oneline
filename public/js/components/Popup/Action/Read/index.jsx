@@ -1,6 +1,8 @@
 import React from 'react';
+import { Map, List } from 'immutable';
 
 // Helpers
+import { isBoolean } from 'utils/detect';
 import { selectNextPageId } from 'utils/select';
 import { Action } from 'utils/api';
 const calcId = ({ provider, action, id }) => {
@@ -25,8 +27,27 @@ const calcId = ({ provider, action, id }) => {
             break;
     }
 };
+const initReadState = ({
+    showingPosts, user,
+    isFetching, isFetchFail, isInitLoad, isLocked,
+    minId, minDate
+}) => {
+
+    return Map({
+        showingPosts: List(showingPosts || []),
+        user: user || {},
+        isFetching: isBoolean(isFetching) ? isFetching : false,
+        isFetchFail: isBoolean(isFetchFail) ? isFetchFail : false,
+        isInitLoad: isBoolean(isInitLoad) ? isInitLoad : true,
+        isLocked: isBoolean(isLocked) ? isLocked : false,
+        minId: minId || '',
+        minDate: minDate || 0
+    });
+
+};
 
 // Components
+import ReRender from 'components/Utils/HoCs/ReRender';
 import Spin from 'components/Utils/Spin';
 import Icon from 'components/Utils/Icon';
 import User from './User';
@@ -48,28 +69,28 @@ const Locked = ({ provider }) => (
         <Icon name="locked" />
     </span>
 );
-export default class Read extends React.Component {
+class Read extends React.Component {
     constructor(props) {
         super(props)
-        this.state = props.location.state || {
-            showingPosts: [],
-            user: {},
-            isFetching: false,
-            isFetchFail: false,
-            isInitLoad: true,
-            isLocked: false,
-            minId: '',
-            minDate: 0
-        }
+        this.state = { data: initReadState(props.location.state || {}) }
         this.fetchPosts = this.fetchPosts.bind(this);
     }
     fetchPosts() {
-        const { provider, action, id } = this.props;
-        const { showingPosts, isFetching, minId, minDate } = this.state;
-        const nextPageId = selectNextPageId[provider]({ minId, minDate, action, showingPosts });
+        const { provider, action, id, history, location } = this.props;
+        const { data } = this.state;
+        const minId = data.get('minId');
+        const minDate = data.get('minDate');
+        const nextPageId = selectNextPageId[provider]({
+            minId,
+            minDate,
+            action,
+            postsSize: data.get('showingPosts').size
+        });
 
-        if (isFetching) return;
-        this.setState({ isFetching: true, isFetchFail: false })
+        if (data.get('isFetching')) return;
+        this.setState(({ data }) => ({
+            data: data.set('isFetching', true).set('isFetchFail', false)
+        }))
 
         Action
         .get({
@@ -80,37 +101,52 @@ export default class Read extends React.Component {
         .then(res => {
             // Update State
             const user = res.user;
-            const data = res.data.sort((a, b) => a.created_at < b.created_at ? 1 : -1);
-            const lastPost = data[data.length - 1] && data[data.length - 1];
-            const newState = {
-                showingPosts: showingPosts.concat(data),
-                user: user || this.state.user,
-                isFetching: false,
-                isInitLoad: false,
-                minId: lastPost && lastPost.id_str,
-                minDate: lastPost && lastPost.created_at
-            };
-            this.setState(newState)
+            const posts = res.data.sort((a, b) => a.created_at < b.created_at ? 1 : -1);
+            const lastPost = posts[posts.length - 1] && posts[posts.length - 1];
+            const newState = data.withMutations(map => {
+                map
+                .update('showingPosts', list => list.concat(posts))
+                .set('isFetching', false)
+                .set('isInitLoad', false)
+                .set('minId', lastPost && lastPost.id_str)
+                .set('minDate', lastPost && lastPost.created_at)
+
+                user ? map.set('user', user) : null
+            });
+
+            this.setState(() => ({ data: newState }))
             // Store State in History State
-            const { history, location } = this.props;
             history.replace({
                 pathname: location.pathname,
                 search: location.search,
-                state: newState
+                state: newState.toJS()
             })
         })
         .catch(err => {
-            this.setState({ isFetching: false, isFetchFail: true, isLocked: true })
+            this.setState(({ data }) => ({
+                data: data.withMutations(map => {
+                    map
+                    .set('isFetching', false)
+                    .set('isFetchFail', true)
+                    .set('isLocked', true)
+                })
+            }))
         })
     }
     componentDidMount() {
-        if (this.state.isInitLoad) {
+        if (this.state.data.get('isInitLoad')) {
             this.fetchPosts()
         }
     }
     render() {
         const { provider, action } = this.props;
-        const { showingPosts, user, isInitLoad, isFetching, isFetchFail, isLocked } = this.state;
+        const { data } = this.state;
+        const showingPosts = data.get('showingPosts');
+        const user = data.get('user');
+        const isFetching = data.get('isFetching');
+        const isFetchFail = data.get('isFetchFail');
+        const isInitLoad = data.get('isInitLoad');
+        const isLocked = data.get('isLocked');
 
         let SelectRead;
         switch (action){
@@ -134,7 +170,7 @@ export default class Read extends React.Component {
                 )}
                 {isLocked && isInitLoad
                     ? <Locked provider={provider} />
-                    : isInitLoad || showingPosts.length >= 7
+                    : isInitLoad || showingPosts.size >= 7
                         ? <Spin
                             type="oldPosts"
                             provider={provider}
@@ -149,3 +185,7 @@ export default class Read extends React.Component {
         );
     }
 }
+Read.displayName = 'Read';
+
+// Export
+export default ReRender(Read);

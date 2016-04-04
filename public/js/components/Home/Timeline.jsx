@@ -1,29 +1,19 @@
 import React from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
 
+import ReRender from 'components/Utils/HoCs/ReRender';
 import Post from 'components/Utils/Post';
 
-export default class Timeline extends React.Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        __DEV__ && console.time('[shallowCompare]')
-        const shouldUpdate = shallowCompare(this, nextProps, nextState);
-        __DEV__ && console.timeEnd('[shallowCompare]')
-        __DEV__ && shouldUpdate && console.log('[ComponentUpdate]: Timeline')
-        return shouldUpdate;
+const Timeline = ({ showingPosts, highlight }) => (
+    <div>
+    {
+        showingPosts
+        .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
+        .map(item => (
+            <Post key={item.id_str} post={item} highlight={highlight} />
+        ))
     }
-    render() {
-        const { showingPosts, highlight } = this.props;
+    </div>
+);
+Timeline.displayName = 'Timeline';
 
-        return (
-            <div>
-            {
-                showingPosts
-                .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
-                .map(item => (
-                    <Post key={item.id_str} post={item} highlight={highlight} />
-                ))
-            }
-            </div>
-        );
-    }
-}
+export default ReRender(Timeline);
