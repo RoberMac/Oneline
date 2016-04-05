@@ -133,7 +133,7 @@ const _buildAction = {
 
             return {
                 triggerActionType: 'basic',
-                action: { endpoint: 'statuses/update', opts: wOpts },
+                action: { method: 'post', endpoint: 'statuses/update', opts: wOpts },
                 handleActionFunc: () => ({ msg: 'ok' })
             };
         },

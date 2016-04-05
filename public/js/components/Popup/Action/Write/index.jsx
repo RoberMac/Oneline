@@ -13,8 +13,14 @@ import {
 
 // Components
 import Post from 'components/Utils/Post';
-import { GeoPicker, MediaUpload, ToggleSensitive, ToggleWeiboEmotions, Submit } from './ToolBtns';
-import { MediaPreview, Mentions, WeiboEmotions } from './ToolPopup';
+import GeoPicker from './GeoPicker';
+import MediaUpload from './MediaUpload';
+import ToggleSensitive from './ToggleSensitive';
+import ToggleWeiboEmotions from './ToggleWeiboEmotions';
+import Submit from './Submit';
+import MediaPreview from './MediaPreview';
+import Mentions from './Mentions';
+import WeiboEmotions from './WeiboEmotions';
 import Transition from 'components/Utils/Transition';
 
 // Export

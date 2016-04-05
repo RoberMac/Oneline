@@ -72,24 +72,24 @@ const Locked = ({ provider }) => (
 class Read extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { data: initReadState(props.location.state || {}) }
+        this.state = { readState: initReadState(props.location.state || {}) }
         this.fetchPosts = this.fetchPosts.bind(this);
     }
     fetchPosts() {
         const { provider, action, id, history, location } = this.props;
-        const { data } = this.state;
-        const minId = data.get('minId');
-        const minDate = data.get('minDate');
+        const { readState } = this.state;
+        const minId = readState.get('minId');
+        const minDate = readState.get('minDate');
         const nextPageId = selectNextPageId[provider]({
             minId,
             minDate,
             action,
-            postsSize: data.get('showingPosts').size
+            postsSize: readState.get('showingPosts').size
         });
 
-        if (data.get('isFetching')) return;
-        this.setState(({ data }) => ({
-            data: data.set('isFetching', true).set('isFetchFail', false)
+        if (readState.get('isFetching')) return;
+        this.setState(({ readState }) => ({
+            readState: readState.set('isFetching', true).set('isFetchFail', false)
         }))
 
         Action
@@ -103,7 +103,7 @@ class Read extends React.Component {
             const user = res.user;
             const posts = res.data.sort((a, b) => a.created_at < b.created_at ? 1 : -1);
             const lastPost = posts[posts.length - 1] && posts[posts.length - 1];
-            const newState = data.withMutations(map => {
+            const newState = readState.withMutations(map => {
                 map
                 .update('showingPosts', list => list.concat(posts))
                 .set('isFetching', false)
@@ -114,7 +114,7 @@ class Read extends React.Component {
                 user ? map.set('user', user) : null
             });
 
-            this.setState(() => ({ data: newState }))
+            this.setState(() => ({ readState: newState }))
             // Store State in History State
             history.replace({
                 pathname: location.pathname,
@@ -123,8 +123,8 @@ class Read extends React.Component {
             })
         })
         .catch(err => {
-            this.setState(({ data }) => ({
-                data: data.withMutations(map => {
+            this.setState(({ readState }) => ({
+                readState: readState.withMutations(map => {
                     map
                     .set('isFetching', false)
                     .set('isFetchFail', true)
@@ -134,19 +134,19 @@ class Read extends React.Component {
         })
     }
     componentDidMount() {
-        if (this.state.data.get('isInitLoad')) {
+        if (this.state.readState.get('isInitLoad')) {
             this.fetchPosts()
         }
     }
     render() {
         const { provider, action } = this.props;
-        const { data } = this.state;
-        const showingPosts = data.get('showingPosts');
-        const user = data.get('user');
-        const isFetching = data.get('isFetching');
-        const isFetchFail = data.get('isFetchFail');
-        const isInitLoad = data.get('isInitLoad');
-        const isLocked = data.get('isLocked');
+        const { readState } = this.state;
+        const showingPosts = readState.get('showingPosts');
+        const user = readState.get('user');
+        const isFetching = readState.get('isFetching');
+        const isFetchFail = readState.get('isFetchFail');
+        const isInitLoad = readState.get('isInitLoad');
+        const isLocked = readState.get('isLocked');
 
         let SelectRead;
         switch (action){

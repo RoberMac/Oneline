@@ -91,9 +91,9 @@ export const updatePost = (newPost) => {
         const nestPostId = nestPostType && post[nestPostType].id_str;
 
         if (id === postId) {
-            return fromJS(post).merge(newPost).toJS();
+            return fromJS(post).mergeDeep(newPost).toJS();
         } else if (id === nestPostId) {
-            return fromJS(post).merge({ [nestPostType]: newPost }).toJS();
+            return fromJS(post).mergeDeep({ [nestPostType]: newPost }).toJS();
         } else {
             return post;
         }

@@ -20,22 +20,22 @@ import Post from 'components/Utils/Post';
 class SearchPost extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { data: initSearchState };
+        this.state = { postsState: initSearchState };
         this.fetchPosts = this.fetchPosts.bind(this)
     }
     fetchPosts() {
         const { provider, searchText } = this.props;
-        const { data } = this.state;
-        const minId = data.get('minId');
+        const { postsState } = this.state;
+        const minId = postsState.get('minId');
         const nextPageId = selectNextPageId[provider]({
             minId,
-            postsSize: data.get('showingPosts').size,
+            postsSize: postsState.get('showingPosts').size,
             action: 'search'
         });
 
-        if (data.get('isFetching') || !searchText) return;
-        this.setState(({ data }) => ({
-            data: data.set('isFetching', true).set('isFetchFail', false)
+        if (postsState.get('isFetching') || !searchText) return;
+        this.setState(({ postsState }) => ({
+            postsState: postsState.set('isFetching', true).set('isFetchFail', false)
         }))
 
         Action
@@ -49,8 +49,8 @@ class SearchPost extends React.Component {
             const posts = res.data.sort((a, b) => a.created_at < b.created_at ? 1 : -1);
             const lastPost = posts[posts.length - 1] && posts[posts.length - 1];
 
-            this.setState(({ data }) => ({
-                data: data.withMutations(map => {
+            this.setState(({ postsState }) => ({
+                postsState: postsState.withMutations(map => {
                     map
                     .update('showingPosts', list => list.concat(posts))
                     .set('isFetching', false)
@@ -60,8 +60,8 @@ class SearchPost extends React.Component {
             }))
         })
         .catch(err => {
-            this.setState(({ data }) => ({
-                data: data.set('isFetching', false).set('isFetchFail', true)
+            this.setState(({ postsState }) => ({
+                postsState: postsState.set('isFetching', false).set('isFetchFail', true)
             }))
         })
     }
@@ -70,7 +70,7 @@ class SearchPost extends React.Component {
         const { searchText: currentText } = this.props;
 
         if (prevText !== currentText) {
-            this.setState(() => ({ data: initSearchState }), () => this.fetchPosts())
+            this.setState(() => ({ postsState: initSearchState }), () => this.fetchPosts())
         }
     }
     componentDidMount() {
@@ -78,11 +78,11 @@ class SearchPost extends React.Component {
     }
     render() {
         const { provider, searchText } = this.props;
-        const { data } = this.state;
-        const showingPosts = data.get('showingPosts');
-        const isFetching = data.get('isFetching');
-        const isFetchFail = data.get('isFetchFail');
-        const isInitLoad = data.get('isInitLoad');
+        const { postsState } = this.state;
+        const showingPosts = postsState.get('showingPosts');
+        const isFetching = postsState.get('isFetching');
+        const isFetchFail = postsState.get('isFetchFail');
+        const isInitLoad = postsState.get('isInitLoad');
 
         return (
             <div>
