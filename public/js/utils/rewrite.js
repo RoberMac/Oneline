@@ -3,7 +3,7 @@ import reduxStore from 'state/store';
 const BLOCKED = reduxStore.getState().base.get('BLOCKED');
 
 export const rewriteMediaLink = ({ type, provider, data }) => {
-    __DEV__ && console.time('[rewriteMediaLink]')
+    __DEV__ && console.time('[rewriteMediaLink]');
 
     if (isWeibo(provider) || !BLOCKED) return data;
 
@@ -29,22 +29,21 @@ export const rewriteMediaLink = ({ type, provider, data }) => {
                 `${PREFIX}?src=$1`
             );
         },
-        unsplash: str => str
-    }
+        unsplash: str => str,
+    };
 
     let rewritedData;
     switch (type) {
         case 'sharers':
         case 'post':
-            rewritedData = JSON.parse(REWRITER[provider](JSON.stringify(data)))
+            rewritedData = JSON.parse(REWRITER[provider](JSON.stringify(data)));
             break;
         default:
-            __DEV__ && console.error(`invalid type: ${type}`)
+            __DEV__ && console.error(`invalid type: ${type}`);
             throw `invalid type: ${type}`;
-            break;
     }
 
-    __DEV__ && console.timeEnd('[rewriteMediaLink]')
+    __DEV__ && console.timeEnd('[rewriteMediaLink]');
 
     return rewritedData;
 };

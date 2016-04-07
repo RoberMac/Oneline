@@ -12,10 +12,9 @@ reduxStore.subscribe(() => {
     if (type !== UPDATE_BASE) return;
 
     PROFILE = base.get('PROFILE');
-})
+});
 
 // Components
-import Icon from 'components/Utils/Icon';
 import Like from './Like';
 import Reply from './Reply';
 import Retweet from './Retweet';
@@ -31,8 +30,8 @@ const Actions = {
     twitter: ({ post }) => {
         const isAuthUser = (
             post.detail
-            && PROFILE && PROFILE['twitter'] 
-            && post.user.screen_name === PROFILE['twitter'].screen_name
+            && PROFILE && PROFILE.twitter
+            && post.user.screen_name === PROFILE.twitter.screen_name
         );
         return (post.detail
             ? <div>
@@ -40,11 +39,20 @@ const Actions = {
                 {isAuthUser && <Trash provider="twitter" id={post.id_str} />}
             </div>
             : <div>
-                <Like provider="twitter" id={post.id_str} count={post.like_count} liked={post.liked} />
+                <Like
+                    provider="twitter"
+                    id={post.id_str}
+                    count={post.like_count}
+                    liked={post.liked}
+                />
                 <Retweet provider="twitter" post={post} />
                 <span className="post-action__hide animate--faster">
                     <Reply provider="twitter" post={post} />
-                    <Source provider="twitter" screen_name={post.user.screen_name} id={post.id_str} />
+                    <Source
+                        provider="twitter"
+                        screen_name={post.user.screen_name}
+                        id={post.id_str}
+                    />
                     <Detail provider="twitter" id={post.id_str} />
                     <Share provider="twitter" post={post} />
                 </span>
@@ -70,8 +78,8 @@ const Actions = {
     weibo: ({ post }) => {
         const isAuthUser = (
             post.detail
-            && PROFILE && PROFILE['weibo']
-            && post.user.screen_name === PROFILE['weibo'].screen_name
+            && PROFILE && PROFILE.weibo
+            && post.user.screen_name === PROFILE.weibo.screen_name
         );
         return (post.detail
             ? <div>
@@ -96,7 +104,12 @@ const Actions = {
                 <Source provider="unsplash" id={post.id_str} />
             </div>
             : <div>
-                <Like provider="unsplash" id={post.id_str} count={post.like_count} liked={post.liked} />
+                <Like
+                    provider="unsplash"
+                    id={post.id_str}
+                    count={post.like_count}
+                    liked={post.liked}
+                />
                 <span className="post-action__hide animate--faster">
                     <Download provider="unsplash" id={post.id_str} count={post.download_count} />
                     <Source provider="unsplash" id={post.id_str} />
@@ -104,7 +117,7 @@ const Actions = {
                 </span>
             </div>
         );
-    }
+    },
 };
 
 // Export

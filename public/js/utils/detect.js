@@ -25,5 +25,5 @@ export const providersActive = ({ activeProviders }) => ({
     isTwitterActive: !!~activeProviders.indexOf('twitter'),
     isInstagramActive: !!~activeProviders.indexOf('instagram'),
     isWeiboActive: !!~activeProviders.indexOf('weibo'),
-    isUnsplashActive: !!~activeProviders.indexOf('unsplash')
+    isUnsplashActive: !!~activeProviders.indexOf('unsplash'),
 });

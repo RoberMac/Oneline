@@ -32,8 +32,16 @@ export default ({ post, highlight }) => (
                     provider="twitter"
                     text={post.quote.text}
                     middlewares={[
-                        { order: 2, middleware: 'trimMediaLink', opts: { link: post.quote.mediaLink } },
-                        { order: 5, middleware: 'highlight', opts: { provider: 'twitter', highlight } },
+                        {
+                            order: 2,
+                            middleware: 'trimMediaLink',
+                            opts: { link: post.quote.mediaLink },
+                        },
+                        {
+                            order: 5,
+                            middleware: 'highlight',
+                            opts: { provider: 'twitter', highlight },
+                        },
                     ]}
                 />
                 {post.quote.media && post.quote.media.length > 0 && (

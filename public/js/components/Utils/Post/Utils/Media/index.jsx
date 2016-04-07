@@ -9,10 +9,10 @@ const Medias = {
     twitter: Twitter,
     instagram: Instagram,
     weibo: Weibo,
-    unsplash: Unsplash
+    unsplash: Unsplash,
 };
 
 export default ({ provider, ...media }) => {
     const SelectMedia = Medias[provider];
-    return <SelectMedia {...media} />
+    return <SelectMedia {...media} />;
 };

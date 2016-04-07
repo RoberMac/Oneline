@@ -5,33 +5,33 @@ import { browserHistory as history } from 'react-router';
 import Transition from 'components/Utils/Transition';
 
 export default class Popup extends React.Component {
-    constructor (props){
-        super(props)
-        this.hidePopup = this.hidePopup.bind(this)
-        this.handleKeyDown = this.handleKeyDown.bind(this)
-        this.handleSwipedLeft = this.handleSwipedLeft.bind(this)
-        this.handleSwipedRight = this.handleSwipedRight.bind(this)
+    constructor(props) {
+        super(props);
+        this.hidePopup = this.hidePopup.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.handleSwipedLeft = this.handleSwipedLeft.bind(this);
+        this.handleSwipedRight = this.handleSwipedRight.bind(this);
     }
-    hidePopup (){
+    componentDidMount() {
+        window.addEventListener('keydown', this.handleKeyDown);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.handleKeyDown);
+    }
+    hidePopup() {
         const { location } = this.props;
-        history.push(/settings/.test(location.pathname) ? '/settings' : '/home')
+        history.push(/settings/.test(location.pathname) ? '/settings' : '/home');
     }
-    handleKeyDown (e){
-        if (e.keyCode === 27){ this.hidePopup() }
+    handleKeyDown(e) {
+        if (e.keyCode === 27) { this.hidePopup(); }
     }
     handleSwipedLeft(e) {
-        e.stopPropagation()
-        history.go()
+        e.stopPropagation();
+        history.go();
     }
     handleSwipedRight(e) {
-        e.stopPropagation()
-        history.goBack()
-    }
-    componentDidMount (){
-        window.addEventListener('keydown', this.handleKeyDown)
-    }
-    componentWillUnmount (){
-        window.removeEventListener('keydown', this.handleKeyDown)
+        e.stopPropagation();
+        history.goBack();
     }
     render() {
         const children = this.props.children;

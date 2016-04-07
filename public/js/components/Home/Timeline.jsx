@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ReRender from 'components/Utils/HoCs/ReRender';
+import rerender from 'components/Utils/HoCs/rerender';
 import Post from 'components/Utils/Post';
 
 const Timeline = ({ showingPosts, highlight }) => (
@@ -16,4 +16,4 @@ const Timeline = ({ showingPosts, highlight }) => (
 );
 Timeline.displayName = 'Timeline';
 
-export default ReRender(Timeline);
+export default rerender(Timeline);

@@ -17,38 +17,49 @@ const PEDICTION = {
                 <span onClick={() => onClick({ searchText: name })}>
                     {name}
                 </span>
-            )
-        }
+            ),
+        },
     },
     instagram: {
         tags: {
             action: 'pediction_tags',
             initState: () => ({}),
             id: i => i,
-            renderItem: ({ name }) => <Link to={`/home/instagram/tags/${name}`}>#{name}</Link>
+            renderItem: ({ name }) => <Link to={`/home/instagram/tags/${name}`}>#{name}</Link>,
         },
         users: {
             action: 'pediction_users',
             initState: () => ({}),
             id: i => i,
-            renderItem: ({ name }) => <Link to={`/home/instagram/user/${name}`}>@{name}</Link>
-        }
-    }
-}
+            renderItem: ({ name }) => <Link to={`/home/instagram/user/${name}`}>@{name}</Link>,
+        },
+    },
+};
 
 // Components
 import Spin from 'components/Utils/Spin';
 
 export default class SearchPediction extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
-            pedictions: PEDICTION[props.provider][props.searchType]['initState'](),
+            pedictions: PEDICTION[props.provider][props.searchType].initState(),
             isFetching: false,
-            isFetchFail: false
+            isFetchFail: false,
+        };
+        this.fetchPedictions = this.fetchPedictions.bind(this);
+    }
+    componentDidMount() {
+        _isTwitter(this.props.provider) && this.fetchPedictions();
+    }
+    componentDidUpdate(prevProps) {
+        const { searchType: prevType, searchText: prevText } = prevProps;
+        const { searchType: currentType, searchText: currentText } = this.props;
+
+        if (prevType !== currentType || prevText !== currentText) {
+            this.fetchPedictions();
         }
-        this.fetchPedictions = this.fetchPedictions.bind(this)
     }
     fetchPedictions() {
         const { provider, searchType, searchText } = this.props;
@@ -57,48 +68,38 @@ export default class SearchPediction extends React.Component {
         const isTwitter = _isTwitter(provider);
         const P = PEDICTION[provider][searchType];
 
-        if (isFetching || isTwitter && P['isFresh'](pedictions)) return;
+        if (isFetching || isTwitter && P.isFresh(pedictions)) return;
 
         if (!searchText && !isTwitter) {
-            this.setState({ pedictions: {}, isFetching: false, isFetchFail: false })
+            this.setState({ pedictions: {}, isFetching: false, isFetchFail: false });
             return;
         }
 
-        this.setState({ pedictions: {}, isFetching: true, isFetchFail: false })
+        this.setState({ pedictions: {}, isFetching: true, isFetchFail: false });
 
         Action
         .get({
             provider,
-            action: P['action'],
-            id: P['id'](searchText)
+            action: P.action,
+            id: P.id(searchText),
         })
         .then(res => {
             this.setState({
                 pedictions: res,
                 isFetching: false,
                 isFetchFail: false,
-            })
-            isTwitter && P['storeState'](res)
+            });
+            isTwitter && P.storeState(res);
         })
-        .catch(err => {
-            this.setState({ isFetching: false, isFetchFail: true })
-        })
-    }
-    componentDidUpdate(prevProps, prevState) {
-        const { searchType: prevType , searchText: prevText } = prevProps;
-        const { searchType: currentType , searchText: currentText } = this.props;
-
-        if (prevType !== currentType || prevText !== currentText) {
-            this.fetchPedictions()
-        }
-    }
-    componentDidMount() {
-        _isTwitter(this.props.provider) && this.fetchPedictions()
+        .catch(() => {
+            this.setState({ isFetching: false, isFetchFail: true });
+        });
     }
     render() {
-        const { provider, searchType, searchText, onPedictionClick } = this.props;
+        const { provider, searchType, onPedictionClick } = this.props;
         const { pedictions, isFetching, isFetchFail } = this.state;
-        const Item = PEDICTION[provider][searchType]['renderItem'];
+        const Item = PEDICTION[provider][searchType].renderItem;
+
         return (
             <ul className={`search__pedictions color--${provider} overflow--y`}>
             {pedictions.data && pedictions.data
@@ -115,7 +116,7 @@ export default class SearchPediction extends React.Component {
                 <Spin
                     type="oldPosts"
                     provider={provider}
-                    initLoad={true}
+                    initLoad
                     isFetching={isFetching}
                     isFetchFail={isFetchFail}
                 />

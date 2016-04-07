@@ -5,15 +5,17 @@ export default ComposeComponent => class extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         const displayName = ComposeComponent.displayName;
 
-        __DEV__ && console.time(`[shallowCompare: ${displayName}]`)
+        __DEV__ && console.time(`[shallowCompare: ${displayName}]`);
         const shouldUpdate = shallowCompare(this, nextProps, nextState);
-        __DEV__ && console.timeEnd(`[shallowCompare: ${displayName}]`)
+        __DEV__ && console.timeEnd(`[shallowCompare: ${displayName}]`);
 
-        __DEV__ && shouldUpdate && console.log(`%c [ComponentUpdate]: ${displayName}`, 'color: red')
+        __DEV__
+        && shouldUpdate
+        && console.log(`%c [ComponentUpdate]: ${displayName}`, 'color: red');
 
         return shouldUpdate;
     }
     render() {
-        return <ComposeComponent {...this.props} {...this.state} />
+        return <ComposeComponent {...this.props} {...this.state} />;
     }
-}
+};

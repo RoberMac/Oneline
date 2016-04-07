@@ -4,25 +4,25 @@ import SearchBar from 'components/Utils/SearchBar';
 
 export default class SearchLocal extends React.Component {
     constructor(props) {
-        super(props)
-        this.state = { search: false }
-        this.toggleSearch = this.toggleSearch.bind(this)
-        this.handleSearchChange = this.handleSearchChange.bind(this)
+        super(props);
+        this.state = { search: false };
+        this.toggleSearch = this.toggleSearch.bind(this);
+        this.handleSearchChange = this.handleSearchChange.bind(this);
     }
     toggleSearch() {
         const { onChange } = this.props;
         const { search } = this.state;
 
         if (search) {
-            onChange({ actionType: 'reset' })
+            onChange({ actionType: 'reset' });
         } else {
-            onChange({ actionType: 'init' })
+            onChange({ actionType: 'init' });
         }
 
-        this.setState({ search: !search })
+        this.setState({ search: !search });
     }
     handleSearchChange({ searchType, searchText }) {
-        __DEV__ && console.time(`[Search] ${searchText}`)
+        __DEV__ && console.time(`[Search] ${searchText}`);
 
         if (!searchText) return;
 
@@ -32,7 +32,7 @@ export default class SearchLocal extends React.Component {
             .filter(post => {
                 let srcText;
 
-                switch (searchType){
+                switch (searchType) {
                     case 'text':
                         srcText = (
                             post.text
@@ -43,9 +43,17 @@ export default class SearchLocal extends React.Component {
                     case 'user':
                         srcText = (
                             post.user.name + post.user.screen_name
-                            + (post.quote && (post.quote.user.name + post.quote.user.screen_name) || '')
-                            + (post.retweet && (post.retweet.user.name + post.retweet.user.screen_name) || '')
+                            + (post.quote
+                                && (post.quote.user.name + post.quote.user.screen_name)
+                                || ''
+                            )
+                            + (post.retweet
+                                && (post.retweet.user.name + post.retweet.user.screen_name)
+                                || ''
+                            )
                         );
+                        break;
+                    default:
                         break;
                 }
 
@@ -57,17 +65,19 @@ export default class SearchLocal extends React.Component {
         onChange({
             searchText,
             actionType: 'update',
-            newShowingPosts
-        })
+            newShowingPosts,
+        });
 
-        __DEV__ && console.timeEnd(`[Search] ${searchText}`)
+        __DEV__ && console.timeEnd(`[Search] ${searchText}`);
     }
     render() {
-        return <SearchBar
-            type="local"
-            provider="all"
-            onSearchChange={this.handleSearchChange}
-            onRightBtnClick={this.toggleSearch}
-        />;
+        return (
+            <SearchBar
+                type="local"
+                provider="all"
+                onSearchChange={this.handleSearchChange}
+                onRightBtnClick={this.toggleSearch}
+            />
+        );
     }
 }

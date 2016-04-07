@@ -1,8 +1,8 @@
 export default (value, unit, suffix) => {
-    let formattedSuffix = suffix === 'ago' ? '' : ' from now';
+    const formattedSuffix = suffix === 'ago' ? '' : ' from now';
     let formattedUnit;
 
-    switch (unit){
+    switch (unit) {
         case 'second':
             formattedUnit = 's';
             break;
@@ -24,7 +24,9 @@ export default (value, unit, suffix) => {
         case 'year':
             formattedUnit = 'Y';
             break;
+        default:
+            break;
     }
 
-    return `${value}${formattedUnit}${formattedSuffix}`
-}
+    return `${value}${formattedUnit}${formattedSuffix}`;
+};

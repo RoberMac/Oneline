@@ -5,9 +5,9 @@ import reduxStore from 'state/store';
 import { UPDATE_BASE } from 'state/actions/base';
 
 // State Handing
-const { base } = reduxStore.getState();
-let SHARE_PAGE = base.get('SHARE_PAGE');
-let EMOTIONS = base.get('EMOTIONS');
+const _state = reduxStore.getState();
+let SHARE_PAGE = _state.base.get('SHARE_PAGE');
+let EMOTIONS = _state.base.get('EMOTIONS');
 reduxStore.subscribe(() => {
     const { base, lastAction: { type } } = reduxStore.getState();
 
@@ -15,7 +15,7 @@ reduxStore.subscribe(() => {
 
     SHARE_PAGE = base.get('SHARE_PAGE');
     EMOTIONS = base.get('EMOTIONS');
-})
+});
 
 // Constants
 const USER_PREFIX = {
@@ -27,60 +27,49 @@ const TAG_PREFIX = {
     twitter: SHARE_PAGE ? '//twitter.com/search?q=%23' : '/home/twitter/tags/',
     instagram: SHARE_PAGE ? '//instagram.com/explore/tags/' : '/home/instagram/tags/',
     weibo: SHARE_PAGE ? 'http://huati.weibo.com/k/' : '/home/weibo/tags/',
-    unsplash: SHARE_PAGE ? '//unsplash.com/search?utf8=✓&keyword=' : '/home/unsplash/tags/'
+    unsplash: SHARE_PAGE ? '//unsplash.com/search?utf8=✓&keyword=' : '/home/unsplash/tags/',
 };
 const TARGET_ATTR = SHARE_PAGE ? 'target="_blank"' : '';
 const MATCH_ZERO_WIDTH_CHAR = /[\u200B-\u200F\u202C\uFEFF]/g;
 const MATCH_MENTION = {
     twitter: /(|\s)*@([\w]+)/g,
     instagram: /(|\s)*@([\w\.]+)/g,
-    weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g
+    weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g,
 };
 const MATCH_LINK = new RegExp([
     '(?:https?:\/\/)+',
     '(?![^\\s]*?")',
-    '([\\w.,@?!^=%&amp;:\/~+#-]*[\\w@?!^=%&amp;\/~+#-])?'
+    '([\\w.,@?!^=%&amp;:\/~+#-]*[\\w@?!^=%&amp;\/~+#-])?',
 ].join(''), 'gi');
 const MATCH_SUFFIX_LINK = new RegExp([
     '(?:https?:\/\/)+',
     '(?![^\\s]*?")',
-    '([\\w.,@?!^=%&amp;:\/~+#-]*[\\w@?!^=%&amp;\/~+#-])?$'
+    '([\\w.,@?!^=%&amp;:\/~+#-]*[\\w@?!^=%&amp;\/~+#-])?$',
 ].join(''), 'gi');
 const MATCH_TAG = new RegExp([
     '(^|\\s)*',
     '[#＃]',
     '([',
-        '^#\\s!?@$%^&*()+\\-=\\[\\]{};\':"|,.<>\/\\\\',
-        '\u3002\uff1f\uff01\uff0c\u3001\uff1b', // 。？！，、；
-        '\uff1a\u300c\u300d\u300e\u300f\u2018', // ：「」『』‘
-        '\u2019\u201c\u201D\uff08\uff09\u3014', // ’“”（）〔
-        '\u3015\u3010\u3011\u2014\u2026\u2013', // 〕【】—…–
-        '\uff0e\u300a\u300B\u3008\u3009\uFF03', // ．《》〈〉＃
-    ']+)'
-].join(''), 'g')
+    '^#\\s!?@$%^&*()+\\-=\\[\\]{};\':"|,.<>\/\\\\',
+    '\u3002\uff1f\uff01\uff0c\u3001\uff1b', // 。？！，、；
+    '\uff1a\u300c\u300d\u300e\u300f\u2018', // ：「」『』‘
+    '\u2019\u201c\u201D\uff08\uff09\u3014', // ’“”（）〔
+    '\u3015\u3010\u3011\u2014\u2026\u2013', // 〕【】—…–
+    '\uff0e\u300a\u300B\u3008\u3009\uFF03', // ．《》〈〉＃
+    ']+)',
+].join(''), 'g');
 
-
-// Export
-export default {
-    linkify,
-    weiboEmotify,
-    trimSuffixLink,
-    trimMediaLink,
-    sanitizer,
-    highlight
-};
-
-
-function linkify(text, { provider }) {
+// Implements
+const linkify = (text, { provider }) => {
     if (!text) return '';
 
     let _text;
     // Linkify URL
     _text = text.replace(MATCH_LINK, url => {
-        let wrap = document.createElement('div');
-        let anch = document.createElement('a');
+        const wrap = document.createElement('div');
+        const anch = document.createElement('a');
         anch.href = url;
-        anch.target = "_blank";
+        anch.target = '_blank';
         anch.innerHTML = url;
         wrap.appendChild(anch);
         return wrap.innerHTML;
@@ -106,6 +95,8 @@ function linkify(text, { provider }) {
                 '$1<a href="http://weibo.com/n/$2" target="_blank">@$2</a>'
             );
             break;
+        default:
+            break;
     }
 
     // Linkify Tags
@@ -119,35 +110,32 @@ function linkify(text, { provider }) {
             );
             break;
         case 'weibo':
-            _text = _text.replace(/(^|\s)*#([^#]+)#/g, (str, $1, $2) => {
-                str = str || '';
-                $1  = $1 || '';
-                $2  = $2 || '';
-
-                return (
-                    $1 +
-                    '<a href="http://huati.weibo.com/k/' +
-                    $2.replace(/\[([\u4e00-\u9fa5]*\])/g, '') +
-                    '" target="_blank">#' + $2 + '#</a>'
-                );
-            });
+            _text = _text.replace(/(^|\s)*#([^#]+)#/g, (str = '', $1 = '', $2 = '') => (
+                $1
+                + '<a href="http://huati.weibo.com/k/'
+                + $2.replace(/\[([\u4e00-\u9fa5]*\])/g, '')
+                + '" target="_blank">#' + $2 + '#</a>'
+            ));
+            break;
+        default:
             break;
     }
 
     return _text;
-}
-function weiboEmotify(text) {
-    if (!text) return;
-    if (!EMOTIONS['weibo']) return text;
-    let _text = text.replace(/\[[\u4e00-\u9fa5\w]+\]/g, str => {
+};
+const weiboEmotify = (text) => {
+    if (!text) return '';
+    if (!EMOTIONS.weibo) return text;
+
+    const _text = text.replace(/\[[\u4e00-\u9fa5\w]+\]/g, str => {
         /**
          * Key Structure
          *
          * [key] -> key
          *
          */
-        let key = str.replace(/[\[\]]/g, '');
-        let _id = EMOTIONS['weibo'][key];
+        const key = str.replace(/[\[\]]/g, '');
+        const _id = EMOTIONS.weibo[key];
 
         if (!_id) return str;
 
@@ -161,25 +149,25 @@ function weiboEmotify(text) {
          *
          */
         const PREFIX = 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/';
-        const ID     = _id.replace(/\-|\+|\@/g, '/').replace('?', '');
-        const TYPE   = _id.indexOf('-') > 0 ? '_org' : _id.indexOf('+') > 0 ? '_thumb' : '';
+        const ID = _id.replace(/\-|\+|\@/g, '/').replace('?', '');
+        const TYPE = _id.indexOf('-') > 0 ? '_org' : _id.indexOf('+') > 0 ? '_thumb' : '';
         const SUFFIX = _id.indexOf('?') > 0 ? '.png' : '.gif';
 
         return `<img text="${str}" alt="${str}" src="${PREFIX}${ID}${TYPE}${SUFFIX}">`;
     });
 
     return _text || '';
-}
-function trimSuffixLink(text) {
+};
+const trimSuffixLink = (text) => {
     return text.replace(MATCH_SUFFIX_LINK, '');
-}
-function trimMediaLink(text, { link }) {
+};
+const trimMediaLink = (text, { link }) => {
     return text.replace(link, '');
-}
-function sanitizer(text) {
+};
+const sanitizer = (text) => {
     return xssFilters.inHTMLData(text);
-}
-function highlight(text, { provider, highlight }) {
+};
+const _highlight = (text, { provider, highlight }) => {
     if (!highlight) return text;
 
     const MATCH_HIGHLIGHT = new RegExp(`(${highlight})(?![^<]*>|[^<>]*<\/)`, 'gim');
@@ -188,4 +176,15 @@ function highlight(text, { provider, highlight }) {
         MATCH_HIGHLIGHT,
         `<mark class="highlight--${provider}">$1</mark>`
     );
-}
+};
+
+
+// Export
+export default {
+    linkify,
+    weiboEmotify,
+    trimSuffixLink,
+    trimMediaLink,
+    sanitizer,
+    highlight: _highlight,
+};

@@ -8,7 +8,7 @@ import DetailIcon from './DetailIcon';
 export default ({ provider, post, likedList, replyList, retweetedList }) => {
     let DetailComponents;
 
-    switch (provider){
+    switch (provider) {
         case 'twitter':
             DetailComponents = (
                 <div className={`detail__container provider--${provider}`}>
@@ -94,6 +94,8 @@ export default ({ provider, post, likedList, replyList, retweetedList }) => {
                     <DetailRow provider={provider} list={replyList} />
                 </div>
             );
+            break;
+        default:
             break;
     }
 

@@ -15,7 +15,7 @@ export default class Detail extends React.Component {
         const historyState = props.location.state;
         const restoreState = historyState && historyState.likedList ? historyState : null;
 
-        super(props)
+        super(props);
         this.state = restoreState || {
             post: historyState,
             likedList: [],
@@ -23,7 +23,12 @@ export default class Detail extends React.Component {
             retweetedList: [],
             isFetching: false,
             isFetchFail: false,
-            isInitLoad: true
+            isInitLoad: true,
+        };
+    }
+    componentDidMount() {
+        if (this.state.isInitLoad) {
+            this.loadDetail();
         }
     }
     loadDetail() {
@@ -31,7 +36,7 @@ export default class Detail extends React.Component {
         const { isFetching } = this.state;
 
         if (isFetching) return;
-        this.setState({ isFetching: true, isFetchFail: false })
+        this.setState({ isFetching: true, isFetchFail: false });
 
         Action
         .get({ action, provider, id })
@@ -48,25 +53,20 @@ export default class Detail extends React.Component {
                 retweetedList,
                 isFetching: false,
                 isFetchFail: false,
-                isInitLoad: false
+                isInitLoad: false,
             };
-            this.setState(newState)
+            this.setState(newState);
             // Store State in History State
             const { history } = this.props;
             history.replace({
                 pathname: location.pathname,
                 search: location.search,
-                state: newState
-            })
+                state: newState,
+            });
         })
-        .catch(err => {
-            this.setState({ isFetching: false, isFetchFail: true })
-        })
-    }
-    componentDidMount() {
-        if (this.state.isInitLoad) {
-            this.loadDetail()
-        }
+        .catch(() => {
+            this.setState({ isFetching: false, isFetchFail: true });
+        });
     }
     render() {
         const { provider } = this.props;
@@ -76,7 +76,7 @@ export default class Detail extends React.Component {
         if (!isInitLoad) {
             detailPost = assign(post, { detail: true });
 
-            if (detailPost.quote) { detailPost.quote.detail = true };
+            if (detailPost.quote) detailPost.quote.detail = true;
         }
 
         return (

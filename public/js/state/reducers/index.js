@@ -10,5 +10,5 @@ export default combineReducers({
     timeline,
     lastAction: (state = null, action) => {
         return { type: action.type };
-    }
-})
+    },
+});

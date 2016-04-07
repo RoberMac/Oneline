@@ -26,33 +26,34 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
         const auth = _state.auth.toObject();
         const timeline = _state.timeline.toObject();
 
-        if (timeline[postsType].get('isFetching')) return;
+        if (timeline[postsType].get('isFetching')) return false;
 
         return determineFetchFrom({ postsType, isAutoFetch, ...auth, ...timeline })
         .then(({ fetchFrom, invalidProviders }) => {
-            __DEV__ && console.info(`[${postsType}: fetchFrom] ${fetchFrom}`)
+            __DEV__ && console.info(`[${postsType}: fetchFrom] ${fetchFrom}`);
             switch (fetchFrom) {
                 case 'local':
                     fetchFromLocal({ postsType, ...timeline })
-                    .then( newState => dispatch(postsRecive(newState)) )
+                    .then(newState => dispatch(postsRecive(newState)))
                     .catch(err => {
-                        throw err
-                    })
+                        throw err;
+                    });
                     break;
                 case 'remote':
-                    dispatch(fetchStart({ postsType }))
+                    dispatch(fetchStart({ postsType }));
 
                     return fetchFromRemote({ postsType, isAutoFetch, invalidProviders, ...timeline })
-                    .then( newState => dispatch(postsRecive(newState)) )
+                    .then(newState => dispatch(postsRecive(newState)))
                     .catch(err => {
-                        dispatch(fetchFail({ postsType }))
-                        throw err
-                    })
+                        dispatch(fetchFail({ postsType }));
+                        throw err;
+                    });
+                default:
                     break;
             }
-        })
+        });
     };
-}
+};
 
 /**
  * Manipulate (Single) Post
@@ -65,7 +66,7 @@ export const updatePost = (newPost) => {
     const id = newPost.id_str;
 
     return (dispatch, getState) => {
-        __DEV__ && console.time(`[updatePost: ${id}]`)
+        __DEV__ && console.time(`[updatePost: ${id}]`);
 
         const _state = getState();
         const showingPosts = _state.timeline.get('showingPosts');
@@ -78,11 +79,11 @@ export const updatePost = (newPost) => {
             type: UPDATE_POST,
             payload: {
                 showingPosts: newShowingPosts,
-                allPosts: allPosts.set('posts', newAllPosts)
-            }
-        })
+                allPosts: allPosts.set('posts', newAllPosts),
+            },
+        });
 
-        __DEV__ && console.timeEnd(`[updatePost: ${id}]`)
+        __DEV__ && console.timeEnd(`[updatePost: ${id}]`);
     };
 
     function updatePostIfFound(post) {
@@ -94,14 +95,14 @@ export const updatePost = (newPost) => {
             return fromJS(post).mergeDeep(newPost).toJS();
         } else if (id === nestPostId) {
             return fromJS(post).mergeDeep({ [nestPostType]: newPost }).toJS();
-        } else {
-            return post;
         }
+
+        return post;
     }
-}
+};
 export const deletePost = ({ id }) => {
     return (dispatch, getState) => {
-        __DEV__ && console.time(`[deletePost: ${id}]`)
+        __DEV__ && console.time(`[deletePost: ${id}]`);
 
         const _state = getState();
         const showingPosts = _state.timeline.get('showingPosts');
@@ -114,17 +115,17 @@ export const deletePost = ({ id }) => {
             type: UPDATE_POST,
             payload: {
                 showingPosts: newShowingPosts,
-                allPosts: allPosts.set('posts', newAllPosts)
-            }
-        })
+                allPosts: allPosts.set('posts', newAllPosts),
+            },
+        });
 
-        __DEV__ && console.timeEnd(`[deletePost: ${id}]`)
+        __DEV__ && console.timeEnd(`[deletePost: ${id}]`);
     };
 
     function deletePostIfFound(post) {
         return post.id_str !== id;
     }
-}
+};
 
 /**
  * Update Showing Posts
@@ -133,5 +134,5 @@ export const deletePost = ({ id }) => {
 export const UPDATE_SHOWINGS_POSTS = 'UPDATE_SHOWINGS_POSTS';
 export const updateShowingPosts = (showingPosts) => ({
     type: UPDATE_SHOWINGS_POSTS,
-    payload: { showingPosts }
+    payload: { showingPosts },
 });

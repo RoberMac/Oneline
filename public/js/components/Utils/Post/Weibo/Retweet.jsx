@@ -24,7 +24,7 @@ export default ({ post, highlight }) => (
             )}
         </div>
 
-        <RetweetAvatar provider="weibo" {...post.user}/>
+        <RetweetAvatar provider="weibo" {...post.user} />
 
         <Action post={post.retweet} />
 

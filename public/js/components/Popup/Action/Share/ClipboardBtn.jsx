@@ -10,24 +10,24 @@ export default class ClipboardBtn extends Component {
     componentDidMount() {
         this.clipboard = new Clipboard(this.refs.btn);
 
-        this.clipboard.on('success', e => {
-            addClassTemporarily(this.refs.btn, 'tips--active', 500)
+        this.clipboard.on('success', () => {
+            addClassTemporarily(this.refs.btn, 'tips--active', 500);
             // Cut (due to target is a controled <textarea>)
-            document.querySelector('textarea').value = ''
-        })
+            document.querySelector('textarea').value = '';
+        });
 
         // gracefully degrades for Safari
         this.clipboard.on('error', e => {
             const btnElem = this.refs.btn;
             const btnClassList = new ClassList(btnElem);
 
-            if (btnClassList.contains('tips--active')){
-                btnClassList.remove('tips--active')
-                e.clearSelection()
+            if (btnClassList.contains('tips--active')) {
+                btnClassList.remove('tips--active');
+                e.clearSelection();
             } else {
-                btnClassList.toggle('tips--active')
+                btnClassList.toggle('tips--active');
             }
-        })
+        });
     }
     componentWillUnmount() {
         this.clipboard.destroy();

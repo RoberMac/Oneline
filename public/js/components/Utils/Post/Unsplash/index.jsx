@@ -10,12 +10,16 @@ export const UnsplashPost = ({ post, highlight }) => (
     <div>
         {!post.avatarless && <Avatar provider="unsplash" {...post.user} />}
         <div className="post__content">
-            <Media provider="unsplash" images={post.images}/>
+            <Media provider="unsplash" images={post.images} />
             <Text
                 provider="unsplash"
                 text={post.text}
                 middlewares={[
-                    { order: 5, middleware: 'highlight', opts: { provider: 'unsplash', highlight } },
+                    {
+                        order: 5,
+                        middleware: 'highlight',
+                        opts: { provider: 'unsplash', highlight },
+                    },
                 ]}
             />
         </div>

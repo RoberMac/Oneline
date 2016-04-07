@@ -6,23 +6,23 @@ export const _fetch = ({ method, url, query, body }) => {
     const _url = query ? `${url}?${qs.encode(query)}` : url;
     const _opts = {
         method,
-        headers: {}
+        headers: {},
     };
 
-    if (body){
+    if (body) {
         const isJSON = Object.prototype.toString.call(body) === '[object Object]';
 
         assign(_opts, {
             headers: isJSON ? {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
             } : {},
-            body: isJSON ? JSON.stringify(body) : body
-        })
+            body: isJSON ? JSON.stringify(body) : body,
+        });
     }
 
     // Authorize Request
-    const authorizeRequest = (url) => {
+    const authorizeRequest = authURL => {
         const protectedEndpoints = [
             '/timeline',
             '/actions',
@@ -32,88 +32,86 @@ export const _fetch = ({ method, url, query, body }) => {
             '/share',
         ];
 
-        if (protectedEndpoints.some(endpoint => url.search(endpoint) >= 0)){
-            let token = localStorage.getItem('tokenList');
+        if (protectedEndpoints.some(endpoint => authURL.search(endpoint) >= 0)) {
+            const token = localStorage.getItem('tokenList');
             return { authorization: `Bearer ${token}` };
-        } else {
-            return {};
         }
+
+        return {};
     };
-    assign(_opts.headers, authorizeRequest(url))
+    assign(_opts.headers, authorizeRequest(url));
 
 
     return fetch(_url, _opts)
     .then(res => {
         // Check Status
-        if (res.status >= 200 && res.status < 300) {
-            return res;
-        } else {
-            let error = new Error(res.statusText)
-            error.res = res
-            throw error
-        }
+        if (res.status >= 200 && res.status < 300) return res;
+
+        const error = new Error(res.statusText);
+        error.res = res;
+        throw error;
     })
     .then(res => res.json())
     .catch(err => {
-        __DEV__ && console.error(err)
-        throw err
-    })
+        __DEV__ && console.error(err);
+        throw err;
+    });
 };
 export const Auth = {
     revoke: ({ provider }) => _fetch({
         method: 'DELETE',
-        url: `/auth/revoke/${provider}`
+        url: `/auth/revoke/${provider}`,
     }),
     deckard: ({ profileList }) => _fetch({
         method: 'POST',
         url: '/auth/replicant/deckard',
-        body: profileList && { profileList }
+        body: profileList && { profileList },
     }),
     rachael: ({ code }) => _fetch({
         method: 'GET',
         url: '/auth/replicant/rachael',
-        query: { code }
-    })
-}
+        query: { code },
+    }),
+};
 export const Timeline = {
     get: ({ id }) => _fetch({
         method: 'GET',
         url: '/timeline',
-        query: id && { id }
-    })
-}
+        query: id && { id },
+    }),
+};
 export const Action = {
     create: ({ action, provider, id }) => _fetch({
         method: 'PUT',
-        url: `/actions/${action}/${provider}/${id || 0}`
+        url: `/actions/${action}/${provider}/${id || 0}`,
     }),
     destroy: ({ action, provider, id }) => _fetch({
         method: 'DELETE',
-        url: `/actions/${action}/${provider}/${id || 0}`
+        url: `/actions/${action}/${provider}/${id || 0}`,
     }),
     update: ({ action, provider, id }, body) => _fetch({
         method: 'POST',
         url: `/actions/${action}/${provider}/${id || 0}`,
-        body
+        body,
     }),
     get: ({ action, provider, id }, query) => _fetch({
         method: 'GET',
         url: `/actions/${action}/${provider}/${id || 0}`,
-        query
-    })
-}
+        query,
+    }),
+};
 export const Media = {
     upload: ({ provider }, body) => _fetch({
         method: 'POST',
         url: `/upload/${provider}`,
-        body
-    })
-}
+        body,
+    }),
+};
 export const Share = {
     post: ({ provider, id }, body) => _fetch({
         method: 'POST',
         url: `/share/${provider}/${id}`,
-        body
-    })
-}
+        body,
+    }),
+};
 

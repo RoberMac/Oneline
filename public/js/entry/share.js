@@ -38,10 +38,10 @@ const DetailContainerWrapper = ({ provider, post, viewCount, sharers, children }
     </div>
 );
 const DetailContainer = props => {
-    const { provider, post, viewCount, sharers } = props;
+    const { provider, post } = props;
 
     let DetailComponents;
-    switch (provider){
+    switch (provider) {
         case 'twitter':
         case 'weibo':
             DetailComponents = (
@@ -77,25 +77,17 @@ const DetailContainer = props => {
                 </DetailContainerWrapper>
             );
             break;
+        default:
+            break;
     }
 
     return DetailComponents;
 };
 class Share extends React.Component {
-    constructor(props){
-        super(props)
-        this.state = ({ center: true })
-        this.checkDetailHeight = this.checkDetailHeight.bind(this)
-    }
-    checkDetailHeight() {
-        if (this.refs.detail.offsetHeight < window.innerHeight && !this.POST_WITH_MEDIA) {
-            this.setState({ center: true })
-        } else {
-            this.setState({ center: false })
-        }
-    }
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.state.center !== nextState.center;
+    constructor(props) {
+        super(props);
+        this.state = ({ center: true });
+        this.checkDetailHeight = this.checkDetailHeight.bind(this);
     }
     componentDidMount() {
         this.POST_WITH_MEDIA = (() => {
@@ -103,26 +95,36 @@ class Share extends React.Component {
             return data.media || (data.quote && data.quote.media);
         })();
 
-        this.checkDetailHeight()
+        this.checkDetailHeight();
         setInterval(() => {
-            this.checkDetailHeight()
-        }, 1000)
+            this.checkDetailHeight();
+        }, 1000);
 
-        // Auto Pause All Video 
+        // Auto Pause All Video
         window.addEventListener('blur', () => {
             const videos = document.getElementsByTagName('video');
 
             [].forEach.call(videos, video => {
-                video.pause()
+                video.pause();
             });
         });
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.state.center !== nextState.center;
+    }
+    checkDetailHeight() {
+        if (this.refs.detail.offsetHeight < window.innerHeight && !this.POST_WITH_MEDIA) {
+            this.setState({ center: true });
+        } else {
+            this.setState({ center: false });
+        }
     }
     render() {
         const { data, sharers, viewCount } = window.__share_data__;
         const { provider } = data;
         const wrapperClass = classNames({
-            'popup__wrapper': true,
-            'vertically_center': this.state.center
+            popup__wrapper: true,
+            vertically_center: this.state.center,
         });
 
         return (
@@ -135,7 +137,7 @@ class Share extends React.Component {
                                 post={rewriteMediaLink({
                                     type: 'post',
                                     provider,
-                                    data
+                                    data,
                                 })}
                             />
                             <DetailContainer
@@ -145,7 +147,7 @@ class Share extends React.Component {
                                 sharers={rewriteMediaLink({
                                     type: 'sharers',
                                     provider,
-                                    data: sharers
+                                    data: sharers,
                                 })}
                             />
                         </div>
@@ -154,7 +156,7 @@ class Share extends React.Component {
             </div>
         );
     }
-};
+}
 
 // Render
 ReactDOM.render(

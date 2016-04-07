@@ -13,7 +13,7 @@ import { UPDATE_BASE } from 'state/actions/base';
  */
 const MENTIONS_REGEX = {
     twitter: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
-    weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/
+    weibo: /(|\s)*@([\u4e00-\u9fa5\w-]*)$/,
 };
 // State Handing
 let MENTIONS = reduxStore.getState().base.get('MENTIONS');
@@ -23,61 +23,63 @@ reduxStore.subscribe(() => {
     if (type !== UPDATE_BASE) return;
 
     MENTIONS = base.get('MENTIONS');
-})
+});
 export const extractMentions = ({ status, provider }) => {
     const isTwitter = _isTwitter(provider);
     let mentionUser = status.match(MENTIONS_REGEX[provider]);
 
-    if (mentionUser){
+    if (mentionUser) {
         mentionUser = mentionUser[2].trim().toLowerCase();
         return (
             MENTIONS[provider]
             .filter(isTwitter
-                ? item => Object.keys(item).some(key => item[key].toLowerCase().indexOf(mentionUser) >= 0)
+                ? item => (
+                    Object.keys(item)
+                    .some(key => item[key].toLowerCase().indexOf(mentionUser) >= 0)
+                )
                 : item => item.toLowerCase().indexOf(mentionUser) >= 0
             )
             .slice(0, 100)
         );
-    } else {
-        return [];
     }
+
+    return [];
 };
 /**
  * UI
  *
  */
 export const isLeftPopup = () => {
-    let statusElem = document.querySelector('textarea');
-    let mirror = document.querySelector('.write__textarea span');
-    let _start = statusElem.selectionStart;
-    let _width = statusElem.offsetWidth - 10;
+    const statusElem = document.querySelector('textarea');
+    const mirror = document.querySelector('.write__textarea span');
+    const _start = statusElem.selectionStart;
+    const _width = statusElem.offsetWidth - 10;
 
-    mirror.innerHTML = statusElem.value.substr(0, _start).replace(/\n$/, '\n\u0001')
+    mirror.innerHTML = statusElem.value.substr(0, _start).replace(/\n$/, '\n\u0001');
 
-    let _rects = mirror.getClientRects();
-    let _lastRect = _rects[_rects.length - 1];
-    let _left = _lastRect.width;
+    const _rects = mirror.getClientRects();
+    const _lastRect = _rects[_rects.length - 1];
+    const _left = _lastRect.width;
 
     return _left > _width / 2;
-}
+};
 export const getCountInfo = ({ action, provider, status }) => {
-    const limitCount = action === 'quote' && _isTwitter(provider) ? 116 : 140;
-
-    let count, isOverLimitCount;
     // Count
-    if (_isWeibo(provider)){
-        let asciiLength = (status.match(/[\x00-\x7F]+/g) || []).join('').length;
-        let nonAsciiLength = status.length - asciiLength;
+    let count;
+    if (_isWeibo(provider)) {
+        const asciiLength = (status.match(/[\x00-\x7F]+/g) || []).join('').length;
+        const nonAsciiLength = status.length - asciiLength;
 
         count = nonAsciiLength + Math.round(asciiLength / 2);
     } else {
         count = status.length;
     }
     // isOverLimitCount
-    isOverLimitCount = count > limitCount ? true : false;
+    const limitCount = action === 'quote' && _isTwitter(provider) ? 116 : 140;
+    const isOverLimitCount = count > limitCount;
 
-    return { count, isOverLimitCount }
-}
+    return { count, isOverLimitCount };
+};
 /**
  * Status
  *
@@ -89,50 +91,51 @@ export const removeText = (regex) => {
     const _start_str = statusElem.value.slice(0, _start);
     const _end_str = statusElem.value.slice(_start);
 
-    statusElem.value = _start_str.replace(regex, '') + _end_str
+    statusElem.value = _start_str.replace(regex, '') + _end_str;
 
-    _start -= 1
-    statusElem.setSelectionRange(_start, _start)
+    _start -= 1;
+    statusElem.setSelectionRange(_start, _start);
 
-    if (statusElem.value.length === 1){
-        statusElem.value = ''
+    if (statusElem.value.length === 1) {
+        statusElem.value = '';
     }
-}
+};
 export const insertText = (text) => {
     const statusElem = document.querySelector('textarea');
     const _start = statusElem.selectionStart;
     const _end = statusElem.selectionEnd;
     const _after = _start + text.length;
 
-    if (_start || _start == '0') {
-        statusElem.value = statusElem.value.substring(0, _start)
+    if (_start || _start === '0') {
+        statusElem.value = (
+            statusElem.value.substring(0, _start)
             + text
-            + statusElem.value.substring(_end, statusElem.value.length);
+            + statusElem.value.substring(_end, statusElem.value.length)
+        );
     } else {
         statusElem.value += text;
     }
 
-    statusElem.setSelectionRange(_after, _after)
-}
+    statusElem.setSelectionRange(_after, _after);
+};
 export const submitWrite = (props) => {
     const { action, provider, id } = props;
-    const { status, mentions, geo, media, sensitive } = props;
+    const { status, geo, media, sensitive } = props;
     const post = props.location.state;
     const isTwitter = _isTwitter(provider);
-    const isWeibo   = _isWeibo(provider);
+    const isWeibo = _isWeibo(provider);
     // Init
-    let params = { status };
-    if (isTwitter){
-        const media_ids = media.length > 0 ? media.map(({ id }) => id) : undefined;
-        assign(params, { geo, sensitive, media_ids })
+    const params = { status };
+    if (isTwitter) {
+        const media_ids = media.length > 0 ? media.map(i => i.id) : undefined;
+        assign(params, { geo, sensitive, media_ids });
 
-        if (action === 'quote'){
-            params.status = `${status} https://twitter.com/${post.user.screen_name}/status/${id}`
+        if (action === 'quote') {
+            params.status = `${status} https://twitter.com/${post.user.screen_name}/status/${id}`;
         }
-    }
-    else if (isWeibo){
-        if (action === 'tweet'){
-            assign(params, { geo })
+    } else if (isWeibo) {
+        if (action === 'tweet') {
+            assign(params, { geo });
         }
     }
     // Fire
@@ -145,120 +148,120 @@ export const submitWrite = (props) => {
                     id_str: id,
                     retweeted: true,
                     retweet_count: post.retweet_count + 1,
-                    retweeted_id_str: res.id_str
-                }))
+                    retweeted_id_str: res.id_str,
+                }));
             }
-            resolve()
+            resolve();
         })
-        .catch(err => reject(err))
-    })
-}
+        .catch(err => reject(err));
+    });
+};
 export const draft = {
     get: ({ action, provider }) => store.get(`${action}_${provider}`),
     set: ({ action, provider, status }) => {
         if (action !== 'tweet') return;
 
-        store.set(`${action}_${provider}`, status)
+        store.set(`${action}_${provider}`, status);
     },
-    remove: ({ action, provider }) => store.remove(`${action}_${provider}`)
-}
-export const initStatus = ({ action, provider, id, location }) => {
+    remove: ({ action, provider }) => store.remove(`${action}_${provider}`),
+};
+export const initStatus = ({ action, provider, location }) => {
     const post = location.state;
     const statusElem = document.querySelector('textarea');
 
-    switch (action){
+    switch (action) {
         case 'tweet':
             statusElem.value = draft.get({ action, provider }) || '';
             break;
         case 'reply':
-            if (_isTwitter(provider)){
-                statusElem.value = (
+            if (_isTwitter(provider)) {
+                statusElem.value = `${(
                     [`@${post.user.screen_name}`] // Post Author
                     .concat(post.text.match(/(|\s)*@([\w]+)/g) || []) // Extract from post's text
                     .map(v => v.trim()) // Trim
-                    .filter((v, i, a) => a.indexOf(v) == i) // Remove Dups
+                    .filter((v, i, a) => a.indexOf(v) === i) // Remove Dups
                     .join(' ') // Concat
-                ) + ' ';
+                )} `;
             }
             break;
         case 'retweet':
-            if (_isWeibo(provider) && (post.retweet || post.quote)){
+            if (_isWeibo(provider) && (post.retweet || post.quote)) {
                 statusElem.value = `//@${post.user.screen_name}: ${post.text}`;
-                statusElem.setSelectionRange(0, 0)
+                statusElem.setSelectionRange(0, 0);
             }
             break;
+        default:
+            break;
     }
-}
+};
 /**
  * Media
  *
  */
-export const uploadMedia = ({ provider, file }) => {
-    return new Promise((resolve, reject) => {
-        // https://blog.gaya.ninja/articles/uploading-files-superagent-in-browser/
-        let fd = new FormData();
-        fd.append('twitterMedia', file)
-
-        Media.upload({ provider }, fd)
-        .then(res => {
-            const id = res.media_id;
-            resolve(id)
-        })
-        .catch(err => {
-            reject(err)
-        })
-
-    })
-}
-export const addImagePreview = ({ file }) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        const image  = new Image();
-
-        reader.onload = (e) => {
-            const previewURL = URL.createObjectURL(dataURLtoBlob(e.target.result));
-            image.src = previewURL
-            image.onload = () => {
-                const ratio = (image.height / image.width).toFixed(5);
-                resolve({ previewURL, ratio })
-            };
-        }
-
-        reader.readAsDataURL(file)
-    })
-}
 // via https://github.com/ebidel/filer.js/blob/master/src/filer.js#L137
 function dataURLtoBlob(dataURL) {
-    var BASE64_MARKER = ';base64,';
-    if (dataURL.indexOf(BASE64_MARKER) == -1) {
-        var parts = dataURL.split(',');
-        var contentType = parts[0].split(':')[1];
-        var raw = decodeURIComponent(parts[1]);
+    const BASE64_MARKER = ';base64,';
+    if (dataURL.indexOf(BASE64_MARKER) === -1) {
+        const parts = dataURL.split(',');
+        const contentType = parts[0].split(':')[1];
+        const raw = decodeURIComponent(parts[1]);
 
-        return new Blob([raw], {type: contentType});
+        return new Blob([raw], { type: contentType });
     }
 
-    var parts = dataURL.split(BASE64_MARKER);
-    var contentType = parts[0].split(':')[1];
-    var raw = window.atob(parts[1]);
-    var rawLength = raw.length;
+    const parts = dataURL.split(BASE64_MARKER);
+    const contentType = parts[0].split(':')[1];
+    const raw = window.atob(parts[1]);
+    const rawLength = raw.length;
 
-    var uInt8Array = new Uint8Array(rawLength);
+    const uInt8Array = new Uint8Array(rawLength);
 
-    for (var i = 0; i < rawLength; ++i) {
+    for (let i = 0; i < rawLength; ++i) {
         uInt8Array[i] = raw.charCodeAt(i);
     }
 
-    return new Blob([uInt8Array], {type: contentType});
+    return new Blob([uInt8Array], { type: contentType });
 }
+export const uploadMedia = ({ provider, file }) => new Promise((resolve, reject) => {
+    // https://blog.gaya.ninja/articles/uploading-files-superagent-in-browser/
+    const fd = new FormData();
+    fd.append('twitterMedia', file);
+
+    Media.upload({ provider }, fd)
+    .then(res => {
+        const id = res.media_id;
+        resolve(id);
+    })
+    .catch(err => {
+        reject(err);
+    });
+});
+export const addImagePreview = ({ file }) => new Promise((resolve) => {
+    const reader = new FileReader();
+    const image = new Image();
+
+    reader.onload = (e) => {
+        const previewURL = URL.createObjectURL(dataURLtoBlob(e.target.result));
+        image.src = previewURL;
+        image.onload = () => {
+            const ratio = (image.height / image.width).toFixed(5);
+            resolve({ previewURL, ratio });
+        };
+    };
+
+    reader.readAsDataURL(file);
+});
 /**
  * Live Preview
  *
  */
+const initLivePreviewMedia = ({ media }) => (
+    media.map(({ url, ratio }) => ({ type: 'photo', image_url: url, ratio }))
+);
 export const initLivePreview = ({ type, provider, status, media, livePreviewPost, post }) => {
     if (type === 'reply') return {};
 
-    let newLivePreviewPost = {};
+    const newLivePreviewPost = {};
 
     // Common (Outside Post)
     const { created_at, user } = livePreviewPost; // Restore from previous `livePreviewPost`
@@ -268,21 +271,19 @@ export const initLivePreview = ({ type, provider, status, media, livePreviewPost
         created_at: created_at || Date.now(),
         text: status,
         user: user || reduxStore.getState().base.get('PROFILE')[provider],
-        media: initLivePreviewMedia({ media, provider })
+        media: initLivePreviewMedia({ media }),
     });
     // Retweet / Quote (Inside Post)
-    switch (type){
+    switch (type) {
         case 'retweet':
         case 'quote':
             assign(newLivePreviewPost, {
-                [type]: _isWeibo(provider) && post[type] || post
+                [type]: _isWeibo(provider) && post[type] || post,
             });
+            break;
+        default:
             break;
     }
 
     return newLivePreviewPost;
-}
-function initLivePreviewMedia ({ media, provider }) {
-    return media.map(({ url, ratio }) => ({ type: 'photo', image_url: url, ratio }));
-}
-
+};

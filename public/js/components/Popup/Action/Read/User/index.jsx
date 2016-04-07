@@ -7,7 +7,7 @@ import Profile from './Profile';
 export default ({ provider, showingPosts, user }) => (
     <div>
         <Profile provider={provider} user={user} />
-        {showingPosts.map(item=> {
+        {showingPosts.map(item => {
             const isRetweet = item.type === 'retweet';
             const post = isRetweet ? item : assign(item, { avatarless: true });
             return (

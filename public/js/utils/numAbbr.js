@@ -1,13 +1,11 @@
 export default num => {
-    num = parseInt(num, 10)
+    const _num = parseInt(num, 10);
 
-    if (num >= 1000000) {
-        return `${Math.round(num / 1000000)}m`;
+    if (_num >= 1000000) {
+        return `${Math.round(_num / 1000000)}m`;
+    } else if (_num >= 10000) {
+        return `${Math.round(_num / 1000)}k`;
     }
-    else if (num >= 10000) {
-        return `${Math.round(num / 1000)}k`;
-    }
-    else {
-        return `${num}`;
-    }
-}
+
+    return `${_num}`;
+};

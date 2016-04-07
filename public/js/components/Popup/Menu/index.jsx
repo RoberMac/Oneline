@@ -9,18 +9,20 @@ import MenuRows from './MenuRows';
 const _SettingsMenu = ({ activeProviders }) => {
     let rowsData = [];
 
-    if (activeProviders.length > 0){
-        rowsData.push({ link: '/settings/replicant/deckard', iconName: 'menu_deckard' })
+    if (activeProviders.length > 0) {
+        rowsData.push({ link: '/settings/replicant/deckard', iconName: 'menu_deckard' });
     }
 
-    rowsData.push({ link: '/settings/replicant/rachael', iconName: 'menu_rachael' })
+    rowsData.push({ link: '/settings/replicant/rachael', iconName: 'menu_rachael' });
 
     return <MenuRows data={rowsData} />;
 };
 const _HomeMenu = ({ activeProviders }) => {
-    const rowsData = activeProviders.map(provider => {
-        return { provider, link: `/home/${provider}`, iconType: 'menu' };
-    });
+    const rowsData = activeProviders.map(provider => ({
+        provider,
+        link: `/home/${provider}`,
+        iconType: 'menu',
+    }));
 
     return <MenuRows data={rowsData} />;
 };
@@ -31,21 +33,21 @@ const _ProviderMenu = ({ params, PROFILE }) => {
     const ROW_TWEET = {
         provider,
         link: `/home/${provider}/tweet`,
-        iconName: 'menu_tweet'
+        iconName: 'menu_tweet',
     };
     const ROW_PROFILE = {
         provider,
         link: `/home/${provider}/user/${isUnsplash(provider) ? screen_name : uid}`,
-        iconName: 'menu_profile'
+        iconName: 'menu_profile',
     };
     const ROW_SEARCH = {
         provider,
         link: `/home/${provider}/search`,
-        iconName: 'menu_search'
+        iconName: 'menu_search',
     };
 
     let rowsData = [];
-    switch (provider){
+    switch (provider) {
         case 'twitter':
             rowsData.push(ROW_TWEET, ROW_PROFILE, ROW_SEARCH);
             break;
@@ -55,6 +57,8 @@ const _ProviderMenu = ({ params, PROFILE }) => {
         case 'instagram':
         case 'unsplash':
             rowsData.push(ROW_PROFILE, ROW_SEARCH);
+            break;
+        default:
             break;
     }
 

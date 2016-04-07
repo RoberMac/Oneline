@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route, IndexRoute, Redirect } from 'react-router';
+import { Route, IndexRoute, Redirect } from 'react-router';
 
 import redirectIfNot from './redirectIfNot';
 
@@ -11,7 +11,7 @@ import App from 'components/App';
 // Home & Settings
 import Home from 'components/Home';
 import Settings from 'components/Settings';
-import { LeftSidebar, RightSidebar } from 'components/Utils/SideBar'
+import { LeftSidebar, RightSidebar } from 'components/Utils/SideBar';
 const HomeComponents = { main: Home, leftSidebar: LeftSidebar, rightSidebar: RightSidebar };
 const SettingsComponents = { main: Settings, leftSidebar: LeftSidebar, rightSidebar: RightSidebar };
 // Popup
@@ -35,7 +35,11 @@ export default (
             </Route>
             <Route path=":provider" component={Popup} onEnter={redirectIfNot.VaildProvider}>
                 <IndexRoute component={ProviderMenu} />
-                <Route path=":action(/:id)" component={Action} onEnter={redirectIfNot.VaildAction} />
+                <Route
+                    path=":action(/:id)"
+                    component={Action}
+                    onEnter={redirectIfNot.VaildAction}
+                />
             </Route>
         </Route>
 
@@ -44,7 +48,7 @@ export default (
                 <IndexRoute component={SettingsMenu} />
                 <Route path="deckard" component={Deckard} />
                 <Route path="rachael" component={Rachael} />
-                <Redirect from="*" to="deckard"/>
+                <Redirect from="*" to="deckard" />
             </Route>
         </Route>
 

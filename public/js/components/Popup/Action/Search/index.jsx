@@ -13,19 +13,21 @@ import SearchPost from './SearchPost';
 // Export
 export default class Search extends React.Component {
     constructor(props) {
-        super(props)
-        this.state = { searchType: selectSearchType['remote'][props.provider][0].name, searchText: '' }
+        super(props);
+        this.state = {
+            searchType: selectSearchType.remote[props.provider][0].name, searchText: '',
+        };
         this.handleSearchChange = this.handleSearchChange.bind(this);
     }
-    handleSearchChange({ searchType, searchText}) {
+    handleSearchChange({ searchType, searchText }) {
         this.setState({
             searchType: searchType || this.state.searchType,
-            searchText
+            searchText,
         });
     }
     render() {
         const { provider } = this.props;
-        const { searchType, searchText } = this.state;
+        const { searchText } = this.state;
 
         return (
             <div className="search">

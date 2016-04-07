@@ -12,8 +12,8 @@ export default ({ provider, text, middlewares, className }) => {
     selectTextMiddlewares[provider]
     .concat(Array.isArray(middlewares) ? middlewares : [])
     .sort((a, b) => a.order < b.order ? -1 : 1)
-    .forEach( ({ middleware, opts }) => {
-        _text = Middlewares[middleware](_text, opts || {})
+    .forEach(({ middleware, opts }) => {
+        _text = Middlewares[middleware](_text, opts || {});
     });
 
     return (_text
@@ -24,4 +24,4 @@ export default ({ provider, text, middlewares, className }) => {
         />
         : <span />
     );
-}
+};

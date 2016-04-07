@@ -10,37 +10,37 @@ import { addToken, removeToken, clearTokenIfTokenExpired } from 'state/actions/a
 import Icon from 'components/Utils/Icon';
 import Transition from 'components/Utils/Transition';
 class SocialAuth extends React.Component {
-    constructor (props){
-        super(props)
-        this.toggleAuth = this.toggleAuth.bind(this)
-        this.handleStorageChange = this.handleStorageChange.bind(this)
-        this.handleSwipedLeft = this.handleSwipedLeft.bind(this)
-        this.handleSwipedRight = this.handleSwipedRight.bind(this)
+    constructor(props) {
+        super(props);
+        this.toggleAuth = this.toggleAuth.bind(this);
+        this.handleStorageChange = this.handleStorageChange.bind(this);
+        this.handleSwipedLeft = this.handleSwipedLeft.bind(this);
+        this.handleSwipedRight = this.handleSwipedRight.bind(this);
+    }
+    componentWillMount() {
+        this.props.clearTokenIfTokenExpired();
+    }
+    componentDidMount() {
+        window.addEventListener('storage', this.handleStorageChange);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('storage', this.handleStorageChange);
     }
     toggleAuth(provider) {
-        if (this.props.activeProviders.indexOf(provider) < 0){
-            window.open('/auth/' + provider, '_blank')
+        if (this.props.activeProviders.indexOf(provider) < 0) {
+            window.open(`/auth/${provider}`, '_blank');
         } else {
-            this.props.removeToken(provider)
+            this.props.removeToken(provider);
         }
     }
     handleStorageChange(e) {
-        if (e.key === 'addToken'){ this.props.addToken() };
+        if (e.key === 'addToken') this.props.addToken();
     }
     handleSwipedLeft() {
-        history.push('/home')
+        history.push('/home');
     }
     handleSwipedRight() {
-        history.push('/settings/replicant')
-    }
-    componentWillMount() {
-        this.props.clearTokenIfTokenExpired()
-    }
-    componentDidMount() {
-        window.addEventListener('storage', this.handleStorageChange)
-    }
-    componentWillUnmount() {
-        window.removeEventListener('storage', this.handleStorageChange)
+        history.push('/settings/replicant');
     }
     _renderAuthBtns() {
         const { providers, activeProviders } = this.props;
@@ -50,14 +50,14 @@ class SocialAuth extends React.Component {
             const soicalListClass = classNames('social-list', 'vertically_center');
             const soicalBtnClass = classNames({
                 'social-icon animate--faster tips': true,
-                'social-icon--active tips--active': isActive
+                'social-icon--active tips--active': isActive,
             });
 
             return (
                 <div className={soicalListClass} key={provider}>
                     <button
                         className={soicalBtnClass}
-                        onClick={this.toggleAuth.bind(null, provider)}
+                        onClick={() => this.toggleAuth(provider)}
                         type="button"
                     >
                         <Icon name={provider} />
@@ -87,7 +87,7 @@ class SocialAuth extends React.Component {
 export default connect(
     state => ({
         providers: state.auth.get('providers'),
-        activeProviders: state.auth.get('activeProviders')
+        activeProviders: state.auth.get('activeProviders'),
     }),
     { addToken, removeToken, clearTokenIfTokenExpired }
-)(SocialAuth)
+)(SocialAuth);

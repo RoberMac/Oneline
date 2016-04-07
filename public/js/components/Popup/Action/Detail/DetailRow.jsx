@@ -7,7 +7,10 @@ import TimeAgo from 'components/Utils/Post/Utils/TimeAgo';
 export default ({ provider, list }) => (
     <div>
     {list.map((item, index) => (
-        <li key={index} className={`detail__row vertically_center ${index === 0 ? 'detail__row--reply' : ''}`}>
+        <li
+            key={index}
+            className={`detail__row vertically_center ${index === 0 ? 'detail__row--reply' : ''}`}
+        >
             <UserLink
                 provider={provider}
                 screen_name={item.screen_name}

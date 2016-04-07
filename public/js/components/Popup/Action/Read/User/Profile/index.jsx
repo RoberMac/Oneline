@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 
 // Components
 import { Avatar } from 'components/Utils/Post/Utils/Avatar';

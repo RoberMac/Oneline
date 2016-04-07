@@ -15,17 +15,22 @@ export default class Index extends React.Component {
         const historyState = props.location.state;
         const restoreState = historyState && historyState.sharedLink ? historyState : null;
 
-        super(props)
+        super(props);
         this.state = restoreState || {
             post: {},
             sharedLink: '',
             sharedText: '',
             isFetching: false,
             isFetchFail: false,
-            isInitLoad: true
-        }
+            isInitLoad: true,
+        };
 
-        this.toggleSharedText = this.toggleSharedText.bind(this)
+        this.toggleSharedText = this.toggleSharedText.bind(this);
+    }
+    componentDidMount() {
+        if (this.state.isInitLoad) {
+            this.fetchSharedLink();
+        }
     }
     fetchSharedLink() {
         const { provider, id, location } = this.props;
@@ -33,14 +38,14 @@ export default class Index extends React.Component {
         const { isFetching } = this.state;
 
         if (isFetching) return;
-        this.setState({ isFetching: true, isFetchFail: false })
+        this.setState({ isFetching: true, isFetchFail: false });
 
         Share
         .post({ provider, id }, {
             post,
             sharer: reduxStore.getState().base.get('PROFILE')[provider],
         })
-        .then(res => {
+        .then(() => {
             // Update State
             const newState = {
                 post,
@@ -48,38 +53,30 @@ export default class Index extends React.Component {
                 sharedText: '',
                 isFetching: false,
                 isFetchFail: false,
-                isInitLoad: false
+                isInitLoad: false,
             };
-            this.setState(newState)
+            this.setState(newState);
             // Store State in History State
             const { history } = this.props;
             history.replace({
                 pathname: location.pathname,
                 search: location.search,
-                state: newState
-            })
+                state: newState,
+            });
         })
-        .catch(err => {
-            this.setState({ isFetching: false, isFetchFail: true })
-        })
+        .catch(() => {
+            this.setState({ isFetching: false, isFetchFail: true });
+        });
     }
     toggleSharedText() {
         const { post, sharedText: preSharedText } = this.state;
         const { user: { screen_name } } = post;
         const text = post.text || '';
+        const summary = (text.length > 17 ? `${text.slice(0, 17)}…` : text);
 
         this.setState({
-            sharedText: (
-                preSharedText
-                    ? ''
-                : `｜ @${screen_name}: ` + (text.length > 17 ? `${text.slice(0, 17)}…` : text)
-            )
-        })
-    }
-    componentDidMount() {
-        if (this.state.isInitLoad) {
-            this.fetchSharedLink()
-        }
+            sharedText: preSharedText ? '' : `｜ @${screen_name}: ${summary}`,
+        });
     }
     render() {
         const { provider } = this.props;

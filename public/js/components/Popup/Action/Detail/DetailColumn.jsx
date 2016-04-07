@@ -7,10 +7,10 @@ export default ({ type, provider, list, children }) => {
     const _list = list || [];
     const listLength = _list.length;
     const columnClass = classNames({
-        'detail__column': true,
+        detail__column: true,
         [`detail__column--${type}`]: type,
-        ['detail__column--empty']: listLength <= 0
-    })
+        ['detail__column--empty']: listLength <= 0,
+    });
     return (
         <div className={columnClass}>
             <div className="overflow--x">

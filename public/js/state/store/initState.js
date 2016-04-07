@@ -6,7 +6,7 @@ import { getActiveProviders } from 'utils/tokenHelper';
 export const initAuthState = () => {
     return Map({
         providers: ['twitter', 'instagram', 'weibo', 'unsplash'],
-        activeProviders: getActiveProviders()
+        activeProviders: getActiveProviders(),
     });
 };
 export const initTimelineState = () => {
@@ -33,10 +33,10 @@ export const initTimelineState = () => {
             maxId: {},
             maxDate: {},
             minId: {},
-            minDate: {}
+            minDate: {},
         }),
         timePointer,
-        timeRange
+        timeRange,
     });
 };
 export const initBaseState = () => {
@@ -45,7 +45,7 @@ export const initBaseState = () => {
         BLOCKED: !!window.__is_blocked__,
         SAFARI: /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent),
         EMOTIONS: {
-            weibo: store.get('weiboEmotions')
+            weibo: store.get('weiboEmotions'),
         },
         MENTIONS: {
             // twitter,
@@ -56,6 +56,6 @@ export const initBaseState = () => {
             // twitter,
             // instagram,
             // weibo
-        }
+        },
     });
 };

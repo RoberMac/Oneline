@@ -2,15 +2,15 @@ import React from 'react';
 
 export default class MediaPreview extends React.Component {
     constructor(props) {
-        super(props)
-        this.removeMedia = this.removeMedia.bind(this)
+        super(props);
+        this.removeMedia = this.removeMedia.bind(this);
     }
     removeMedia(index) {
         const { media, onChange } = this.props;
 
         onChange({
-            media: [...media.slice(0, index), ...media.slice(index + 1)]
-        })
+            media: [...media.slice(0, index), ...media.slice(index + 1)],
+        });
     }
     render() {
         const { media } = this.props;
@@ -21,7 +21,7 @@ export default class MediaPreview extends React.Component {
                     <span
                         className="write__mediaPreview__item animate--faster"
                         key={url}
-                        onClick={this.removeMedia.bind(null, index)}
+                        onClick={() => this.removeMedia(index)}
                     >
                         <img src={url} />
                     </span>

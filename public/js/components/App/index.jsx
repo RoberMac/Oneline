@@ -9,15 +9,15 @@ export default ({ location: { pathname }, main, leftSidebar, rightSidebar }) => 
     const homePage = isHomePage(pathname);
     const mainClass = classNames({
         'oneline oneline--enter animate--general': true,
-        'oneline--timeline': homePage
+        'oneline--timeline': homePage,
     });
     const leftSidebarClass = classNames({
         'sidebar sidebar--left vertically_center animate--faster': true,
-        'sidebar--timeline sidebar--timeline--left': homePage
+        'sidebar--timeline sidebar--timeline--left': homePage,
     });
     const rightSidebarClass = classNames({
         'sidebar sidebar--right vertically_center animate--faster': true,
-        'sidebar--timeline sidebar--timeline--right': homePage 
+        'sidebar--timeline sidebar--timeline--right': homePage,
     });
 
     return (

@@ -11,7 +11,7 @@ import Icon from 'components/Utils/Icon';
 // Export
 export default class Submit extends React.Component {
     componentWillReceiveProps() {
-        addClassTemporarily(this.refs.btn, 'write__btn--send--typing', 700)
+        addClassTemporarily(this.refs.btn, 'write__btn--send--typing', 700);
     }
     render() {
         const { action, provider, status, submitting, onClick } = this.props;
@@ -19,7 +19,7 @@ export default class Submit extends React.Component {
         const btnClass = classNames({
             'write__btn write__btn--send tips': true,
             [`color--${provider}`]: true,
-            'write__btn--send--sending': submitting
+            'write__btn--send--sending': submitting,
         });
         return (
             <button

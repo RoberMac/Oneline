@@ -9,19 +9,30 @@ const initSearchState = fromJS({
     isFetching: false,
     isFetchFail: false,
     isInitLoad: true,
-    minId: ''
+    minId: '',
 });
 
 // Components
-import ReRender from 'components/Utils/HoCs/ReRender';
+import rerender from 'components/Utils/HoCs/rerender';
 import Spin from 'components/Utils/Spin';
 import Post from 'components/Utils/Post';
 
 class SearchPost extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = { postsState: initSearchState };
-        this.fetchPosts = this.fetchPosts.bind(this)
+        this.fetchPosts = this.fetchPosts.bind(this);
+    }
+    componentDidMount() {
+        this.fetchPosts();
+    }
+    componentDidUpdate(prevProps) {
+        const { searchText: prevText } = prevProps;
+        const { searchText: currentText } = this.props;
+
+        if (prevText !== currentText) {
+            this.setState(() => ({ postsState: initSearchState }), () => this.fetchPosts());
+        }
     }
     fetchPosts() {
         const { provider, searchText } = this.props;
@@ -30,13 +41,13 @@ class SearchPost extends React.Component {
         const nextPageId = selectNextPageId[provider]({
             minId,
             postsSize: postsState.get('showingPosts').size,
-            action: 'search'
+            action: 'search',
         });
 
         if (postsState.get('isFetching') || !searchText) return;
         this.setState(({ postsState }) => ({
-            postsState: postsState.set('isFetching', true).set('isFetchFail', false)
-        }))
+            postsState: postsState.set('isFetching', true).set('isFetchFail', false),
+        }));
 
         Action
         .get({
@@ -55,26 +66,15 @@ class SearchPost extends React.Component {
                     .update('showingPosts', list => list.concat(posts))
                     .set('isFetching', false)
                     .set('isInitLoad', false)
-                    .set('minId', lastPost && lastPost.id_str)
-                })
-            }))
+                    .set('minId', lastPost && lastPost.id_str);
+                }),
+            }));
         })
-        .catch(err => {
+        .catch(() => {
             this.setState(({ postsState }) => ({
-                postsState: postsState.set('isFetching', false).set('isFetchFail', true)
-            }))
-        })
-    }
-    componentDidUpdate(prevProps, prevState) {
-        const { searchText: prevText } = prevProps;
-        const { searchText: currentText } = this.props;
-
-        if (prevText !== currentText) {
-            this.setState(() => ({ postsState: initSearchState }), () => this.fetchPosts())
-        }
-    }
-    componentDidMount() {
-        this.fetchPosts()
+                postsState: postsState.set('isFetching', false).set('isFetchFail', true),
+            }));
+        });
     }
     render() {
         const { provider, searchText } = this.props;
@@ -87,7 +87,12 @@ class SearchPost extends React.Component {
         return (
             <div>
                 {showingPosts.map(item => (
-                    <Post className="popupPost" key={item.id_str} post={item} highlight={searchText} />
+                    <Post
+                        className="popupPost"
+                        key={item.id_str}
+                        post={item}
+                        highlight={searchText}
+                    />
                 ))}
                 {(isFetching || showingPosts.size >= 7) && (
                     <Spin
@@ -106,4 +111,4 @@ class SearchPost extends React.Component {
 SearchPost.displayName = 'SearchPost';
 
 // Export
-export default ReRender(SearchPost);
+export default rerender(SearchPost);

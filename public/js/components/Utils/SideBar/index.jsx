@@ -40,7 +40,7 @@ const _RightSidebar = ({ activeProviders, location: { pathname } }) => (
 // Exports
 export const LeftSidebar = connect(
     state => ({ activeProviders: state.auth.get('activeProviders') })
-)(_LeftSidebar)
+)(_LeftSidebar);
 export const RightSidebar = connect(
     state => ({ activeProviders: state.auth.get('activeProviders') })
-)(_RightSidebar)
+)(_RightSidebar);

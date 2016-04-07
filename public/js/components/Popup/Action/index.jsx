@@ -11,7 +11,7 @@ export const Action = props => {
     const { action } = props.params;
 
     let SelectAction;
-    switch (action){
+    switch (action) {
         case 'user':
         case 'locations':
         case 'tags':
@@ -32,6 +32,8 @@ export const Action = props => {
         case 'search':
             SelectAction = Search;
             break;
+        default:
+            break;
     }
 
     return (
@@ -41,4 +43,4 @@ export const Action = props => {
             {...props.params} // provider, action, id
         />
     );
-}
+};

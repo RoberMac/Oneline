@@ -18,7 +18,7 @@ export default ({ data }) => (
         const btnClass = classNames({
             'menu--row menu__btn btn tips animate--faster': true,
             [`menu--row-${rowNum}-${index + 1}`]: true,
-            [`color--${provider}`]: provider
+            [`color--${provider}`]: provider,
         });
         const providerColor = selectProviderColor[provider];
         const activeColor = '#000';
@@ -29,7 +29,11 @@ export default ({ data }) => (
                     {iconType === 'menu'
                         ? <MenuIcon
                             oColor={providerColor}
-                            tColor={provider !== 'instagram' && provider !== 'unsplash' && activeColor}
+                            tColor={
+                                provider !== 'instagram'
+                                && provider !== 'unsplash'
+                                && activeColor
+                            }
                             cColor={activeColor}
                             rColor={provider !== 'weibo' && activeColor}
                         />

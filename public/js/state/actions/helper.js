@@ -10,28 +10,29 @@ import { updateBase } from 'state/actions/base';
 const arrayUnique = {
     // via http://jszen.com/best-way-to-get-unique-values-of-an-array-in-javascript.7.html
     literal: (a) => {
-        var n = {},r=[];
-        for(var i = 0; i < a.length; i++) 
-        {
-            if (!n[a[i]]) 
-            {
-                n[a[i]] = true; 
-                r.push(a[i]); 
+        const n = {};
+        const r = [];
+        for (let i = 0; i < a.length; i++) {
+            if (!n[a[i]]) {
+                n[a[i]] = true;
+                r.push(a[i]);
             }
         }
         return r;
     },
     object: (a) => {
-        var flags = [], output = [], l = a.length, i;
-        for (i = 0; i < l; i++) {
-            if(flags[a[i].s]) continue;
+        const flags = [];
+        const output = [];
+        const l = a.length;
+        for (let i = 0; i < l; i++) {
+            if (flags[a[i].s]) continue;
 
             flags[a[i].s] = true;
 
             output.push(a[i]);
         }
         return output;
-    }
+    },
 };
 
 // Exports
@@ -44,37 +45,41 @@ export const determineFetchFrom = ({
     newPosts,
     allPosts,
     timePointer,
-    timeRange
+    timeRange,
 }) => {
-
-    return new Promise((resolve, reject) => {
-        let fetchFrom, invalidProviders;
+    return new Promise(resolve => {
+        let fetchFrom;
+        let invalidProviders;
+        let hasNewPostsInLocal;
+        let isFetchFromLocal;
 
         switch (postsType) {
             case 'newPosts':
-                const hasNewPostsInLocal = newPosts.get('unreadCount') > 0;
-                const isFetchFromLocal = hasNewPostsInLocal && !isAutoFetch;
+                hasNewPostsInLocal = newPosts.get('unreadCount') > 0;
+                isFetchFromLocal = hasNewPostsInLocal && !isAutoFetch;
 
                 fetchFrom = isFetchFromLocal ? 'local' : 'remote';
                 invalidProviders = isFetchFromLocal ? [] : activeProviders;
                 break;
             case 'oldPosts':
                 invalidProviders = activeProviders.filter(provider => {
-                    if (provider === 'unsplash') return;
+                    if (provider === 'unsplash') return false;
 
                     const minDate = allPosts.get('minDate')[provider];
                     return timePointer - minDate < timeRange;
                 });
                 fetchFrom = invalidProviders.length <= 0 ? 'local' : 'remote';
                 break;
+            default:
+                break;
         }
 
         resolve({ fetchFrom, invalidProviders });
-    })
-}
+    });
+};
 
 export const fetchFromLocal = ({ postsType, showingPosts, allPosts, timePointer, timeRange }) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         const isFetchNewPosts = postsType === 'newPosts';
         const { newUnreadCount, newShowingPosts, newTimePointer } = (
             isFetchNewPosts
@@ -87,12 +92,12 @@ export const fetchFromLocal = ({ postsType, showingPosts, allPosts, timePointer,
             unreadCount: newUnreadCount,
             showingPosts: newShowingPosts,
             allPosts,
-            timePointer: newTimePointer
-        })
+            timePointer: newTimePointer,
+        });
 
-        isFetchNewPosts ? setTitleUnreadCount(newUnreadCount) : null
-    })
-}
+        isFetchNewPosts && setTitleUnreadCount(newUnreadCount);
+    });
+};
 
 export const fetchFromRemote = ({
     postsType,
@@ -105,27 +110,28 @@ export const fetchFromRemote = ({
     showingPosts,
     allPosts,
     timePointer,
-    timeRange
+    timeRange,
 }) => {
-
     return new Promise((resolve, reject) => {
         const unreadCount = newPosts.get('unreadCount');
         const isFetchNewPosts = postsType === 'newPosts';
 
         Timeline
-        .get({ id: isInitLoad ? null : getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) })
+        .get({
+            id: isInitLoad ? null : getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }),
+        })
         .then(res => {
             const newRemotePosts = res.data;
 
             // Reject for Wrong Response
             if (!newRemotePosts) {
-                reject(new Error('[FetchFail]: WTF Responses?'))
+                reject(new Error('[FetchFail]: WTF Responses?'));
                 return;
             } else if (newRemotePosts && newRemotePosts.length <= 0) {
-                if (!isFetchNewPosts){
-                    reject(new Error('[FetchFail]: No More Posts'))
+                if (!isFetchNewPosts) {
+                    reject(new Error('[FetchFail]: No More Posts'));
                 } else {
-                    resolve({ postsType, unreadCount, showingPosts, allPosts, timePointer })
+                    resolve({ postsType, unreadCount, showingPosts, allPosts, timePointer });
                 }
                 return;
             }
@@ -141,26 +147,26 @@ export const fetchFromRemote = ({
                     .get('posts')
                     .concat(newRemotePosts)
                     .filter(i => i.created_at > lastWeekMs)
-                ))
+                ));
 
-                maxId ? map.set('maxId', assign(allPosts.get('maxId'), maxId)) : null
-                maxDate ? map.set('maxDate', assign(allPosts.get('maxDate'), maxDate)) : null
-                minId ? map.set('minId', assign(allPosts.get('minId'), minId)) : null
-                minDate ? map.set('minDate', assign(allPosts.get('minDate'), minDate)) : null
+                maxId && map.set('maxId', assign(allPosts.get('maxId'), maxId));
+                maxDate && map.set('maxDate', assign(allPosts.get('maxDate'), maxDate));
+                minId && map.set('minId', assign(allPosts.get('minId'), minId));
+                minDate && map.set('minDate', assign(allPosts.get('minDate'), minDate));
             });
 
             // Store and dispatch
-            if (isAutoFetch){
+            if (isAutoFetch) {
                 const newUnreadCount = unreadCount + newRemotePosts.length;
                 resolve({
                     postsType,
                     unreadCount: newUnreadCount,
                     showingPosts,
                     allPosts: newAllPosts,
-                    timePointer
-                })
+                    timePointer,
+                });
 
-                setTitleUnreadCount(newUnreadCount)
+                setTitleUnreadCount(newUnreadCount);
             } else {
                 const { newUnreadCount, newShowingPosts, newTimePointer } = isFetchNewPosts
                     ? extractFreshPosts({ allPosts: newAllPosts, timeRange })
@@ -171,20 +177,20 @@ export const fetchFromRemote = ({
                     unreadCount: newUnreadCount,
                     showingPosts: newShowingPosts,
                     allPosts: newAllPosts,
-                    timePointer: newTimePointer
-                })
+                    timePointer: newTimePointer,
+                });
 
-                isFetchNewPosts ? setTitleUnreadCount(newUnreadCount) : null
+                isFetchNewPosts && setTitleUnreadCount(newUnreadCount);
             }
 
             // Always record mentions in posts
-            recordMentions({ providers: invalidProviders, posts: newRemotePosts })
+            recordMentions({ providers: invalidProviders, posts: newRemotePosts });
         })
         .catch(err => {
-            reject(err)
-        })
-    })
-}
+            reject(err);
+        });
+    });
+};
 
 
 // 提取最新 30 分鐘內的貼文
@@ -205,16 +211,17 @@ function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
     let isEmpty = true;
     let newShowingPosts = [];
     let newTimePointer = timePointer;
-    while (isEmpty){
-        newShowingPosts = posts.filter(post => {
-            const timeDiff = newTimePointer - post.created_at;
+    const extractPosts = post => {
+        const timeDiff = newTimePointer - post.created_at;
 
-            return 0 < timeDiff && timeDiff <= timeRange;
-        });
+        return timeDiff > 0 && timeDiff <= timeRange;
+    };
+    while (isEmpty) {
+        newShowingPosts = posts.filter(extractPosts);
 
         newTimePointer -= timeRange;
 
-        if (newShowingPosts.length > 0 || newTimePointer < lastWeekMs){
+        if (newShowingPosts.length > 0 || newTimePointer < lastWeekMs) {
             isEmpty = false;
         }
     }
@@ -229,12 +236,12 @@ function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
     return {
         newUnreadCount: 0,
         newShowingPosts,
-        newTimePointer
+        newTimePointer,
     };
 }
 // 向後端獲取貼文的查詢字段
 function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
-    let [typeForLocal, typeForRemote] = isFetchNewPosts ? ['maxId', 'minId'] : ['minId', 'maxId'];
+    const [typeForLocal, typeForRemote] = isFetchNewPosts ? ['maxId', 'minId'] : ['minId', 'maxId'];
     let queryIdStr = '';
 
     invalidProviders.forEach((provider, index) => {
@@ -251,44 +258,44 @@ function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
 // 標題未讀數提醒
 function setTitleUnreadCount(count) {
     const N_MAP = {
-        '0': '⁰',
-        '1': '¹',
-        '2': '²',
-        '3': '³',
-        '4': '⁴',
-        '5': '⁵',
-        '6': '⁶',
-        '7': '⁷',
-        '8': '⁸',
-        '9': '⁹'
+        0: '⁰',
+        1: '¹',
+        2: '²',
+        3: '³',
+        4: '⁴',
+        5: '⁵',
+        6: '⁶',
+        7: '⁷',
+        8: '⁸',
+        9: '⁹',
     };
     let count_str = '';
 
-    if (count > 0 && count % 1 === 0){
-        let _count = (~~count).toString().split('');
+    if (count > 0 && count % 1 === 0) {
+        const _count = (~~count).toString().split('');
 
-        _count.forEach(function (numStr){
-            count_str += N_MAP[numStr]
-        })
+        _count.forEach(numStr => {
+            count_str += N_MAP[numStr];
+        });
     }
 
-    document.title = '｜'+ count_str;
+    document.title = `｜${count_str}`;
 }
 // 紀錄時間線上出現的「提及」用戶
 function recordMentions({ providers, posts }) {
-    __DEV__ && console.time('[recordMentions]')
+    __DEV__ && console.time('[recordMentions]');
 
     const MAX_COUNT_L1 = 2000;
     const MAX_COUNT_L2 = 3000;
     const mentionRegex = {
         twitter: /(|\s)*@([\w]+)/g,
-        weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g
+        weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g,
     };
 
     // Init
-    let mentionsList = {};
+    const mentionsList = {};
     providers.forEach(provider => {
-        mentionsList[provider] = store.get(`mentions_${provider}`) || []
+        mentionsList[provider] = store.get(`mentions_${provider}`) || [];
     });
     // Extract
     posts.forEach(({ provider, text, user }) => {
@@ -299,62 +306,65 @@ function recordMentions({ providers, posts }) {
 
         // Extract from post's text
         let textMentions = text.match(mentionRegex[provider]); // TODO: Extract `quote` posts
-        if (textMentions){
+        if (textMentions) {
             // Trim
-            textMentions = textMentions.map(i => i.trim())
+            textMentions = textMentions.map(i => i.trim());
 
             if (isTwitter) {
-                textMentions = textMentions.map( i => ({ 's': i }) )
-            };
+                textMentions = textMentions.map(i => ({ s: i }));
+            }
 
             // Limit max count (Level 1: remove twitter text mentions)
-            if (mentionsList[provider].length >= MAX_COUNT_L1){
+            if (mentionsList[provider].length >= MAX_COUNT_L1) {
                 let _len = textMentions.length;
 
-                if (isTwitter){
+                if (isTwitter) {
                     mentionsList[provider] = mentionsList[provider].filter(item => {
                         if (!item.hasOwnProperty('u') && _len > 0) {
-                            _len --
+                            _len --;
                             return false;
-                        } else {
-                            return true;
                         }
-                    })
+                        return true;
+                    });
                 } else {
-                    mentionsList[provider].splice(0, _len) 
+                    mentionsList[provider].splice(0, _len);
                 }
             }
 
-            mentionsList[provider] = mentionsList[provider].concat(textMentions)
+            mentionsList[provider] = mentionsList[provider].concat(textMentions);
         }
 
         // Extract from post's author
-        let authorMention = user;
+        const authorMention = user;
         mentionsList[provider].push(
             isTwitter
-                ? { 's': `@${authorMention.screen_name}`, 'u': authorMention.name }
+                ? { s: `@${authorMention.screen_name}`, u: authorMention.name }
             : isWeibo
                 ? `@${authorMention.screen_name}`
             : null
-        )
-    })
+        );
+    });
 
     // Store
-    let MENTIONS = {};
+    const MENTIONS = {};
     providers.forEach(provider => {
         // Remove Dups
-        mentionsList[provider] = arrayUnique[_isTwitter(provider) ? 'object' : 'literal'](mentionsList[provider]);
+        mentionsList[provider] = (
+            arrayUnique[_isTwitter(provider)
+                ? 'object'
+            : 'literal'](mentionsList[provider])
+        );
 
         // Limit max count (Level 2: remove old items)
-        if (mentionsList[provider].length >= MAX_COUNT_L2){
-            let _len = mentionsList[provider].length - MAX_COUNT_L2;
-            mentionsList[provider].splice(0, _len) 
+        if (mentionsList[provider].length >= MAX_COUNT_L2) {
+            const _len = mentionsList[provider].length - MAX_COUNT_L2;
+            mentionsList[provider].splice(0, _len);
         }
 
-        store.set('mentions_' + provider, mentionsList[provider])
-        MENTIONS[provider] = mentionsList[provider]
-    })
+        store.set(`mentions_${provider}`, mentionsList[provider]);
+        MENTIONS[provider] = mentionsList[provider];
+    });
     reduxStore.dispatch(updateBase({ MENTIONS }));
 
-    __DEV__ && console.timeEnd('[recordMentions]')
+    __DEV__ && console.timeEnd('[recordMentions]');
 }

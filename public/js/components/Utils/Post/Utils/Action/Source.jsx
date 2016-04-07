@@ -10,7 +10,7 @@ import Icon from 'components/Utils/Icon';
 
 export default (props) => (
     <a
-        href={selectSourceLink[props.provider]({...props})}
+        href={selectSourceLink[props.provider]({ ...props })}
         target="_blank"
         role="button"
         className={!isActive({...props}) ? 'tips--inactive' : ''}

@@ -3,7 +3,7 @@ import { decodeToken, isTokenExpired } from 'utils/jwtHelper';
 
 // Helpers
 const _removeToken = (tokenList, provider) => {
-    return tokenList.filter(token => provider !== decodeToken(token).provider)
+    return tokenList.filter(token => provider !== decodeToken(token).provider);
 };
 const getTokenList = () => {
     const isArray = target => Object.prototype.toString.call(target) === '[object Array]';
@@ -15,57 +15,55 @@ const getTokenList = () => {
 };
 
 // Export
+export const getActiveProviders = () => getTokenList().map(token => decodeToken(token).provider);
 export const addToken = () => {
-    let newToken  = store.get('addToken');
-    let provider  = decodeToken(newToken).provider;
+    const newToken = store.get('addToken');
+    const provider = decodeToken(newToken).provider;
     let tokenList = getTokenList();
 
     // Remove Dups Token
-    tokenList = _removeToken(tokenList, provider)
+    tokenList = _removeToken(tokenList, provider);
     // Add Token
-    tokenList.push(newToken)
-    store.set('tokenList', tokenList)
-    store.remove('addToken')
+    tokenList.push(newToken);
+    store.set('tokenList', tokenList);
+    store.remove('addToken');
 
     return {
         activeProviders: getActiveProviders(),
-        tokenList
+        tokenList,
     };
-}
+};
 export const removeToken = provider => {
     let tokenList = getTokenList();
 
-    tokenList = _removeToken(tokenList, provider)
+    tokenList = _removeToken(tokenList, provider);
 
-    store.set('tokenList', tokenList)
+    store.set('tokenList', tokenList);
 
     return {
         activeProviders: getActiveProviders(),
-        tokenList
+        tokenList,
     };
-}
+};
 export const replaceTokenList = tokenList => {
-    store.set('tokenList', tokenList)
+    store.set('tokenList', tokenList);
 
     return {
         activeProviders: getActiveProviders(),
-        tokenList: getTokenList()
+        tokenList: getTokenList(),
     };
-}
+};
 export const clearTokenList = () => {
-    store.set('tokenList', [])
+    store.set('tokenList', []);
 
     return {
         activeProviders: [],
-        tokenList: []
-    }
-}
+        tokenList: [],
+    };
+};
 export const isValidToken = () => {
-    let tokenList = getTokenList();
+    const tokenList = getTokenList();
 
     return (tokenList.length > 0) && tokenList.every(token => !isTokenExpired(token));
-}
-export const getActiveProviders = () => getTokenList().map(token => decodeToken(token).provider);
-
-
+};
 

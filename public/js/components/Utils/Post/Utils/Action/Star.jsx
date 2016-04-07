@@ -9,33 +9,33 @@ import { addClassTemporarily } from 'utils/dom';
 import Icon from 'components/Utils/Icon';
 export default class Star extends React.Component {
     constructor(props) {
-        super(props)
-        this.state = { inprocess: false, stared: props.stared }
-        this.toggleStar = this.toggleStar.bind(this)
+        super(props);
+        this.state = { inprocess: false, stared: props.stared };
+        this.toggleStar = this.toggleStar.bind(this);
     }
     toggleStar() {
         const { inprocess, stared } = this.state;
         const { provider, id } = this.props;
 
         if (inprocess) return;
-        this.setState({ inprocess: true })
+        this.setState({ inprocess: true });
 
         Action[stared ? 'destroy' : 'create']({
             action: 'star',
             provider,
-            id
+            id,
         })
         .then(() => {
             reduxStore.dispatch(updatePost({
                 id_str: id,
-                stared: !stared
-            }))
-            this.setState({ inprocess: false, stared: !stared })
+                stared: !stared,
+            }));
+            this.setState({ inprocess: false, stared: !stared });
         })
-        .catch(err => {
-            addClassTemporarily(this.refs.btn, 'tips--error', 500)
-            this.setState({ inprocess: false })
-        })
+        .catch(() => {
+            addClassTemporarily(this.refs.btn, 'tips--error', 500);
+            this.setState({ inprocess: false });
+        });
     }
     render() {
         const { inprocess, stared } = this.state;
@@ -43,11 +43,11 @@ export default class Star extends React.Component {
             'post-action__btn tips--deep': true,
             'color--star tips--active': stared,
             'color--steel': !stared,
-            'tips--inactive': !this.props.id
+            'tips--inactive': !this.props.id,
         });
         const iconClass = classNames({
             'post-action__icon': true,
-            'animate--star': inprocess
+            'animate--star': inprocess,
         });
         return (
             <button className={btnClass} type="button" onClick={this.toggleStar} ref="btn">

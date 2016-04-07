@@ -27,7 +27,11 @@ export default ({ post, highlight }) => (
                     provider="weibo"
                     text={post.quote.text}
                     middlewares={[
-                        { order: 5, middleware: 'highlight', opts: { provider: 'weibo', highlight } },
+                        {
+                            order: 5,
+                            middleware: 'highlight',
+                            opts: { provider: 'weibo', highlight },
+                        },
                     ]}
                 />
 

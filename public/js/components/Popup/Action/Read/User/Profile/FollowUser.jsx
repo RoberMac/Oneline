@@ -8,36 +8,36 @@ import { isTwitter } from 'utils/detect';
 import Icon from 'components/Utils/Icon';
 class FollowBtn extends React.Component {
     constructor(props) {
-        super(props)
-        this.state = { inprocess: false, following: props.following }
-        this.handleClick = this.handleClick.bind(this)
+        super(props);
+        this.state = { inprocess: false, following: props.following };
+        this.handleClick = this.handleClick.bind(this);
     }
     handleClick() {
         const { inprocess, following } = this.state;
         const { uid, provider } = this.props;
 
         if (inprocess) return;
-        this.setState({ inprocess: true })
+        this.setState({ inprocess: true });
 
         Action[following ? 'destroy' : 'create']({
+            provider,
             action: 'follow',
-            provider: provider,
-            id: uid
+            id: uid,
         })
         .then(() => {
-            this.setState({ inprocess: false, following: !following })
+            this.setState({ inprocess: false, following: !following });
         })
-        .catch(err => {
-            addClassTemporarily(this.refs.btn, 'tips--error', 500)
-            this.setState({ inprocess: false })
-        })
+        .catch(() => {
+            addClassTemporarily(this.refs.btn, 'tips--error', 500);
+            this.setState({ inprocess: false });
+        });
     }
     render() {
         const { inprocess, following } = this.state;
         const btnClass = classNames({
             'profile__following tips--deep': true,
             'color--twitter tips--active': following,
-            'tips--inprocess': inprocess
+            'tips--inprocess': inprocess,
         });
         return (
             <button

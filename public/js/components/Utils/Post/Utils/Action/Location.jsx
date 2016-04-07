@@ -11,12 +11,12 @@ const selectLink = (
     : {
         twitter: ({ id, name }) => `/home/twitter/locations/${id}?name=${name}`,
         instagram: ({ id, name }) => `/home/instagram/locations/${id}?name=${name}`,
-        weibo: ({ id, name, place_id  }) => (
+        weibo: ({ id, name, place_id }) => (
             name
                 ? `/home/weibo/locations/${id}?name=${name}&place_id=${place_id}`
             : `/home/weibo/locations/${id}`
         ),
-        unsplash: ({ name }) => `//maps.google.com/maps?z=12&t=h&q=${name}`
+        unsplash: ({ name }) => `//maps.google.com/maps?z=12&t=h&q=${name}`,
     }
 );
 
@@ -31,7 +31,7 @@ const LocationLink = ({ link, children }) => {
 };
 
 export default (props) => (
-    <LocationLink link={selectLink[props.provider]({...props})}>
+    <LocationLink link={selectLink[props.provider]({ ...props })}>
         <span className="post__location btn color--steel tips--deep">
             <Icon className="post-action__icon" name="location" />
             <span className="post__location__name">{props.name}</span>

@@ -8,7 +8,7 @@ export default e => {
     const link = elem.getAttribute('href');
     const isInsideLink = /^\/(?!\/)/.test(link);
 
-    if (isInsideLink){
+    if (isInsideLink) {
         e.preventDefault();
         history.push(link);
     } else {

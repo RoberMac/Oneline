@@ -7,6 +7,7 @@ import numAbbr from 'utils/numAbbr';
 import reduxStore from 'state/store';
 import { updatePost } from 'state/actions/timeline';
 import { Action } from 'utils/api';
+import { addClassTemporarily } from 'utils/dom';
 
 // Components
 import Icon from 'components/Utils/Icon';
@@ -14,8 +15,8 @@ const RetweetBtn = ({ provider, post }) => {
     const { id_str, retweet_count } = post;
     const btnClass = classNames({
         'post-action__btn btn color--steel tips--deep': true,
-        'tips--inactive': !id_str
-    })
+        'tips--inactive': !id_str,
+    });
     return (
         <Link to={{ pathname: `/home/${provider}/retweet/${id_str}`, state: post }}>
             <span className={btnClass}>
@@ -30,9 +31,9 @@ const RetweetBtn = ({ provider, post }) => {
 };
 class DeleteRetweetBtn extends React.Component {
     constructor(props) {
-        super(props)
-        this.state = { inprocess: false }
-        this.deleteRetweet = this.deleteRetweet.bind(this)
+        super(props);
+        this.state = { inprocess: false };
+        this.deleteRetweet = this.deleteRetweet.bind(this);
     }
     deleteRetweet() {
         const { inprocess } = this.state;
@@ -40,7 +41,7 @@ class DeleteRetweetBtn extends React.Component {
         const { id_str, retweet_count, retweeted_id_str } = post;
 
         if (inprocess) return;
-        this.setState({ inprocess: true })
+        this.setState({ inprocess: true });
 
         Action
         .destroy({ action: 'tweet', provider, id: retweeted_id_str })
@@ -49,30 +50,33 @@ class DeleteRetweetBtn extends React.Component {
                 id_str,
                 retweeted: false,
                 retweet_count: retweet_count - 1,
-                retweeted_id_str: null
-            }))
+                retweeted_id_str: null,
+            }));
             // component will unmount, don't need `this.setState` anymore.
         })
-        .catch(err => {
-            addClassTemporarily(this.refs.btn, 'tips--error', 500)
-            this.setState({ inprocess: false })
-        })
+        .catch(() => {
+            addClassTemporarily(this.refs.btn, 'tips--error', 500);
+            this.setState({ inprocess: false });
+        });
     }
     render() {
         const { inprocess } = this.state;
         const { id_str, retweet_count, retweeted_id_str } = this.props.post;
         const btnClass = classNames({
             'post-action__btn tips--deep color--retweet tips--active': true,
-            'tips--inactive': !(id_str && retweeted_id_str)
-        })
+            'tips--inactive': !(id_str && retweeted_id_str),
+        });
         const iconClass = classNames({
             'post-action__icon': true,
-            'animate--retweet': inprocess
+            'animate--retweet': inprocess,
         });
         return (
             <button className={btnClass} type="button" onClick={this.deleteRetweet} ref="btn">
                 <Icon className={iconClass} name="retweet" />
-                <span className="post-action__count" data-count={retweet_count > 0 ? retweet_count : ''} />
+                <span
+                    className="post-action__count"
+                    data-count={retweet_count > 0 ? retweet_count : ''}
+                />
             </button>
         );
     }

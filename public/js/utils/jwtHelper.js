@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode';
 export const getTokenExpirationDate = token => {
     const decoded = jwtDecode(token);
 
-    if (typeof decoded.exp === "undefined"){
+    if (typeof decoded.exp === 'undefined') {
         return null;
     }
 
@@ -12,15 +12,15 @@ export const getTokenExpirationDate = token => {
     d.setUTCSeconds(decoded.exp);
 
     return d;
-}
+};
 export const isTokenExpired = (token, offsetSeconds = 0) => {
     const d = getTokenExpirationDate(token);
 
-    if (d === null){
+    if (d === null) {
         return false;
     }
 
     // Token expired?
     return !(d.valueOf() > (new Date().valueOf() + (offsetSeconds * 1000)));
-}
-export const decodeToken = token => jwtDecode(token)
+};
+export const decodeToken = token => jwtDecode(token);

@@ -1,35 +1,35 @@
 import React from 'react';
 
-// Helpers
-const selectPost = {
-    twitter: {
-        tweet: TwitterTweet,
-        retweet: TwitterRetweet,
-        quote: TwitterQuote
-    },
-    instagram: {
-        post: InstagramPost
-    },
-    weibo: {
-        tweet: WeiboTweet,
-        retweet: WeiboRetweet,
-        quote: WeiboQuote
-    },
-    unsplash: {
-        post: UnsplashPost
-    }
-};
-
 // Components
-import ReRender from 'components/Utils/HoCs/ReRender';
+import rerender from 'components/Utils/HoCs/rerender';
 import { TwitterTweet, TwitterRetweet, TwitterQuote } from './Twitter';
 import { WeiboTweet, WeiboRetweet, WeiboQuote } from './Weibo';
 import { InstagramPost } from './Instagram';
 import { UnsplashPost } from './Unsplash';
 
+// Helpers
+const selectPost = {
+    twitter: {
+        tweet: TwitterTweet,
+        retweet: TwitterRetweet,
+        quote: TwitterQuote,
+    },
+    instagram: {
+        post: InstagramPost,
+    },
+    weibo: {
+        tweet: WeiboTweet,
+        retweet: WeiboRetweet,
+        quote: WeiboQuote,
+    },
+    unsplash: {
+        post: UnsplashPost,
+    },
+};
+
 class Post extends React.Component {
     componentDidMount() {
-        setTimeout(() => this.refs.post.style.opacity = 1)
+        setTimeout(() => { this.refs.post.style.opacity = 1; });
     }
     render() {
         const { className, post } = this.props;
@@ -50,4 +50,4 @@ class Post extends React.Component {
 Post.displayName = 'Post';
 
 // Export
-export default ReRender(Post);
+export default rerender(Post);

@@ -10,9 +10,9 @@ import Icon from 'components/Utils/Icon';
 // Export
 export default class GeoPicker extends React.Component {
     constructor(props) {
-        super(props)
-        this.state = { inprocess: false }
-        this.handleClick = this.handleClick.bind(this)
+        super(props);
+        this.state = { inprocess: false };
+        this.handleClick = this.handleClick.bind(this);
     }
     handleClick() {
         const { inprocess } = this.state;
@@ -21,25 +21,25 @@ export default class GeoPicker extends React.Component {
         if (inprocess) return;
 
         if (selected) {
-            this.setState({ inprocess: false })
-            onChange({ geo: {} })
+            this.setState({ inprocess: false });
+            onChange({ geo: {} });
         } else {
-            this.setState({ inprocess: true })
+            this.setState({ inprocess: true });
 
             window.navigator.geolocation.getCurrentPosition(pos => {
-                this.setState({ inprocess: false })
+                this.setState({ inprocess: false });
 
                 const { latitude, longitude } = pos.coords;
                 onChange({
                     geo: {
                         lat: latitude,
-                        long: longitude
-                    }
-                })
-            }, err => {
-                this.setState({ inprocess: false })
-                addClassTemporarily(this.refs.btn, 'tips--error', 500)
-            }, { maximumAge: 60000, timeout: 7000 })
+                        long: longitude,
+                    },
+                });
+            }, () => {
+                this.setState({ inprocess: false });
+                addClassTemporarily(this.refs.btn, 'tips--error', 500);
+            }, { maximumAge: 60000, timeout: 7000 });
         }
     }
     render() {
@@ -47,13 +47,13 @@ export default class GeoPicker extends React.Component {
         const { inprocess } = this.state;
         const btnStyle = (
             inprocess || action === 'retweet'
-                ? { 'pointerEvents': 'none', 'opacity': '.1' }
+                ? { pointerEvents: 'none', opacity: '.1' }
             : null
         );
         const btnClass = classNames({
             'write__btn write__btn--left tips--deep--peace': true,
             'tips--active--peace': selected,
-            'tips--inprocess': inprocess
+            'tips--inprocess': inprocess,
         });
 
         return (

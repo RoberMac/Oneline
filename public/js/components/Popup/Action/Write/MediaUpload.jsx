@@ -11,9 +11,9 @@ import Icon from 'components/Utils/Icon';
 // Export
 export default class MediaUpload extends React.Component {
     constructor(props) {
-        super(props)
-        this.state = { inprocess: false }
-        this.handleChange = this.handleChange.bind(this)
+        super(props);
+        this.state = { inprocess: false };
+        this.handleChange = this.handleChange.bind(this);
     }
     handleChange() {
         const { provider, media, onChange } = this.props;
@@ -21,26 +21,26 @@ export default class MediaUpload extends React.Component {
         const file = uploadElem.files[0];
 
         // Preview
-        let newMediaItem = {};
+        const newMediaItem = {};
         addImagePreview({ file })
         .then(({ previewURL, ratio }) => {
             newMediaItem.url = previewURL;
             newMediaItem.ratio = ratio;
-            this.setState({ inprocess: true })
+            this.setState({ inprocess: true });
         })
         .then(() => {
             // Upload
             uploadMedia({ provider, file })
             .then(id => {
                 newMediaItem.id = id;
-                onChange({ media: media.concat([newMediaItem]) })
-                this.setState({ inprocess: false })
+                onChange({ media: media.concat([newMediaItem]) });
+                this.setState({ inprocess: false });
             })
-            .catch(err => {
-                addClassTemporarily(this.refs.label, 'tips--error', 500)
-                this.setState({ inprocess: false })
-            })
-        })
+            .catch(() => {
+                addClassTemporarily(this.refs.label, 'tips--error', 500);
+                this.setState({ inprocess: false });
+            });
+        });
 
         // Reset
         uploadElem.value = '';
@@ -50,12 +50,12 @@ export default class MediaUpload extends React.Component {
         const { inprocess } = this.state;
         const btnStyle = (
             inprocess || media.length >= 4 || action === 'retweet'
-                ? { 'pointerEvents': 'none', 'opacity': '.1' }
+                ? { pointerEvents: 'none', opacity: '.1' }
             : null
         );
         const btnClass = classNames({
             'write__btn write__btn--media tips--deep--peace': true,
-            'tips--inprocess': inprocess
+            'tips--inprocess': inprocess,
         });
 
         return (

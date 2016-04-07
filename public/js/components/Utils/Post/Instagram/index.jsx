@@ -21,7 +21,11 @@ export const InstagramPost = ({ post, highlight }) => (
                 provider="instagram"
                 text={post.text}
                 middlewares={[
-                    { order: 5, middleware: 'highlight', opts: { provider: 'instagram', highlight } },
+                    {
+                        order: 5,
+                        middleware: 'highlight',
+                        opts: { provider: 'instagram', highlight },
+                    },
                 ]}
             />
         </div>

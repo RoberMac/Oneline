@@ -10,62 +10,64 @@ import Icon from 'components/Utils/Icon';
 // Export
 export default class SearchBar extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
 
         const initTypeList = selectSearchType[props.type][props.provider];
         this.state = {
-            active: props.type === 'local' ? false : true,
+            active: !(props.type === 'local'),
             typeList: initTypeList,
-            currentType: initTypeList[0]
+            currentType: initTypeList[0],
+        };
+        this.toggleType = this.toggleType.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleRightBtnClick = this.handleRightBtnClick.bind(this);
+    }
+    componentDidUpdate() {
+        if (this.props.searchText) {
+            this.refs.input.value = this.props.searchText;
         }
-        this.toggleType = this.toggleType.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleRightBtnClick = this.handleRightBtnClick.bind(this)
     }
     toggleType() {
         const { typeList, currentType } = this.state;
         const inputElem = this.refs.input;
-        const index = typeList.findIndex((item, i) => item.name === currentType.name);
+        const index = typeList.findIndex(item => item.name === currentType.name);
         const nextType = typeList[typeList.length - 1 > index ? index + 1 : 0];
 
-        inputElem.focus()
-        this.setState({ currentType: nextType }, () => this.handleSubmit())
+        inputElem.focus();
+        this.setState({ currentType: nextType }, () => this.handleSubmit());
     }
     handleSubmit(e) {
-        e && e.preventDefault()
+        e && e.preventDefault();
 
         const { currentType: { name: searchType } } = this.state;
         const searchText = this.refs.input.value.trim();
 
-        this.props.onSearchChange({ searchType, searchText })
+        this.props.onSearchChange({ searchType, searchText });
     }
-    handleRightBtnClick(){
+    handleRightBtnClick() {
         const { type } = this.props;
         const { active } = this.state;
         const inputElem = this.refs.input;
 
-        switch (type){
+        switch (type) {
             case 'local':
                 if (active) {
-                    inputElem.blur()
-                    inputElem.value = ''
+                    inputElem.blur();
+                    inputElem.value = '';
                 } else {
-                    inputElem.focus()
+                    inputElem.focus();
                 }
-                this.setState({ active: !active })
+                this.setState({ active: !active });
                 break;
             case 'remote':
-                inputElem.value = ''
-                inputElem.focus()
+                inputElem.value = '';
+                inputElem.focus();
+                break;
+            default:
                 break;
         }
 
-        this.props.onRightBtnClick()
-    }
-    componentDidUpdate() {
-        if (this.props.searchText){
-            this.refs.input.value = this.props.searchText
-        }
+        this.props.onRightBtnClick();
     }
     render() {
         const { type } = this.props;
@@ -73,17 +75,17 @@ export default class SearchBar extends React.Component {
         const searchBarClass = classNames({
             'searchBar animate--faster': true,
             [`searchBar--${type}`]: true,
-            'searchBar--active': active
+            'searchBar--active': active,
         });
         const leftBtnClass = classNames({
             'searchBar__btn searchBar__btn--left': true,
             'color--gray-drak': active,
-            'color--white': !active
+            'color--white': !active,
         });
         const rightBtnClass = classNames({
             'searchBar__btn searchBar__btn--right': true,
             'color--gray-drak': active,
-            'color--white': !active
+            'color--white': !active,
         });
         return (
             <div className={searchBarClass}>
@@ -100,7 +102,11 @@ export default class SearchBar extends React.Component {
                         spellCheck="false"
                         ref="input"
                     />
-                    <button className={rightBtnClass} type="button" onClick={this.handleRightBtnClick}>
+                    <button
+                        className={rightBtnClass}
+                        type="button"
+                        onClick={this.handleRightBtnClick}
+                    >
                         <Icon name={active ? 'cancel' : 'search'} />
                     </button>
                 </form>

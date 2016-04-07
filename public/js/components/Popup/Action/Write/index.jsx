@@ -8,7 +8,7 @@ import { isTwitter as _isTwitter, isWeibo as _isWeibo } from 'utils/detect';
 import {
     extractMentions, isLeftPopup,
     submitWrite, draft,
-    initStatus, initLivePreview
+    initStatus, initLivePreview,
 } from './helper';
 
 // Components
@@ -26,7 +26,7 @@ import Transition from 'components/Utils/Transition';
 // Export
 export default class Write extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             status: '',
             mentions: [],
@@ -40,11 +40,11 @@ export default class Write extends React.Component {
                 status: '',
                 media: [],
                 post: props.location.state,
-                livePreviewPost: {}
+                livePreviewPost: {},
             }),
             toolPopupLeft: false,
-            submitting: false
-        }
+            submitting: false,
+        };
         this.handleStateChange = this.handleStateChange.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -60,11 +60,11 @@ export default class Write extends React.Component {
                     status,
                     media: state.media,
                     livePreviewPost,
-                    post: this.props.location.state
-                })
-            })
+                    post: this.props.location.state,
+                }),
+            });
         }
-        this.setState(state)
+        this.setState(state);
     }
     handleTextChange() {
         const { action, provider, id } = this.props;
@@ -72,88 +72,88 @@ export default class Write extends React.Component {
         const _status = textareaElem.value;
 
         // Init New State
-        let newStatus = _status.trim().length > 0 ? _status : _status.trim();
+        const newStatus = _status.trim().length > 0 ? _status : _status.trim();
         let newAction = action;
         let newGeo = this.state.geo;
         let newMedia = this.state.media;
         // Retweet <==> Quote
-        if (action === 'retweet' && newStatus || action === 'quote' && newStatus === ''){
-            let { history, location } = this.props;
+        if (action === 'retweet' && newStatus || action === 'quote' && newStatus === '') {
+            const { history, location } = this.props;
             newAction = action === 'retweet' ? 'quote' : 'retweet';
             newGeo = {};
             newMedia = [];
             history.replace({
                 pathname: `/home/${provider}/${newAction}/${id}`,
                 search: location.search,
-                state: location.state
-            })
+                state: location.state,
+            });
         }
         // Update Live Preview
-        let newLivePreviewPost = initLivePreview({
+        const newLivePreviewPost = initLivePreview({
             type: newAction,
             provider,
             status: newStatus,
             media: newMedia,
             livePreviewPost: this.state.livePreviewPost,
-            post: this.props.location.state
-        })
+            post: this.props.location.state,
+        });
         // Update State
         this.setState({
             status: newStatus,
             mentions: extractMentions({
                 status: newStatus.slice(0, textareaElem.selectionStart),
-                provider
+                provider,
             }),
             geo: newGeo,
             media: newMedia,
             livePreviewPost: newLivePreviewPost,
-            toolPopupLeft: isLeftPopup()
-        })
-        textareaElem.focus()
+            toolPopupLeft: isLeftPopup(),
+        });
+        textareaElem.focus();
     }
     handleSubmit() {
         const { action, provider, history } = this.props;
 
-        this.setState({ submitting: true })
+        this.setState({ submitting: true });
         submitWrite({ ...this.state, ...this.props })
         .then(() => {
-            history.push('/home')
-            setTimeout(() => { draft.remove({ action, provider }) }, 700)
+            history.push('/home');
+            setTimeout(() => { draft.remove({ action, provider }); }, 700);
         })
-        .catch(err => {
-            addClassTemporarily(this.refs.textarea, 'write__textarea--err', 500)
+        .catch(() => {
+            addClassTemporarily(this.refs.textarea, 'write__textarea--err', 500);
         })
         .then(() => {
-            this.setState({ submitting: false })
-        })
+            this.setState({ submitting: false });
+        });
     }
     componentDidMount() {
         setTimeout(() => {
-            initStatus({ ...this.props })
-            this.handleTextChange()
-        }, 700)
+            initStatus({ ...this.props });
+            this.handleTextChange();
+        }, 700);
     }
     componentWillUnmount() {
         const { action, provider } = this.props;
         const { status } = this.state;
         // Save Draft
-        status && draft.set({ action, provider, status })
+        status && draft.set({ action, provider, status });
     }
     render() {
-        const { action, provider, id } = this.props;
+        const { action, provider } = this.props;
         const {
             status, geo, media, mentions,
             emotions, livePreviewPost,
-            toolPopupLeft, submitting
+            toolPopupLeft, submitting,
         } = this.state;
         const isTwitter = _isTwitter(provider);
-        const isWeibo   = _isWeibo(provider);
+        const isWeibo = _isWeibo(provider);
 
         return (
             <div className="write">
                 {action !== 'reply' && (
                     <div className="write__livePreview animate--enter overflow--y">
-                        <Post post={livePreviewPost}/>
+                        <Post post={livePreviewPost} />
                     </div>
                 )}
                 <form className="write__form">
@@ -171,7 +171,9 @@ export default class Write extends React.Component {
                     <div className="write__textarea write__textarea--mirror"><span></span></div>
 
                     <div className="write__toolBar">
-                        {isTwitter && <ToggleSensitive action={action} onChange={this.handleStateChange} />}
+                        {isTwitter && (
+                            <ToggleSensitive action={action} onChange={this.handleStateChange} />
+                        )}
                         <GeoPicker
                             action={action}
                             selected={Object.keys(geo).length > 0}
@@ -195,7 +197,9 @@ export default class Write extends React.Component {
                         />
                     </div>
 
-                    {media.length > 0 && <MediaPreview media={media} onChange={this.handleStateChange} />}
+                    {media.length > 0 && (
+                        <MediaPreview media={media} onChange={this.handleStateChange} />
+                    )}
 
                     <Transition>
                     {mentions.length > 0 && (
@@ -211,7 +215,6 @@ export default class Write extends React.Component {
                     <Transition>
                     {emotions && isWeibo && (
                         <WeiboEmotions
-                            emotions={emotions}
                             toolPopupLeft={toolPopupLeft}
                             onChange={this.handleTextChange}
                         />

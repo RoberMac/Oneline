@@ -5,7 +5,7 @@ import Text from '../Utils/Text';
 import Media from '../Utils/Media';
 import Action from '../Utils/Action';
 import TimeAgo from '../Utils/TimeAgo';
-import { Avatar, RetweetAvatar} from '../Utils/Avatar';
+import { Avatar, RetweetAvatar } from '../Utils/Avatar';
 
 export default ({ post, highlight }) => (
     <div>
@@ -15,8 +15,16 @@ export default ({ post, highlight }) => (
                 provider="twitter"
                 text={post.retweet.text}
                 middlewares={[
-                    { order: 2, middleware: 'trimMediaLink', opts: { link: post.retweet.mediaLink } },
-                    { order: 5, middleware: 'highlight', opts: { provider: 'twitter', highlight } },
+                    {
+                        order: 2,
+                        middleware: 'trimMediaLink',
+                        opts: { link: post.retweet.mediaLink },
+                    },
+                    {
+                        order: 5,
+                        middleware: 'highlight',
+                        opts: { provider: 'twitter', highlight },
+                    },
                 ]}
             />
             {post.retweet.media && post.retweet.media.length > 0 && (

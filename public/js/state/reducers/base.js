@@ -1,19 +1,21 @@
-import { UPDATE_BASE }  from '../actions/base';
+import { UPDATE_BASE } from '../actions/base';
 import { initBaseState } from '../store/initState';
 
 const initState = initBaseState();
 
 export default (state = initState, action) => {
-    switch (action.type){
+    let payload;
+    let keys;
+
+    switch (action.type) {
         case UPDATE_BASE:
-            const { payload } = action;
-            const keys = Object.keys(payload);
+            payload = action.payload;
+            keys = Object.keys(payload);
 
             return state.withMutations(map => {
-                keys.forEach(key => map.set(key, payload[key]))
+                keys.forEach(key => map.set(key, payload[key]));
             });
-            break;
         default:
             return state;
     }
-}
+};

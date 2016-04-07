@@ -16,4 +16,4 @@ export default ({ link, provider }) => {
             <Icon name="eyeball" />
         </a>
     );
-}
+};

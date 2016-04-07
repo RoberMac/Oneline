@@ -6,33 +6,39 @@ import { isBoolean } from 'utils/detect';
 import { selectNextPageId } from 'utils/select';
 import { Action } from 'utils/api';
 const calcId = ({ provider, action, id }) => {
-    switch (provider){
+    let _id;
+    switch (provider) {
         case 'twitter':
-            switch (action){
+            switch (action) {
                 case 'user':
-                    return id;
+                    _id = id;
                     break;
                 case 'locations':
-                    return window.encodeURIComponent(`place:${id}`);
+                    _id = window.encodeURIComponent(`place:${id}`);
                     break;
                 case 'tags':
-                    return window.encodeURIComponent(`#${id}`);
+                    _id = window.encodeURIComponent(`#${id}`);
+                    break;
+                default:
                     break;
             }
             break;
         case 'instagram':
         case 'weibo':
         case 'unsplash':
-            return id;
+            _id = id;
+            break;
+        default:
             break;
     }
+
+    return _id;
 };
 const initReadState = ({
     showingPosts, user,
     isFetching, isFetchFail, isInitLoad, isLocked,
-    minId, minDate
+    minId, minDate,
 }) => {
-
     return Map({
         showingPosts: List(showingPosts || []),
         user: user || {},
@@ -41,13 +47,12 @@ const initReadState = ({
         isInitLoad: isBoolean(isInitLoad) ? isInitLoad : true,
         isLocked: isBoolean(isLocked) ? isLocked : false,
         minId: minId || '',
-        minDate: minDate || 0
+        minDate: minDate || 0,
     });
-
 };
 
 // Components
-import ReRender from 'components/Utils/HoCs/ReRender';
+import rerender from 'components/Utils/HoCs/rerender';
 import Spin from 'components/Utils/Spin';
 import Icon from 'components/Utils/Icon';
 import User from './User';
@@ -71,9 +76,14 @@ const Locked = ({ provider }) => (
 );
 class Read extends React.Component {
     constructor(props) {
-        super(props)
-        this.state = { readState: initReadState(props.location.state || {}) }
+        super(props);
+        this.state = { readState: initReadState(props.location.state || {}) };
         this.fetchPosts = this.fetchPosts.bind(this);
+    }
+    componentDidMount() {
+        if (this.state.readState.get('isInitLoad')) {
+            this.fetchPosts();
+        }
     }
     fetchPosts() {
         const { provider, action, id, history, location } = this.props;
@@ -84,19 +94,19 @@ class Read extends React.Component {
             minId,
             minDate,
             action,
-            postsSize: readState.get('showingPosts').size
+            postsSize: readState.get('showingPosts').size,
         });
 
         if (readState.get('isFetching')) return;
         this.setState(({ readState }) => ({
-            readState: readState.set('isFetching', true).set('isFetchFail', false)
-        }))
+            readState: readState.set('isFetching', true).set('isFetchFail', false),
+        }));
 
         Action
         .get({
             provider,
             action,
-            id: calcId({ provider, action, id })
+            id: calcId({ provider, action, id }),
         }, minId ? { maxId: nextPageId } : undefined)
         .then(res => {
             // Update State
@@ -109,34 +119,29 @@ class Read extends React.Component {
                 .set('isFetching', false)
                 .set('isInitLoad', false)
                 .set('minId', lastPost && lastPost.id_str)
-                .set('minDate', lastPost && lastPost.created_at)
+                .set('minDate', lastPost && lastPost.created_at);
 
-                user ? map.set('user', user) : null
+                user && map.set('user', user);
             });
 
-            this.setState(() => ({ readState: newState }))
+            this.setState(() => ({ readState: newState }));
             // Store State in History State
             history.replace({
                 pathname: location.pathname,
                 search: location.search,
-                state: newState.toJS()
-            })
+                state: newState.toJS(),
+            });
         })
-        .catch(err => {
+        .catch(() => {
             this.setState(({ readState }) => ({
                 readState: readState.withMutations(map => {
                     map
                     .set('isFetching', false)
                     .set('isFetchFail', true)
-                    .set('isLocked', true)
-                })
-            }))
-        })
-    }
-    componentDidMount() {
-        if (this.state.readState.get('isInitLoad')) {
-            this.fetchPosts()
-        }
+                    .set('isLocked', true);
+                }),
+            }));
+        });
     }
     render() {
         const { provider, action } = this.props;
@@ -149,7 +154,7 @@ class Read extends React.Component {
         const isLocked = readState.get('isLocked');
 
         let SelectRead;
-        switch (action){
+        switch (action) {
             case 'user':
                 SelectRead = User;
                 break;
@@ -158,6 +163,8 @@ class Read extends React.Component {
                 break;
             case 'tags':
                 SelectRead = Tags;
+                break;
+            default:
                 break;
         }
 
@@ -188,4 +195,4 @@ class Read extends React.Component {
 Read.displayName = 'Read';
 
 // Export
-export default ReRender(Read);
+export default rerender(Read);
