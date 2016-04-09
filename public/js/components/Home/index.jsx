@@ -1,3 +1,5 @@
+/* eslint no-console: 0, no-shadow: 0 */
+
 import React from 'react';
 import Swipeable from 'react-swipeable';
 import { connect } from 'react-redux';

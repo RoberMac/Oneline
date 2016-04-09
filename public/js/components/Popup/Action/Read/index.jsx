@@ -1,3 +1,5 @@
+/* eslint no-shadow: 0 */
+
 import React from 'react';
 import { Map, List } from 'immutable';
 

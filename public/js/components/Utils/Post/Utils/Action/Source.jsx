@@ -13,7 +13,7 @@ export default (props) => (
         href={selectSourceLink[props.provider]({ ...props })}
         target="_blank"
         role="button"
-        className={!isActive({...props}) ? 'tips--inactive' : ''}
+        className={!isActive({ ...props }) ? 'tips--inactive' : ''}
     >
         <span className="post-action__btn btn color--steel tips--deep">
             <Icon className="post-action__icon" name="source" />

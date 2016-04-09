@@ -1,3 +1,5 @@
+/* eslint max-len: 0, no-console: 0 */
+
 import { isWeibo } from 'utils/detect';
 import reduxStore from 'state/store';
 const BLOCKED = reduxStore.getState().base.get('BLOCKED');
@@ -40,7 +42,7 @@ export const rewriteMediaLink = ({ type, provider, data }) => {
             break;
         default:
             __DEV__ && console.error(`invalid type: ${type}`);
-            throw `invalid type: ${type}`;
+            throw new TypeError(`invalid type: ${type}`);
     }
 
     __DEV__ && console.timeEnd('[rewriteMediaLink]');

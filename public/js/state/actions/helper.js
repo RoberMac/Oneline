@@ -1,3 +1,5 @@
+/* eslint no-console: 0, no-use-before-define: [2, { "functions": false }] */
+
 import assign from 'object.assign';
 
 // Helpers

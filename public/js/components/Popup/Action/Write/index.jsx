@@ -49,6 +49,18 @@ export default class Write extends React.Component {
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+    componentDidMount() {
+        setTimeout(() => {
+            initStatus({ ...this.props });
+            this.handleTextChange();
+        }, 700);
+    }
+    componentWillUnmount() {
+        const { action, provider } = this.props;
+        const { status } = this.state;
+        // Save Draft
+        status && draft.set({ action, provider, status });
+    }
     handleStateChange(state) {
         if (Object.keys(state).indexOf('media') >= 0) {
             const { action, provider } = this.props;
@@ -126,18 +138,6 @@ export default class Write extends React.Component {
         .then(() => {
             this.setState({ submitting: false });
         });
-    }
-    componentDidMount() {
-        setTimeout(() => {
-            initStatus({ ...this.props });
-            this.handleTextChange();
-        }, 700);
-    }
-    componentWillUnmount() {
-        const { action, provider } = this.props;
-        const { status } = this.state;
-        // Save Draft
-        status && draft.set({ action, provider, status });
     }
     render() {
         const { action, provider } = this.props;

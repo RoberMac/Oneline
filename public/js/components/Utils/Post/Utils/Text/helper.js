@@ -1,3 +1,5 @@
+/* eslint prefer-template: 0 */
+
 import xssFilters from 'xss-filters';
 
 // Helpers

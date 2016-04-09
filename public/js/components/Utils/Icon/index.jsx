@@ -1,3 +1,5 @@
+/* eslint no-unused-vars: 0 */
+
 import React from 'react';
 
 import iconSprites from 'images/icon-sprites.svg';

@@ -1,3 +1,5 @@
+/* eslint max-len: 0  */
+
 import React from 'react';
 
 export default ({ oColor, tColor, cColor, rColor }) => (

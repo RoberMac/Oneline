@@ -1,3 +1,5 @@
+/* eslint no-alert: 0 */
+
 import React from 'react';
 import { browserHistory as history } from 'react-router';
 

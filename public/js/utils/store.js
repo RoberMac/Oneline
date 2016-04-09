@@ -1,9 +1,11 @@
+/* eslint no-console: 0 */
+
 const parseJSON = data => {
     let returnData;
     try {
         returnData = JSON.parse(data);
     } catch (e) {
-        // empty
+        returnData = data;
     } finally {
         return returnData;
     }

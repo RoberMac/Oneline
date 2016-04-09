@@ -1,3 +1,5 @@
+/* eslint react/no-did-update-set-state: 0, no-shadow: 0 */
+
 import React from 'react';
 import { fromJS } from 'immutable';
 

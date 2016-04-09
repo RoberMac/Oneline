@@ -1,3 +1,5 @@
+/* eslint no-console: 0, no-use-before-define: [2, { "functions": false }], consistent-return: 0 */
+
 /**
  * Reset Timeline State
  *
@@ -31,25 +33,27 @@ export const fetchPosts = ({ postsType, isAutoFetch }) => {
         return determineFetchFrom({ postsType, isAutoFetch, ...auth, ...timeline })
         .then(({ fetchFrom, invalidProviders }) => {
             __DEV__ && console.info(`[${postsType}: fetchFrom] ${fetchFrom}`);
-            switch (fetchFrom) {
-                case 'local':
-                    fetchFromLocal({ postsType, ...timeline })
-                    .then(newState => dispatch(postsRecive(newState)))
-                    .catch(err => {
-                        throw err;
-                    });
-                    break;
-                case 'remote':
-                    dispatch(fetchStart({ postsType }));
 
-                    return fetchFromRemote({ postsType, isAutoFetch, invalidProviders, ...timeline })
-                    .then(newState => dispatch(postsRecive(newState)))
-                    .catch(err => {
-                        dispatch(fetchFail({ postsType }));
-                        throw err;
-                    });
-                default:
-                    break;
+            if (fetchFrom === 'local') {
+                fetchFromLocal({ postsType, ...timeline })
+                .then(newState => dispatch(postsRecive(newState)))
+                .catch(err => {
+                    throw err;
+                });
+            } else if (fetchFrom === 'remote') {
+                dispatch(fetchStart({ postsType }));
+
+                return fetchFromRemote({
+                    postsType,
+                    isAutoFetch,
+                    invalidProviders,
+                    ...timeline,
+                })
+                .then(newState => dispatch(postsRecive(newState)))
+                .catch(err => {
+                    dispatch(fetchFail({ postsType }));
+                    throw err;
+                });
             }
         });
     };

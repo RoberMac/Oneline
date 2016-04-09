@@ -1,3 +1,5 @@
+/* eslint no-console: 0 */
+
 import qs from 'querystring';
 import assign from 'object.assign';
 

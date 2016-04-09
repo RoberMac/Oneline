@@ -1,3 +1,5 @@
+/* eslint no-param-reassign: 0 */
+
 // via https://github.com/callmecavs/jump.js
 const easeInOutQuad = (t, b, c, d) => {
     t /= d / 2;

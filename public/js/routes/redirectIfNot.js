@@ -1,3 +1,5 @@
+/* eslint no-console: 0 */
+
 import { isValidToken } from '../utils/tokenHelper';
 
 // Helerps
