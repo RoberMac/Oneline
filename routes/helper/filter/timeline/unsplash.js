@@ -1,53 +1,53 @@
-"use strict";
+'use strict';
 const filterUtils = require('../utils');
 
 
 module.exports = data => {
     const now = Date.now();
     const postsLength = data.length;
-    let cache = [];
+    const cache = [];
 
     data.forEach((item, index) => {
-        let post = {
-            provider: 'unsplash',
+        const post = {
+            provider  : 'unsplash',
             created_at: now + (postsLength - index),
-            id_str: item.id,
-            type: 'post',
-            user: filterUtils.unsplash.user(item.user),
-            text: filterUtils.unsplash.text(item.categories),
-            images: filterUtils.unsplash.media({
-                urls: item.urls,
-                width: item.width,
+            id_str    : item.id,
+            type      : 'post',
+            user      : filterUtils.unsplash.user(item.user),
+            text      : filterUtils.unsplash.text(item.categories),
+            images    : filterUtils.unsplash.media({
+                urls  : item.urls,
+                width : item.width,
                 height: item.height,
             }),
-            like_count: item.likes,
-            liked: item.liked_by_user,
-            download_count: item.downloads
+            like_count    : item.likes,
+            liked         : item.liked_by_user,
+            download_count: item.downloads,
         };
 
         // Location
-        if (item.location){
+        if (item.location) {
             Object.assign(post, {
                 location: {
-                    name: item.location.city || item.location.country
-                }
-            })
+                    name: item.location.city || item.location.country,
+                },
+            });
         }
 
         cache.push(post);
-    })
+    });
 
-    let returnObj = { data: cache };
-    let firstData = cache[0];
-    let lastData  = cache[postsLength - 1];
+    const returnObj = { data: cache };
+    const firstData = cache[0];
+    const lastData  = cache[postsLength - 1];
 
-    if (lastData){
+    if (lastData) {
         Object.assign(returnObj, {
             minId  : lastData.id_str,
             minDate: lastData.created_at,
             maxId  : firstData.id_str,
-            maxDate: firstData.created_at
-        })
+            maxDate: firstData.created_at,
+        });
     }
 
     return returnObj;

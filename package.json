@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.13.5",
+  "version": "0.13.6",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -8,7 +8,8 @@
     "prod:watch": "gulp && NODE_ENV=production webpack -p --watch --progress --colors",
     "dev": "NODE_ENV=development node dev-server.js",
     "start": "NODE_ENV=production node app.js",
-    "lint:fe": "eslint --ext .js,.jsx public/js"
+    "lint:fe": "eslint --ext .js,.jsx public/js",
+    "lint:be": "eslint --ext .js *.js utils routes views"
   },
   "main": "app.js",
   "repository": {

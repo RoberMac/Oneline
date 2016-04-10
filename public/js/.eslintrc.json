@@ -1,0 +1,29 @@
+{
+    "extends": "airbnb",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
+    },
+    "globals": {
+        "__DEV__": true
+    },
+    "rules": {
+        "arrow-body-style": 0,
+        "camelcase": 0,
+        "indent": [2, 4, { "SwitchCase": 1, "VariableDeclarator": 1 }],
+        "new-cap": [2, {"capIsNewExceptions": ["Map", "List"]}],
+        "no-confusing-arrow": 0,
+        "no-nested-ternary": 0,
+        "no-unused-expressions": [2, { "allowShortCircuit": true, "allowTernary": true }],
+
+        "react/jsx-indent-props": [2, 4],
+        "react/prop-types": [0, { "ignore": [], "customValidators": [] }]
+    }
+}
+
+/**
+ * Issues
+ *
+ * 2) ES6 Assignment Destructuring [no-shadow]
+ */

@@ -1,11 +1,12 @@
-"use strict";
+'use strict';
 
 module.exports = data => {
+    let returnData;
     try {
-        data = JSON.parse(data)
+        returnData = JSON.parse(data);
     } catch (e) {
-        data = data
+        returnData = data;
     } finally {
-        return data
+        return returnData;
     }
-}
+};

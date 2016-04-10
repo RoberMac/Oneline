@@ -10,25 +10,25 @@ const svgmin   = require('gulp-svgmin');
 const svgstore = require('gulp-svgstore');
 const SVG_PATH = 'public/img/src/*.svg';
 
-gulp.task('svgstore', function () {
+gulp.task('svgstore', () => {
     return (
         gulp.src(SVG_PATH)
-        .pipe(svgmin(function (file) {
+        .pipe(svgmin(file => {
             const prefix = path.basename(file.relative, path.extname(file.relative));
             return {
                 plugins: [{
                     cleanupIDs: {
-                        prefix: prefix + '-',
-                        minify: true
-                    }
-                }]
-            }
+                        prefix: `${prefix}-`,
+                        minify: true,
+                    },
+                }],
+            };
         }))
         .pipe(svgstore())
         .pipe(rename('icon-sprites.svg'))
         .pipe(gulp.dest('public/img'))
     );
-})
+});
 
 /**
  * CSS
@@ -37,22 +37,22 @@ gulp.task('svgstore', function () {
 const postcss = require('gulp-postcss');
 const CSS_PATH = 'views/styles/src/*.css';
 
-gulp.task('css', function () {
+gulp.task('css', () => {
     const processors = [
         require('postcss-import')({
-            path: ['public/css']
+            path: ['public/css'],
         }),
         require('postcss-nested'),
         require('postcss-short'),
         require('postcss-assets')({
-            loadPaths: ['public/img/assets']
+            loadPaths: ['public/img/assets'],
         }),
         require('postcss-cssnext')({
-            autoprefixer: true
+            autoprefixer: true,
         }),
         require('css-mqpacker'),
         require('lost'),
-        require('cssnano')
+        require('cssnano'),
     ];
 
     return (
@@ -60,7 +60,7 @@ gulp.task('css', function () {
         .pipe(postcss(processors))
         .pipe(gulp.dest('views/styles/dist'))
     );
-})
+});
 
 /**
  * Task

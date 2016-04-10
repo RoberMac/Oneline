@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /* /auth */
 const passport = require('passport');
 const jwt      = require('jsonwebtoken');
@@ -8,20 +8,20 @@ const router   = require('express').Router();
 router.param('provider', (req, res, next, provider) => {
     const validProviders = ['twitter', 'instagram', 'weibo', 'unsplash'];
 
-    if (validProviders.indexOf(provider) >= 0){
-        req.olProvider = provider
-        next()
+    if (validProviders.indexOf(provider) >= 0) {
+        req.olProvider = provider;
+        next();
     } else {
-        next({ statusCode: 400, msg: 'invalid provider' })
+        next({ statusCode: 400, msg: 'invalid provider' });
     }
-})
+});
 
 /**
  * Auth
  *
  */
 router.get('/:provider', (req, res, next) => {
-    let authOpts = { session: false };
+    const authOpts = { session: false };
     switch (req.olProvider) {
         case 'unsplash':
             Object.assign(authOpts, { scope: ['public', 'read_photos', 'write_likes'] });
@@ -30,22 +30,22 @@ router.get('/:provider', (req, res, next) => {
             break;
     }
 
-    passport.authenticate(req.olProvider, authOpts)(req, res, next)
-})
+    passport.authenticate(req.olProvider, authOpts)(req, res, next);
+});
 router.get('/:provider/callback', (req, res, next) => {
-    passport.authenticate(req.olProvider, { session: false })(req, res, next)
+    passport.authenticate(req.olProvider, { session: false })(req, res, next);
 }, (req, res) => {
     const user        = req.user;
     const provider    = user.provider;
     const uid         = user.uid;
     const name        = user.name;
     const screen_name = user.screen_name;
-    const avatar      = user.avatar
+    const avatar      = user.avatar;
     const token = jwt.sign({
         provider,
-        uid
+        uid,
     }, process.env.KEY, {
-        expiresIn: provider === 'weibo' ? '7d' : '14d'
+        expiresIn: provider === 'weibo' ? '7d' : '14d',
     });
 
     res.render('authCallback', {
@@ -56,10 +56,10 @@ router.get('/:provider/callback', (req, res, next) => {
             name,
             avatar,
             screen_name,
-            provider
-        }
-    })
-})
+            provider,
+        },
+    });
+});
 
 
 /**
@@ -67,13 +67,13 @@ router.get('/:provider/callback', (req, res, next) => {
  *
  */
 router.delete('/revoke/:provider', (req, res, next) => {
-    let provider = req.olProvider;
-    let id       = provider + req.olPassports[provider];
+    const provider = req.olProvider;
+    const id       = provider + req.olPassports[provider];
 
-    q_userFindOneAndRemove({id: id})
-    .then(() => res.json({statusCode: 200}))
-    .fail(err => next(err))
-})
+    q_userFindOneAndRemove({ id })
+    .then(() => res.json({ statusCode: 200 }))
+    .fail(err => next(err));
+});
 
 
 /**
@@ -95,35 +95,35 @@ router.post('/replicant/deckard', (req, res, next) => {
 
     q_replicantFindOne({ id: code })
     .then(found => {
-        if (!found){
+        if (!found) {
             const replicant = new Replicant({
                 id       : code,
                 token    : JSON.stringify(req.olTokenList),
                 profile  : JSON.stringify(req.body.profileList),
-                createdAt: new Date()
+                createdAt: new Date(),
             });
             replicant.save(err => {
-                if (err) return next({ statusCode: 500 })
-                res.json({ code })
-            })
+                if (err) return next({ statusCode: 500 });
+                res.json({ code });
+            });
         } else {
-            next({ statusCode: 400, msg: 'code is existed' })
+            next({ statusCode: 400, msg: 'code is existed' });
         }
-    }, err => next({ statusCode: 500 }))
-})
+    }, err => next({ statusCode: 500 }));
+});
 router.get('/replicant/rachael', (req, res, next) => {
     q_replicantFindOne({ id: req.query.code })
     .then(found => {
-        if (found){
+        if (found) {
             res.json({
-                tokenList: JSON.parse(found.token || '[]'),
+                tokenList  : JSON.parse(found.token || '[]'),
                 profileList: JSON.parse(found.profile || '[]'),
-                msg: JSON.parse(found.msg || '[]')
-            })
+                msg        : JSON.parse(found.msg || '[]'),
+            });
         } else {
-            next({ statusCode: 404 })
+            next({ statusCode: 404 });
         }
-    }, err => next({ statusCode: 500 }))
-})
+    }, err => next({ statusCode: 500 }));
+});
 
-module.exports = router
+module.exports = router;

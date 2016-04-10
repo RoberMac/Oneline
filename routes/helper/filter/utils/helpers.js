@@ -1,3 +1,3 @@
 module.exports = {
-    calcRatio: (width, height) => (height / width).toFixed(5)
+    calcRatio: (width, height) => (height / width).toFixed(5),
 };

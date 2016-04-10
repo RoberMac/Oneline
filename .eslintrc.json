@@ -1,24 +1,37 @@
 {
-    "extends": "airbnb",
+    "extends": "airbnb/base",
+    "env": {
+        "node": true
+    },
     "parserOptions": {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true
         }
     },
     "globals": {
-        "__DEV__": true
+        "Q": true,
+        "User": true,
+        "q_userFindOne": true,
+        "q_userFindOneAndRemove": true,
+        "q_userFindOneAndUpdate": true,
+        "__base": true
     },
     "rules": {
         "arrow-body-style": 0,
         "camelcase": 0,
+        "consistent-return": 0,
         "indent": [2, 4, { "SwitchCase": 1, "VariableDeclarator": 1 }],
-        "new-cap": [2, {"capIsNewExceptions": ["Map", "List"]}],
+        "key-spacing": [2, { "align": "colon" }],
+        "new-cap": [2, {"capIsNewExceptions": ["Unsplash", "Weibo", "Router"]}],
         "no-confusing-arrow": 0,
+        "no-console": 0,
+        "no-multi-spaces": [2, { "exceptions": { "VariableDeclarator": true } }],
         "no-nested-ternary": 0,
+        "no-param-reassign": 0,
+        "no-throw-literal": 0,
         "no-unused-expressions": [2, { "allowShortCircuit": true, "allowTernary": true }],
-
-        "react/jsx-indent-props": [2, 4],
-        "react/prop-types": [0, { "ignore": [], "customValidators": [] }]
+        "no-unused-vars": [2, { "argsIgnorePattern": "(err|req|res|next|opts)" }],
+        "no-use-before-define": [2, { "functions": false }]
     }
 }
 

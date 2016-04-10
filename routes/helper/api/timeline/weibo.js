@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 const Weibo = require(`${__base}/utils/wrapper/weibo`);
 
 
 module.exports = opts => {
     const wOpts = Object.assign({
         access_token: opts.token,
-        count: opts.count || 100
+        count       : opts.count || 100,
     }, (
         opts.minId
             ? { since_id: opts.minId }
@@ -15,13 +15,13 @@ module.exports = opts => {
     ));
 
     return Weibo({
-        method: 'get',
+        method  : 'get',
         endpoint: 'statuses/home_timeline',
-        opts: wOpts
+        opts    : wOpts,
     })
     .then((data) => {
-        if (opts.maxId){
-            data['statuses'].splice(0, 1)
+        if (opts.maxId) {
+            data.statuses.splice(0, 1);
         }
         return data;
     });

@@ -1,4 +1,6 @@
-"use strict";
+/* eslint no-else-return: 0 */
+
+'use strict';
 const Ig = require('instagram-node').instagram();
 const timelineFilter = require(`${__base}/routes/helper/filter/timeline`);
 const actionsFilter = require(`${__base}/routes/helper/filter/actions`);
@@ -11,114 +13,120 @@ const _buildAction = {
             if (opts.query && opts.query.maxId) {
                 actionObj = {
                     triggerActionType: 'basic',
-                    action: { endpoint: 'user_media_recent', opts: { max_id: opts.query.maxId } },
-                    handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data })
+                    action           : {
+                        endpoint: 'user_media_recent',
+                        opts    : { max_id: opts.query.maxId },
+                    },
+                    handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data }),
                 };
             } else {
                 actionObj = {
                     triggerActionType: 'combination',
-                    actions: [
+                    actions          : [
                         { endpoint: 'user' },
-                        { endpoint: 'user_media_recent', opts: { count: 7 } }
+                        { endpoint: 'user_media_recent', opts: { count: 7 } },
                     ],
                     handleActionFunc: (userData, timelineData) => {
                         const user = actionsFilter.instagram.user(userData[0]);
                         const data = timelineFilter.instagram(timelineData[0]).data;
                         return { user, data };
-                    }
+                    },
                 };
             }
 
-            if (isNaN(opts.id)){
+            if (isNaN(opts.id)) {
                 return {
                     triggerActionType: 'queue',
-                    action: { endpoint: 'user_search' },
-                    handleActionFunc: data => ({
-                        uid: data[0].find(item => item.username === opts.id).id
+                    action           : { endpoint: 'user_search' },
+                    handleActionFunc : data => ({
+                        uid: data[0].find(item => item.username === opts.id).id,
                     }),
-                    actionObj
+                    actionObj,
                 };
             } else {
                 return actionObj;
             }
-        }
+        },
     },
     locations: {
         _get(opts) {
             return {
                 triggerActionType: 'basic',
-                action: { endpoint: 'location_media_recent', opts: { max_id: opts.query.maxId } },
-                handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data })
+                action           : {
+                    endpoint: 'location_media_recent',
+                    opts    : { max_id: opts.query.maxId },
+                },
+                handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data }),
             };
-        }
+        },
     },
     tags: {
         _get(opts) {
             return {
                 triggerActionType: 'basic',
-                action: {
+                action           : {
                     endpoint: 'tag_media_recent',
-                    opts: { max_tag_id: opts.query.maxId && opts.query.maxId.split('_')[0] }
+                    opts    : { max_tag_id: opts.query.maxId && opts.query.maxId.split('_')[0] },
                 },
                 handleActionFunc: data => {
-                    if (opts.query.maxId){
-                        data[0].splice(0, 1)
+                    if (opts.query.maxId) {
+                        data[0].splice(0, 1);
                     }
 
                     return { data: timelineFilter.instagram(data[0]).data };
-                }
+                },
             };
-        }
+        },
     },
     detail: {
         _get(opts) {
             return {
                 triggerActionType: 'combination',
-                actions: [
+                actions          : [
                     { endpoint: 'media' },
                     { endpoint: 'likes' },
-                    { endpoint: 'comments' }
+                    { endpoint: 'comments' },
                 ],
                 handleActionFunc: (postData, likeData, replyData) => {
                     const post = timelineFilter.instagram([postData[0]]).data[0];
-                    const like = actionsFilter.instagram['like'](likeData[0].slice(0, 100));
-                    const reply = actionsFilter.instagram['reply'](replyData[0].slice(0, 100));
+                    const like = actionsFilter.instagram.like(likeData[0].slice(0, 100));
+                    const reply = actionsFilter.instagram.reply(replyData[0].slice(0, 100));
                     return { post, like, reply };
-                }
+                },
             };
-        }
+        },
     },
     pediction_tags: {
         _get(opts) {
             return {
                 triggerActionType: 'basic',
-                action: { endpoint: 'tag_search' },
-                handleActionFunc: data => {
+                action           : { endpoint: 'tag_search' },
+                handleActionFunc : data => {
                     return {
-                        data: actionsFilter.instagram['pediction_tags'](data[0].slice(0, 100))
+                        data: actionsFilter.instagram.pediction_tags(data[0].slice(0, 100)),
                     };
-                }
+                },
             };
-        }
+        },
     },
     pediction_users: {
         _get(opts) {
             return {
                 triggerActionType: 'basic',
-                action: { endpoint: 'user_search' },
-                handleActionFunc: data => {
+                action           : { endpoint: 'user_search' },
+                handleActionFunc : data => {
                     return {
-                        data: actionsFilter.instagram['pediction_users'](data[0].slice(0, 100))
+                        data: actionsFilter.instagram.pediction_users(data[0].slice(0, 100)),
                     };
-                }
+                },
             };
-        }
-    }
+        },
+    },
 };
 
 
 module.exports = (action, opts) => {
-    Ig.use({ access_token : opts.token })
+    Ig.use({ access_token: opts.token });
 
     const triggerAction = {
         basic: i => {
@@ -131,7 +139,7 @@ module.exports = (action, opts) => {
             )
             .then(i.handleActionFunc)
             .catch((err) => {
-                if (err.error_type){
+                if (err.error_type) {
                     throw { statusCode: 400, msg: 'you cannot view this resource' };
                 } else {
                     throw err;
@@ -139,20 +147,20 @@ module.exports = (action, opts) => {
             });
         },
         combination: i => {
-            let promiseAll = [];
-            i.actions.forEach(action => {
-                const endpoint = action.endpoint;
-                const iOpts = action.opts;
+            const promiseAll = [];
+            i.actions.forEach(actionItem => {
+                const endpoint = actionItem.endpoint;
+                const iOpts = actionItem.opts;
                 promiseAll.push(iOpts
                         ? Q.nbind(Ig[endpoint], Ig)(opts.id, iOpts)
                     : Q.nbind(Ig[endpoint], Ig)(opts.id)
                 );
-            })
+            });
 
             return Q.all(promiseAll)
             .spread(i.handleActionFunc)
             .catch((err) => {
-                if (err.error_type){
+                if (err.error_type) {
                     throw { statusCode: 400, msg: 'you cannot view this resource' };
                 } else {
                     throw err;
@@ -162,19 +170,19 @@ module.exports = (action, opts) => {
         queue: i => {
             return triggerAction.basic(i)
             .then(data => {
-                opts.id = data.uid
-                i = i.actionObj
+                opts.id = data.uid;
+                i = i.actionObj;
                 return triggerAction[i.triggerActionType](i);
             });
-        }
+        },
     };
 
 
     try {
         const i = _buildAction[action][`_${opts.method}`](opts);
         return triggerAction[i.triggerActionType](i);
-    } catch (e){
-        console.log(e)
+    } catch (e) {
+        console.log(e);
         throw { statusCode: 405 };
     }
 };

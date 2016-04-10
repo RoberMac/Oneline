@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /* /timeline */
 const router = require('express').Router();
 const timelineFilter = require('./helper/filter/timeline');
@@ -7,31 +7,31 @@ const timelineFetch = require('./helper/api/timeline');
 
 router.get('/', (req, res, next) => {
     // Init
-    let olIdObj = {};
+    const olIdObj = {};
 
-    if (req.query.id){
+    if (req.query.id) {
         req.query.id.split(',').forEach(id_str => {
             const id_split = id_str.split('Id-');
             const key   = `${id_split[0]}Id`;
             const value = id_split[1];
 
-            olIdObj[key] = value
-        })
+            olIdObj[key] = value;
+        });
     }
 
     // Fire
     Q.all([
-        q_userFindOne({id: 'twitter' + req.olPassports.twitter}),
-        q_userFindOne({id: 'instagram' + req.olPassports.instagram}),
-        q_userFindOne({id: 'weibo' + req.olPassports.weibo}),
-        q_userFindOne({id: 'unsplash' + req.olPassports.unsplash}),
+        q_userFindOne({ id: `twitter${req.olPassports.twitter}` }),
+        q_userFindOne({ id: `instagram${req.olPassports.instagram}` }),
+        q_userFindOne({ id: `weibo${req.olPassports.weibo}` }),
+        q_userFindOne({ id: `unsplash${req.olPassports.unsplash}` }),
     ])
     .then(profileList => {
         const validProfileList = profileList.filter(i => i);
-        let timelinePromises = [];
+        const timelinePromises = [];
 
-        if (validProfileList.length < Object.keys(req.olPassports).length){
-            throw { statusCode: 401 }
+        if (validProfileList.length < Object.keys(req.olPassports).length) {
+            throw { statusCode: 401 };
         }
 
         profileList.forEach((profile, index) => {
@@ -49,16 +49,16 @@ router.get('/', (req, res, next) => {
                 minId,
                 maxId,
                 token,
-                tokenSecret
-            })
-        })
+                tokenSecret,
+            });
+        });
 
         return Q.all(timelinePromises);
     })
     .then(dataList => {
         const providerList = ['twitter', 'instagram', 'weibo', 'unsplash'];
-        let combineData = {
-            data    : [],
+        const combineData = {
+            data   : [],
             minId  : {},
             maxId  : {},
             minDate: {},
@@ -76,18 +76,18 @@ router.get('/', (req, res, next) => {
 
             if (!dataItem) return;
 
-            dataItem = timelineFilter[provider](dataItem)
+            dataItem = timelineFilter[provider](dataItem);
 
-            combineData.minId[provider]   = dataItem.minId
-            combineData.maxId[provider]   = dataItem.maxId
-            combineData.minDate[provider] = dataItem.minDate
-            combineData.maxDate[provider] = dataItem.maxDate
-            combineData.data = combineData.data.concat(dataItem.data)
-        })
+            combineData.minId[provider] = dataItem.minId;
+            combineData.maxId[provider] = dataItem.maxId;
+            combineData.minDate[provider] = dataItem.minDate;
+            combineData.maxDate[provider] = dataItem.maxDate;
+            combineData.data = combineData.data.concat(dataItem.data);
+        });
 
-        res.json(combineData)
+        res.json(combineData);
     })
-    .fail(err => next(err))
-})
+    .fail(err => next(err));
+});
 
-module.exports = router
+module.exports = router;

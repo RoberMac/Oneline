@@ -1,77 +1,77 @@
-"use strict";
+'use strict';
 const mongoose = require('mongoose');
 const Schema   = mongoose.Schema;
 
-let userSchema = new Schema({
-    id           : { // provider + uid
-        type     : String,
-        unique   : true,
-        require  : true,
-        index    : true
+const userSchema = new Schema({
+    id: { // provider + uid
+        type   : String,
+        unique : true,
+        require: true,
+        index  : true,
     },
-    provider     : {
+    provider: {
         type     : String,
         lowercase: true,
-        require  : true
+        require  : true,
     },
-    screen_name  : {
-        type     : String,
-        require  : true
+    screen_name: {
+        type   : String,
+        require: true,
     },
-    token        : {
-        type     : String,
-        require  : true
+    token: {
+        type   : String,
+        require: true,
     },
-    tokenSecret  : String,
-    refreshToken : String
+    tokenSecret : String,
+    refreshToken: String,
 });
-let replicantSchema = new Schema({
-    id           : {
-        type     : String,
-        unique   : true,
-        require  : true,
-        index    : true
+const replicantSchema = new Schema({
+    id: {
+        type   : String,
+        unique : true,
+        require: true,
+        index  : true,
     },
-    token        : {
-        type     : String,
-        require  : true
+    token: {
+        type   : String,
+        require: true,
     },
-    profile      : {
-        type     : String,
-        require  : true
+    profile: {
+        type   : String,
+        require: true,
     },
-    msg          : {
-        type     : String,
-        require  : false
+    msg: {
+        type   : String,
+        require: false,
     },
-    createdAt    : {
-        type     : Date,
-        expires  : 60
-    }
+    createdAt: {
+        type   : Date,
+        expires: 60,
+    },
 });
-let shareSchema = new Schema({
-    id           : {
-        type     : String,
-        unique   : true,
-        require  : true,
-        index    : true,
+const shareSchema = new Schema({
+    id: {
+        type   : String,
+        unique : true,
+        require: true,
+        index  : true,
     },
-    sharers      : {
-        type     : [Schema.Types.Mixed],
-        require  : true,
+    sharers: {
+        type   : [Schema.Types.Mixed],
+        require: true,
     },
-    viewCount    : {
-        type     : Number,
-        require  : true,
+    viewCount: {
+        type   : Number,
+        require: true,
     },
-    data         : {
-        type     : Schema.Types.Mixed,
-        require  : true
-    }
+    data: {
+        type   : Schema.Types.Mixed,
+        require: true,
+    },
 });
 
 module.exports = {
-    User: mongoose.model('User', userSchema),
+    User     : mongoose.model('User', userSchema),
     Replicant: mongoose.model('Replicant', replicantSchema),
-    Share: mongoose.model('Share', shareSchema),
-}
+    Share    : mongoose.model('Share', shareSchema),
+};

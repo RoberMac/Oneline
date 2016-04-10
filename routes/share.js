@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 const router = require('express').Router();
 const validator = require('is-my-json-valid');
 
@@ -11,47 +11,47 @@ const Share = require('../utils/models').Share;
 const q_shareFindOne = Q.nbind(Share.findOne, Share);
 
 router.param('provider', (req, res, next, provider) => {
-    req.olProvider = provider
-    next()
-})
+    req.olProvider = provider;
+    next();
+});
 router.param('id', (req, res, next, id) => {
-    req.olId = id
-    next()
-})
+    req.olId = id;
+    next();
+});
 
 /**
  * Store Shared Post
  *
  */
 router.post('/:provider/:id', require('../utils/middlewares'), (req, res, next) => {
-    if (!req.body.sharer || !req.body.post){
-        next({ statusCode: 400, msg: 'sharer & post is required' })
+    if (!req.body.sharer || !req.body.post) {
+        next({ statusCode: 400, msg: 'sharer & post is required' });
         return;
     }
 
     const provider = req.olProvider;
     const id = provider + req.olId;
     const sharer = Object.assign(req.body.sharer, { shared_at: Date.now() });
-    let post = Object.assign(req.body.post, { detail: true, avatarless: false });
+    const post = Object.assign(req.body.post, { detail: true, avatarless: false });
 
-    if (post.quote) { post.quote.detail = true }
+    if (post.quote) { post.quote.detail = true; }
 
     /**
      * Valid
      *
      */
     if (req.olPassports[provider] !== sharer.uid || !userValidate(sharer)) {
-        next({ statusCode: 400, msg: 'invalid sharer' })
+        next({ statusCode: 400, msg: 'invalid sharer' });
         return;
     }
     if (!postValidate(post)) {
-        next({ statusCode: 400, msg: 'invalid post' })
+        next({ statusCode: 400, msg: 'invalid post' });
         return;
     }
 
     q_shareFindOne({ id })
     .then(found => {
-        if (found){
+        if (found) {
             // Update
             const newSharers = (
                 found.sharers
@@ -60,33 +60,33 @@ router.post('/:provider/:id', require('../utils/middlewares'), (req, res, next) 
             );
             Object.assign(found, {
                 sharers: newSharers,
-                data: post
-            })
+                data   : post,
+            });
             found.save(err => {
-                if (err) { 
-                    next({ statusCode: 500 })
+                if (err) {
+                    next({ statusCode: 500 });
                 } else {
-                    res.json({ id })
+                    res.json({ id });
                 }
-            })
+            });
         } else {
             // Create
             const share = new Share({
                 id,
-                sharers: [sharer],
+                sharers  : [sharer],
                 viewCount: 0,
-                data: post
+                data     : post,
             });
             share.save(err => {
                 if (err) {
-                    next({ statusCode: 500 })
+                    next({ statusCode: 500 });
                 } else {
-                    res.json({ id })
+                    res.json({ id });
                 }
-            })
+            });
         }
-    }, err => next({ statusCode: 500 }))
-})
+    }, err => next({ statusCode: 500 }));
+});
 
 /**
  * Read Shared Post
@@ -99,35 +99,35 @@ router.get('/:provider/:id', (req, res, next) => {
     const render = sharedData => {
         if (isAndroidWechat) {
             res.render('accessDenied', {
-                icon: 'androidWechat'
-            })
+                icon: 'androidWechat',
+            });
         } else {
             res.render('share', {
                 sharedData: {
-                    sharers: sharedData.sharers,
-                    data: sharedData.data,
-                    viewCount: sharedData.viewCount
+                    sharers  : sharedData.sharers,
+                    data     : sharedData.data,
+                    viewCount: sharedData.viewCount,
                 },
-                isBlocked: !!req.acceptsLanguages('zh', 'pa-pk', 'ko-kp', 'fa-ir')
-            })
+                isBlocked: !!req.acceptsLanguages('zh', 'pa-pk', 'ko-kp', 'fa-ir'),
+            });
         }
     };
 
     q_shareFindOne({ id })
     .then(found => {
         if (found) {
-            Object.assign(found, { viewCount: found.viewCount + 1 })
-                found.save(err => {
-                    if (err) { 
-                        next({ statusCode: 500 })
-                    } else {
-                        render(found)
-                    }
-                })
+            Object.assign(found, { viewCount: found.viewCount + 1 });
+            found.save(err => {
+                if (err) {
+                    next({ statusCode: 500 });
+                } else {
+                    render(found);
+                }
+            });
         } else {
-            res.redirect('/settings')
+            res.redirect('/settings');
         }
-    }, err => next({ statusCode: 500 }))
-})
+    }, err => next({ statusCode: 500 }));
+});
 
-module.exports = router
+module.exports = router;

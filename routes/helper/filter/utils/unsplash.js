@@ -1,12 +1,11 @@
-"use strict";
+'use strict';
 const calcRatio = require('./helpers').calcRatio;
 
-
-function user(user) {
-    const name        = user.name;
-    const uid         = user.id;
-    const screen_name = user.username;
-    const avatar      = user.profile_image.medium;
+function user(u) {
+    const name        = u.name;
+    const uid         = u.id;
+    const screen_name = u.username;
+    const avatar      = u.profile_image.medium;
 
     return { name, uid, screen_name, avatar };
 }
@@ -14,7 +13,7 @@ function media(image) {
     return {
         small: image.urls.regular.replace('&w=1080&', '&w=640&'),
         large: image.urls.regular,
-        ratio: calcRatio(image.width, image.height)
+        ratio: calcRatio(image.width, image.height),
     };
 }
 function text(categories) {
@@ -25,6 +24,5 @@ function text(categories) {
         return `#${tagName}`;
     }).join(' ');
 }
-
 
 module.exports = { user, media, text };

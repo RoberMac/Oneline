@@ -1,3 +1,3 @@
 module.exports = {
-    unsplash: require('./unsplash')
+    unsplash: require('./unsplash'),
 };
