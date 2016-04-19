@@ -26,7 +26,7 @@ function media(items) {
             };
         }
 
-        const type = item.thumbnail_pic.indexOf('\.gif') > 0 ? 'gif' : 'photo';
+        const type = item.thumbnail_pic.indexOf('.gif') > 0 ? 'gif' : 'photo';
         const image_url = item.thumbnail_pic.replace('thumbnail', 'square');
 
         cache.push({ type, image_url });

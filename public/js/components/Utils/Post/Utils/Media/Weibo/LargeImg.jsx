@@ -1,3 +1,4 @@
+/* eslint jsx-a11y/img-uses-alt: 0 */
 import React from 'react';
 import ClassList from 'classlist';
 

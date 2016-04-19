@@ -1,4 +1,5 @@
 {
+    "root": true,
     "extends": "airbnb",
     "parserOptions": {
         "ecmaFeatures": {
@@ -21,9 +22,3 @@
         "react/prop-types": [0, { "ignore": [], "customValidators": [] }]
     }
 }
-
-/**
- * Issues
- *
- * 2) ES6 Assignment Destructuring [no-shadow]
- */

@@ -22,7 +22,7 @@ export default ({ type, provider, list, children }) => {
                         screen_name={item.screen_name}
                         className="detail__column__cell detail__avatar"
                     >
-                        <img src={item.avatar} />
+                        <img src={item.avatar} alt={`${item.name || item.screen_name}'s avatar`} />
                     </UserLink>
                 ))}
             </div>

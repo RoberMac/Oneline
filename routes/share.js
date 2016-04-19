@@ -1,14 +1,10 @@
 'use strict';
 const router = require('express').Router();
-const validator = require('is-my-json-valid');
 
-const USER_SCHEMA = require('./helper/validator/userSchema');
-const POST_SCHEMA = require('./helper/validator/postSchema');
-const FORMATS = require('./helper/validator/formats');
-const userValidate = validator(USER_SCHEMA, FORMATS);
-const postValidate = validator(POST_SCHEMA, FORMATS);
 const Share = require('../utils/models').Share;
 const q_shareFindOne = Q.nbind(Share.findOne, Share);
+const sharerValidate = require('./helper/schema/sharer');
+const postValidate = require('./helper/schema/post');
 
 router.param('provider', (req, res, next, provider) => {
     req.olProvider = provider;
@@ -40,11 +36,11 @@ router.post('/:provider/:id', require('../utils/middlewares'), (req, res, next) 
      * Valid
      *
      */
-    if (req.olPassports[provider] !== sharer.uid || !userValidate(sharer)) {
+    if (req.olPassports[provider] !== sharer.uid || sharerValidate.validate(sharer).error) {
         next({ statusCode: 400, msg: 'invalid sharer' });
         return;
     }
-    if (!postValidate(post)) {
+    if (postValidate.validate(post).error) {
         next({ statusCode: 400, msg: 'invalid post' });
         return;
     }

@@ -28,7 +28,7 @@ const DetailContainerWrapper = ({ provider, post, viewCount, sharers, children }
             <DetailIcon
                 name="like"
                 text={{ type: 'count', content: post.like_count }}
-                active={post.liked}
+                active={false}
                 iconCount={4}
             />
             {children}
@@ -49,7 +49,7 @@ const DetailContainer = props => {
                     <DetailIcon
                         name="retweet"
                         text={{ type: 'count', content: post.retweet_count }}
-                        active={post.retweeted}
+                        active={false}
                         iconCount={4}
                     />
                 </DetailContainerWrapper>

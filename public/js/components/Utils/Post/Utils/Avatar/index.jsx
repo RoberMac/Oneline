@@ -29,6 +29,7 @@ export const Avatar = ({ avatar, screen_name, name, provider }) => (
             <img
                 className="post-profile__avatar"
                 src={converToHDAvatar[provider](avatar)}
+                alt={`${name || screen_name}'s avatar`}
             />
         </UserLink>
         <div className="post-profile__fullname">
@@ -44,6 +45,7 @@ export const RetweetAvatar = ({ avatar, screen_name, provider }) => (
             <img
                 className={`post-profile__avatar post-profile__avatar--${provider}`}
                 src={avatar}
+                alt={`${name || screen_name}'s avatar`}
             />
         </span>
     </UserLink>

@@ -34,9 +34,3 @@
         "no-use-before-define": [2, { "functions": false }]
     }
 }
-
-/**
- * Issues
- *
- * 2) ES6 Assignment Destructuring [no-shadow]
- */

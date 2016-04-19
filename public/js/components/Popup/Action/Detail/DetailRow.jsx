@@ -16,7 +16,7 @@ export default ({ provider, list }) => (
                 screen_name={item.screen_name}
                 className="detail__row__avatar detail__avatar"
             >
-                <img src={item.avatar} />
+                <img src={item.avatar} alt={`${item.name || item.screen_name}'s avatar`} />
             </UserLink>
             <div className="detail__row__content">
                 <Text

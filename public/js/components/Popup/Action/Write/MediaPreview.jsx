@@ -1,3 +1,5 @@
+/* eslint jsx-a11y/redundant-alt: 0 */
+
 import React from 'react';
 
 export default class MediaPreview extends React.Component {
@@ -23,7 +25,7 @@ export default class MediaPreview extends React.Component {
                         key={url}
                         onClick={() => this.removeMedia(index)}
                     >
-                        <img src={url} />
+                        <img src={url} alt={`uploaded image ${index}`} />
                     </span>
                 ))
             }

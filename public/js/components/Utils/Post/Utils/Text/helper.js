@@ -39,20 +39,20 @@ const MATCH_MENTION = {
     weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g,
 };
 const MATCH_LINK = new RegExp([
-    '(?:https?:\/\/)+',
+    '(?:https?://)+',
     '(?![^\\s]*?")',
-    '([\\w.,@?!^=%&amp;:\/~+#-]*[\\w@?!^=%&amp;\/~+#-])?',
+    '([\\w.,@?!^=%&amp;:/~+#-]*[\\w@?!^=%&amp;/~+#-])?',
 ].join(''), 'gi');
 const MATCH_SUFFIX_LINK = new RegExp([
-    '(?:https?:\/\/)+',
+    '(?:https?://)+',
     '(?![^\\s]*?")',
-    '([\\w.,@?!^=%&amp;:\/~+#-]*[\\w@?!^=%&amp;\/~+#-])?$',
+    '([\\w.,@?!^=%&amp;:/~+#-]*[\\w@?!^=%&amp;/~+#-])?$',
 ].join(''), 'gi');
 const MATCH_TAG = new RegExp([
     '(^|\\s)*',
     '[#＃]',
     '([',
-    '^#\\s!?@$%^&*()+\\-=\\[\\]{};\':"|,.<>\/\\\\',
+    '^#\\s!?@$%^&*()+\\-=\\[\\]{};\':"|,.<>/\\\\',
     '\u3002\uff1f\uff01\uff0c\u3001\uff1b', // 。？！，、；
     '\uff1a\u300c\u300d\u300e\u300f\u2018', // ：「」『』‘
     '\u2019\u201c\u201D\uff08\uff09\u3014', // ’“”（）〔
@@ -151,7 +151,7 @@ const weiboEmotify = (text) => {
          *
          */
         const PREFIX = 'http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/';
-        const ID = _id.replace(/\-|\+|\@/g, '/').replace('?', '');
+        const ID = _id.replace(/\-|\+|@/g, '/').replace('?', '');
         const TYPE = _id.indexOf('-') > 0 ? '_org' : _id.indexOf('+') > 0 ? '_thumb' : '';
         const SUFFIX = _id.indexOf('?') > 0 ? '.png' : '.gif';
 

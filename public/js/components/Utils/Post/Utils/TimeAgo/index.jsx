@@ -17,7 +17,7 @@ export default class _TimeAgo extends React.Component {
         return (
             <span className={`post__time tips ${className || ''}`} onClick={this.toggleTimeAgo}>
             {this.state.isTimeAge
-                ? <TimeAgo date={date} live formatter={formatter} maxPeriod={1000 * 60} />
+                ? <TimeAgo date={date} live formatter={formatter} maxPeriod={60} />
                 : <span>{new Date(date).toLocaleString()}</span>
             }
             </span>
