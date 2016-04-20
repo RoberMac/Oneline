@@ -1,4 +1,5 @@
 import React from 'react';
+import assign from 'object.assign';
 
 // Helpers
 import reduxStore from 'state/store';
@@ -92,7 +93,7 @@ const Actions = {
                 <span className="post-action__hide animate--faster">
                     <Star provider="weibo" id={post.id_str} stared={post.stared} />
                     <Source provider="weibo" uid={post.user.uid} mid={post.mid} />
-                    <Detail provider="weibo" post={post} />
+                    <Detail provider="weibo" post={assign({}, post)} />
                     <Share provider="weibo" post={post} />
                 </span>
             </div>

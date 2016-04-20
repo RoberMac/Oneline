@@ -259,18 +259,18 @@ function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
 }
 // 標題未讀數提醒
 function setTitleUnreadCount(count) {
-    const N_MAP = {
-        0: '⁰',
-        1: '¹',
-        2: '²',
-        3: '³',
-        4: '⁴',
-        5: '⁵',
-        6: '⁶',
-        7: '⁷',
-        8: '⁸',
-        9: '⁹',
-    };
+    const N_MAP = [
+        '⁰',
+        '¹',
+        '²',
+        '³',
+        '⁴',
+        '⁵',
+        '⁶',
+        '⁷',
+        '⁸',
+        '⁹',
+    ];
     let count_str = '';
 
     if (count > 0 && count % 1 === 0) {
