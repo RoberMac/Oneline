@@ -1,4 +1,4 @@
-const Joi = require('Joi');
+const Joi = require('joi');
 
 module.exports = Joi.when('provider', {
     is  : ['twitter', 'weibo'],

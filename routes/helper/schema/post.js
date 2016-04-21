@@ -1,4 +1,4 @@
-const Joi = require('Joi');
+const Joi = require('joi');
 
 // Helpers
 const providerSchema = require('./helpers/provider');
