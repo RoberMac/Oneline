@@ -17,7 +17,7 @@ export default ({ name, text, iconCount, active }) => {
     let _text;
     switch (text.type) {
         case 'count':
-            _text = numAbbr(text.content);
+            _text = text.content && numAbbr(text.content) || '?';
             break;
         case 'date':
             _text = new Date(text.content).toLocaleDateString();

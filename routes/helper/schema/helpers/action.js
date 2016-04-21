@@ -17,7 +17,14 @@ exports.retweeted = (
     })
 );
 
-exports.like_count = Joi.number().required();
+exports.like_count = (
+    Joi
+    .when('provider', {
+        is       : ['twitter', 'instagram', 'weibo'],
+        then     : Joi.number().required(),
+        otherwise: Joi.number().optional(),
+    })
+);
 exports.liked = Joi.boolean().required();
 
 exports.reply_count = (
@@ -33,7 +40,7 @@ exports.download_count = (
     Joi
     .when('provider', {
         is       : 'unsplash',
-        then     : Joi.number().required(),
+        then     : Joi.number().optional(),
         otherwise: Joi.forbidden(),
     })
 );

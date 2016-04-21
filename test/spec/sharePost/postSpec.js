@@ -104,8 +104,8 @@ describe('base post', () => {
                 expect(err).toBeFalsy();
             });
         });
-        it('fails when `location.id` is not a string or number or not provided', () => {
-            [{}, true, undefined, '', null].forEach(v => {
+        it('fails when `location.id` is not a string or number', () => {
+            [{}, true, '', null].forEach(v => {
                 const invalidLocation = Object.assign({}, initLocation, { id: v });
                 postSchema.validate(Object.assign(post, { location: invalidLocation }), err => {
                     expect(err).toBeTruthy();

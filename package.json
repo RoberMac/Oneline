@@ -1,13 +1,14 @@
 {
   "name": "Oneline",
-  "version": "0.13.7-rc.1",
+  "version": "0.13.7-rc.2",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "cd test && jasmine",
+    "build": "npm run test && npm run prod && npm run lint",
     "prod": "gulp && NODE_ENV=production webpack -p --progress --colors",
-    "prod:watch": "gulp && NODE_ENV=production webpack -p --watch --progress --colors",
     "dev": "NODE_ENV=development node dev-server.js",
     "start": "NODE_ENV=production node app.js",
+    "lint": "npm run lint:fe && npm run lint:be",
     "lint:fe": "eslint --ext .js,.jsx public/js",
     "lint:be": "eslint --ext .js *.js utils routes views test"
   },
