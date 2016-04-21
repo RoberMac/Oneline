@@ -7,4 +7,4 @@ module.exports = Joi.object({
     avatar     : linkSchema,
     name       : Joi.string().empty('').required(),
     screen_name: Joi.string().required(),
-}).required();
+}).unknown().required();

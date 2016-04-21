@@ -6,9 +6,8 @@ function user(u) {
     const avatar      = u.profile_picture;
     const screen_name = u.username;
     const uid         = u.id;
-    const created_at  = u.created_time * 1000;
 
-    return { name, avatar, screen_name, uid, created_at };
+    return { name, avatar, screen_name, uid };
 }
 function media(image) {
     const _low = image.low_resolution;
