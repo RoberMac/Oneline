@@ -19,20 +19,21 @@
         }
     }
     &__count {
+        display: flex;
+        justify-content: space-around;
         position: relative -17px * *;
         height: 50px;
 
         &__column {
             position: relative;
-            lost-column: 1/3;
             text-align: center;
 
             &::before {
                 content: attr(data-count);
-                position: absolute * * -17px 0;
+                position: absolute * * 0 0;
                 width: 100%;
                 font-size: 11px;
-                color: var(--color-steel);
+                color: currentcolor;
             }
 
             svg {
@@ -78,7 +79,7 @@
         .profile__website {
             svg {
                 stroke: var(--color-twitter);
-            }   
+            }
         }
     }
     &--instagram {

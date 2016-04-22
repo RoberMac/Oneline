@@ -6,10 +6,9 @@ import Icon from 'components/Utils/Icon';
 import numAbbr from 'utils/numAbbr';
 
 
-export default ({ name, text, iconCount, active }) => {
+export default ({ name, text, active }) => {
     const iconClass = classNames({
-        [`detail__column__icon detail__column__icon--${iconCount}`]: iconCount,
-        detail__column__cell: !iconCount,
+        detail__actionsColumn__icon: true,
         [`color--${name}`]: active,
         'color--gray-drak': !active,
     });
@@ -28,8 +27,8 @@ export default ({ name, text, iconCount, active }) => {
     }
 
     return (
-        <div className={iconClass} data-text={_text}>
+        <span className={iconClass} data-text={_text}>
             <Icon name={name} />
-        </div>
+        </span>
     );
 };

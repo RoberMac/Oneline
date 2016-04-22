@@ -30,7 +30,7 @@ export default class Search extends React.Component {
         const { searchText } = this.state;
 
         return (
-            <div className="search">
+            <div className="search" onClick={e => e.stopPropagation()}>
                 <Banner
                     provider={provider}
                     iconName="search"

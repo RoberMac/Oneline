@@ -68,7 +68,6 @@ module.exports = {
                 autoprefixer: true,
             }),
             require('css-mqpacker'),
-            require('lost'),
             // require('cssnano'),
         ];
     },

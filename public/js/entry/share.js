@@ -18,18 +18,15 @@ const DetailContainerWrapper = ({ provider, post, viewCount, sharers, children }
             <DetailIcon
                 name="share"
                 text={{ type: 'count', content: sharers.length }}
-                iconCount={4}
             />
             <DetailIcon
                 name="detail"
                 text={{ type: 'count', content: viewCount }}
-                iconCount={4}
             />
             <DetailIcon
                 name="like"
                 text={{ type: 'count', content: post.like_count }}
                 active={false}
-                iconCount={4}
             />
             {children}
         </DetailColumn>
@@ -50,7 +47,6 @@ const DetailContainer = props => {
                         name="retweet"
                         text={{ type: 'count', content: post.retweet_count }}
                         active={false}
-                        iconCount={4}
                     />
                 </DetailContainerWrapper>
             );
@@ -61,7 +57,6 @@ const DetailContainer = props => {
                     <DetailIcon
                         name="reply"
                         text={{ type: 'count', content: post.reply_count }}
-                        iconCount={4}
                     />
                 </DetailContainerWrapper>
             );
@@ -72,7 +67,6 @@ const DetailContainer = props => {
                     <DetailIcon
                         name="download"
                         text={{ type: 'count', content: post.download_count }}
-                        iconCount={4}
                     />
                 </DetailContainerWrapper>
             );

@@ -51,7 +51,7 @@ export default class GeoPicker extends React.Component {
             : null
         );
         const btnClass = classNames({
-            'write__btn write__btn--left tips--deep--peace': true,
+            'write__toolBar__btn tips--deep--peace': true,
             'tips--active--peace': selected,
             'tips--inprocess': inprocess,
         });

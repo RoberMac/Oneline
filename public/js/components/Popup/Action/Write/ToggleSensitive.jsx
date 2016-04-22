@@ -23,7 +23,7 @@ export default class ToggleSensitive extends React.Component {
         const { selected } = this.state;
         const btnStyle = action === 'retweet' ? { pointerEvents: 'none', opacity: '.1' } : null;
         const btnClass = classNames({
-            'write__btn write__btn--left tips--deep--peace': true,
+            'write__toolBar__btn tips--deep--peace': true,
             'tips--active--peace': selected,
         });
 

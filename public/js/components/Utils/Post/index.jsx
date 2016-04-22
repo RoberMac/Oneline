@@ -1,4 +1,5 @@
 import React from 'react';
+import assign from 'object.assign';
 
 // Components
 import rerender from 'components/Utils/HoCs/rerender';
@@ -32,14 +33,14 @@ class Post extends React.Component {
         setTimeout(() => { this.refs.post.style.opacity = 1; });
     }
     render() {
-        const { className, post } = this.props;
+        const { className, post, style } = this.props;
         const { provider, type } = post;
         const SelectedPost = selectPost[provider][type];
 
         return (
             <div
                 className={`post animate--faster provider--${provider} ${className || ''}`}
-                style={{ opacity: 0 }}
+                style={assign({ opacity: 0 }, style)}
                 ref="post"
             >
                 <SelectedPost {...this.props} />

@@ -11,15 +11,15 @@ export default ({ provider, counts }) => {
         counts && !isUnsplash(provider)
             ? (
                 <div className="profile__count">
-                    <div className={columnClass} data-count={counts.statuses}>
+                    <span className={columnClass} data-count={counts.statuses}>
                         <Icon name={isInstagram(provider) ? 'post' : 'tweet'} />
-                    </div>
-                    <div className={columnClass} data-count={counts.followed_by}>
+                    </span>
+                    <span className={columnClass} data-count={counts.followed_by}>
                         <Icon name="followed_by" />
-                    </div>
-                    <div className={columnClass} data-count={counts.follows}>
+                    </span>
+                    <span className={columnClass} data-count={counts.follows}>
                         <Icon name="follows" />
-                    </div>
+                    </span>
                 </div>
             )
         : <span />

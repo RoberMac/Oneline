@@ -171,7 +171,7 @@ class Read extends React.Component {
         }
 
         return (
-            <div>
+            <div onClick={e => e.stopPropagation()}>
                 {!isInitLoad && (
                     <div className="read animate--enter">
                         <SelectRead showingPosts={showingPosts} user={user} {...this.props} />

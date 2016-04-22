@@ -21,7 +21,7 @@ export default class ToggleWeiboEmotions extends React.Component {
     render() {
         const { selected } = this.state;
         const btnClass = classNames({
-            'write__btn write__btn--left tips--deep--peace': true,
+            'write__toolBar__btn tips--deep--peace': true,
             'tips--active--peace': selected,
         });
 

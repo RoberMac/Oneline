@@ -47,32 +47,29 @@ class SocialAuth extends React.Component {
 
         return (providers.map(provider => {
             const isActive = activeProviders.indexOf(provider) >= 0;
-            const soicalListClass = classNames('social-list', 'vertically_center');
             const soicalBtnClass = classNames({
-                'social-icon animate--faster tips': true,
-                'social-icon--active tips--active': isActive,
+                'social__icon animate--faster tips': true,
+                'social__icon--active tips--active': isActive,
             });
 
             return (
-                <div className={soicalListClass} key={provider}>
-                    <button
-                        className={soicalBtnClass}
-                        onClick={() => this.toggleAuth(provider)}
-                        type="button"
-                    >
-                        <Icon name={provider} />
-                    </button>
-                </div>
+                <button
+                    key={provider}
+                    className={soicalBtnClass}
+                    onClick={() => this.toggleAuth(provider)}
+                    type="button"
+                >
+                    <Icon name={provider} />
+                </button>
             );
         }));
     }
     render() {
         const { children } = this.props;
-        const soicalWrapperClass = classNames('social-wrapper', 'overflow--y', 'animate--faster');
 
         return (
             <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
-                <div className={soicalWrapperClass}>
+                <div className="social animate--faster">
                     {this._renderAuthBtns()}
                 </div>
                 <Transition>

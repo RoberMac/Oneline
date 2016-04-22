@@ -54,7 +54,7 @@ export default class MediaUpload extends React.Component {
             : null
         );
         const btnClass = classNames({
-            'write__btn write__btn--media tips--deep--peace': true,
+            'write__toolBar__btn write__toolBar__btn--media tips--deep--peace': true,
             'tips--inprocess': inprocess,
         });
 

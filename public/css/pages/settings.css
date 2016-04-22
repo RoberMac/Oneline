@@ -1,33 +1,20 @@
-.social-wrapper {
-    position: absolute 15% * *;
-    size: 100% 70%;
-}
-.social-list {
-    size: 100% 33.3%;
+.social {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    position: absolute 11.5% * * 0%;
+    size: 100% 77%;
 
-    &:nth-child(1){
-        top: 0;
-    }
-    &:nth-child(2){
-        top: 33.3%;
-    }
-    &:nth-child(3){
-        top: 66.7%;
-    }
-    &--one {
-        height: 100%;
-    }
-}
-.social-icon {
-    display: block;
-    margin: 0 auto;
-    width: 33.3%;
-    filter: grayscale(100%) contrast(.5);
+    &__icon {
+        width: 33.3%;
+        filter: grayscale(100%) contrast(.5);
 
-    > svg {
-        width: 100%;
-    }
-    &--active {
-        filter: grayscale(0%) contrast(1);
+        > svg {
+            width: 100%;
+        }
+        &--active {
+            filter: grayscale(0%) contrast(1);
+        }
     }
 }

@@ -26,6 +26,7 @@ export default class Index extends React.Component {
         };
 
         this.toggleSharedText = this.toggleSharedText.bind(this);
+        this.handleSpinClick = this.handleSpinClick.bind(this);
     }
     componentDidMount() {
         if (this.state.isInitLoad) {
@@ -78,6 +79,10 @@ export default class Index extends React.Component {
             sharedText: preSharedText ? '' : `｜ @${screen_name}: ${summary}`,
         });
     }
+    handleSpinClick(e) {
+        this.fetchSharedLink();
+        e.stopPropagation();
+    }
     render() {
         const { provider } = this.props;
         const { sharedLink, sharedText, isInitLoad, isFetching, isFetchFail } = this.state;
@@ -89,9 +94,9 @@ export default class Index extends React.Component {
                     initLoad={isInitLoad}
                     isFetching={isFetching}
                     isFetchFail={isFetchFail}
-                    onClick={this.fetchSharedLink}
+                    onClick={this.handleSpinClick}
                 />
-            : <div className={`share provider--${provider}`}>
+            : <div className={`share provider--${provider}`} onClick={e => e.stopPropagation()}>
                 <textarea
                     className="share__text"
                     type="text"

@@ -9,8 +9,8 @@ block styles
 
 block content
     .oneline.overflow--y
-        .social-list.social-list--one.vertically_center
-            button.social-icon.animate--general
+        .social.animate--general
+            button.social__icon.animate--general
                 case provider
                     when 'twitter'
                         include ./icons/twitter.svg
@@ -25,16 +25,16 @@ block content
 
     script(type='text/javascript').
         // Cross-tab Communication
-        localStorage.setItem('addToken', !{JSON.stringify(token)})
+        localStorage.setItem('addToken', !{JSON.stringify(token)});
         localStorage.setItem(
             'profile_' + !{JSON.stringify(provider)},
             !{JSON.stringify(JSON.stringify(profile))}
-        )
+        );
 
         setTimeout(function (){
-            var socialIcon = document.getElementsByClassName('social-icon')[0];
-            socialIcon.setAttribute('class', socialIcon.getAttribute('class') + ' social-icon--active')
+            var socialIcon = document.getElementsByClassName('social__icon')[0];
+            socialIcon.setAttribute('class', socialIcon.getAttribute('class') + ' social__icon--active');
             setTimeout(function (){
-                window.close()
-            }, 1000)
-        }, 500)
+                window.close();
+            }, 1000);
+        }, 500);

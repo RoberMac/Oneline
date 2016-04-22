@@ -46,73 +46,63 @@
         }
     }
     &__toolBar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         position: relative 17% * *;
         margin: 7px auto;
         width: 90%;
-    }
-    &__btn {
-        position: relative;
-        size: 27px;
 
         &--left {
-            float: left;
-
-            svg {
-                height: 20px;
-            }
+            display: flex;
         }
-        &--media {
-            float: left;
+
+        &__btn {
+            position: relative;
             display: inline-block;
-            line-height: 22px;
-            text-align: center;
+            size: 27px;
+            padding: 4px;
             cursor: pointer;
 
-            svg {
-                size: 19px;
-                vertical-align: middle;
-            }
-        }
-        &--send {
-            float: right;
-
-            svg {
-                width: 27px;
-                animation: writingAnimate .3s infinite linear;
-                animation-play-state: paused;
-            }
-
-            &::before {
-                content: attr(data-count);
-                position: absolute * 28px 0 *;
-                color: var(--color-steel);
-                font-size: 7px;
-            }
-
-            &--typing {
-                svg {
-                    animation-play-state: running;
-                }
-            }
-            &:disabled {
-                cursor: not-allowed;
-                filter: brightness(0);
+            &--send {
+                padding: 0;
 
                 svg {
+                    animation: writingAnimate .3s infinite linear;
                     animation-play-state: paused;
                 }
                 &::before {
-                    color: var(--color-weibo);
+                    content: attr(data-count);
+                    position: absolute * 28px 0 *;
+                    color: var(--color-steel);
+                    font-size: 7px;
                 }
-            }
-            &--sending {
-                animation: sendingAnimate 1.7s infinite cubic-bezier(0.4, 0, 1, 1);
 
-                svg {
-                    animation-play-state: running;
+                &--typing {
+                    svg {
+                        animation-play-state: running;
+                    }
                 }
-                &::before {
-                    content: '';
+                &:disabled {
+                    filter: brightness(0);
+                    cursor: not-allowed;
+
+                    svg {
+                        animation-play-state: paused;
+                    }
+                    &::before {
+                        color: var(--color-weibo);
+                    }
+                }
+                &--sending {
+                    animation: sendingAnimate 1.7s infinite cubic-bezier(0.4, 0, 1, 1);
+
+                    svg {
+                        animation-play-state: running;
+                    }
+                    &::before {
+                        content: '';
+                    }
                 }
             }
         }
@@ -122,7 +112,6 @@
         transform: translateY(7px);
 
         &__item {
-            float: left;
             display: inline-block;
             margin-right: 3px;
             size: 27px;
@@ -154,31 +143,31 @@
         }
     }
     &__emotions {
-        padding: 10px 10px 0 10px;
+        display: flex;
+        flex-flow: row wrap;
         z-index: 2;
 
         button {
+            flex: 0 0 25%;
             position: relative;
-            margin-bottom: 10px;
+            padding: 7px;
             border: 1px solid;
             border-color: var(--color-gray-drak);
-            lost-column: 1/4;
+            overflow: hidden;
 
-            @media (--all-mobile-devices){
-                lost-column: 1/3;
+            @media (--phone){
+                flex-basis: 33.3%;
             }
 
             &::before {
                 content: '';
                 padding-top: 100%;
-                float: left;
             }
             &:hover {
-                border-color: var(--color-weibo);
+                background-color: var(--color-gray);
             }
 
             img {
-                float: left;
                 width: 100%;
             }
         }

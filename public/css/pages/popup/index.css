@@ -7,15 +7,9 @@
     size: 100%;
     z-index: 4;
     background-color: var(--color-black-alpha);
-    cursor: zoom-out;
+    overflow-x: hidden;
     ::-webkit-scrollbar {
-        display: none; 
-    }
-
-    &__wrapper {
-        position: relative;
-        size: 100%;
-        overflow-x: hidden;
+        display: none;
     }
 }
 

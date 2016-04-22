@@ -11,20 +11,18 @@ import MenuIcon from './MenuIcon';
 
 // Export
 export default ({ data }) => (
-    <div>
-    {data.map((item, index) => {
+    <div className="menu">
+    {data.map(item => {
         const { link, provider, iconName, iconType } = item;
-        const rowNum = data.length;
         const btnClass = classNames({
-            'menu--row menu__btn btn tips animate--faster': true,
-            [`menu--row-${rowNum}-${index + 1}`]: true,
+            'menu__btn btn tips animate--faster': true,
             [`color--${provider}`]: provider,
         });
         const providerColor = selectProviderColor[provider];
         const activeColor = '#000';
 
         return (
-           <Link to={link} key={link}>
+           <Link to={link} key={link} onClick={e => e.stopPropagation()}>
                 <span className={btnClass}>
                     {iconType === 'menu'
                         ? <MenuIcon

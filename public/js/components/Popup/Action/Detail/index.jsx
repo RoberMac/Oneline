@@ -25,6 +25,8 @@ export default class Detail extends React.Component {
             isFetchFail: false,
             isInitLoad: true,
         };
+
+        this.handleSpinClick = this.handleSpinClick.bind(this);
     }
     componentDidMount() {
         if (this.state.isInitLoad) {
@@ -68,6 +70,10 @@ export default class Detail extends React.Component {
             this.setState({ isFetching: false, isFetchFail: true });
         });
     }
+    handleSpinClick(e) {
+        this.loadDetail();
+        e.stopPropagation();
+    }
     render() {
         const { provider } = this.props;
         const { post, isInitLoad, isFetching, isFetchFail } = this.state;
@@ -87,9 +93,9 @@ export default class Detail extends React.Component {
                     initLoad={isInitLoad}
                     isFetching={isFetching}
                     isFetchFail={isFetchFail}
-                    onClick={this.loadDetail}
+                    onClick={this.handleSpinClick}
                 />
-            : <div className="detail overflow--y animate--enter">
+            : <div className="detail overflow--y animate--enter" onClick={e => e.stopPropagation()}>
                 <Post className="detail__post" post={detailPost} />
                 <DetailContainer provider={provider} {...this.state} />
             </div>

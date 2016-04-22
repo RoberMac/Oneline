@@ -22,7 +22,9 @@
     }
 
     &__row {
+        justify-content: flex-start;
         position: relative;
+        padding: 7px;
         border-top: 1px solid #F1F1F1;
 
         &--reply {
@@ -30,12 +32,12 @@
         }
 
         &__avatar {
+            display: inline-block;
             size: 27px;
-            margin: 7px;
+            margin-right: 7px;
+            overflow: hidden;
         }
         &__content {
-            margin: 7px;
-            width: calc(100% - 27px);
             font-size: var(--font-size-small);
         }
         &__text {
@@ -46,17 +48,12 @@
             font-size: var(--font-size-xx-small);
         }
     }
-    &__column {
+    &__userColumn {
         overflow: hidden;
 
         > div {
             padding: 7px;
             white-space: nowrap;
-        }
-        &--empty {
-            > div {
-                text-align: center;
-            }
         }
         &--like, &--share {
             border-top: 1px dashed #E9574F;
@@ -64,6 +61,19 @@
         &--retweet {
             border-top: 1px dashed #1BADF8;
         }
+        &__item {
+            display: inline-block;
+            position: relative;
+            margin: 3px;
+            size: 30px;
+            vertical-align: middle;
+            text-align: center;
+        }
+    }
+    &__actionsColumn {
+        display: flex;
+        justify-content: space-around;
+        padding: 7px;
 
         &__icon {
             position: relative;
@@ -81,34 +91,10 @@
                 width: 30px;
                 height: 17px;
             }
-            &--2 {
-                lost-column: 1/2;
-            }
-            &--3 {
-                lost-column: 1/3;
-            }
-            &--4 {
-                lost-column: 1/4;
-            }
-        }
-        &__cell {
-            display: inline-block;
-            position: relative;
-            margin: 3px;
-            size: 30px;
-            vertical-align: middle;
-            text-align: center;
         }
     }
     &__avatar {
-        &::before {
-            content: '';
-            padding-top: 100%;
-            float: left;
-        }
-
         img {
-            float: left;
             width: 100%;
             border-radius: 50%;
         }

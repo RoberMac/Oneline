@@ -45,7 +45,7 @@ export default class Rachael extends React.Component {
     }
     render() {
         return (
-            <div className={replicantClass}>
+            <div className={replicantClass} onClick={e => e.stopPropagation()}>
                 <form onSubmit={this.handleSubmit}>
                     <input
                         className="replicant--rachael"

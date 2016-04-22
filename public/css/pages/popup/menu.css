@@ -1,45 +1,11 @@
 .menu {
-    &--row {
-        position: absolute;
-        left: calc(50% - 35px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    position: absolute 11.5% * * 0%;
+    size: 100% 77%;
 
-        &-1-1 {
-            top: calc(50% - 35px);
-        }
-        &-2 {
-            &-1 {
-                top: calc(33.3% - 35px);
-            }
-            &-2 {
-                top: calc(66.7% - 35px);
-            }
-        }
-        &-3 {
-            &-1 {
-                top: calc(25% - 35px);
-            }
-            &-2 {
-                top: calc(50% - 35px);
-            }
-            &-3 {
-                top: calc(75% - 35px);
-            }
-        }
-        &-4 {
-            &-1 {
-                top: calc(20% - 35px);
-            }
-            &-2 {
-                top: calc(40% - 35px);
-            }
-            &-3 {
-                top: calc(60% - 35px);
-            }
-            &-4 {
-                top: calc(80% - 35px);
-            }
-        }
-    }
     &__btn {
         size: 70px;
     }

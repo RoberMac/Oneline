@@ -51,7 +51,6 @@ gulp.task('css', () => {
             autoprefixer: true,
         }),
         require('css-mqpacker'),
-        require('lost'),
         require('cssnano'),
     ];
 

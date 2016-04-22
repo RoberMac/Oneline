@@ -34,5 +34,3 @@
 @custom-media --phone-landscape (device-width <= 767px) and (orientation : landscape);
 @custom-media --tablet (768px <= device-width <= 1024px),(768px <= width <= 1024px);
 @custom-media --tablet-landscape (768px <= device-width <= 1024px) and (orientation : landscape),(768px <= width <= 1024px) and (orientation : landscape);
-
-@lost gutter 10px;

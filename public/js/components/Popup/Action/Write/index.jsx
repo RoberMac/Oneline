@@ -135,7 +135,7 @@ export default class Write extends React.Component {
         .catch(() => {
             addClassTemporarily(this.refs.textarea, 'write__textarea--err', 500);
         })
-        .then(() => {
+        .finally(() => {
             this.setState({ submitting: false });
         });
     }
@@ -152,11 +152,14 @@ export default class Write extends React.Component {
         return (
             <div className="write">
                 {action !== 'reply' && (
-                    <div className="write__livePreview animate--enter overflow--y">
-                        <Post post={livePreviewPost} />
+                    <div
+                        className="write__livePreview animate--enter overflow--y"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <Post post={livePreviewPost} style={{ marginBottom: 0 }} />
                     </div>
                 )}
-                <form className="write__form">
+                <form className="write__form" onClick={e => e.stopPropagation()}>
 
                     <textarea
                         className="write__textarea animate--general"
@@ -171,23 +174,28 @@ export default class Write extends React.Component {
                     <div className="write__textarea write__textarea--mirror"><span></span></div>
 
                     <div className="write__toolBar">
-                        {isTwitter && (
-                            <ToggleSensitive action={action} onChange={this.handleStateChange} />
-                        )}
-                        <GeoPicker
-                            action={action}
-                            selected={Object.keys(geo).length > 0}
-                            onChange={this.handleStateChange}
-                        />
-                        {isTwitter && (
-                            <MediaUpload
-                                provider={provider}
-                                media={media}
+                        <div className="write__toolBar--left">
+                            {isTwitter && (
+                                <ToggleSensitive
+                                    action={action}
+                                    onChange={this.handleStateChange}
+                                />
+                            )}
+                            <GeoPicker
                                 action={action}
+                                selected={Object.keys(geo).length > 0}
                                 onChange={this.handleStateChange}
                             />
-                        )}
-                        {isWeibo && <ToggleWeiboEmotions onChange={this.handleStateChange} />}
+                            {isTwitter && (
+                                <MediaUpload
+                                    provider={provider}
+                                    media={media}
+                                    action={action}
+                                    onChange={this.handleStateChange}
+                                />
+                            )}
+                            {isWeibo && <ToggleWeiboEmotions onChange={this.handleStateChange} />}
+                        </div>
                         <Submit
                             action={action}
                             provider={provider}

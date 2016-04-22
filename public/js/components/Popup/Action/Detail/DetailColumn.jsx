@@ -1,31 +1,38 @@
 import React from 'react';
 import classNames from 'classnames';
 
+// Components
 import UserLink from 'components/Utils/UserLink';
-
-export default ({ type, provider, list, children }) => {
-    const _list = list || [];
-    const listLength = _list.length;
+const UserColumn = ({ type, provider, list = [] }) => {
     const columnClass = classNames({
-        detail__column: true,
-        [`detail__column--${type}`]: type,
-        ['detail__column--empty']: listLength <= 0,
+        detail__userColumn: true,
+        [`detail__userColumn--${type}`]: type,
     });
+
     return (
         <div className={columnClass}>
             <div className="overflow--x">
-                {children}
-                {_list.map((item, index) => (
-                    <UserLink
-                        key={index}
-                        provider={provider}
-                        screen_name={item.screen_name}
-                        className="detail__column__cell detail__avatar"
-                    >
-                        <img src={item.avatar} alt={`${item.name || item.screen_name}'s avatar`} />
+                {list.map((item, index) => (
+                    <UserLink key={index} provider={provider} screen_name={item.screen_name}>
+                        <span className="detail__userColumn__item detail__avatar">
+                            <img
+                                src={item.avatar}
+                                alt={`${item.name || item.screen_name}'s avatar`}
+                            />
+                        </span>
                     </UserLink>
                 ))}
             </div>
         </div>
     );
 };
+const ActionsColumn = ({ children }) => (
+    <div className="detail__actionsColumn detail__actionsColumn">
+        {children}
+    </div>
+);
+
+// Export
+export default props => (
+    props.children ? <ActionsColumn {...props} /> : <UserColumn {...props} />
+);
