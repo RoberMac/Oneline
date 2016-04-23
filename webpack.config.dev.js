@@ -43,7 +43,7 @@ module.exports = {
             routes    : path.resolve(APP_PATH, 'routes'),
             state     : path.resolve(APP_PATH, 'state'),
             utils     : path.resolve(APP_PATH, 'utils'),
-            images    : path.resolve(ROOT_PATH, 'public/img'),
+            dist      : path.resolve(ROOT_PATH, 'public/dist'),
         },
     },
     plugins: [

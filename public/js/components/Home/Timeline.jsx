@@ -1,6 +1,6 @@
 import React from 'react';
 
-import rerender from 'components/Utils/HoCs/rerender';
+import rerender from 'components/Utils/HoCs/ReRender';
 import Post from 'components/Utils/Post';
 
 const Timeline = ({ showingPosts, highlight }) => (

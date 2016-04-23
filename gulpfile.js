@@ -8,7 +8,7 @@ const rename = require('gulp-rename');
  */
 const svgmin   = require('gulp-svgmin');
 const svgstore = require('gulp-svgstore');
-const SVG_PATH = 'public/img/src/*.svg';
+const SVG_PATH = 'public/img/svg/*.svg';
 
 gulp.task('svgstore', () => {
     return (
@@ -26,7 +26,7 @@ gulp.task('svgstore', () => {
         }))
         .pipe(svgstore())
         .pipe(rename('icon-sprites.svg'))
-        .pipe(gulp.dest('public/img'))
+        .pipe(gulp.dest('public/dist'))
     );
 });
 

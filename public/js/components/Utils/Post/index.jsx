@@ -2,7 +2,7 @@ import React from 'react';
 import assign from 'object.assign';
 
 // Components
-import rerender from 'components/Utils/HoCs/rerender';
+import rerender from 'components/Utils/HoCs/ReRender';
 import { TwitterTweet, TwitterRetweet, TwitterQuote } from './Twitter';
 import { WeiboTweet, WeiboRetweet, WeiboQuote } from './Weibo';
 import { InstagramPost } from './Instagram';

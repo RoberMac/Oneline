@@ -54,7 +54,7 @@ const initReadState = ({
 };
 
 // Components
-import rerender from 'components/Utils/HoCs/rerender';
+import rerender from 'components/Utils/HoCs/ReRender';
 import Spin from 'components/Utils/Spin';
 import Icon from 'components/Utils/Icon';
 import User from './User';

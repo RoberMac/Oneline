@@ -15,7 +15,7 @@ const initSearchState = fromJS({
 });
 
 // Components
-import rerender from 'components/Utils/HoCs/rerender';
+import rerender from 'components/Utils/HoCs/ReRender';
 import Spin from 'components/Utils/Spin';
 import Post from 'components/Utils/Post';
 

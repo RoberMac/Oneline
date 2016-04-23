@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import iconSprites from 'images/icon-sprites.svg';
+import iconSprites from 'dist/icon-sprites.svg';
 
 const _SQUARE = '0 0 100 100';
 const ICONS_VIEWBOX = {

@@ -32,3 +32,4 @@ TODO
 .sass-cache
 stats.json
 public/dist
+views/styles/dist
