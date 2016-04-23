@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const AssetsPlugin = require('assets-webpack-plugin');
 
 const ROOT_PATH = path.resolve(__dirname);
 const APP_PATH = path.resolve(ROOT_PATH, 'public/js');
@@ -8,12 +9,13 @@ const BUILD_PATH = path.resolve(ROOT_PATH, 'public/dist');
 
 module.exports = {
     entry: {
-        app  : [path.resolve(ENTRY_PATH, 'app')],
-        share: [path.resolve(ENTRY_PATH, 'share')],
+        app  : [path.resolve(ENTRY_PATH, 'app'), 'webpack-hot-middleware/client'],
+        share: [path.resolve(ENTRY_PATH, 'share'), 'webpack-hot-middleware/client'],
     },
     output: {
-        path    : BUILD_PATH,
-        filename: '[name].js',
+        path      : BUILD_PATH,
+        publicPath: '/public/dist/',
+        filename  : '[name].[hash].js',
     },
     module: {
         loaders: [
@@ -51,9 +53,15 @@ module.exports = {
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name    : 'common',
-            filename: 'common.js',
+            filename: 'common.[hash].js',
         }),
-        new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
+        new AssetsPlugin({
+            filename: 'assets.manifest.dev.json',
+            path    : BUILD_PATH,
+        }),
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoErrorsPlugin(),
     ],
     postcss: wp => {
         return [

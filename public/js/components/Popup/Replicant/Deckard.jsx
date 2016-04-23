@@ -69,7 +69,7 @@ export default class Deckard extends React.Component {
     }
     render() {
         return (
-            <div className="replicant vertically_center" onClick={e => e.stopPropagation()}>
+            <div className="replicant center" onClick={e => e.stopPropagation()}>
                 <span className="replicant--deckard" data-countdown="" ref="deckard"></span>
             </div>
         );

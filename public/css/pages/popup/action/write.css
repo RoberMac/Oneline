@@ -46,12 +46,12 @@
         }
     }
     &__toolBar {
+        position: relative 17% * *;
+        width: 90%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        position: relative 17% * *;
         margin: 7px auto;
-        width: 90%;
 
         &--left {
             display: flex;
@@ -59,8 +59,8 @@
 
         &__btn {
             position: relative;
-            display: inline-block;
             size: 27px;
+            display: inline-block;
             padding: 4px;
             cursor: pointer;
 
@@ -112,9 +112,9 @@
         transform: translateY(7px);
 
         &__item {
+            size: 27px;
             display: inline-block;
             margin-right: 3px;
-            size: 27px;
             overflow: hidden;
             cursor: pointer;
             border-radius: 3px 3px 0 0;
@@ -177,8 +177,8 @@
 
         button {
             display: block;
-            padding: 3px;
             size: 100% 32px;
+            padding: 3px;
             border-bottom: 1px solid var(--color-gray);
             border-radius: 0;
             overflow: hidden;

@@ -7,7 +7,7 @@ import { browserHistory as history } from 'react-router';
 import store from 'utils/store';
 import { Auth } from 'utils/api';
 import { addClassTemporarily } from 'utils/dom';
-const replicantClass = 'replicant vertically_center';
+const replicantClass = 'replicant center';
 
 // Export
 export default class Rachael extends React.Component {

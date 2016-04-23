@@ -99,6 +99,7 @@ router.get('/:provider/:id', (req, res, next) => {
             });
         } else {
             res.render('share', {
+                assets    : __assets,
                 sharedData: {
                     sharers  : sharedData.sharers,
                     data     : sharedData.data,

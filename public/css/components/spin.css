@@ -45,8 +45,8 @@
 
     &__btn {
         position: relative;
-        display: block;
         size: 48px;
+        display: block;
         margin: 0 auto;
         padding: 0;
         font-size: var(--font-size-base);

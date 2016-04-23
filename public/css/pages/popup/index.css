@@ -21,13 +21,13 @@
         width: 100%;
 
         > * {
-            display: inline-block;
             height: 37px;
+            display: inline-block;
             vertical-align: middle;
         }
         > span {
-            display: inline-block;
             max-width: calc(100% - 37px);
+            display: inline-block;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;

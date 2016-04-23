@@ -19,25 +19,16 @@
         }
     }
     &__count {
-        display: flex;
-        justify-content: space-around;
         position: relative -17px * *;
-        height: 50px;
 
-        &__column {
-            position: relative;
-            text-align: center;
-
-            &::before {
-                content: attr(data-count);
-                position: absolute * * 0 0;
-                width: 100%;
-                font-size: 11px;
-                color: currentcolor;
-            }
-
+        &__item {
             svg {
-                size: 27px;
+                height: 27px;
+            }
+            span {
+                font-size: var(--font-size-small);
+                line-height: 23px;
+                color: currentcolor;
             }
         }
     }

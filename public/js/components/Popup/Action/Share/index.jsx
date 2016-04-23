@@ -103,7 +103,7 @@ export default class Index extends React.Component {
                     value={`${sharedText} ${sharedLink}`}
                     readOnly
                 />
-                <div className="share__toolBar vertically_center">
+                <div className="share__toolBar center">
                     <ClipboardBtn />
                     <button
                         className={`share__btn ${sharedText ? '' : 'tips--deep--peace'}`}

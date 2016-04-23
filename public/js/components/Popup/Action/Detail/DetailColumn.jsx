@@ -27,7 +27,7 @@ const UserColumn = ({ type, provider, list = [] }) => {
     );
 };
 const ActionsColumn = ({ children }) => (
-    <div className="detail__actionsColumn detail__actionsColumn">
+    <div className="detail__actionsColumn column">
         {children}
     </div>
 );

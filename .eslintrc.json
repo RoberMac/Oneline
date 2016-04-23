@@ -14,7 +14,8 @@
         "q_userFindOne": true,
         "q_userFindOneAndRemove": true,
         "q_userFindOneAndUpdate": true,
-        "__base": true
+        "__base": true,
+        "__assets": true
     },
     "rules": {
         "arrow-body-style": 0,

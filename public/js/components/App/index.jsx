@@ -12,11 +12,11 @@ export default ({ location: { pathname }, main, leftSidebar, rightSidebar }) => 
         'oneline--timeline': homePage,
     });
     const leftSidebarClass = classNames({
-        'sidebar sidebar--left vertically_center animate--faster': true,
+        'sidebar sidebar--left center animate--faster': true,
         'sidebar--timeline sidebar--timeline--left': homePage,
     });
     const rightSidebarClass = classNames({
-        'sidebar sidebar--right vertically_center animate--faster': true,
+        'sidebar sidebar--right center animate--faster': true,
         'sidebar--timeline sidebar--timeline--right': homePage,
     });
 

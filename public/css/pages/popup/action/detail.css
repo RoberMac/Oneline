@@ -12,18 +12,18 @@
         position: relative -39px * * *;
         margin: 0 17px;
         padding: 7px 0px 0px;
-        font-size: var(--font-size-base) var(--line-height-base);
-        background-color: #FFF;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         border-bottom-left-radius: 3px;
         border-bottom-right-radius: 3px;
+        font-size: var(--font-size-base) var(--line-height-base);
+        background-color: #FFF;
         z-index: 1;
     }
 
     &__row {
-        justify-content: flex-start;
         position: relative;
+        justify-content: flex-start;
         padding: 7px;
         border-top: 1px solid #F1F1F1;
 
@@ -62,34 +62,25 @@
             border-top: 1px dashed #1BADF8;
         }
         &__item {
-            display: inline-block;
             position: relative;
-            margin: 3px;
             size: 30px;
+            display: inline-block;
+            margin: 3px;
             vertical-align: middle;
             text-align: center;
         }
     }
     &__actionsColumn {
-        display: flex;
-        justify-content: space-around;
         padding: 7px;
 
-        &__icon {
-            position: relative;
-            text-align: center;
-            height: 30px;
-
-            &::before {
-                content: attr(data-text);
-                position: absolute * * 0 0;
-                width: 100%;
+        &__item {
+            svg {
+                height: 17px;
+            }
+            span {
                 font-size: var(--font-size-xx-small);
                 line-height: 13px;
-            }
-            svg {
-                width: 30px;
-                height: 17px;
+                color: currentcolor;
             }
         }
     }

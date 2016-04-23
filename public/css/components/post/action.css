@@ -4,19 +4,19 @@
 
     &__btn {
         position: relative;
+        height: 23px;
         padding-right: 3px;
         margin-right: 5px;
-        height: 23px;
     }
     &__icon {
-        display: inline-block;
         height: 17px;
+        display: inline-block;
         vertical-align: middle;
     }
     &__count {
+        height: 23px;
         display: inline-block;
         margin-left: 1px;
-        height: 23px;
         vertical-align: middle;
 
         &::after {

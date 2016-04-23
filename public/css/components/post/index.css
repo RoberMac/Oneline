@@ -27,9 +27,9 @@
             }
         }
         &__name {
-            display: none;
             position: absolute 0 17px * *;
             width: 100px;
+            display: none;
             text-align: right;
             overflow: hidden;
             white-space: nowrap;

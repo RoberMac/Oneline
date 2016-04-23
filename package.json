@@ -1,11 +1,11 @@
 {
   "name": "Oneline",
-  "version": "0.13.7-rc.4",
+  "version": "0.13.7-rc.5",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "cd test && jasmine",
     "build": "npm run test && npm run prod && npm run lint",
-    "prod": "gulp && NODE_ENV=production webpack -p --progress --colors",
+    "prod": "gulp && NODE_ENV=production webpack --config webpack.config.prod.js -p --progress --colors",
     "dev": "NODE_ENV=development node dev-server.js",
     "start": "NODE_ENV=production node app.js",
     "lint": "npm run lint:fe && npm run lint:be",
@@ -61,6 +61,7 @@
     "weibo-mid": "0.0.1"
   },
   "devDependencies": {
+    "assets-webpack-plugin": "^3.4.0",
     "babel-core": "^6.7.7",
     "babel-loader": "^6.2.4",
     "babel-plugin-react-transform": "^2.0.2",
@@ -114,6 +115,7 @@
     "style-loader": "^0.13.1",
     "svg-sprite-loader": "0.0.18",
     "webpack": "^1.13.0",
+    "webpack-cleanup-plugin": "^0.2.0",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.10.0",
     "xss-filters": "^1.2.6"

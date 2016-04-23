@@ -118,7 +118,7 @@ class Share extends React.Component {
         const { provider } = data;
         const wrapperClass = classNames({
             popup__wrapper: true,
-            vertically_center: this.state.center,
+            center: this.state.center,
         });
 
         return (

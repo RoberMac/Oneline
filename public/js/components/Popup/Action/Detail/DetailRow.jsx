@@ -9,7 +9,7 @@ export default ({ provider, list }) => (
     {list.map((item, index) => (
         <li
             key={index}
-            className={`detail__row vertically_center ${index === 0 ? 'detail__row--reply' : ''}`}
+            className={`detail__row center ${index === 0 ? 'detail__row--reply' : ''}`}
         >
             <UserLink provider={provider} screen_name={item.screen_name}>
                 <span className="detail__row__avatar detail__avatar">

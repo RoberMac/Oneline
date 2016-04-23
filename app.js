@@ -22,6 +22,7 @@ global.q_userFindOne = Q.nbind(User.findOne, User);
 global.q_userFindOneAndRemove = Q.nbind(User.findOneAndRemove, User);
 global.q_userFindOneAndUpdate = Q.nbind(User.findOneAndUpdate, User);
 global.__base = __dirname;
+global.__assets = require(`${__base}/public/dist/assets.manifest.prod.json`);
 
 // load dotenv
 require('dotenv').load();
@@ -107,7 +108,7 @@ app
 .use('/upload', require('./routes/upload'))
 .use('/share', require('./routes/share'))
 .use('/public', express.static('public'))
-.all('/*', (req, res, next) => res.sendFile(`${__dirname}/index.html`));
+.all('/*', (req, res, next) => res.render('index', { assets: __assets }));
 
 
 // Handing Error

@@ -8,7 +8,7 @@ import numAbbr from 'utils/numAbbr';
 
 export default ({ name, text, active }) => {
     const iconClass = classNames({
-        detail__actionsColumn__icon: true,
+        'detail__actionsColumn__item column__item': true,
         [`color--${name}`]: active,
         'color--gray-drak': !active,
     });
@@ -27,8 +27,9 @@ export default ({ name, text, active }) => {
     }
 
     return (
-        <span className={iconClass} data-text={_text}>
+        <span className={iconClass}>
             <Icon name={name} />
+            <span>{_text}</span>
         </span>
     );
 };
