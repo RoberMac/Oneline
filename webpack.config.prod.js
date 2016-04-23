@@ -62,8 +62,6 @@ module.exports = {
         }),
         new WebpackCleanupPlugin({
             exclude: [
-                'emotions_v1.min.json',
-                'emotions_v2.min.json',
                 'assets.manifest.prod.json',
                 'assets.manifest.dev.json',
             ],

@@ -36,7 +36,7 @@ export default class Deckard extends React.Component {
 
         const profileList = [];
         activeProviders.forEach(provider => {
-            const profile = store.get.profile + provider;
+            const profile = store.get(`profile_${provider}`);
             if (profile) profileList.push(profile);
         });
 

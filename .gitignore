@@ -31,3 +31,4 @@ TODO
 .env
 .sass-cache
 stats.json
+public/dist

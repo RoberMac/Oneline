@@ -23,8 +23,8 @@ app
     '/actions',
     '/upload',
     '/share',
-    '/public/img/icon-sprites.svg',
-    '/public/dist/emotions_v2.min.json',
+    '/public/img',
+    '/public/emotions',
 ], {
     target: 'http://localhost:8080',
 }));
