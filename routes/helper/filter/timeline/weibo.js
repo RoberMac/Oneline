@@ -1,7 +1,7 @@
 'use strict';
+
 const mid    = require('weibo-mid');
 const filterUtils = require('../utils');
-
 
 module.exports = data => {
     const postsLength = data.length;

@@ -1,5 +1,6 @@
-const filterUtils = require('../utils');
+'use strict';
 
+const filterUtils = require('../utils');
 
 module.exports = data => {
     const now = Date.now();

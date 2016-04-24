@@ -1,3 +1,5 @@
+'use strict';
+
 exports.https = 'https://pbs.twimg.com/profile_images/668328458519384064/FSAIjKRl.jpg';
 
 exports.twitter = 'http://pbs.twimg.com/profile_images/668328458519384064/FSAIjKRl.jpg';

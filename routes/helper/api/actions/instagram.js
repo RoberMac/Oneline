@@ -1,6 +1,6 @@
 /* eslint no-else-return: 0 */
-
 'use strict';
+
 const Ig = require('instagram-node').instagram();
 const timelineFilter = require(`${__base}/routes/helper/filter/timeline`);
 const actionsFilter = require(`${__base}/routes/helper/filter/actions`);

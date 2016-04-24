@@ -1,5 +1,6 @@
 /* eslint no-undef: 0 */
 'use strict';
+
 const _omit = require('lodash.omit');
 
 const sharerSchema = require('../../../routes/helper/schema/sharer');

@@ -1,3 +1,5 @@
+'use strict';
+
 const router = require('express').Router();
 
 const Share = require('../utils/models').Share;

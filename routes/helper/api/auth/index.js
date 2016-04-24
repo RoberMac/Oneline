@@ -1,3 +1,5 @@
+'use strict';
+
 const unsplash  = require('./unsplash');
 
 module.exports = {

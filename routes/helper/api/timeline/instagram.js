@@ -1,3 +1,5 @@
+'use strict';
+
 const Ig = require('instagram-node').instagram();
 
 module.exports = opts => {

@@ -1,3 +1,5 @@
+'use strict';
+
 function user(u) {
     const name        = u.name;
     const uid         = u.id_str;

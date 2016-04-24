@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require('fs');
 const express = require('express');
 const proxyMiddleware = require('http-proxy-middleware');

@@ -1,5 +1,5 @@
-'use strict';
 /* eslint global-require: 0 */
+'use strict';
 
 const Strategies = {
     Twitter  : require('passport-twitter').Strategy,

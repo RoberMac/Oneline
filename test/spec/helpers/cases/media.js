@@ -1,3 +1,5 @@
+'use strict';
+
 const link = require('./link');
 
 exports.media = {

@@ -1,3 +1,5 @@
+'use strict';
+
 const twitter   = require('./twitter');
 const instagram = require('./instagram');
 const weibo     = require('./weibo');

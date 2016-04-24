@@ -1,3 +1,5 @@
+'use strict';
+
 const Unsplash = require('./wrapper/unsplash');
 
 /**

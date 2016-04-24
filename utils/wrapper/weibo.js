@@ -1,4 +1,5 @@
 'use strict';
+
 const Q = require('q');
 const request = require('request');
 

@@ -1,4 +1,5 @@
-/* /timeline */
+'use strict';
+
 const router = require('express').Router();
 const timelineFilter = require('./helper/filter/timeline');
 const timelineFetch = require('./helper/api/timeline');

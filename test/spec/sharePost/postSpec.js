@@ -1,5 +1,6 @@
 /* eslint no-undef: 0, key-spacing: 0 */
 'use strict';
+
 const _omit = require('lodash.omit');
 const postSchema = require('../../../routes/helper/schema/post');
 

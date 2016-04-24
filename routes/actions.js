@@ -1,6 +1,6 @@
 /* eslint no-else-return: 0 */
+'use strict';
 
-/* /actions */
 const router  = require('express').Router();
 const Auth    = require('./helper/api/auth');
 const Actions = require('./helper/api/actions');

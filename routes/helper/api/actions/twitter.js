@@ -1,4 +1,5 @@
 /* eslint no-else-return: 0 */
+'use strict';
 
 const Twit    = require('twit');
 const timelineFilter = require(`${__base}/routes/helper/filter/timeline`);

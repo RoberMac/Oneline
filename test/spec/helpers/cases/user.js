@@ -1,3 +1,5 @@
+'use strict';
+
 const twitterLink = require('./link').twitter;
 
 module.exports = {
