@@ -1,4 +1,3 @@
-'use strict';
 const calcRatio = require('./helpers').calcRatio;
 
 function user(u) {

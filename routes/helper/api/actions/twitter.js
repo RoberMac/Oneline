@@ -1,6 +1,5 @@
 /* eslint no-else-return: 0 */
 
-'use strict';
 const Twit    = require('twit');
 const timelineFilter = require(`${__base}/routes/helper/filter/timeline`);
 const actionsFilter = require(`${__base}/routes/helper/filter/actions`);
@@ -337,13 +336,13 @@ module.exports = (action, opts) => {
         access_token_secret: opts.tokenSecret,
     });
     const _method = `_${opts.method}`;
-    const q_twit  = Q.nbind(T[_method === '_get' ? 'get' : 'post'], T);
+    const promiseTwit  = Q.nbind(T[_method === '_get' ? 'get' : 'post'], T);
     const triggerAction = {
-        basic      : t => q_twit(t.action.endpoint, t.action.tOpts).then(t.handleActionFunc),
+        basic      : t => promiseTwit(t.action.endpoint, t.action.tOpts).then(t.handleActionFunc),
         combination: t => {
             const promiseAll = [];
             t.actions.forEach(actionItem => {
-                promiseAll.push(q_twit(actionItem.endpoint, actionItem.tOpts));
+                promiseAll.push(promiseTwit(actionItem.endpoint, actionItem.tOpts));
             });
 
             return Q.all(promiseAll).spread(t.handleActionFunc);

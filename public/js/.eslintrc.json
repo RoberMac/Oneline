@@ -16,9 +16,12 @@
         "new-cap": [2, {"capIsNewExceptions": ["Map", "List"]}],
         "no-confusing-arrow": 0,
         "no-nested-ternary": 0,
+        "no-underscore-dangle": 0,
         "no-unused-expressions": [2, { "allowShortCircuit": true, "allowTernary": true }],
 
         "react/jsx-indent-props": [2, 4],
-        "react/prop-types": [0, { "ignore": [], "customValidators": [] }]
+        "react/jsx-indent": [2, 4],
+        "react/prop-types": [0, { "ignore": [], "customValidators": [] }],
+        "import/no-unresolved": [2, { "ignore": ["components", "state", "utils", "dist"] }]
     }
 }

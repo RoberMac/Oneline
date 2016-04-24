@@ -1,6 +1,11 @@
+const twitter   = require('./twitter');
+const instagram = require('./instagram');
+const weibo     = require('./weibo');
+const unsplash  = require('./unsplash');
+
 module.exports = {
-    twitter  : require('./twitter'),
-    instagram: require('./instagram'),
-    weibo    : require('./weibo'),
-    unsplash : require('./unsplash'),
+    twitter,
+    instagram,
+    weibo,
+    unsplash,
 };

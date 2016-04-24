@@ -1,4 +1,3 @@
-'use strict';
 const uniqBy =  require('lodash.uniqby');
 const filterUtils = require('../utils');
 

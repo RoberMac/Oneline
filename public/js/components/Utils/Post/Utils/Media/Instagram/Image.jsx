@@ -1,4 +1,4 @@
-/* eslint jsx-a11y/img-uses-alt: 0 */
+/* eslint jsx-a11y/img-has-alt: 0 */
 
 import React from 'react';
 

@@ -1,3 +1,5 @@
+const twitter   = require('./twitter');
+
 module.exports = {
-    twitter: require('./twitter'),
+    twitter,
 };

@@ -1,4 +1,3 @@
-'use strict';
 /* /auth */
 const passport = require('passport');
 const jwt      = require('jsonwebtoken');
@@ -70,7 +69,7 @@ router.delete('/revoke/:provider', (req, res, next) => {
     const provider = req.olProvider;
     const id       = provider + req.olPassports[provider];
 
-    q_userFindOneAndRemove({ id })
+    promiseUserFindOneAndRemove({ id })
     .then(() => res.json({ statusCode: 200 }))
     .fail(err => next(err));
 });
@@ -82,9 +81,11 @@ router.delete('/revoke/:provider', (req, res, next) => {
  */
 const crypto = require('crypto');
 const Replicant = require('../utils/models').Replicant;
-const q_replicantFindOne = Q.nbind(Replicant.findOne, Replicant);
+const promiseReplicantFindOne = Q.nbind(Replicant.findOne, Replicant);
+const userValidate = require('./helper/schema/helpers/user');
 
 router.post('/replicant/deckard', (req, res, next) => {
+    const profileList = req.body.profileList;
     const code = (
         crypto
         .createHash('md5')
@@ -92,14 +93,25 @@ router.post('/replicant/deckard', (req, res, next) => {
         .digest('hex')
         .slice(0, 7)
     );
+    const invalidProfileList = (
+        profileList.some(profile => {
+            if (userValidate.validate(profile).error) {
+                next({ statusCode: 400, msg: 'invalid profile' });
+                return true;
+            }
+            return false;
+        })
+    );
 
-    q_replicantFindOne({ id: code })
+    if (invalidProfileList) return;
+
+    promiseReplicantFindOne({ id: code })
     .then(found => {
         if (!found) {
             const replicant = new Replicant({
                 id       : code,
                 token    : JSON.stringify(req.olTokenList),
-                profile  : JSON.stringify(req.body.profileList),
+                profile  : JSON.stringify(profileList),
                 createdAt: new Date(),
             });
             replicant.save(err => {
@@ -112,7 +124,7 @@ router.post('/replicant/deckard', (req, res, next) => {
     }, err => next({ statusCode: 500 }));
 });
 router.get('/replicant/rachael', (req, res, next) => {
-    q_replicantFindOne({ id: req.query.code })
+    promiseReplicantFindOne({ id: req.query.code })
     .then(found => {
         if (found) {
             res.json({

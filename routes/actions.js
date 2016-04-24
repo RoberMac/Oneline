@@ -1,6 +1,5 @@
 /* eslint no-else-return: 0 */
 
-'use strict';
 /* /actions */
 const router  = require('express').Router();
 const Auth    = require('./helper/api/auth');
@@ -30,7 +29,7 @@ router.all('/:action/:provider/:id', (req, res, next) => {
         query : req.query,
     };
 
-    q_userFindOne({ id })
+    promiseUserFindOne({ id })
     .then(found => {
         Object.assign(actionOpts, {
             token       : found.token,
@@ -66,7 +65,7 @@ router.all('/:action/:provider/:id', (req, res, next) => {
 
         Object.assign(actionOpts, update);
 
-        return q_userFindOneAndUpdate({ id }, update);
+        return promiseUserFindOneAndUpdate({ id }, update);
     }
     function reRequest() {
         return Actions[provider](req.olAction, actionOpts);

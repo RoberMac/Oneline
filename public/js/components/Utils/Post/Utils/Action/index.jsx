@@ -85,7 +85,7 @@ const Actions = {
         return (post.detail
             ? <div>
                 <Source provider="weibo" uid={post.user.uid} mid={post.mid} />
-                {isAuthUser && <Trash provider="weibo" id={post.id_str} /> }
+                {isAuthUser && <Trash provider="weibo" id={post.id_str} />}
             </div>
             : <div>
                 <Retweet provider="weibo" post={post} />

@@ -1,4 +1,3 @@
-'use strict';
 const fs   = require('fs');
 const Twit = require('twit');
 
@@ -10,10 +9,10 @@ module.exports = opts => {
         access_token       : opts.token,
         access_token_secret: opts.tokenSecret,
     });
-    const q_twit = Q.nbind(T.post, T);
+    const promiseTwit = Q.nbind(T.post, T);
     const b64content = fs.readFileSync(opts.filePath, { encoding: 'base64' });
 
-    return q_twit('media/upload', {
+    return promiseTwit('media/upload', {
         media_data: b64content,
     })
     .then(data => ({ media_id: data[0].media_id_string }));

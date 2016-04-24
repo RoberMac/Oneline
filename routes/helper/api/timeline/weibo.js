@@ -1,4 +1,3 @@
-'use strict';
 const Weibo = require(`${__base}/utils/wrapper/weibo`);
 
 

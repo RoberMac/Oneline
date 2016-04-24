@@ -1,3 +1,5 @@
+/* eslint global-require: 0 */
+
 const gulp   = require('gulp');
 const path   = require('path');
 const rename = require('gulp-rename');

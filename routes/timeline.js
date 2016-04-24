@@ -1,4 +1,3 @@
-'use strict';
 /* /timeline */
 const router = require('express').Router();
 const timelineFilter = require('./helper/filter/timeline');
@@ -21,10 +20,10 @@ router.get('/', (req, res, next) => {
 
     // Fire
     Q.all([
-        q_userFindOne({ id: `twitter${req.olPassports.twitter}` }),
-        q_userFindOne({ id: `instagram${req.olPassports.instagram}` }),
-        q_userFindOne({ id: `weibo${req.olPassports.weibo}` }),
-        q_userFindOne({ id: `unsplash${req.olPassports.unsplash}` }),
+        promiseUserFindOne({ id: `twitter${req.olPassports.twitter}` }),
+        promiseUserFindOne({ id: `instagram${req.olPassports.instagram}` }),
+        promiseUserFindOne({ id: `weibo${req.olPassports.weibo}` }),
+        promiseUserFindOne({ id: `unsplash${req.olPassports.unsplash}` }),
     ])
     .then(profileList => {
         const validProfileList = profileList.filter(i => i);

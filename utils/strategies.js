@@ -1,4 +1,6 @@
 'use strict';
+/* eslint global-require: 0 */
+
 const Strategies = {
     Twitter  : require('passport-twitter').Strategy,
     Instagram: require('passport-instagram').Strategy,
@@ -14,7 +16,7 @@ const oauth1 = (token, tokenSecret, profile, done) => {
     const avatar = profile._json.profile_image_url_https;
     const id = provider + uid;
 
-    q_userFindOne({ id })
+    promiseUserFindOne({ id })
     .then(found => {
         const userProfile = {
             provider,
@@ -75,7 +77,7 @@ const oauth2 = (token, refreshToken, profile, done) => {
             break;
     }
 
-    q_userFindOne({ id })
+    promiseUserFindOne({ id })
     .then(found => {
         const userProfile = {
             provider,

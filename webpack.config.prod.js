@@ -1,3 +1,5 @@
+/* eslint global-require: 0 */
+
 const path = require('path');
 const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
@@ -41,7 +43,6 @@ module.exports = {
         extensions: ['', '.js', '.jsx', '.json', '.coffee'],
         alias     : {
             components: path.resolve(APP_PATH, 'components'),
-            routes    : path.resolve(APP_PATH, 'routes'),
             state     : path.resolve(APP_PATH, 'state'),
             utils     : path.resolve(APP_PATH, 'utils'),
             dist      : path.resolve(ROOT_PATH, 'public/dist'),

@@ -1,8 +1,7 @@
-'use strict';
 const router = require('express').Router();
 
 const Share = require('../utils/models').Share;
-const q_shareFindOne = Q.nbind(Share.findOne, Share);
+const promiseShareFindOne = Q.nbind(Share.findOne, Share);
 const sharerValidate = require('./helper/schema/sharer');
 const postValidate = require('./helper/schema/post');
 
@@ -45,7 +44,7 @@ router.post('/:provider/:id', require('../utils/middlewares'), (req, res, next) 
         return;
     }
 
-    q_shareFindOne({ id })
+    promiseShareFindOne({ id })
     .then(found => {
         if (found) {
             // Update
@@ -110,7 +109,7 @@ router.get('/:provider/:id', (req, res, next) => {
         }
     };
 
-    q_shareFindOne({ id })
+    promiseShareFindOne({ id })
     .then(found => {
         if (found) {
             Object.assign(found, { viewCount: found.viewCount + 1 });

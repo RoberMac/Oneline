@@ -1,4 +1,3 @@
-'use strict';
 /* /upload */
 const fs     = require('fs');
 const router = require('express').Router();
@@ -26,7 +25,7 @@ router.post('/:provider', (req, res, next) => {
         } else {
             const provider = req.olProvider;
 
-            q_userFindOne({ id: provider + req.olPassports[provider] })
+            promiseUserFindOne({ id: provider + req.olPassports[provider] })
             .then((found) => {
                 return upload[provider]({
                     token      : found.token,

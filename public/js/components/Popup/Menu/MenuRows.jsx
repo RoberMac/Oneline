@@ -22,7 +22,7 @@ export default ({ data }) => (
         const activeColor = '#000';
 
         return (
-           <Link to={link} key={link} onClick={e => e.stopPropagation()}>
+            <Link to={link} key={link} onClick={e => e.stopPropagation()}>
                 <span className={btnClass}>
                     {iconType === 'menu'
                         ? <MenuIcon

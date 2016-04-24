@@ -1,4 +1,3 @@
-'use strict';
 const express      = require('express');
 const app          = express();
 const res_time     = require('response-time');
@@ -18,9 +17,9 @@ const limiter      = require('connect-ratelimit');
 // global variables
 global.Q = require('q');
 global.User = require('./utils/models').User;
-global.q_userFindOne = Q.nbind(User.findOne, User);
-global.q_userFindOneAndRemove = Q.nbind(User.findOneAndRemove, User);
-global.q_userFindOneAndUpdate = Q.nbind(User.findOneAndUpdate, User);
+global.promiseUserFindOne = Q.nbind(User.findOne, User);
+global.promiseUserFindOneAndRemove = Q.nbind(User.findOneAndRemove, User);
+global.promiseUserFindOneAndUpdate = Q.nbind(User.findOneAndUpdate, User);
 global.__base = __dirname;
 global.__assets = require(`${__base}/public/dist/assets.manifest.prod.json`);
 

@@ -1,3 +1,5 @@
+/* eslint global-require: 0 */
+
 import Immutable from 'immutable';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';

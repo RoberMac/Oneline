@@ -1,10 +1,9 @@
-'use strict';
 const Ig = require('instagram-node').instagram();
 
 module.exports = opts => {
     Ig.use({ access_token: opts.token });
 
-    const q_ig_timeline = Q.nbind(Ig.user_self_feed, Ig);
+    const promiseIg = Q.nbind(Ig.user_self_feed, Ig);
     const iOpts = Object.assign({
         count: opts.count || 100,
     }, (
@@ -15,5 +14,5 @@ module.exports = opts => {
         : {}
     ));
 
-    return q_ig_timeline(iOpts);
+    return promiseIg(iOpts);
 };

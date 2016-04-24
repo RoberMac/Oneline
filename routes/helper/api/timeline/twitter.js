@@ -1,4 +1,3 @@
-'use strict';
 const Twit  = require('twit');
 
 module.exports = opts => {
@@ -8,7 +7,7 @@ module.exports = opts => {
         access_token       : opts.token,
         access_token_secret: opts.tokenSecret,
     });
-    const q_twit_get = Q.nbind(T.get, T);
+    const promiseTwit = Q.nbind(T.get, T);
     const tOpts = Object.assign({
         include_entities: false,
         count           : opts.count || 100,
@@ -20,7 +19,7 @@ module.exports = opts => {
         : {}
     ));
 
-    return q_twit_get('statuses/home_timeline', tOpts)
+    return promiseTwit('statuses/home_timeline', tOpts)
     .then((data) => {
         if (opts.maxId) {
             data[0].splice(0, 1);
@@ -28,7 +27,7 @@ module.exports = opts => {
         return data;
     }, err => {
         if (err.statusCode === 429) {
-            return q_twit_get('application/rate_limit_status', { resources: ['statuses'] })
+            return promiseTwit('application/rate_limit_status', { resources: ['statuses'] })
             .then((data) => {
                 throw {
                     statusCode: 429,
