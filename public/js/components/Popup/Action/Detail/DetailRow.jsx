@@ -11,11 +11,11 @@ export default ({ provider, list }) => (
             key={index}
             className={`detail__row center ${index === 0 ? 'detail__row--reply' : ''}`}
         >
-            <UserLink provider={provider} screen_name={item.screen_name}>
-                <span className="detail__row__avatar detail__avatar">
+            <span className="detail__row__avatar detail__avatar">
+                <UserLink provider={provider} screen_name={item.screen_name}>
                     <img src={item.avatar} alt={`${item.name || item.screen_name}'s avatar`} />
-                </span>
-            </UserLink>
+                </UserLink>
+            </span>
             <div className="detail__row__content">
                 <Text
                     className="detail__row__text"
