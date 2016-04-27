@@ -1,5 +1,3 @@
-'use strict';
-
 const filterUtils = require('../utils');
 
 module.exports = data => {

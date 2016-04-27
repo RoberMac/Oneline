@@ -1,23 +1,26 @@
 /* eslint no-undef: 0, key-spacing: 0 */
-'use strict';
 
 const _omit = require('lodash.omit');
 const postSchema = require('../../../routes/helper/schema/post');
 
-const initLink = require('../helpers/cases/link');
 const initBasePost = require('../helpers/cases/post');
-const initMedia = require('../helpers/cases/media');
 const initLocation = require('../helpers/cases/location');
+const { twitter: twitterLink, instagram: instagramLink } = require('../helpers/cases/link');
+const {
+    images: mediaImages,
+    videos: mediaVideos,
+    media: mediaCommons,
+} = require('../helpers/cases/media');
 const initTwitterPost = () => Object.assign({}, initBasePost, {
     type         : 'tweet',
     provider     : 'twitter',
     retweet_count: 0,
     retweeted: false,
 });
-const initInstagramPost = () => Object.assign({}, initBasePost, initMedia.images, {
+const initInstagramPost = () => Object.assign({}, initBasePost, mediaImages, {
     type       : 'post',
     provider   : 'instagram',
-    link       : initLink.instagram,
+    link       : instagramLink,
     reply_count: 0,
 });
 const initWeiboPost = () => Object.assign({}, initBasePost, {
@@ -28,7 +31,7 @@ const initWeiboPost = () => Object.assign({}, initBasePost, {
     retweeted    : false,
     reply_count  : 0,
 });
-const initUnsplashPost = () => Object.assign({}, initBasePost, initMedia.images, {
+const initUnsplashPost = () => Object.assign({}, initBasePost, mediaImages, {
     type          : 'post',
     provider      : 'unsplash',
     download_count: 0,
@@ -143,9 +146,9 @@ describe('provider-sensitive post', () => {
                 { download_count: 0 },
                 { reply_count: 0, download_count: 0 },
                 { mid: 'DrGC7fqtW' },
-                { link: initLink.instagram },
-                initMedia.images,
-                initMedia.videos,
+                { link: instagramLink },
+                mediaImages,
+                mediaVideos,
             ].forEach(v => {
                 postSchema.validate(Object.assign(post, v), err => {
                     expect(err).toBeTruthy();
@@ -176,11 +179,11 @@ describe('provider-sensitive post', () => {
         // media
         describe('> media', () => {
             beforeEach(() => {
-                Object.assign(post, initMedia.media, { mediaLink: initLink.twitter });
+                Object.assign(post, mediaCommons, { mediaLink: twitterLink });
             });
 
             it('allows when contain "video_url"', () => {
-                Object.assign(post.media, { video_url: initLink.twitter });
+                Object.assign(post.media, { video_url: twitterLink });
                 postSchema.validate(post, err => {
                     expect(err).toBeFalsy();
                 });
@@ -211,9 +214,9 @@ describe('provider-sensitive post', () => {
                 { download_count: 0 },
                 { retweet_count: 0, retweeted: false },
                 { mid: 'DrGC7fqtW' },
-                { mediaLink: initLink.twitter },
-                initMedia.media,
-                Object.assign({}, { mediaLink: initLink.twitter }, initMedia.media),
+                { mediaLink: twitterLink },
+                mediaCommons,
+                Object.assign({}, { mediaLink: twitterLink }, mediaCommons),
             ].forEach(v => {
                 postSchema.validate(Object.assign(post, v), err => {
                     expect(err).toBeTruthy();
@@ -246,11 +249,11 @@ describe('provider-sensitive post', () => {
             [
                 { download_count: 0 },
                 { reply_count: 0, download_count: 0 },
-                { link: initLink.instagram },
-                { mediaLink: initLink.twitter },
-                initMedia.images,
-                initMedia.videos,
-                Object.assign({}, initMedia.images, initMedia.videos),
+                { link: instagramLink },
+                { mediaLink: twitterLink },
+                mediaImages,
+                mediaVideos,
+                Object.assign({}, mediaImages, mediaVideos),
             ].forEach(v => {
                 postSchema.validate(Object.assign(post, v), err => {
                     expect(err).toBeTruthy();
@@ -284,9 +287,9 @@ describe('provider-sensitive post', () => {
                 { reply_count: 0 },
                 { retweet_count: 0, retweeted: false },
                 { mid: 'DrGC7fqtW' },
-                { mediaLink: initLink.twitter },
-                initMedia.media,
-                Object.assign({}, { mediaLink: initLink.twitter }, initMedia.media),
+                { mediaLink: twitterLink },
+                mediaCommons,
+                Object.assign({}, { mediaLink: twitterLink }, mediaCommons),
             ].forEach(v => {
                 postSchema.validate(Object.assign(post, v), err => {
                     expect(err).toBeTruthy();

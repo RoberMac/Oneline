@@ -1,5 +1,3 @@
-'use strict';
-
 const router = require('express').Router();
 
 const Share = require('../utils/models').Share;
@@ -21,15 +19,18 @@ router.param('id', (req, res, next, id) => {
  *
  */
 router.post('/:provider/:id', require('../utils/middlewares'), (req, res, next) => {
-    if (!req.body.sharer || !req.body.post) {
+    const { sharer, post } = req.body;
+
+    if (!sharer || !post) {
         next({ statusCode: 400, msg: 'sharer & post is required' });
         return;
     }
 
     const provider = req.olProvider;
     const id = provider + req.olId;
-    const sharer = Object.assign(req.body.sharer, { shared_at: Date.now() });
-    const post = Object.assign(req.body.post, { detail: true, avatarless: false });
+
+    Object.assign(sharer, { shared_at: Date.now() });
+    Object.assign(post, { detail: true, avatarless: false });
 
     if (post.quote) { post.quote.detail = true; }
 
@@ -99,14 +100,11 @@ router.get('/:provider/:id', (req, res, next) => {
                 icon: 'androidWechat',
             });
         } else {
+            const { sharers, data, viewCount } = sharedData;
             res.render('share', {
                 assets    : __assets,
-                sharedData: {
-                    sharers  : sharedData.sharers,
-                    data     : sharedData.data,
-                    viewCount: sharedData.viewCount,
-                },
-                isBlocked: !!req.acceptsLanguages('zh', 'pa-pk', 'ko-kp', 'fa-ir'),
+                sharedData: { sharers, data, viewCount },
+                isBlocked : !!req.acceptsLanguages('zh', 'pa-pk', 'ko-kp', 'fa-ir'),
             });
         }
     };

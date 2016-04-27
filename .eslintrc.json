@@ -33,7 +33,6 @@
         "no-underscore-dangle": 0,
         "no-unused-expressions": [2, { "allowShortCircuit": true, "allowTernary": true }],
         "no-unused-vars": [2, { "argsIgnorePattern": "(err|req|res|next|opts)" }],
-        "no-use-before-define": [2, { "functions": false }],
-        "strict": 0
+        "no-use-before-define": [2, { "functions": false }]
     }
 }

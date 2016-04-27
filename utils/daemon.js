@@ -1,5 +1,3 @@
-'use strict';
-
 const Unsplash = require('./wrapper/unsplash');
 
 /**
@@ -30,7 +28,6 @@ function autoFetch() {
         setTimeout(autoFetchUnsplash, 1000 * 60 * 3);
     }());
 }
-
 
 module.exports = {
     autoFetch,

@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.13.8",
+  "version": "0.13.9",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "cd test && jasmine",
@@ -18,7 +18,7 @@
     "url": "https://github.com/RoberMac/Oneline.git"
   },
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 6.0.0"
   },
   "author": {
     "name": "RoberTu",
@@ -70,7 +70,7 @@
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-stage-2": "^6.5.0",
     "classlist": "^1.0.1",
-    "classnames": "^2.2.3",
+    "classnames": "^2.2.4",
     "clipboard": "^1.5.10",
     "css-loader": "^0.23.1",
     "css-mqpacker": "^4.0.1",
@@ -78,8 +78,8 @@
     "es6-promise": "^3.1.2",
     "eslint": "^2.8.0",
     "eslint-config-airbnb": "^8.0.0",
-    "eslint-plugin-import": "^1.5.0",
-    "eslint-plugin-jsx-a11y": "^1.0.2",
+    "eslint-plugin-import": "^1.6.0",
+    "eslint-plugin-jsx-a11y": "^1.0.3",
     "eslint-plugin-react": "^5.0.1",
     "gulp": "^3.9.1",
     "gulp-postcss": "^6.1.0",
@@ -96,7 +96,7 @@
     "lodash.omit": "^4.2.1",
     "lodash.uniqby": "^4.3.0",
     "object.assign": "^4.0.3",
-    "postcss-assets": "^4.0.1",
+    "postcss-assets": "^4.1.0",
     "postcss-cssnext": "^2.5.2",
     "postcss-import": "^8.1.0",
     "postcss-loader": "^0.8.2",
@@ -111,7 +111,7 @@
     "react-swipeable": "^3.3.1",
     "react-timeago": "^3.0.0",
     "react-visibility-sensor": "^3.1.1",
-    "redux": "^3.5.1",
+    "redux": "^3.5.2",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.0.1",
     "style-loader": "^0.13.1",

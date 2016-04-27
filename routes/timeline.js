@@ -1,9 +1,6 @@
-'use strict';
-
 const router = require('express').Router();
 const timelineFilter = require('./helper/filter/timeline');
 const timelineFetch = require('./helper/api/timeline');
-
 
 router.get('/', (req, res, next) => {
     // Init
@@ -20,11 +17,12 @@ router.get('/', (req, res, next) => {
     }
 
     // Fire
+    const { twitter, instagram, weibo, unsplash } = req.olPassports;
     Q.all([
-        promiseUserFindOne({ id: `twitter${req.olPassports.twitter}` }),
-        promiseUserFindOne({ id: `instagram${req.olPassports.instagram}` }),
-        promiseUserFindOne({ id: `weibo${req.olPassports.weibo}` }),
-        promiseUserFindOne({ id: `unsplash${req.olPassports.unsplash}` }),
+        promiseUserFindOne({ id: `twitter${twitter}` }),
+        promiseUserFindOne({ id: `instagram${instagram}` }),
+        promiseUserFindOne({ id: `weibo${weibo}` }),
+        promiseUserFindOne({ id: `unsplash${unsplash}` }),
     ])
     .then(profileList => {
         const validProfileList = profileList.filter(i => i);
@@ -37,9 +35,7 @@ router.get('/', (req, res, next) => {
         profileList.forEach((profile, index) => {
             if (!profile) return;
 
-            const provider = profile.provider;
-            const token = profile.token;
-            const tokenSecret = profile.tokenSecret;
+            const { provider, token, tokenSecret } = profile;
             const minId = olIdObj[`${provider}_minId`];
             const maxId = olIdObj[`${provider}_maxId`];
 

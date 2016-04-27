@@ -1,18 +1,15 @@
-'use strict';
-
 const Q = require('q');
 const request = require('request');
 
 const toJSON = require('./toJSON');
 
-module.exports = params => {
+module.exports = ({ method, endpoint, opts }) => {
     const deferred = Q.defer();
-    const _method  = params.method;
-    const _opts = { url: `https://api.weibo.com/2/${params.endpoint}.json` };
+    const reqOpts = { url: `https://api.weibo.com/2/${endpoint}.json` };
 
-    _opts[_method === 'get' ? 'qs' : 'form'] = params.opts;
+    reqOpts[method === 'get' ? 'qs' : 'form'] = opts;
 
-    request[_method](_opts, (err, res, body) => {
+    request[method](reqOpts, (err, res, body) => {
         body = toJSON(body);
 
         if (err || !/2\d\d/.test(res.statusCode)) {

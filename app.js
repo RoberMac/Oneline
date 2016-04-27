@@ -1,5 +1,3 @@
-'use strict';
-
 const express      = require('express');
 const app          = express();
 const res_time     = require('response-time');
@@ -32,14 +30,9 @@ require('dotenv').load();
 require('./utils/strategies')(passport);
 
 // Connect to DB
-const DB_URI = (
-    process.env.MONGODB
-        ? JSON.parse(process.env.MONGODB).uri
-    : 'mongodb://test:test@localhost:27017/test'
-);
-mongoose.connect(DB_URI);
+mongoose.connect(process.env.MONGODB || 'mongodb://test:test@localhost:27017/test');
 mongoose.connection
-.on('err', (err) => console.error(err))
+.on('err', err => console.error(err))
 .once('open', () => console.log('Connected to MongoDB'));
 
 // Daemon

@@ -1,29 +1,27 @@
 /* eslint no-else-return: 0 */
-'use strict';
 
 const Twit    = require('twit');
 const timelineFilter = require(`${__base}/routes/helper/filter/timeline`);
 const actionsFilter = require(`${__base}/routes/helper/filter/actions`);
 
-
 const _commonSearch = {
-    _get(opts) {
+    _get({ id, token, query }) {
         const tOpts = {
-            access_token    : opts.token,
-            q               : opts.id,
+            access_token    : token,
+            q               : id,
             count           : 20,
             include_entities: false,
         };
 
-        if (opts.query.maxId) {
-            Object.assign(tOpts, { max_id: opts.query.maxId });
+        if (query.maxId) {
+            Object.assign(tOpts, { max_id: query.maxId });
         }
 
         return {
             triggerActionType: 'basic',
             action           : { endpoint: 'search/tweets', tOpts },
             handleActionFunc : data => {
-                if (opts.query.maxId) {
+                if (query.maxId) {
                     data[0].statuses.splice(0, 1);
                 }
 
@@ -34,21 +32,21 @@ const _commonSearch = {
 };
 const _buildAction = {
     user: {
-        _get(opts) {
-            const user = isNaN(opts.id) ? { screen_name: opts.id } : { user_id: opts.id };
+        _get({ id, query }) {
+            const user = isNaN(id) ? { screen_name: id } : { user_id: id };
             const commonOpts = {
                 trim_user          : false,
                 exclude_replies    : false,
                 contributor_details: false,
                 include_rts        : true,
             };
-            if (opts.query && opts.query.maxId) {
+            if (query && query.maxId) {
                 return {
                     triggerActionType: 'basic',
                     action           : {
                         endpoint: 'statuses/user_timeline',
                         tOpts   : Object.assign(
-                            user, { max_id: opts.query.maxId, count: 20 },
+                            user, { max_id: query.maxId, count: 20 },
                             commonOpts
                         ),
                     },
@@ -81,7 +79,7 @@ const _buildAction = {
         },
     },
     direct: {
-        _get(opts) {
+        _get({ query }) {
             return {
                 triggerActionType: 'combination',
                 actions          : [
@@ -89,7 +87,7 @@ const _buildAction = {
                         endpoint: 'direct_messages',
                         tOpts   : {
                             count           : 200,
-                            since_id        : opts.query && opts.query.minId,
+                            since_id        : query && query.minId,
                             include_entities: true,
                         },
                     },
@@ -97,7 +95,7 @@ const _buildAction = {
                         endpoint: 'direct_messages/sent',
                         tOpts   : {
                             count           : 200,
-                            since_id        : opts.query && opts.query.minId,
+                            since_id        : query && query.minId,
                             include_entities: true,
                         },
                     },
@@ -121,14 +119,14 @@ const _buildAction = {
                 },
             };
         },
-        _post(opts) {
+        _post({ id, params }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     endpoint: 'direct_messages/new',
                     tOpts   : {
-                        screen_name: opts.id,
-                        text       : opts.params.text,
+                        screen_name: id,
+                        text       : params.text,
                     },
                 },
                 handleActionFunc: data => (actionsFilter.twitter.direct([data[0]])),
@@ -136,49 +134,50 @@ const _buildAction = {
         },
     },
     like: {
-        _put(opts) {
+        _put({ id }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     endpoint: 'favorites/create',
-                    tOpts   : { id: opts.id, include_entities: false },
+                    tOpts   : { id, include_entities: false },
                 },
                 handleActionFunc: () => ({ msg: 'ok' }),
             };
         },
-        _delete(opts) {
+        _delete({ id }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     endpoint: 'favorites/destroy',
-                    tOpts   : { id: opts.id, include_entities: false },
+                    tOpts   : { id, include_entities: false },
                 },
                 handleActionFunc: () => ({ msg: 'ok' }),
             };
         },
     },
     retweet: {
-        _post(opts) {
+        _post({ id }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     endpoint: 'statuses/retweet',
-                    tOpts   : { id: opts.id, trim_user: true },
+                    tOpts   : { id, trim_user: true },
                 },
                 handleActionFunc: data => ({ id_str: data[0].id_str }),
             };
         },
     },
     reply: {
-        _post(opts) {
+        _post({ id, params }) {
+            const { status, media_ids, sensitive, geo } = params;
             const tOpts = {
-                status               : opts.params.status,
-                media_ids            : opts.params.media_ids,
+                status,
+                media_ids,
                 trim_user            : true,
-                possibly_sensitive   : opts.params.sensitive,
-                in_reply_to_status_id: opts.id,
-                lat                  : opts.params.geo && opts.params.geo.lat,
-                long                 : opts.params.geo && opts.params.geo.long,
+                possibly_sensitive   : sensitive,
+                in_reply_to_status_id: id,
+                lat                  : geo && geo.lat,
+                long                 : geo && geo.long,
             };
 
             return {
@@ -189,14 +188,15 @@ const _buildAction = {
         },
     },
     quote: {
-        _post(opts) {
+        _post({ params }) {
+            const { status, media_ids, sensitive, geo } = params;
             const tOpts = {
-                status            : opts.params.status,
-                media_ids         : opts.params.media_ids,
+                status,
+                media_ids,
                 trim_user         : true,
-                possibly_sensitive: opts.params.sensitive,
-                lat               : opts.params.geo && opts.params.geo.lat,
-                long              : opts.params.geo && opts.params.geo.long,
+                possibly_sensitive: sensitive,
+                lat               : geo && geo.lat,
+                long              : geo && geo.long,
             };
 
             return {
@@ -207,14 +207,15 @@ const _buildAction = {
         },
     },
     tweet: {
-        _post(opts) {
+        _post({ params }) {
+            const { status, media_ids, sensitive, geo } = params;
             const tOpts = {
-                status            : opts.params.status,
-                media_ids         : opts.params.media_ids,
+                status,
+                media_ids,
                 trim_user         : true,
-                possibly_sensitive: opts.params.sensitive,
-                lat               : opts.params.geo && opts.params.geo.lat,
-                long              : opts.params.geo && opts.params.geo.long,
+                possibly_sensitive: sensitive,
+                lat               : geo && geo.lat,
+                long              : geo && geo.long,
             };
 
             return {
@@ -223,25 +224,25 @@ const _buildAction = {
                 handleActionFunc : () => ({ msg: 'ok' }),
             };
         },
-        _delete(opts) {
+        _delete({ id }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     endpoint: 'statuses/destroy',
-                    tOpts   : { id: opts.id, trim_user: true },
+                    tOpts   : { id, trim_user: true },
                 },
                 handleActionFunc: () => ({ msg: 'ok' }),
             };
         },
     },
     follow: {
-        _get(opts) {
+        _get({ id }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     endpoint: 'friends/list',
                     tOpts   : {
-                        user_id              : opts.id,
+                        user_id              : id,
                         count                : 200,
                         skip_status          : true,
                         include_user_entities: false,
@@ -250,30 +251,30 @@ const _buildAction = {
                 handleActionFunc: data => ({ data: actionsFilter.twitter.follow(data.users) }),
             };
         },
-        _put(opts) {
+        _put({ id }) {
             return {
                 triggerActionType: 'basic',
-                action           : { endpoint: 'friendships/create', tOpts: { id: opts.id } },
+                action           : { endpoint: 'friendships/create', tOpts: { id } },
                 handleActionFunc : () => ({ msg: 'ok' }),
             };
         },
-        _delete(opts) {
+        _delete({ id }) {
             return {
                 triggerActionType: 'basic',
-                action           : { endpoint: 'friendships/destroy', tOpts: { id: opts.id } },
+                action           : { endpoint: 'friendships/destroy', tOpts: { id } },
                 handleActionFunc : () => ({ msg: 'ok' }),
             };
         },
     },
     mentions: {
-        _get(opts) {
+        _get({ query }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     endpoint: 'statuses/mentions_timeline',
                     tOpts   : Object.assign({}, {
                         count              : 200,
-                        since_id           : opts.query.minId,
+                        since_id           : query.minId,
                         include_entities   : false,
                         contributor_details: false,
                     }),
@@ -286,17 +287,17 @@ const _buildAction = {
     tags     : _commonSearch,
     search   : _commonSearch,
     detail   : {
-        _get(opts) {
+        _get({ id }) {
             return {
                 triggerActionType: 'combination',
                 actions          : [
                     {
                         endpoint: 'statuses/show',
-                        tOpts   : { id: opts.id, trim_user: false, include_entities: false },
+                        tOpts   : { id, trim_user: false, include_entities: false },
                     },
                     {
                         endpoint: 'statuses/retweets',
-                        tOpts   : { id: opts.id, count: 50, trim_user: false },
+                        tOpts   : { id, count: 50, trim_user: false },
                     },
                 ],
                 handleActionFunc: (postData, retweetedData) => {
@@ -308,14 +309,12 @@ const _buildAction = {
         },
     },
     trends: {
-        _get(opts) {
+        _get({ id }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     endpoint: 'trends/place',
-                    tOpts   : {
-                        id: opts.id,
-                    },
+                    tOpts   : { id },
                 },
                 handleActionFunc: data => {
                     return {

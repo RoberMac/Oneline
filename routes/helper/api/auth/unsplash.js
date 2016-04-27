@@ -1,5 +1,3 @@
-'use strict';
-
 const Unsplash = require(`${__base}/utils/wrapper/unsplash`);
 
 function refreshToken(refresh_token) {

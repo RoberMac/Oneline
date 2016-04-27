@@ -1,6 +1,4 @@
-'use strict';
-
-const twitterLink = require('./link').twitter;
+const { twitter: twitterLink } = require('./link');
 
 module.exports = {
     uid        : 'fakeUID',

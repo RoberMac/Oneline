@@ -1,5 +1,3 @@
-'use strict';
-
 const mid    = require('weibo-mid');
 const filterUtils = require('../utils');
 

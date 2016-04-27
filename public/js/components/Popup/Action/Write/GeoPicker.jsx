@@ -57,7 +57,13 @@ export default class GeoPicker extends React.Component {
         });
 
         return (
-            <button className={btnClass} style={btnStyle} type="button" onClick={this.handleClick}>
+            <button
+                className={btnClass}
+                style={btnStyle}
+                onClick={this.handleClick}
+                ref="btn"
+                type="button"
+            >
                 <Icon name="geoPicker" />
             </button>
         );

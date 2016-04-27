@@ -134,8 +134,6 @@ export default class Write extends React.Component {
         })
         .catch(() => {
             addClassTemporarily(this.refs.textarea, 'write__textarea--err', 500);
-        })
-        .finally(() => {
             this.setState({ submitting: false });
         });
     }

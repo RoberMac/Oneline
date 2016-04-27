@@ -1,10 +1,8 @@
-'use strict';
-
-const link = require('./link');
+const { twitter: twitterLink, instagram: instagramLink } = require('./link');
 
 exports.media = {
     media: [{
-        image_url: link.twitter,
+        image_url: twitterLink,
         ratio    : '1.50167',
         type     : 'photo',
     }],
@@ -12,15 +10,15 @@ exports.media = {
 
 exports.images = {
     images: {
-        large: link.instagram,
+        large: instagramLink,
         ratio: '0.59219',
-        small: link.instagram,
+        small: instagramLink,
     },
 };
 
 exports.videos = {
     videos: {
-        large: link.instagram,
-        small: link.instagram,
+        large: instagramLink,
+        small: instagramLink,
     },
 };

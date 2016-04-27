@@ -1,5 +1,4 @@
 /* eslint no-else-return: 0 */
-'use strict';
 
 const router  = require('express').Router();
 const Auth    = require('./helper/api/auth');
@@ -31,11 +30,8 @@ router.all('/:action/:provider/:id', (req, res, next) => {
 
     promiseUserFindOne({ id })
     .then(found => {
-        Object.assign(actionOpts, {
-            token       : found.token,
-            tokenSecret : found.tokenSecret,
-            refreshToken: found.refreshToken,
-        });
+        const { token, tokenSecret, refreshToken } = found;
+        Object.assign(actionOpts, { token, tokenSecret, refreshToken });
 
         return Actions[provider](req.olAction, actionOpts);
     })

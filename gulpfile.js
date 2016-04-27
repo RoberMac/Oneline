@@ -1,5 +1,4 @@
 /* eslint global-require: 0 */
-'use strict';
 
 const gulp   = require('gulp');
 const path   = require('path');

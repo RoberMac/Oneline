@@ -1,47 +1,34 @@
-'use strict';
-
 const uniqBy =  require('lodash.uniqby');
 const filterUtils = require('../utils');
 
 module.exports = {
     like(data) {
-        const cache = [];
-
-        for (const item of data) {
-            cache.push({
-                name       : item.full_name,
-                avatar     : item.profile_picture,
-                screen_name: item.username,
-                uid        : item.id,
-            });
-        }
-
-        return cache;
+        return data.map(i => ({
+            name       : i.full_name,
+            avatar     : i.profile_picture,
+            screen_name: i.username,
+            uid        : i.id,
+        }));
     },
     reply(data) {
-        const cache = [];
-
-        for (const item of data) {
-            cache.push({
-                name       : item.from.full_name,
-                avatar     : item.from.profile_picture,
-                screen_name: item.from.username,
-                uid        : item.from.id,
-                text       : item.text,
-                created_at : item.created_time * 1000,
-            });
-        }
-
-        return cache;
+        return data.map(i => ({
+            name       : i.from.full_name,
+            avatar     : i.from.profile_picture,
+            screen_name: i.from.username,
+            uid        : i.from.id,
+            text       : i.text,
+            created_at : i.created_time * 1000,
+        }));
     },
     user(data) {
+        const { bio, website, counts: { follows, followed_by, media } } = data;
         const userObj = {
-            bio    : data.bio || '',
-            website: data.website || '',
+            bio    : bio || '',
+            website: website || '',
             counts : {
-                follows    : data.counts.follows,
-                followed_by: data.counts.followed_by,
-                statuses   : data.counts.media,
+                follows,
+                followed_by,
+                statuses: media,
             },
         };
 
@@ -51,28 +38,21 @@ module.exports = {
     },
     pediction_tags(data) {
         const dataLength = data.length;
-        const cache = [];
-
-        data.forEach((item, index) => {
-            cache.push({
+        const cache = data.map((item, index) => {
+            return {
                 name  : item.name,
                 volume: item.media_count || dataLength - index,
-            });
+            };
         });
 
         return uniqBy(cache, 'name');
     },
     pediction_users(data) {
         const dataLength = data.length;
-        const cache = [];
 
-        data.forEach((item, index) => {
-            cache.push({
-                name  : item.username,
-                volume: dataLength - index,
-            });
-        });
-
-        return cache;
+        return data.map((item, index) => ({
+            name  : item.username,
+            volume: dataLength - index,
+        }));
     },
 };

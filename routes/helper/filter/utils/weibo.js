@@ -1,5 +1,3 @@
-'use strict';
-
 function user(u) {
     u = u || {
         name             : '微博小秘书',

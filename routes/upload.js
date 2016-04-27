@@ -1,5 +1,3 @@
-'use strict';
-
 const fs     = require('fs');
 const router = require('express').Router();
 const multer = require('multer');
@@ -15,7 +13,6 @@ const upload2Local = multer({
 // Handing `provider` Params
 router.param('provider', (req, res, next, provider) => {
     req.olProvider = provider;
-
     next();
 });
 

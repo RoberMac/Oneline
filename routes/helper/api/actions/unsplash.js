@@ -1,5 +1,3 @@
-'use strict';
-
 const Unsplash   = require(`${__base}/utils/wrapper/unsplash`);
 const timelineFilter = require(`${__base}/routes/helper/filter/timeline`);
 const actionsFilter = require(`${__base}/routes/helper/filter/actions`);
@@ -35,8 +33,8 @@ const selectCategoryID = name => {
 };
 const _buildAction = {
     user: {
-        _get(opts) {
-            const username = opts.id;
+        _get({ id }) {
+            const username = id;
 
             return {
                 triggerActionType: 'combination',
@@ -59,30 +57,30 @@ const _buildAction = {
         },
     },
     like: {
-        _put(opts) {
+        _put({ id }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     method  : 'post',
-                    endpoint: `/photos/${opts.id}/like`,
+                    endpoint: `/photos/${id}/like`,
                 },
                 handleActionFunc: () => ({ msg: 'ok' }),
             };
         },
-        _delete(opts) {
+        _delete({ id }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     method  : 'delete',
-                    endpoint: `/photos/${opts.id}/like`,
+                    endpoint: `/photos/${id}/like`,
                 },
                 handleActionFunc: () => ({ msg: 'ok' }),
             };
         },
     },
     tags: { // tags for category
-        _get(opts) {
-            const categoryID = selectCategoryID(opts.id);
+        _get({ id, query }) {
+            const categoryID = selectCategoryID(id);
 
             return {
                 triggerActionType: 'basic',
@@ -91,7 +89,7 @@ const _buildAction = {
                     endpoint: `/categories/${categoryID}/photos`,
                     opts    : {
                         per_page: 20,
-                        page    : opts.query.maxId || 1,
+                        page    : query.maxId || 1,
                     },
                 },
                 handleActionFunc: data => ({
@@ -101,16 +99,16 @@ const _buildAction = {
         },
     },
     search: {
-        _get(opts) {
+        _get({ id, query }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     method  : 'get',
                     endpoint: '/photos/search',
                     opts    : {
-                        query   : opts.id,
+                        query   : id,
                         per_page: 20,
-                        page    : opts.query.maxId || 1,
+                        page    : query.maxId || 1,
                     },
                 },
                 handleActionFunc: data => ({
@@ -125,11 +123,12 @@ const _buildAction = {
 module.exports = (action, opts) => {
     const triggerAction = {
         basic: u => {
+            const { method, endpoint, opts: reqOpts } = u.action;
             return Unsplash({
-                method      : u.action.method,
-                endpoint    : u.action.endpoint,
+                method,
+                endpoint,
+                opts        : reqOpts,
                 access_token: opts.token,
-                opts        : u.action.opts,
             })
             .then(u.handleActionFunc);
         },
@@ -137,11 +136,12 @@ module.exports = (action, opts) => {
             const promiseAll = [];
 
             u.actions.forEach(actionItem => {
+                const { method, endpoint, opts: reqOpts } = actionItem;
                 promiseAll.push(Unsplash({
-                    method      : actionItem.method,
-                    endpoint    : actionItem.endpoint,
+                    method,
+                    endpoint,
+                    opts        : reqOpts,
                     access_token: opts.token,
-                    opts        : actionItem.opts,
                 }));
             });
 

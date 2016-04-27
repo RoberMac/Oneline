@@ -1,5 +1,3 @@
-'use strict';
-
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
@@ -10,11 +8,11 @@ module.exports = (req, res, next) => {
     );
     const validPassports = {};
 
-    // 提取有效 token 的 payload 到 req.olPassports
+    // extract valid token's payload to req.olPassports
     tokenList.forEach(token => {
         try {
-            const decoded = jwt.verify(token, process.env.KEY);
-            validPassports[decoded.provider] = decoded.uid;
+            const { provider, uid } = jwt.verify(token, process.env.KEY);
+            validPassports[provider] = uid;
         } catch (e) {
             // Empty
         }

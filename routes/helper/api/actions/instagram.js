@@ -1,21 +1,19 @@
 /* eslint no-else-return: 0 */
-'use strict';
 
 const Ig = require('instagram-node').instagram();
 const timelineFilter = require(`${__base}/routes/helper/filter/timeline`);
 const actionsFilter = require(`${__base}/routes/helper/filter/actions`);
 
-
 const _buildAction = {
     user: {
-        _get(opts) {
+        _get({ id, query }) {
             let actionObj;
-            if (opts.query && opts.query.maxId) {
+            if (query && query.maxId) {
                 actionObj = {
                     triggerActionType: 'basic',
                     action           : {
                         endpoint: 'user_media_recent',
-                        opts    : { max_id: opts.query.maxId },
+                        opts    : { max_id: query.maxId },
                     },
                     handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data }),
                 };
@@ -34,12 +32,12 @@ const _buildAction = {
                 };
             }
 
-            if (isNaN(opts.id)) {
+            if (isNaN(id)) {
                 return {
                     triggerActionType: 'queue',
                     action           : { endpoint: 'user_search' },
                     handleActionFunc : data => ({
-                        uid: data[0].find(item => item.username === opts.id).id,
+                        uid: data[0].find(item => item.username === id).id,
                     }),
                     actionObj,
                 };
@@ -49,27 +47,27 @@ const _buildAction = {
         },
     },
     locations: {
-        _get(opts) {
+        _get({ query }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     endpoint: 'location_media_recent',
-                    opts    : { max_id: opts.query.maxId },
+                    opts    : { max_id: query.maxId },
                 },
                 handleActionFunc: data => ({ data: timelineFilter.instagram(data[0]).data }),
             };
         },
     },
     tags: {
-        _get(opts) {
+        _get({ query }) {
             return {
                 triggerActionType: 'basic',
                 action           : {
                     endpoint: 'tag_media_recent',
-                    opts    : { max_tag_id: opts.query.maxId && opts.query.maxId.split('_')[0] },
+                    opts    : { max_tag_id: query.maxId && query.maxId.split('_')[0] },
                 },
                 handleActionFunc: data => {
-                    if (opts.query.maxId) {
+                    if (query.maxId) {
                         data[0].splice(0, 1);
                     }
 
@@ -130,8 +128,7 @@ module.exports = (action, opts) => {
 
     const triggerAction = {
         basic: i => {
-            const endpoint = i.action.endpoint;
-            const iOpts = i.action.opts;
+            const { endpoint, opts: iOpts } = i.action;
 
             return (iOpts
                     ? Q.nbind(Ig[endpoint], Ig)(opts.id, iOpts)
@@ -149,8 +146,8 @@ module.exports = (action, opts) => {
         combination: i => {
             const promiseAll = [];
             i.actions.forEach(actionItem => {
-                const endpoint = actionItem.endpoint;
-                const iOpts = actionItem.opts;
+                const { endpoint, opts: iOpts } = actionItem;
+
                 promiseAll.push(iOpts
                         ? Q.nbind(Ig[endpoint], Ig)(opts.id, iOpts)
                     : Q.nbind(Ig[endpoint], Ig)(opts.id)

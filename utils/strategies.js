@@ -1,5 +1,4 @@
 /* eslint global-require: 0 */
-'use strict';
 
 const Strategies = {
     Twitter  : require('passport-twitter').Strategy,
@@ -9,11 +8,13 @@ const Strategies = {
 };
 
 const oauth1 = (token, tokenSecret, profile, done) => {
-    const provider = profile.provider;
-    const uid = profile.id;
-    const name = profile.displayName;
-    const screen_name = profile.username;
-    const avatar = profile._json.profile_image_url_https;
+    const {
+        provider,
+        id: uid,
+        displayName: name,
+        username: screen_name,
+        _json: { profile_image_url_https: avatar },
+    } = profile;
     const id = provider + uid;
 
     promiseUserFindOne({ id })
@@ -50,8 +51,7 @@ const oauth1 = (token, tokenSecret, profile, done) => {
     }, err => done(err));
 };
 const oauth2 = (token, refreshToken, profile, done) => {
-    const provider = profile.provider;
-    const uid = profile.id;
+    const { provider, id: uid } = profile;
     const id = provider + uid;
 
     let avatar;

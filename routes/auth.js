@@ -1,5 +1,3 @@
-'use strict';
-
 const passport = require('passport');
 const jwt      = require('jsonwebtoken');
 const router   = require('express').Router();
@@ -35,12 +33,7 @@ router.get('/:provider', (req, res, next) => {
 router.get('/:provider/callback', (req, res, next) => {
     passport.authenticate(req.olProvider, { session: false })(req, res, next);
 }, (req, res) => {
-    const user        = req.user;
-    const provider    = user.provider;
-    const uid         = user.uid;
-    const name        = user.name;
-    const screen_name = user.screen_name;
-    const avatar      = user.avatar;
+    const { provider, uid, name, screen_name, avatar } = req.user;
     const token = jwt.sign({
         provider,
         uid,
@@ -128,10 +121,11 @@ router.get('/replicant/rachael', (req, res, next) => {
     promiseReplicantFindOne({ id: req.query.code })
     .then(found => {
         if (found) {
+            const { token, profile, msg } = found;
             res.json({
-                tokenList  : JSON.parse(found.token || '[]'),
-                profileList: JSON.parse(found.profile || '[]'),
-                msg        : JSON.parse(found.msg || '[]'),
+                tokenList  : JSON.parse(token || '[]'),
+                profileList: JSON.parse(profile || '[]'),
+                msg        : JSON.parse(msg || '[]'),
             });
         } else {
             next({ statusCode: 404 });

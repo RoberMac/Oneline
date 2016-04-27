@@ -1,5 +1,3 @@
-'use strict';
-
 const Q = require('q');
 const request = require('request');
 
@@ -9,36 +7,36 @@ const API_URL = 'https://api.unsplash.com';
 const API_VERSION = 'v1';
 const OAUTH_TOKEN_URL = 'https://unsplash.com/oauth';
 
-
-module.exports = params => {
+module.exports = ({ method, endpoint, type, access_token, client_id, opts }) => {
     const deferred = Q.defer();
-    const _method  = params.method;
 
     // Build Request Options
-    const _opts = {
-        method : _method,
-        url    : `${params.type === 'oauth' ? OAUTH_TOKEN_URL : API_URL}${params.endpoint}`,
+    const reqOpts = {
+        method,
+        url    : `${type === 'oauth' ? OAUTH_TOKEN_URL : API_URL}${endpoint}`,
         headers: {
             'Accept-Version': API_VERSION,
             Authorization   : (
-                params.access_token
-                    ? `Bearer ${params.access_token}`
-                : params.client_id
-                    ? `Client-ID ${params.client_id}`
+                access_token
+                    ? `Bearer ${access_token}`
+                : client_id
+                    ? `Client-ID ${client_id}`
                 : ''
             ),
         },
     };
 
-    if (_method === 'get') {
-        _opts.qs = params.opts;
-    } else if (_method === 'post') {
-        _opts.body = params.opts;
-        _opts.json = true;
+    if (method === 'get') {
+        Object.assign(reqOpts, { qs: opts });
+    } else if (method === 'post') {
+        Object.assign(reqOpts, {
+            body: opts,
+            json: true,
+        });
     }
 
     // Start Request
-    request(_opts, (err, res, body) => {
+    request(reqOpts, (err, res, body) => {
         body = toJSON(body);
 
         if (err || !/2\d\d/.test(res.statusCode)) {
