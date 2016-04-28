@@ -1,0 +1,21 @@
+node:
+  build: .
+  ports:
+    - "3000:3000"
+  volumes:
+    - ".:/app/Oneline"
+  links:
+    - mongo:mongo
+
+nginx:
+  restart: always
+  build: ./config/nginx
+  ports:
+    - "80:80"
+  volumes_from:
+    - node:ro
+  links:
+    - node:node
+
+mongo:
+  image: mongo

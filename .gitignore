@@ -33,3 +33,4 @@ TODO
 stats.json
 public/dist
 views/styles/dist
+server-configs-nginx*

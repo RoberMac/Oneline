@@ -30,7 +30,9 @@ require('dotenv').load();
 require('./utils/strategies')(passport);
 
 // Connect to DB
-mongoose.connect(process.env.MONGODB || 'mongodb://test:test@localhost:27017/test');
+const MONGO_ADDR = process.env.MONGO_PORT_27017_TCP_ADDR || 'localhost';
+const MONGO_PORT = process.env.MONGO_PORT_27017_TCP_PORT || 27017;
+mongoose.connect(process.env.MONGODB || `mongodb://${MONGO_ADDR}:${MONGO_PORT}/oneline`);
 mongoose.connection
 .on('err', err => console.error(err))
 .once('open', () => console.log('Connected to MongoDB'));
