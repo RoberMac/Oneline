@@ -10,7 +10,7 @@ import { Avatar } from '../Utils/Avatar';
 export default ({ post, highlight }) => (
     <div>
         {!post.avatarless && <Avatar provider="weibo" {...post.user} />}
-        <div className="post__content">
+        <section className="post__content">
             <Text
                 provider="weibo"
                 text={post.text}
@@ -20,10 +20,11 @@ export default ({ post, highlight }) => (
             />
 
             {post.media && post.media.length > 0 && <Media provider="weibo" media={post.media} />}
-        </div>
+        </section>
 
-        <Action post={post} />
-
-        <TimeAgo date={post.created_at} />
+        <footer className="post__footer">
+            <Action post={post} />
+            <TimeAgo date={post.created_at} />
+        </footer>
     </div>
 );

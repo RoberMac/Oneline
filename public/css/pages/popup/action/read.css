@@ -20,6 +20,7 @@
     }
     &__count {
         position: relative -17px * *;
+        margin-top: 17px;
 
         &__item {
             svg {

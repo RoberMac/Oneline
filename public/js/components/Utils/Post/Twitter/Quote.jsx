@@ -10,7 +10,7 @@ import { Avatar } from '../Utils/Avatar';
 export default ({ post, highlight }) => (
     <div>
         {!post.avatarless && <Avatar provider="twitter" {...post.user} />}
-        <div className="post__content">
+        <section className="post__content">
             <Text
                 provider="twitter"
                 text={post.text}
@@ -23,11 +23,11 @@ export default ({ post, highlight }) => (
             {post.media && post.media.length > 0 && (
                 <Media provider="twitter" media={post.media} />
             )}
-        </div>
+        </section>
 
-        <div className="post post--quote post--quote--twitter">
+        <article className="post post--quote post--quote--twitter">
             <Avatar provider="twitter" {...post.quote.user} />
-            <div className="post__content">
+            <section className="post__content">
                 <Text
                     provider="twitter"
                     text={post.quote.text}
@@ -47,13 +47,17 @@ export default ({ post, highlight }) => (
                 {post.quote.media && post.quote.media.length > 0 && (
                     <Media provider="twitter" media={post.quote.media} />
                 )}
-            </div>
+            </section>
 
-            <Action post={post.quote} />
-            <TimeAgo date={post.quote.created_at} />
-        </div>
+            <footer className="post__footer">
+                <Action post={post.quote} />
+                <TimeAgo date={post.quote.created_at} />
+            </footer>
+        </article>
 
-        <Action post={post} />
-        <TimeAgo date={post.created_at} />
+        <footer className="post__footer">
+            <Action post={post} />
+            <TimeAgo date={post.created_at} />
+        </footer>
     </div>
 );

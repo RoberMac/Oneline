@@ -10,7 +10,7 @@ import { Avatar } from '../Utils/Avatar';
 export const InstagramPost = ({ post, highlight }) => (
     <div>
         {!post.avatarless && <Avatar provider="instagram" {...post.user} />}
-        <div className="post__content">
+        <section className="post__content">
             <Media
                 provider="instagram"
                 images={post.images}
@@ -28,9 +28,11 @@ export const InstagramPost = ({ post, highlight }) => (
                     },
                 ]}
             />
-        </div>
+        </section>
 
-        <Action post={post} />
-        <TimeAgo date={post.created_at} />
+        <footer className="post__footer">
+            <Action post={post} />
+            <TimeAgo date={post.created_at} />
+        </footer>
     </div>
 );

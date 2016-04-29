@@ -21,17 +21,17 @@ export default ({ location: { pathname }, main, leftSidebar, rightSidebar }) => 
     });
 
     return (
-        <div>
-            <div className={mainClass}>
+        <section>
+            <main className={mainClass}>
                 {main}
-            </div>
+            </main>
 
-            <div className={leftSidebarClass}>
+            <nav className={leftSidebarClass}>
                 {leftSidebar}
-            </div>
-            <div className={rightSidebarClass}>
+            </nav>
+            <nav className={rightSidebarClass}>
                 {rightSidebar}
-            </div>
-        </div>
+            </nav>
+        </section>
     );
 };

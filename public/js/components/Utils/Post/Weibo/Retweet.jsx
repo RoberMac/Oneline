@@ -10,7 +10,7 @@ import { Avatar, RetweetAvatar } from '../Utils/Avatar';
 export default ({ post, highlight }) => (
     <div>
         {!post.avatarless ? <Avatar provider="weibo" {...post.retweet.user} /> : null}
-        <div className="post__content">
+        <section className="post__content">
             <Text
                 provider="weibo"
                 text={post.retweet.text}
@@ -22,12 +22,13 @@ export default ({ post, highlight }) => (
             {post.retweet.media && post.retweet.media.length > 0 && (
                 <Media provider="weibo" media={post.retweet.media} />
             )}
-        </div>
+        </section>
 
         <RetweetAvatar provider="weibo" {...post.user} />
 
-        <Action post={post.retweet} />
-
-        <TimeAgo date={post.created_at} />
+        <footer className="post__footer">
+            <Action post={post.retweet} />
+            <TimeAgo date={post.created_at} />
+        </footer>
     </div>
 );

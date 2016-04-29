@@ -9,7 +9,7 @@ import { Avatar } from '../Utils/Avatar';
 export const UnsplashPost = ({ post, highlight }) => (
     <div>
         {!post.avatarless && <Avatar provider="unsplash" {...post.user} />}
-        <div className="post__content">
+        <section className="post__content">
             <Media provider="unsplash" images={post.images} />
             <Text
                 provider="unsplash"
@@ -22,8 +22,10 @@ export const UnsplashPost = ({ post, highlight }) => (
                     },
                 ]}
             />
-        </div>
+        </section>
 
-        <Action post={post} />
+        <footer className="post__footer">
+            <Action post={post} />
+        </footer>
     </div>
 );

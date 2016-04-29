@@ -34,7 +34,7 @@ export default (props) => (
     <LocationLink link={selectLink[props.provider]({ ...props })}>
         <span className="post__location btn color--steel tips--deep">
             <Icon className="post-action__icon" name="location" />
-            <span className="post__location__name">{props.name}</span>
+            <span className="post__location__name" title={props.name}>{props.name}</span>
         </span>
     </LocationLink>
 );

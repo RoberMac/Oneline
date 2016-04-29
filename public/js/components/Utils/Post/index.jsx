@@ -38,13 +38,13 @@ class Post extends React.Component {
         const SelectedPost = selectPost[provider][type];
 
         return (
-            <div
+            <article
                 className={`post animate--faster provider--${provider} ${className || ''}`}
                 style={assign({ opacity: 0 }, style)}
                 ref="post"
             >
                 <SelectedPost {...this.props} />
-            </div>
+            </article>
         );
     }
 }

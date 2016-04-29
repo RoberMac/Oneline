@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.13.10",
+  "version": "0.13.10-alpha.2",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "cd test && jasmine",
@@ -44,7 +44,7 @@
     "jade": "^1.11.0",
     "joi": "^8.0.5",
     "jsonwebtoken": "^5.7.0",
-    "mongoose": "^4.4.13",
+    "mongoose": "^4.4.14",
     "morgan": "^1.7.0",
     "multer": "^1.1.0",
     "passport": "^0.3.2",
@@ -78,8 +78,8 @@
     "es6-promise": "^3.1.2",
     "eslint": "^2.8.0",
     "eslint-config-airbnb": "^8.0.0",
-    "eslint-plugin-import": "^1.6.0",
-    "eslint-plugin-jsx-a11y": "^1.0.3",
+    "eslint-plugin-import": "^1.6.1",
+    "eslint-plugin-jsx-a11y": "^1.0.4",
     "eslint-plugin-react": "^5.0.1",
     "gulp": "^3.9.1",
     "gulp-postcss": "^6.1.0",

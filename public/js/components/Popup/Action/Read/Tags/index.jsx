@@ -13,6 +13,8 @@ export default ({ provider, id, showingPosts }) => (
             link={selectTagLink[provider]({ tagName: id })}
             title={id}
         />
-        {showingPosts.map(item => <Post className="popupPost" key={item.id_str} post={item} />)}
+        {showingPosts.map(item => (
+            <Post className="popupPost" key={item.id_str} post={item} />
+        ))}
     </div>
 );

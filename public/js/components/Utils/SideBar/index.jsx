@@ -23,10 +23,7 @@ const _LeftSidebar = ({ activeProviders, location: { pathname } }) => (
 );
 const _RightSidebar = ({ activeProviders, location: { pathname } }) => (
     isPopupPage(pathname)
-        ? <HistoryGoBtn
-            step="1"
-            className={`${colorClass(pathname)} rotate--180`}
-        />
+        ? <HistoryGoBtn step="1" className={`${colorClass(pathname)} rotate--180`} />
     : activeProviders.length <= 0
         ? <span />
     : isHomePage(pathname)

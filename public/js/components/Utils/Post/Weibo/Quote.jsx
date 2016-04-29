@@ -10,7 +10,7 @@ import { Avatar } from '../Utils/Avatar';
 export default ({ post, highlight }) => (
     <div>
         {!post.avatarless && <Avatar provider="weibo" {...post.user} />}
-        <div className="post__content">
+        <section className="post__content">
             <Text
                 provider="weibo"
                 text={post.text}
@@ -18,11 +18,11 @@ export default ({ post, highlight }) => (
                     { order: 5, middleware: 'highlight', opts: { provider: 'weibo', highlight } },
                 ]}
             />
-        </div>
+        </section>
 
-        <div className="post post--quote post--quote--weibo">
+        <article className="post post--quote post--quote--weibo">
             <Avatar provider="weibo" {...post.quote.user} />
-            <div className="post__content">
+            <section className="post__content">
                 <Text
                     provider="weibo"
                     text={post.quote.text}
@@ -38,13 +38,17 @@ export default ({ post, highlight }) => (
                 {post.quote.media && post.quote.media.length > 0 && (
                     <Media provider="weibo" media={post.quote.media} />
                 )}
-            </div>
+            </section>
 
-            <Action post={post.quote} />
-            <TimeAgo date={post.quote.created_at} />
-        </div>
+            <footer className="post__footer">
+                <Action post={post.quote} />
+                <TimeAgo date={post.quote.created_at} />
+            </footer>
+        </article>
 
-        <Action post={post} />
-        <TimeAgo date={post.created_at} />
+        <footer className="post__footer">
+            <Action post={post} />
+            <TimeAgo date={post.created_at} />
+        </footer>
     </div>
 );

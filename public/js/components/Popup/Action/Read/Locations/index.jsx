@@ -13,6 +13,8 @@ export default ({ provider, id, showingPosts, location: { query: { name, place_i
             link={selectLocationLink[provider]({ id, place_id })}
             title={name || ''}
         />
-        {showingPosts.map(item => <Post className="popupPost" key={item.id_str} post={item} />)}
+        {showingPosts.map(item => (
+            <Post className="popupPost" key={item.id_str} post={item} />
+        ))}
     </div>
 );

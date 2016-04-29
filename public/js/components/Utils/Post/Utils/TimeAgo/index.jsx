@@ -14,11 +14,22 @@ export default class _TimeAgo extends React.Component {
     }
     render() {
         const { date, className } = this.props;
+        const dateTime = new Date(date).toISOString();
+        const localeDate = new Date(date).toLocaleString();
+        const timeClass = `post__time tips--deep ${className || ''}`;
+
         return (
-            <span className={`post__time tips ${className || ''}`} onClick={this.toggleTimeAgo}>
+            <span className={timeClass} onClick={this.toggleTimeAgo}>
             {this.state.isTimeAge
-                ? <TimeAgo date={date} live formatter={formatter} maxPeriod={60} />
-                : <span>{new Date(date).toLocaleString()}</span>
+                ? <TimeAgo
+                    component="time"
+                    dateTime={dateTime}
+                    date={date}
+                    formatter={formatter}
+                    maxPeriod={60}
+                    live
+                />
+                : <time dateTime={dateTime}>{localeDate}</time>
             }
             </span>
         );

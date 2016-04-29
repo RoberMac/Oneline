@@ -10,7 +10,7 @@ import { Avatar, RetweetAvatar } from '../Utils/Avatar';
 export default ({ post, highlight }) => (
     <div>
         {!post.avatarless && <Avatar provider="twitter" {...post.retweet.user} />}
-        <div className="post__content">
+        <section className="post__content">
             <Text
                 provider="twitter"
                 text={post.retweet.text}
@@ -30,11 +30,13 @@ export default ({ post, highlight }) => (
             {post.retweet.media && post.retweet.media.length > 0 && (
                 <Media provider="twitter" media={post.retweet.media} />
             )}
-        </div>
+        </section>
 
         <RetweetAvatar provider="twitter" {...post.user} />
 
-        <Action post={post.retweet} />
-        <TimeAgo date={post.created_at} />
+        <footer className="post__footer">
+            <Action post={post.retweet} />
+            <TimeAgo date={post.created_at} />
+        </footer>
     </div>
 );
