@@ -49,15 +49,15 @@ export default ({ post, highlight }) => (
                 )}
             </section>
 
-            <footer className="post__footer">
+            <section className="post__footer">
                 <Action post={post.quote} />
                 <TimeAgo date={post.quote.created_at} />
-            </footer>
+            </section>
         </article>
 
-        <footer className="post__footer">
+        <section className="post__footer">
             <Action post={post} />
             <TimeAgo date={post.created_at} />
-        </footer>
+        </section>
     </div>
 );

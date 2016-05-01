@@ -10,11 +10,12 @@ import './common.css';
 
 // Components
 import Post from 'components/Utils/Post';
-import DetailColumn from 'components/Popup/Action/Detail/DetailColumn';
+import DetailAvatar from 'components/Popup/Action/Detail/DetailAvatar';
+import DetailActions from 'components/Popup/Action/Detail/DetailActions';
 import DetailIcon from 'components/Popup/Action/Detail/DetailIcon';
 const DetailContainerWrapper = ({ provider, post, viewCount, sharers, children }) => (
     <div className={`detail__container provider--${provider}`}>
-        <DetailColumn>
+        <DetailActions>
             <DetailIcon
                 name="share"
                 text={{ type: 'count', content: sharers.length }}
@@ -29,9 +30,9 @@ const DetailContainerWrapper = ({ provider, post, viewCount, sharers, children }
                 active={false}
             />
             {children}
-        </DetailColumn>
+        </DetailActions>
 
-        <DetailColumn type="share" provider={provider} list={sharers} />
+        <DetailAvatar type="share" provider={provider} list={sharers} />
     </div>
 );
 const DetailContainer = props => {

@@ -34,9 +34,9 @@ export default ({ post, highlight }) => (
 
         <RetweetAvatar provider="twitter" {...post.user} />
 
-        <footer className="post__footer">
+        <section className="post__footer">
             <Action post={post.retweet} />
             <TimeAgo date={post.created_at} />
-        </footer>
+        </section>
     </div>
 );

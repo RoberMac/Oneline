@@ -1,3 +1,4 @@
+/* eslint no-control-regex: 0 */
 import assign from 'object.assign';
 
 import store from 'utils/store';
@@ -63,11 +64,11 @@ export const isLeftPopup = () => {
 
     return _left > _width / 2;
 };
-export const getCountInfo = ({ action, provider, status }) => {
+export const getCountInfo = ({ action, provider, status = '' }) => {
     // Count
     let count;
     if (_isWeibo(provider)) {
-        const asciiLength = (status.match(/[\x00-\x7F]+/g) || []).join('').length;
+        const asciiLength = (status.match(/[\x00-\x7F]+/g) || []).length;
         const nonAsciiLength = status.length - asciiLength;
 
         count = nonAsciiLength + Math.round(asciiLength / 2);

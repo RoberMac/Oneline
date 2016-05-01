@@ -64,7 +64,7 @@ app
 }))
 .use(helmet())
 .use(helmet.hidePoweredBy({ setTo: 'PHP 4.2.0' }))
-.use(helmet.csp({
+.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: ["'self'"],
         styleSrc  : ["'self'", "'unsafe-inline'"],

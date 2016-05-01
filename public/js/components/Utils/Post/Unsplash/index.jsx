@@ -24,8 +24,8 @@ export const UnsplashPost = ({ post, highlight }) => (
             />
         </section>
 
-        <footer className="post__footer">
+        <section className="post__footer">
             <Action post={post} />
-        </footer>
+        </section>
     </div>
 );

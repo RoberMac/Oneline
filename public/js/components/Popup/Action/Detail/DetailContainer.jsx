@@ -1,8 +1,9 @@
 import React from 'react';
 
 // Components
-import DetailColumn from './DetailColumn';
-import DetailRow from './DetailRow';
+import DetailAvatar from './DetailAvatar';
+import DetailActions from './DetailActions';
+import DetailReply from './DetailReply';
 import DetailIcon from './DetailIcon';
 
 export default ({ provider, post, likedList, replyList, retweetedList }) => {
@@ -12,7 +13,7 @@ export default ({ provider, post, likedList, replyList, retweetedList }) => {
         case 'twitter':
             DetailComponents = (
                 <div className={`detail__container provider--${provider}`}>
-                    <DetailColumn>
+                    <DetailActions>
                         <DetailIcon
                             name="retweet"
                             text={{ type: 'count', content: post.retweet_count }}
@@ -27,16 +28,16 @@ export default ({ provider, post, likedList, replyList, retweetedList }) => {
                             name="calendar"
                             text={{ type: 'date', content: post.created_at }}
                         />
-                    </DetailColumn>
+                    </DetailActions>
 
-                    <DetailColumn type="retweet" provider={provider} list={retweetedList} />
+                    <DetailAvatar type="retweet" provider={provider} list={retweetedList} />
                 </div>
             );
             break;
         case 'instagram':
             DetailComponents = (
                 <div className={`detail__container provider--${provider}`}>
-                    <DetailColumn>
+                    <DetailActions>
                         <DetailIcon
                             name="like"
                             text={{ type: 'count', content: post.like_count }}
@@ -50,18 +51,18 @@ export default ({ provider, post, likedList, replyList, retweetedList }) => {
                             name="calendar"
                             text={{ type: 'date', content: post.created_at }}
                         />
-                    </DetailColumn>
+                    </DetailActions>
 
-                    <DetailColumn type="like" provider={provider} list={likedList} />
+                    <DetailAvatar type="like" provider={provider} list={likedList} />
 
-                    <DetailRow provider={provider} list={replyList} />
+                    <DetailReply provider={provider} list={replyList} />
                 </div>
             );
             break;
         case 'weibo':
             DetailComponents = (
                 <div className={`detail__container provider--${provider}`}>
-                    <DetailColumn>
+                    <DetailActions>
                         <DetailIcon
                             name="like"
                             text={{ type: 'count', content: post.like_count }}
@@ -80,8 +81,8 @@ export default ({ provider, post, likedList, replyList, retweetedList }) => {
                             name="calendar"
                             text={{ type: 'date', content: post.created_at }}
                         />
-                    </DetailColumn>
-                    <DetailRow provider={provider} list={replyList} />
+                    </DetailActions>
+                    <DetailReply provider={provider} list={replyList} />
                 </div>
             );
             break;

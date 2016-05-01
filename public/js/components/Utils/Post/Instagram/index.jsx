@@ -30,9 +30,9 @@ export const InstagramPost = ({ post, highlight }) => (
             />
         </section>
 
-        <footer className="post__footer">
+        <section className="post__footer">
             <Action post={post} />
             <TimeAgo date={post.created_at} />
-        </footer>
+        </section>
     </div>
 );
