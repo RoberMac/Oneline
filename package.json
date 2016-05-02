@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.13.10-beta.1",
+  "version": "0.13.10",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "cd test && jasmine",
@@ -57,7 +57,7 @@
     "request": "^2.72.0",
     "response-time": "^2.3.1",
     "serve-favicon": "^2.3.0",
-    "twit": "^2.2.3",
+    "twit": "^2.2.4",
     "weibo-mid": "0.0.1"
   },
   "devDependencies": {
@@ -70,7 +70,7 @@
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-stage-2": "^6.5.0",
     "classlist": "^1.0.1",
-    "classnames": "^2.2.4",
+    "classnames": "^2.2.5",
     "clipboard": "^1.5.10",
     "css-loader": "^0.23.1",
     "css-mqpacker": "^4.0.1",
@@ -82,7 +82,7 @@
     "eslint-plugin-jsx-a11y": "^1.0.4",
     "eslint-plugin-react": "^5.0.1",
     "gulp": "^3.9.1",
-    "gulp-postcss": "^6.1.0",
+    "gulp-postcss": "^6.1.1",
     "gulp-rename": "^1.2.2",
     "gulp-svgmin": "^1.2.2",
     "gulp-svgstore": "^6.0.0",
@@ -99,7 +99,7 @@
     "postcss-assets": "^4.1.0",
     "postcss-cssnext": "^2.5.2",
     "postcss-import": "^8.1.0",
-    "postcss-loader": "^0.8.2",
+    "postcss-loader": "^0.9.1",
     "postcss-nested": "^1.0.0",
     "postcss-short": "^1.4.0",
     "react": "^0.14.8",

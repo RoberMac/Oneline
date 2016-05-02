@@ -25,7 +25,7 @@ app
     '/public/img',
     '/public/emotions',
 ], {
-    target: 'http://localhost:8080',
+    target: 'http://oneline.dev',
 }));
 
 // Template engines
