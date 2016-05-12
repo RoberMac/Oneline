@@ -6,7 +6,7 @@ import assign from 'object.assign';
 import store from 'utils/store';
 import { Timeline } from 'utils/api';
 import { isTwitter as _isTwitter, isWeibo as _isWeibo } from 'utils/detect';
-import { selectLastWeekMs } from 'utils/select';
+import { selectExpirationDate } from 'utils/select';
 import reduxStore from 'state/store';
 import { updateBase } from 'state/actions/base';
 const arrayUnique = {
@@ -140,7 +140,7 @@ export const fetchFromRemote = ({
 
             // Init Response Data
             const newAllPosts = allPosts.withMutations(map => {
-                const lastWeekMs = selectLastWeekMs();
+                const expirationDate = selectExpirationDate();
                 const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res : {};
                 const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res : {};
 
@@ -148,7 +148,7 @@ export const fetchFromRemote = ({
                     allPosts
                     .get('posts')
                     .concat(newRemotePosts)
-                    .filter(i => i.created_at > lastWeekMs)
+                    .filter(i => i.created_at > expirationDate)
                 ));
 
                 maxId && map.set('maxId', assign(allPosts.get('maxId'), maxId));
@@ -207,8 +207,9 @@ function extractFreshPosts({ allPosts, timeRange }) {
 }
 // 提取下一個（非空） 30 分鐘內的貼文
 function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
+    const MIN_EXTRACT_COUNT = 20;
     const posts = allPosts.get('posts');
-    const lastWeekMs = selectLastWeekMs();
+    const expirationDate = selectExpirationDate();
 
     let isEmpty = true;
     let newShowingPosts = [];
@@ -219,11 +220,11 @@ function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
         return timeDiff > 0 && timeDiff <= timeRange;
     };
     while (isEmpty) {
-        newShowingPosts = posts.filter(extractPosts);
+        newShowingPosts = newShowingPosts.concat(posts.filter(extractPosts));
 
         newTimePointer -= timeRange;
 
-        if (newShowingPosts.length > 0 || newTimePointer < lastWeekMs) {
+        if (newShowingPosts.length >= MIN_EXTRACT_COUNT || newTimePointer < expirationDate) {
             isEmpty = false;
         }
     }
