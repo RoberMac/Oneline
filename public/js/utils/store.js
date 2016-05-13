@@ -1,4 +1,4 @@
-/* eslint no-console: 0 */
+/* eslint no-console: 0, no-unsafe-finally: 0 */
 
 const parseJSON = data => {
     let returnData;

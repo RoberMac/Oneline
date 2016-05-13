@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import debounce from 'lodash.debounce';
 
 import Jump from 'utils/jump';
+import { TIMELINE_SCROLL } from 'utils/constants';
 
 // Components
 import Icon from '../Icon';
@@ -18,19 +19,21 @@ export default class ScrollToTop extends React.Component {
     componentDidMount() {
         this.debounceHandleContainerScoll = debounce(this.handleContainerScoll, 300);
 
-        const containerElem = document.querySelector(this.props.container);
+        const containerElem = document.querySelector(TIMELINE_SCROLL.container);
         containerElem.addEventListener('scroll', this.debounceHandleContainerScoll);
     }
     componentWillUnmount() {
-        const containerElem = document.querySelector(this.props.container);
+        const containerElem = document.querySelector(TIMELINE_SCROLL.container);
         containerElem.removeEventListener('scroll', this.debounceHandleContainerScoll);
     }
     setScrollBtnState(isShow) {
         this.setState({ isShowScrollBtn: isShow });
     }
     scrollToTop() {
-        const { target, container, duration } = this.props;
-        new Jump().jump(target, { container, duration });
+        new Jump().jump(TIMELINE_SCROLL.target, {
+            container: TIMELINE_SCROLL.container,
+            duration: TIMELINE_SCROLL.duration,
+        });
     }
     handleContainerScoll(e) {
         const BOUND = 70;

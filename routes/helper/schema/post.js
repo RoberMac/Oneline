@@ -1,3 +1,5 @@
+/* eslint newline-per-chained-call: 0 */
+
 const Joi = require('joi');
 
 // Helpers

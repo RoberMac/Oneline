@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { browserHistory as history } from 'react-router';
 
 // Helpers
+import { TIMELINE_SCROLL } from 'utils/constants';
 import { replaceTokenList } from 'state/actions/auth';
 import { resetState, fetchPosts, updateShowingPosts } from 'state/actions/timeline';
 import dependencyLoader from './loader';
@@ -147,11 +148,7 @@ class Home extends React.Component {
     render() {
         return (
             <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
-                <ScrollToTop
-                    target=".scrollTo--target"
-                    container=".oneline__wrapper"
-                    duration={700}
-                />
+                <ScrollToTop />
 
                 <div className="oneline__wrapper overflow--y">
                     <span className="scrollTo--target"></span>
