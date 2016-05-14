@@ -4,14 +4,13 @@ import assign from 'object.assign';
 
 // Helpers
 import Jump from 'utils/jump';
-import { TIMELINE_SCROLL } from 'utils/constants';
+import { TIMELINE_SCROLL, MIN_EXTRACT_COUNT, MAX_SHOWING_COUNT } from 'utils/constants';
 import store from 'utils/store';
 import { Timeline } from 'utils/api';
 import { isTwitter as _isTwitter, isWeibo as _isWeibo } from 'utils/detect';
 import { selectExpirationDate } from 'utils/select';
 import reduxStore from 'state/store';
 import { updateBase } from 'state/actions/base';
-const MIN_EXTRACT_COUNT = 20;
 const arrayUnique = {
     // via http://jszen.com/best-way-to-get-unique-values-of-an-array-in-javascript.7.html
     literal: (a) => {
@@ -220,21 +219,13 @@ function extractFreshPosts({ allPosts, timeRange }) {
 }
 function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
     return new Promise(resolve => {
-        let { newShowingPosts, newTimePointer } = extractPosts({
+        const { newShowingPosts, newTimePointer } = extractPosts({
             allPosts,
             timePointer,
             timeRange,
         });
-        const preShowingPostsLen = showingPosts.length;
 
-        newShowingPosts = (
-            showingPosts
-            .concat(newShowingPosts)
-            .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
-            .slice(preShowingPostsLen - 1, preShowingPostsLen + 100)
-        );
-
-        newTimePointer = newShowingPosts[newShowingPosts.length - 1].created_at;
+        newShowingPosts.unshift(showingPosts.pop());
 
         new Jump()
         .jump(TIMELINE_SCROLL.target, {
@@ -250,23 +241,32 @@ function extractPosts({ allPosts, timePointer, timeRange }) {
 
     let isEmpty = true;
     let newShowingPosts = [];
-    let newTimePointer = timePointer;
+    let _timePointer = timePointer;
     const extractCurRangePosts = post => {
-        const timeDiff = newTimePointer - post.created_at;
+        const timeDiff = _timePointer - post.created_at;
         return timeDiff > 0 && timeDiff <= timeRange;
     };
 
     while (isEmpty) {
         newShowingPosts = newShowingPosts.concat(posts.filter(extractCurRangePosts));
 
-        newTimePointer -= timeRange;
+        _timePointer -= timeRange;
 
-        if (newShowingPosts.length >= MIN_EXTRACT_COUNT || newTimePointer < expirationDate) {
+        if (newShowingPosts.length >= MIN_EXTRACT_COUNT || _timePointer < expirationDate) {
             isEmpty = false;
         }
     }
 
-    return { newShowingPosts, newTimePointer };
+    newShowingPosts = (
+        newShowingPosts
+        .slice(0, MAX_SHOWING_COUNT - 1)
+        .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
+    );
+
+    return {
+        newShowingPosts,
+        newTimePointer: newShowingPosts[newShowingPosts.length - 1].created_at,
+    };
 }
 function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
     const [typeForLocal, typeForRemote] = isFetchNewPosts ? ['maxId', 'minId'] : ['minId', 'maxId'];

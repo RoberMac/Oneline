@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import { MAX_SHOWING_COUNT } from 'utils/constants';
+
 import SearchBar from 'components/Utils/SearchBar';
 
 export default class SearchLocal extends React.Component {
@@ -61,7 +63,7 @@ export default class SearchLocal extends React.Component {
 
                 return srcText.toLowerCase().indexOf(searchText.toLowerCase()) >= 0;
             })
-            .slice(0, 100)
+            .slice(0, MAX_SHOWING_COUNT - 1)
         ) : [];
 
         onChange({

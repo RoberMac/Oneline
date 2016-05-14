@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { browserHistory as history } from 'react-router';
 
 // Helpers
-import { TIMELINE_SCROLL } from 'utils/constants';
 import { replaceTokenList } from 'state/actions/auth';
 import { resetState, fetchPosts, updateShowingPosts } from 'state/actions/timeline';
 import dependencyLoader from './loader';
