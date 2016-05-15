@@ -2,7 +2,7 @@
  * Utils
  *
  */
-export const selectLastWeekMs = () => Date.now() - 1000 * 60 * 60 * 24 * 7;
+export const selectExpirationDate = () => Date.now() - 1000 * 60 * 60 * 24 * 3;
 
 /**
  * Provider

@@ -1,3 +1,5 @@
+/* eslint no-unsafe-finally: 0 */
+
 module.exports = data => {
     let returnData;
     try {

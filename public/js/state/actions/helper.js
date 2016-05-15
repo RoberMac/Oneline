@@ -3,10 +3,12 @@
 import assign from 'object.assign';
 
 // Helpers
+import Jump from 'utils/jump';
+import { TIMELINE_SCROLL, MIN_EXTRACT_COUNT, MAX_SHOWING_COUNT } from 'utils/constants';
 import store from 'utils/store';
 import { Timeline } from 'utils/api';
 import { isTwitter as _isTwitter, isWeibo as _isWeibo } from 'utils/detect';
-import { selectLastWeekMs } from 'utils/select';
+import { selectExpirationDate } from 'utils/select';
 import reduxStore from 'state/store';
 import { updateBase } from 'state/actions/base';
 const arrayUnique = {
@@ -83,21 +85,24 @@ export const determineFetchFrom = ({
 export const fetchFromLocal = ({ postsType, showingPosts, allPosts, timePointer, timeRange }) => {
     return new Promise(resolve => {
         const isFetchNewPosts = postsType === 'newPosts';
-        const { newUnreadCount, newShowingPosts, newTimePointer } = (
+        const promiseFetch = (
             isFetchNewPosts
                 ? extractFreshPosts({ allPosts, timeRange })
             : extractOldPosts({ showingPosts, allPosts, timePointer, timeRange })
         );
 
-        resolve({
-            postsType,
-            unreadCount: newUnreadCount,
-            showingPosts: newShowingPosts,
-            allPosts,
-            timePointer: newTimePointer,
-        });
+        promiseFetch
+        .then(({ newShowingPosts, newTimePointer }) => {
+            resolve({
+                postsType,
+                unreadCount: 0,
+                showingPosts: newShowingPosts,
+                allPosts,
+                timePointer: newTimePointer,
+            });
 
-        isFetchNewPosts && setTitleUnreadCount(newUnreadCount);
+            isFetchNewPosts && setTitleUnreadCount(0);
+        });
     });
 };
 
@@ -129,18 +134,14 @@ export const fetchFromRemote = ({
             if (!newRemotePosts) {
                 reject(new Error('[FetchFail]: WTF Responses?'));
                 return;
-            } else if (newRemotePosts && newRemotePosts.length <= 0) {
-                if (!isFetchNewPosts) {
-                    reject(new Error('[FetchFail]: No More Posts'));
-                } else {
-                    resolve({ postsType, unreadCount, showingPosts, allPosts, timePointer });
-                }
+            } else if (newRemotePosts && !isFetchNewPosts && newRemotePosts.length <= 0) {
+                reject(new Error('[FetchFail]: No More Posts'));
                 return;
             }
 
             // Init Response Data
             const newAllPosts = allPosts.withMutations(map => {
-                const lastWeekMs = selectLastWeekMs();
+                const expirationDate = selectExpirationDate();
                 const { maxId, maxDate } = isFetchNewPosts || isInitLoad ? res : {};
                 const { minId, minDate } = !isFetchNewPosts || isInitLoad ? res : {};
 
@@ -148,7 +149,7 @@ export const fetchFromRemote = ({
                     allPosts
                     .get('posts')
                     .concat(newRemotePosts)
-                    .filter(i => i.created_at > lastWeekMs)
+                    .filter(i => i.created_at > expirationDate)
                 ));
 
                 maxId && map.set('maxId', assign(allPosts.get('maxId'), maxId));
@@ -170,19 +171,29 @@ export const fetchFromRemote = ({
 
                 setTitleUnreadCount(newUnreadCount);
             } else {
-                const { newUnreadCount, newShowingPosts, newTimePointer } = isFetchNewPosts
-                    ? extractFreshPosts({ allPosts: newAllPosts, timeRange })
-                : extractOldPosts({ showingPosts, allPosts: newAllPosts, timePointer, timeRange });
+                const promiseFetch = (
+                    isFetchNewPosts
+                        ? extractFreshPosts({ allPosts: newAllPosts, timeRange })
+                    : extractOldPosts({
+                        showingPosts,
+                        allPosts: newAllPosts,
+                        timePointer,
+                        timeRange,
+                    })
+                );
 
-                resolve({
-                    postsType,
-                    unreadCount: newUnreadCount,
-                    showingPosts: newShowingPosts,
-                    allPosts: newAllPosts,
-                    timePointer: newTimePointer,
+                promiseFetch
+                .then(({ newShowingPosts, newTimePointer }) => {
+                    resolve({
+                        postsType,
+                        unreadCount: 0,
+                        showingPosts: newShowingPosts,
+                        allPosts: newAllPosts,
+                        timePointer: newTimePointer,
+                    });
+
+                    isFetchNewPosts && setTitleUnreadCount(0);
                 });
-
-                isFetchNewPosts && setTitleUnreadCount(newUnreadCount);
             }
 
             // Always record mentions in posts
@@ -195,53 +206,68 @@ export const fetchFromRemote = ({
 };
 
 
-// 提取最新 30 分鐘內的貼文
 function extractFreshPosts({ allPosts, timeRange }) {
-    const NOW = Date.now();
+    return new Promise(resolve => {
+        const { newShowingPosts, newTimePointer } = extractPosts({
+            allPosts,
+            timePointer: Date.now(),
+            timeRange,
+        });
 
-    return {
-        newUnreadCount: 0,
-        newShowingPosts: allPosts.get('posts').filter(post => NOW - post.created_at < timeRange),
-        newTimePointer: NOW - timeRange,
-    };
+        resolve({ newShowingPosts, newTimePointer });
+    });
 }
-// 提取下一個（非空） 30 分鐘內的貼文
 function extractOldPosts({ showingPosts, allPosts, timePointer, timeRange }) {
+    return new Promise(resolve => {
+        const { newShowingPosts, newTimePointer } = extractPosts({
+            allPosts,
+            timePointer,
+            timeRange,
+        });
+
+        newShowingPosts.unshift(showingPosts.pop());
+
+        new Jump()
+        .jump(TIMELINE_SCROLL.target, {
+            container: TIMELINE_SCROLL.container,
+            duration: TIMELINE_SCROLL.duration,
+            callback: () => resolve({ newShowingPosts, newTimePointer }),
+        });
+    });
+}
+function extractPosts({ allPosts, timePointer, timeRange }) {
     const posts = allPosts.get('posts');
-    const lastWeekMs = selectLastWeekMs();
+    const expirationDate = selectExpirationDate();
 
     let isEmpty = true;
     let newShowingPosts = [];
-    let newTimePointer = timePointer;
-    const extractPosts = post => {
-        const timeDiff = newTimePointer - post.created_at;
-
+    let _timePointer = timePointer;
+    const extractCurRangePosts = post => {
+        const timeDiff = _timePointer - post.created_at;
         return timeDiff > 0 && timeDiff <= timeRange;
     };
+
     while (isEmpty) {
-        newShowingPosts = posts.filter(extractPosts);
+        newShowingPosts = newShowingPosts.concat(posts.filter(extractCurRangePosts));
 
-        newTimePointer -= timeRange;
+        _timePointer -= timeRange;
 
-        if (newShowingPosts.length > 0 || newTimePointer < lastWeekMs) {
+        if (newShowingPosts.length >= MIN_EXTRACT_COUNT || _timePointer < expirationDate) {
             isEmpty = false;
         }
     }
 
     newShowingPosts = (
-        showingPosts
-        .concat(newShowingPosts)
+        newShowingPosts
+        .slice(0, MAX_SHOWING_COUNT - 1)
         .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
     );
-    newTimePointer = newShowingPosts[newShowingPosts.length - 1].created_at;
 
     return {
-        newUnreadCount: 0,
         newShowingPosts,
-        newTimePointer,
+        newTimePointer: newShowingPosts[newShowingPosts.length - 1].created_at,
     };
 }
-// 向後端獲取貼文的查詢字段
 function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
     const [typeForLocal, typeForRemote] = isFetchNewPosts ? ['maxId', 'minId'] : ['minId', 'maxId'];
     let queryIdStr = '';
@@ -257,7 +283,6 @@ function getQueryIdStr({ isFetchNewPosts, invalidProviders, allPosts }) {
 
     return queryIdStr;
 }
-// 標題未讀數提醒
 function setTitleUnreadCount(count) {
     const N_MAP = [
         '⁰',
@@ -283,7 +308,6 @@ function setTitleUnreadCount(count) {
 
     document.title = `｜${count_str}`;
 }
-// 紀錄時間線上出現的「提及」用戶
 function recordMentions({ providers, posts }) {
     __DEV__ && console.time('[recordMentions]');
 

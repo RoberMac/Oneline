@@ -8,6 +8,10 @@ import { rewriteMediaLink } from 'utils/rewrite';
 // Styles
 import './common.css';
 
+// Polyfill
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
+
 // Components
 import Post from 'components/Utils/Post';
 import DetailAvatar from 'components/Popup/Action/Detail/DetailAvatar';

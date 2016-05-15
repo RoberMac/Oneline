@@ -147,11 +147,7 @@ class Home extends React.Component {
     render() {
         return (
             <Swipeable onSwipedLeft={this.handleSwipedLeft} onSwipedRight={this.handleSwipedRight}>
-                <ScrollToTop
-                    target=".scrollTo--target"
-                    container=".oneline__wrapper"
-                    duration={700}
-                />
+                <ScrollToTop />
 
                 <div className="oneline__wrapper overflow--y">
                     <span className="scrollTo--target"></span>

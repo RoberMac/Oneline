@@ -35,7 +35,6 @@ export default class Jump {
 
         requestAnimationFrame(time => this._loop(time));
     }
-
     _loop(time) {
         if (!this.timeStart) {
             this.timeStart = time;
@@ -52,7 +51,6 @@ export default class Jump {
           ? requestAnimationFrame(t => this._loop(t))
         : this._end();
     }
-
     _end() {
         !!this.options.container
             ? this.options.container.scrollTop = this.next + this.distance
