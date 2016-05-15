@@ -7,8 +7,8 @@ import { Router, browserHistory } from 'react-router';
 import './common.css';
 
 // Polyfill
-import 'es6-promise';
-import 'isomorphic-fetch';
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 
 // Config
 import routes from '../routes';
