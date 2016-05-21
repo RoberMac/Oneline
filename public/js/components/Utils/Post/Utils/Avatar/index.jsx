@@ -23,32 +23,40 @@ const converToHDAvatar = {
 import UserLink from 'components/Utils/UserLink';
 
 // Export
-export const Avatar = ({ avatar, screen_name, name, provider }) => (
-    <header className="post-profile">
-        <UserLink provider={provider} screen_name={screen_name}>
-            <img
-                className="post-profile__avatar"
-                src={converToHDAvatar[provider](avatar)}
-                alt={`${name || screen_name}'s avatar`}
-            />
-        </UserLink>
-        <div className="post-profile__fullname">
-            <a href={selectUserLink[provider](screen_name)} target="_blank">
-                <strong>{name || screen_name}</strong>
-            </a>
-        </div>
-    </header>
-);
-export const RetweetAvatar = ({ avatar, screen_name, provider }) => (
-    <header>
-        <UserLink provider={provider} screen_name={screen_name}>
-            <span className="post-profile__avatar--retweet">
+export const Avatar = ({ avatar, screen_name, name, provider }) => {
+    const displayName = name || screen_name;
+    return (
+        <header className="post-profile">
+            <UserLink provider={provider} screen_name={screen_name}>
                 <img
-                    className={`post-profile__avatar post-profile__avatar--${provider}`}
-                    src={avatar}
-                    alt={`${name || screen_name}'s avatar`}
+                    className="post-profile__avatar"
+                    src={converToHDAvatar[provider](avatar)}
+                    alt={`${displayName}'s avatar`}
+                    title={displayName}
                 />
-            </span>
-        </UserLink>
-    </header>
-);
+            </UserLink>
+            <div className="post-profile__fullname">
+                <a href={selectUserLink[provider](screen_name)} target="_blank">
+                    <strong>{displayName}</strong>
+                </a>
+            </div>
+        </header>
+    );
+};
+export const RetweetAvatar = ({ avatar, screen_name, provider }) => {
+    const displayName = name || screen_name;
+    return (
+        <header>
+            <UserLink provider={provider} screen_name={screen_name}>
+                <span className="post-profile__avatar--retweet">
+                    <img
+                        className={`post-profile__avatar post-profile__avatar--${provider}`}
+                        src={avatar}
+                        alt={`${displayName}'s avatar`}
+                        title={displayName}
+                    />
+                </span>
+            </UserLink>
+        </header>
+    );
+};

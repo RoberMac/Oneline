@@ -1,6 +1,6 @@
 {
   "name": "Oneline",
-  "version": "0.13.11",
+  "version": "0.13.12",
   "description": "A Social Network Aggregator",
   "scripts": {
     "test": "cd test && jasmine",
