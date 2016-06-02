@@ -25,7 +25,6 @@ const calcId = ({ provider, action, id }) => {
                     break;
             }
             break;
-        case 'instagram':
         case 'weibo':
         case 'unsplash':
             _id = id;

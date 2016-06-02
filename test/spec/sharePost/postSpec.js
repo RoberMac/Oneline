@@ -5,7 +5,7 @@ const postSchema = require('../../../routes/helper/schema/post');
 
 const initBasePost = require('../helpers/cases/post');
 const initLocation = require('../helpers/cases/location');
-const { twitter: twitterLink, instagram: instagramLink } = require('../helpers/cases/link');
+const { twitter: twitterLink } = require('../helpers/cases/link');
 const {
     images: mediaImages,
     videos: mediaVideos,
@@ -16,12 +16,6 @@ const initTwitterPost = () => Object.assign({}, initBasePost, {
     provider     : 'twitter',
     retweet_count: 0,
     retweeted: false,
-});
-const initInstagramPost = () => Object.assign({}, initBasePost, mediaImages, {
-    type       : 'post',
-    provider   : 'instagram',
-    link       : instagramLink,
-    reply_count: 0,
 });
 const initWeiboPost = () => Object.assign({}, initBasePost, {
     type         : 'tweet',
@@ -146,7 +140,6 @@ describe('provider-sensitive post', () => {
                 { download_count: 0 },
                 { reply_count: 0, download_count: 0 },
                 { mid: 'DrGC7fqtW' },
-                { link: instagramLink },
                 mediaImages,
                 mediaVideos,
             ].forEach(v => {
@@ -196,44 +189,6 @@ describe('provider-sensitive post', () => {
         });
     });
 
-    describe('> instagram post', () => {
-        let post = initInstagramPost();
-        beforeEach(() => {
-            post = initInstagramPost();
-        });
-
-        it('allows when post is initPost', () => {
-            postSchema.validate(post, err => {
-                expect(err).toBeFalsy();
-            });
-        });
-        it('fails when contain other providers keys', () => {
-            [
-                { retweet_count: 0 },
-                { retweeted: false },
-                { download_count: 0 },
-                { retweet_count: 0, retweeted: false },
-                { mid: 'DrGC7fqtW' },
-                { mediaLink: twitterLink },
-                mediaCommons,
-                Object.assign({}, { mediaLink: twitterLink }, mediaCommons),
-            ].forEach(v => {
-                postSchema.validate(Object.assign(post, v), err => {
-                    expect(err).toBeTruthy();
-                });
-            });
-        });
-
-        // type
-        it('fails when `type` contain other providers `type`', () => {
-            ['tweet', 'retweet', 'quote'].forEach(v => {
-                postSchema.validate(Object.assign(post, { type: v }), err => {
-                    expect(err).toBeTruthy();
-                });
-            });
-        });
-    });
-
     describe('> weibo post', () => {
         let post = initWeiboPost();
         beforeEach(() => {
@@ -249,7 +204,6 @@ describe('provider-sensitive post', () => {
             [
                 { download_count: 0 },
                 { reply_count: 0, download_count: 0 },
-                { link: instagramLink },
                 { mediaLink: twitterLink },
                 mediaImages,
                 mediaVideos,
@@ -323,10 +277,10 @@ describe('nest post', () => {
         });
     });
 
-    describe('> instagram || unsplash', () => {
+    describe('> unsplash', () => {
         it('fails when `type` is "retweet" or "quote"', () => {
             ['retweet', 'quote'].forEach(t => {
-                [initInstagramPost(), initUnsplashPost()].forEach(p => {
+                [initUnsplashPost()].forEach(p => {
                     const post = Object.assign({}, p, { type: t }, { [t]: p });
                     postSchema.validate(post, err => {
                         expect(err).toBeTruthy();

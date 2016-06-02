@@ -5,7 +5,7 @@ import { getActiveProviders } from 'utils/tokenHelper';
 
 export const initAuthState = () => {
     return Map({
-        providers: ['twitter', 'instagram', 'weibo', 'unsplash'],
+        providers: ['twitter', 'weibo', 'unsplash', 'instagram'],
         activeProviders: getActiveProviders(),
     });
 };
@@ -49,12 +49,10 @@ export const initBaseState = () => {
         },
         MENTIONS: {
             // twitter,
-            // instagram,
             // weibo
         },
         PROFILE: {
             // twitter,
-            // instagram,
             // weibo
         },
     });

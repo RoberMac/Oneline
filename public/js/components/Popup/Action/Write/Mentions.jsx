@@ -15,7 +15,6 @@ export default class Mentions extends React.Component {
         const { provider, onChange } = this.props;
         const mentionRegex = {
             twitter: /@([\u4e00-\u9fa5\w-]*)$/, // 可匹配中文
-            instagram: /@([\w\.]*)$/,
             weibo: /@([\u4e00-\u9fa5\w-]*)$/,
         };
 

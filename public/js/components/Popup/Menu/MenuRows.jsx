@@ -27,11 +27,7 @@ export default ({ data }) => (
                     {iconType === 'menu'
                         ? <MenuIcon
                             oColor={providerColor}
-                            tColor={
-                                provider !== 'instagram'
-                                && provider !== 'unsplash'
-                                && activeColor
-                            }
+                            tColor={provider !== 'unsplash' && activeColor}
                             cColor={activeColor}
                             rColor={provider !== 'weibo' && activeColor}
                         />

@@ -5,7 +5,6 @@ import assign from 'object.assign';
 import rerender from 'components/Utils/HoCs/ReRender';
 import { TwitterTweet, TwitterRetweet, TwitterQuote } from './Twitter';
 import { WeiboTweet, WeiboRetweet, WeiboQuote } from './Weibo';
-import { InstagramPost } from './Instagram';
 import { UnsplashPost } from './Unsplash';
 
 // Helpers
@@ -14,9 +13,6 @@ const selectPost = {
         tweet: TwitterTweet,
         retweet: TwitterRetweet,
         quote: TwitterQuote,
-    },
-    instagram: {
-        post: InstagramPost,
     },
     weibo: {
         tweet: WeiboTweet,

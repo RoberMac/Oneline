@@ -17,10 +17,9 @@ router.get('/', (req, res, next) => {
     }
 
     // Fire
-    const { twitter, instagram, weibo, unsplash } = req.olPassports;
+    const { twitter, weibo, unsplash } = req.olPassports;
     Q.all([
         promiseUserFindOne({ id: `twitter${twitter}` }),
-        promiseUserFindOne({ id: `instagram${instagram}` }),
         promiseUserFindOne({ id: `weibo${weibo}` }),
         promiseUserFindOne({ id: `unsplash${unsplash}` }),
     ])
@@ -52,7 +51,7 @@ router.get('/', (req, res, next) => {
         return Q.all(timelinePromises);
     })
     .then(dataList => {
-        const providerList = ['twitter', 'instagram', 'weibo', 'unsplash'];
+        const providerList = ['twitter', 'weibo', 'unsplash'];
         const combineData = {
             data   : [],
             minId  : {},

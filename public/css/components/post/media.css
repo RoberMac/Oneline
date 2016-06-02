@@ -98,24 +98,6 @@
             }
         }
     }
-    &__userTag {
-        position: absolute;
-        transform-origin: 17px -6px;
-
-        &:before {
-            content: '';
-            position: absolute -6px * * calc(50% - 7px);
-            border-color: transparent transparent var(--color-instagram) transparent;
-            border-style: solid;
-            border-width: 0 7px 14px 7px;
-        }
-        &__content {
-            display: inline-block;
-            size: 32px;
-            border-radius: 50% !important;
-            border: 3px solid #3F5D87;
-        }
-    }
     &__playBtn {
         position: absolute 0 * * 0;
         size: 50px;

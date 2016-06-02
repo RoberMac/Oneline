@@ -54,7 +54,6 @@ const _ProviderMenu = ({ params, PROFILE }) => {
         case 'weibo':
             rowsData.push(ROW_TWEET, ROW_PROFILE);
             break;
-        case 'instagram':
         case 'unsplash':
             rowsData.push(ROW_PROFILE, ROW_SEARCH);
             break;

@@ -18,12 +18,10 @@ export const isPopupPage = pathname => !/(home|settings)\/?$/i.test(pathname);
  *
  */
 export const isTwitter = provider => /twitter/i.test(provider);
-export const isInstagram = provider => /instagram/i.test(provider);
 export const isWeibo = provider => /weibo/i.test(provider);
 export const isUnsplash = provider => /unsplash/i.test(provider);
 export const providersActive = ({ activeProviders }) => ({
     isTwitterActive: !!~activeProviders.indexOf('twitter'),
-    isInstagramActive: !!~activeProviders.indexOf('instagram'),
     isWeiboActive: !!~activeProviders.indexOf('weibo'),
     isUnsplashActive: !!~activeProviders.indexOf('unsplash'),
 });

@@ -7,8 +7,8 @@ import { providersActive } from 'utils/detect';
 export default ({ link, activeProviders }) => {
     const {
         isTwitterActive,
-        isInstagramActive,
         isWeiboActive,
+        isUnsplashActive,
     } = providersActive({ activeProviders });
 
     return (
@@ -22,11 +22,11 @@ export default ({ link, activeProviders }) => {
                             cx="100" cy="42.5" r="15"
                         />
                         <circle
-                            fill={isInstagramActive ? selectProviderColor.instagram : '#FFF'}
+                            fill={isWeiboActive ? selectProviderColor.weibo : '#FFF'}
                             cx="100" cy="100" r="15"
                         />
                         <circle
-                            fill={isWeiboActive ? selectProviderColor.weibo : '#FFF'}
+                            fill={isUnsplashActive ? selectProviderColor.unsplash : '#FFF'}
                             cx="100" cy="157.5" r="15"
                         />
                     </g>

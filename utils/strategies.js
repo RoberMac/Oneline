@@ -1,10 +1,9 @@
 /* eslint global-require: 0 */
 
 const Strategies = {
-    Twitter  : require('passport-twitter').Strategy,
-    Instagram: require('passport-instagram').Strategy,
-    Weibo    : require('passport-weibo').Strategy,
-    Unsplash : require('passport-unsplash').Strategy,
+    Twitter : require('passport-twitter').Strategy,
+    Weibo   : require('passport-weibo').Strategy,
+    Unsplash: require('passport-unsplash').Strategy,
 };
 
 const oauth1 = (token, tokenSecret, profile, done) => {
@@ -58,11 +57,6 @@ const oauth2 = (token, refreshToken, profile, done) => {
     let screen_name;
     let name;
     switch (provider) {
-        case 'instagram':
-            avatar = profile._json.data.profile_picture;
-            screen_name = profile.username;
-            name = profile.displayName;
-            break;
         case 'weibo':
             avatar = profile._json.profile_image_url;
             screen_name = profile._json.screen_name;
@@ -119,12 +113,6 @@ module.exports = passport => {
         consumerSecret: process.env.TWITTER_SECRET,
         callbackURL   : process.env.TWITTER_CB_URL,
     }, oauth1));
-    // Instagram
-    passport.use(new Strategies.Instagram({
-        clientID    : process.env.INSTAGRAM_KEY,
-        clientSecret: process.env.INSTAGRAM_SECRET,
-        callbackURL : process.env.INSTAGRAM_CB_URL,
-    }, oauth2));
     // Weibo
     passport.use(new Strategies.Weibo({
         clientID    : process.env.WEIBO_KEY,

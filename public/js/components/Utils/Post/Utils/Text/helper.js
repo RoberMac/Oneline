@@ -20,14 +20,8 @@ reduxStore.subscribe(() => {
 });
 
 // Constants
-const USER_PREFIX = {
-    twitter: SHARE_PAGE ? '//twitter.com/' : '/home/twitter/user/',
-    instagram: SHARE_PAGE ? '//instagram.com/' : '/home/instagram/user/',
-    weibo: SHARE_PAGE ? '//weibo.com/n/' : '/home/weibo/user/',
-};
 const TAG_PREFIX = {
     twitter: SHARE_PAGE ? '//twitter.com/search?q=%23' : '/home/twitter/tags/',
-    instagram: SHARE_PAGE ? '//instagram.com/explore/tags/' : '/home/instagram/tags/',
     weibo: SHARE_PAGE ? 'http://huati.weibo.com/k/' : '/home/weibo/tags/',
     unsplash: SHARE_PAGE ? '//unsplash.com/search?utf8=✓&keyword=' : '/home/unsplash/tags/',
 };
@@ -35,7 +29,6 @@ const TARGET_ATTR = SHARE_PAGE ? 'target="_blank"' : '';
 const MATCH_ZERO_WIDTH_CHAR = /[\u200B-\u200F\u202C\uFEFF]/g;
 const MATCH_MENTION = {
     twitter: /(|\s)*@([\w]+)/g,
-    instagram: /(|\s)*@([\w\.]+)/g,
     weibo: /(|\s)*@([\u4e00-\u9fa5\w-]+)/g,
 };
 const MATCH_LINK = new RegExp([
@@ -85,12 +78,6 @@ const linkify = (text, { provider }) => {
     // Linkify Mentions
     switch (provider) {
         case 'twitter':
-        case 'instagram':
-            _text = _text.replace(
-                MATCH_MENTION[provider],
-                `$1<a href="${USER_PREFIX[provider]}$2" ${TARGET_ATTR}>@$2</a>`
-            );
-            break;
         case 'weibo':
             _text = _text.replace(
                 MATCH_MENTION[provider],
@@ -104,7 +91,6 @@ const linkify = (text, { provider }) => {
     // Linkify Tags
     switch (provider) {
         case 'twitter':
-        case 'instagram':
         case 'unsplash':
             _text = _text.replace(
                 MATCH_TAG,

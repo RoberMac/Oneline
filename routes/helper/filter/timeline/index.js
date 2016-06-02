@@ -1,5 +1,4 @@
 const twitter   = require('./twitter');
-const instagram = require('./instagram');
 const weibo     = require('./weibo');
 const unsplash  = require('./unsplash');
 /*
@@ -12,7 +11,7 @@ const unsplash  = require('./unsplash');
     BASE
  ---------
  *     - type: tweet, retweet, quote
- *     - provider: twitter, instagram, weibo, unsplash
+ *     - provider: twitter, weibo, unsplash
  *     - created_at
  *     - id_str
  *     - mid [w]
@@ -25,14 +24,14 @@ const unsplash  = require('./unsplash');
  *     - text
  *     - media [t|w]
  *     - mediaLink [t]
- *     - images, videos [i]
+ *     - images [u]
  *     - location
  *         - name
  *         - id
  *         - place_id [w]
  *     - retweet_count, retweeted [t|w]
  *     - like_count, liked
- *     - reply_count [i, w]
+ *     - reply_count [w]
  *     - download_count [u]
  ---------------------------
    NEST POST: same as BASE
@@ -42,7 +41,6 @@ const unsplash  = require('./unsplash');
  *
  ------------------
  * [t] twitter
- * [i] instagram
  * [w] weibo
  * [u] unsplash
  *
@@ -50,7 +48,6 @@ const unsplash  = require('./unsplash');
 
 module.exports = {
     twitter,
-    instagram,
     weibo,
     unsplash,
 };

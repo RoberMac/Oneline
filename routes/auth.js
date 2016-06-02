@@ -6,6 +6,11 @@ const router   = require('express').Router();
 router.param('provider', (req, res, next, provider) => {
     const validProviders = ['twitter', 'instagram', 'weibo', 'unsplash'];
 
+    if (provider === 'instagram') {
+        res.redirect('http://developers.instagram.com/post/145262544121/instagram-platform-update-effective-june-1-2016');
+        return;
+    }
+
     if (validProviders.indexOf(provider) >= 0) {
         req.olProvider = provider;
         next();

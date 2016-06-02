@@ -1,4 +1,4 @@
-const { twitter: twitterLink, instagram: instagramLink } = require('./link');
+const { twitter: twitterLink, unsplash: unsplashLink } = require('./link');
 
 exports.media = {
     media: [{
@@ -10,15 +10,8 @@ exports.media = {
 
 exports.images = {
     images: {
-        large: instagramLink,
+        large: unsplashLink,
         ratio: '0.59219',
-        small: instagramLink,
-    },
-};
-
-exports.videos = {
-    videos: {
-        large: instagramLink,
-        small: instagramLink,
+        small: unsplashLink,
     },
 };

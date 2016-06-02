@@ -6,7 +6,7 @@ import DetailActions from './DetailActions';
 import DetailReply from './DetailReply';
 import DetailIcon from './DetailIcon';
 
-export default ({ provider, post, likedList, replyList, retweetedList }) => {
+export default ({ provider, post, replyList, retweetedList }) => {
     let DetailComponents;
 
     switch (provider) {
@@ -31,31 +31,6 @@ export default ({ provider, post, likedList, replyList, retweetedList }) => {
                     </DetailActions>
 
                     <DetailAvatar type="retweet" provider={provider} list={retweetedList} />
-                </div>
-            );
-            break;
-        case 'instagram':
-            DetailComponents = (
-                <div className={`detail__container provider--${provider}`}>
-                    <DetailActions>
-                        <DetailIcon
-                            name="like"
-                            text={{ type: 'count', content: post.like_count }}
-                            active={post.liked}
-                        />
-                        <DetailIcon
-                            name="reply"
-                            text={{ type: 'count', content: post.reply_count }}
-                        />
-                        <DetailIcon
-                            name="calendar"
-                            text={{ type: 'date', content: post.created_at }}
-                        />
-                    </DetailActions>
-
-                    <DetailAvatar type="like" provider={provider} list={likedList} />
-
-                    <DetailReply provider={provider} list={replyList} />
                 </div>
             );
             break;

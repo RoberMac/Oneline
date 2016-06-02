@@ -20,7 +20,7 @@ exports.retweeted = (
 exports.like_count = (
     Joi
     .when('provider', {
-        is       : ['twitter', 'instagram', 'weibo'],
+        is       : ['twitter', 'weibo'],
         then     : Joi.number().required(),
         otherwise: Joi.number().optional(),
     })
@@ -30,7 +30,7 @@ exports.liked = Joi.boolean().required();
 exports.reply_count = (
     Joi
     .when('provider', {
-        is       : ['instagram', 'weibo'],
+        is       : 'weibo',
         then     : Joi.number().required(),
         otherwise: Joi.forbidden(),
     })

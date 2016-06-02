@@ -74,25 +74,6 @@
             }
         }
     }
-    &--instagram {
-        ::selection {
-            color: var(--color-instagram-alpha);
-            background-color: var(--color-gray);
-        }
-
-        .profile__biography {
-            background-color: var(--color-instagram);
-
-            a, a:visited {
-                color: #82B6FF;
-            }
-        }
-        .profile__website {
-            svg {
-                stroke: var(--color-instagram);
-            }
-        }
-    }
     &--weibo {
         ::selection {
             color: var(--color-weibo-alpha);

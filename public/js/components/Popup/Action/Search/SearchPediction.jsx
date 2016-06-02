@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router';
 
 // Helpers
 import store from 'utils/store';
@@ -18,20 +17,6 @@ const PEDICTION = {
                     {name}
                 </span>
             ),
-        },
-    },
-    instagram: {
-        tags: {
-            action: 'pediction_tags',
-            initState: () => ({}),
-            id: i => i,
-            renderItem: ({ name }) => <Link to={`/home/instagram/tags/${name}`}>#{name}</Link>,
-        },
-        users: {
-            action: 'pediction_users',
-            initState: () => ({}),
-            id: i => i,
-            renderItem: ({ name }) => <Link to={`/home/instagram/user/${name}`}>@{name}</Link>,
         },
     },
 };

@@ -10,7 +10,6 @@ const locationSchema = require('./helpers/location');
 const mediaSchema = require('./helpers/media');
 const actionSchema = require('./helpers/action');
 const midSchema = require('./helpers/mid');
-const srcLinkSchema = require('./helpers/srcLink');
 const mediaLinkSchema = require('./helpers/mediaLink');
 
 const postSchema = Joi.object().keys({
@@ -27,16 +26,14 @@ const postSchema = Joi.object().keys({
     location      : locationSchema,
     // Medias
     media         : mediaSchema.media, // optional [t|w]
-    images        : mediaSchema.images, // required [i|u]
-    videos        : mediaSchema.videos, // optional [i]
+    images        : mediaSchema.images, // required [u]
     // Actions (Required)
     retweet_count : actionSchema.retweet_count, // [t|w]
     retweeted     : actionSchema.retweeted, // [t|w]
-    reply_count   : actionSchema.reply_count, // [i|w]
+    reply_count   : actionSchema.reply_count, // [w]
     download_count: actionSchema.download_count, // [u]
     // Others
     mid           : midSchema, // required [w]
-    link          : srcLinkSchema, // required [i]
     mediaLink     : mediaLinkSchema, // optional [t]
 }).unknown().required();
 

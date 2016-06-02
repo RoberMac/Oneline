@@ -18,13 +18,6 @@ export const rewriteMediaLink = ({ type, provider, data }) => {
                 `${PREFIX}?src=$1`
             );
         },
-        instagram: str => {
-            return str.replace(
-                // via http://rubular.com/r/bA7feGqWSK
-                /(https?:\/\/[\w|\-]+?\.(akamaihd|fbcdn|cdninstagram|instagram)\.(net|com)[^"]*?\.(gif|png|jpg|jpeg|mp4|webp))/g,
-                `${PREFIX}?src=$1`
-            );
-        },
         weibo: str => {
             return str.replace(
                 /(https?:\/\/[\w|\-]+?\.sinaimg.cn[^"]*?\.(gif|png|jpg|jpeg|mp4|webp))/g,

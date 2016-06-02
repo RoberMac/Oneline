@@ -65,19 +65,6 @@
             background-size: 20px;
         }
     }
-    &--instagram {
-        ::selection {
-            color: var(--color-gray);
-            background-color: var(--color-instagram-alpha);
-        }
-        a, a:visited {
-            color: var(--color-instagram);
-        }
-        img, video {
-            background: var(--color-white) inline('background--instagram.png') repeat;
-            background-size: 100px 30px;
-        }
-    }
     &--weibo {
         ::selection {
             color: var(--color-gray);
@@ -109,10 +96,6 @@
     &--twitter {
         color: var(--color-gray);
         background-color: var(--color-twitter-alpha);
-    }
-    &--instagram {
-        color: var(--color-gray);
-        background-color: var(--color-instagram-alpha);
     }
     &--weibo {
         color: var(--color-gray);

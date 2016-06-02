@@ -6,7 +6,7 @@ import iconSprites from 'dist/icon-sprites.svg';
 
 const _SQUARE = '0 0 100 100';
 const ICONS_VIEWBOX = {
-    instagram: '0 0 775 300',
+    instagram: '0 0 815 300',
     unsplash: '0 0 775 300',
     detail: '0 0 34 26',
     retweet: '0 0 34 26',

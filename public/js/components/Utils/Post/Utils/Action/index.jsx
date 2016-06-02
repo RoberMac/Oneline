@@ -60,22 +60,6 @@ const Actions = {
             </div>
         );
     },
-    instagram: ({ post }) => {
-        return (post.detail
-            ? <div>
-                <Source provider="instagram" link={post.link} />
-            </div>
-            : <div>
-                <Like provider="instagram" count={post.like_count} />
-                <Reply provider="instagram" post={{ reply_count: post.reply_count }} />
-                <span className="post-action__hide animate--faster">
-                    <Source provider="instagram" link={post.link} />
-                    <Detail provider="instagram" id={post.id_str} />
-                    <Share provider="instagram" post={post} />
-                </span>
-            </div>
-        );
-    },
     weibo: ({ post }) => {
         const isAuthUser = (
             post.detail

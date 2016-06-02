@@ -26,24 +26,12 @@ exports.media = (
 exports.images = (
     Joi
     .when('provider', {
-        is  : ['instagram', 'unsplash'],
+        is  : 'unsplash',
         then: Joi.object({
             small: linkSchema,
             large: linkSchema,
             ratio: Joi.number().required(),
         }).required(),
-        otherwise: Joi.forbidden(),
-    })
-);
-
-exports.videos = (
-    Joi
-    .when('provider', {
-        is  : 'instagram',
-        then: Joi.object({
-            small: linkSchema,
-            large: linkSchema,
-        }).optional(),
         otherwise: Joi.forbidden(),
     })
 );

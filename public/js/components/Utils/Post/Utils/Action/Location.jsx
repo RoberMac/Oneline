@@ -10,7 +10,6 @@ const selectLink = (
     ? selectLocationLink
     : {
         twitter: ({ id, name }) => `/home/twitter/locations/${id}?name=${name}`,
-        instagram: ({ id, name }) => `/home/instagram/locations/${id}?name=${name}`,
         weibo: ({ id, name, place_id }) => (
             name
                 ? `/home/weibo/locations/${id}?name=${name}&place_id=${place_id}`

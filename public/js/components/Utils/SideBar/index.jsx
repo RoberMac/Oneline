@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 // Helpers
 import { isSettingsPage, isHomePage, isPopupPage } from 'utils/detect';
 const colorClass = pathname => {
-    const match = pathname.match(/twitter|instagram|weibo/);
+    const match = pathname.match(/twitter|weibo|unsplash/);
     return `color--${match ? match[0] : 'steel'}`;
 };
 

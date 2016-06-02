@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { isInstagram, isUnsplash } from 'utils/detect';
+import { isUnsplash } from 'utils/detect';
 
 import Icon from 'components/Utils/Icon';
 
@@ -11,7 +11,7 @@ export default ({ provider, counts }) => {
         counts && !isUnsplash(provider) ? (
             <div className="profile__count column">
                 <span className={columnItemClass}>
-                    <Icon name={isInstagram(provider) ? 'post' : 'tweet'} />
+                    <Icon name="tweet" />
                     <span>{counts.statuses}</span>
                 </span>
                 <span className={columnItemClass}>

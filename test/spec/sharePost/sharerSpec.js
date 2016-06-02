@@ -56,7 +56,7 @@ describe('user', () => {
     // provider
     describe('> provider', () => {
         it('allows when `provider` is valid provider', () => {
-            ['twitter', 'instagram', 'weibo', 'unsplash'].forEach(v => {
+            ['twitter', 'weibo', 'unsplash'].forEach(v => {
                 sharerSchema.validate(Object.assign(user, { provider: v }), err => {
                     expect(err).toBeFalsy();
                 });
@@ -77,7 +77,6 @@ describe('user', () => {
             [
                 initLink.https,
                 initLink.twitter,
-                initLink.instagram,
                 initLink.weibo,
                 initLink.unsplash,
             ].forEach(v => {

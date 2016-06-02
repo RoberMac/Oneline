@@ -9,7 +9,6 @@ export const selectExpirationDate = () => Date.now() - 1000 * 60 * 60 * 24 * 3;
  */
 export const selectProviderColor = {
     twitter: '#2AA9E0',
-    instagram: '#3F5D87',
     weibo: '#E6162D',
     unsplash: '#999',
 };
@@ -17,8 +16,6 @@ export const selectFirstProvider = activeProviders => {
     const provider = (
         ~activeProviders.indexOf('twitter')
             ? 'twitter'
-        : ~activeProviders.indexOf('instagram')
-            ? 'instagram'
         : ~activeProviders.indexOf('weibo')
             ? 'weibo'
         : ~activeProviders.indexOf('unsplash')
@@ -39,13 +36,11 @@ export const selectFirstProvider = activeProviders => {
  */
 export const selectUserLink = {
     twitter: screen_name => `//twitter.com/${screen_name}`,
-    instagram: screen_name => `//instagram.com/${screen_name}`,
     weibo: screen_name => `//weibo.com/n/${screen_name}`,
     unsplash: screen_name => `http://unsplash.com/${screen_name}`,
 };
 export const selectLocationLink = {
     twitter: ({ id }) => `//twitter.com/search?q=place%3A${id}`,
-    instagram: ({ id }) => `//instagram.com/explore/locations/${id}`,
     weibo: ({ id, place_id }) => (
         place_id
             ? `//weibo.com/p/100101${place_id}`
@@ -55,12 +50,10 @@ export const selectLocationLink = {
 };
 export const selectTagLink = {
     twitter: ({ tagName }) => `//twitter.com/search?q=%23${tagName}`,
-    instagram: ({ tagName }) => `//instagram.com/explore/tags/${tagName}`,
     unsplash: ({ tagName }) => `//unsplash.com/search?utf8=✓&keyword=${tagName}`,
 };
 export const selectSourceLink = {
     twitter: ({ screen_name, id }) => `//twitter.com/${screen_name}/status/${id}`,
-    instagram: ({ link }) => link,
     weibo: ({ uid, mid }) => `//weibo.com/${uid}/${mid}`,
     unsplash: ({ id }) => `//unsplash.com/photos/${id}`,
 };
@@ -69,7 +62,6 @@ export const selectDownloadLink = {
 };
 export const selectSearchLink = {
     twitter: ({ searchText }) => `//twitter.com/search?q=${searchText}`,
-    instagram: () => '',
     weibo: () => '',
     unsplash: ({ searchText }) => `//unsplash.com/search?utf8=✓&keyword=${searchText}`,
 };
@@ -78,7 +70,6 @@ export const selectSearchLink = {
  */
 export const selectNextPageId = {
     twitter: ({ minId }) => minId, // for oldest post's id
-    instagram: ({ minId }) => minId,
     weibo: ({ minDate }) => minDate, // for oldest post's created date
     unsplash: ({ action, postsSize }) => {
         const PAGE_COUNT = action === 'user' ? 10 : 20;
@@ -96,10 +87,6 @@ export const selectSearchType = {
     remote: {
         twitter: [
             { name: 'text', icon: 'search' },
-        ],
-        instagram: [
-            { name: 'tags', icon: 'tags' },
-            { name: 'users', icon: 'user' },
         ],
         unsplash: [
             { name: 'text', icon: 'search' },
@@ -119,10 +106,6 @@ export const selectTextMiddlewares = {
     twitter: [
         { order: 0, middleware: 'sanitizer' },
         { order: 3, middleware: 'linkify', opts: { provider: 'twitter' } },
-    ],
-    instagram: [
-        { order: 0, middleware: 'sanitizer' },
-        { order: 3, middleware: 'linkify', opts: { provider: 'instagram' } },
     ],
     weibo: [
         { order: 0, middleware: 'sanitizer' },

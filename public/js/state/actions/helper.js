@@ -150,6 +150,7 @@ export const fetchFromRemote = ({
                     .get('posts')
                     .concat(newRemotePosts)
                     .filter(i => i.created_at > expirationDate)
+                    .sort((a, b) => a.created_at < b.created_at ? 1 : -1)
                 ));
 
                 maxId && map.set('maxId', assign(allPosts.get('maxId'), maxId));

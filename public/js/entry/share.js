@@ -56,16 +56,6 @@ const DetailContainer = props => {
                 </DetailContainerWrapper>
             );
             break;
-        case 'instagram':
-            DetailComponents = (
-                <DetailContainerWrapper {...props}>
-                    <DetailIcon
-                        name="reply"
-                        text={{ type: 'count', content: post.reply_count }}
-                    />
-                </DetailContainerWrapper>
-            );
-            break;
         case 'unsplash':
             DetailComponents = (
                 <DetailContainerWrapper {...props}>
