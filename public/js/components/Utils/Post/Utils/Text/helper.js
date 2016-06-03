@@ -20,6 +20,10 @@ reduxStore.subscribe(() => {
 });
 
 // Constants
+const USER_PREFIX = {
+    twitter: SHARE_PAGE ? '//twitter.com/' : '/home/twitter/user/',
+    weibo: SHARE_PAGE ? '//weibo.com/n/' : '/home/weibo/user/',
+};
 const TAG_PREFIX = {
     twitter: SHARE_PAGE ? '//twitter.com/search?q=%23' : '/home/twitter/tags/',
     weibo: SHARE_PAGE ? 'http://huati.weibo.com/k/' : '/home/weibo/tags/',
@@ -78,6 +82,11 @@ const linkify = (text, { provider }) => {
     // Linkify Mentions
     switch (provider) {
         case 'twitter':
+            _text = _text.replace(
+                MATCH_MENTION[provider],
+                `$1<a href="${USER_PREFIX[provider]}$2" ${TARGET_ATTR}>@$2</a>`
+            );
+            break;
         case 'weibo':
             _text = _text.replace(
                 MATCH_MENTION[provider],
